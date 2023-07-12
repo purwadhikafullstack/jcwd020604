@@ -27,6 +27,8 @@ app.use(express.json());
 // ===========================
 // NOTE : Add your routes here
 
+app.use("/product", router.productRouter);
+app.use("/category", router.categoryRouter);
 app.use("/rajaOngkir", router.rajaOngkirRouter);
 
 app.get("/api", (req, res) => {
