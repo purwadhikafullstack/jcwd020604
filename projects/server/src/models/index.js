@@ -56,80 +56,80 @@ db.products = require("./product")(sequelize, Sequelize); // id: category
 db.productImages = require("./productImage")(sequelize, Sequelize); // id: product
 db.stocks = require("./stock")(sequelize, Sequelize); // id: product, warehouse
 db.stockHistories = require("./stockHistory")(sequelize, Sequelize); // id: stock
-db.stockMutation = require("./stockMutation")(sequelize, Sequelize); // id: from_warehouse, to_warehouse, stock
+db.stockMutations = require("./stockMutation")(sequelize, Sequelize); // id: from_warehouse, to_warehouse, stock
 db.tokens = require("./token")(sequelize, Sequelize); // id: user
 db.users = require("./user")(sequelize, Sequelize); // id: warehouse
 db.warehouses = require("./warehouse")(sequelize, Sequelize); // id: product
 
-// // db.addresses foreignKey
-// db.users.hasMany(db.addresses, { foreignKey: "user_id", targetKey: "id" });
+// db.addresses foreignKey
+db.users.hasMany(db.addresses, { foreignKey: "user_id", targetKey: "id" });
 
-// // db.carts foreignKey
-// db.stocks.hasMany(db.carts, { foreignKey: "stock_id", targetKey: "id" });
+// db.carts foreignKey
+db.stocks.hasMany(db.carts, { foreignKey: "stock_id", targetKey: "id" });
 
-// // db.orders foreignKey
-// db.users.hasMany(db.orders, { foreignKey: "user_id", targetKey: "id" });
-// db.addresses.hasMany(db.orders, { foreignKey: "address_id", targetKey: "id" });
+// db.orders foreignKey
+db.users.hasMany(db.orders, { foreignKey: "user_id", targetKey: "id" });
+db.addresses.hasMany(db.orders, { foreignKey: "address_id", targetKey: "id" });
 
-// // db.orderDetails foreignKey
-// db.stocks.hasMany(db.orderDetails, { foreignKey: "stock_id", targetKey: "id" });
-// db.orders.hasMany(db.orderDetails, { foreignKey: "order_id", targetKey: "id" });
+// db.orderDetails foreignKey
+db.stocks.hasMany(db.orderDetails, { foreignKey: "stock_id", targetKey: "id" });
+db.orders.hasMany(db.orderDetails, { foreignKey: "order_id", targetKey: "id" });
 
-// // db.products foreignKey
-// db.categories.hasMany(db.products, {
-// 	foreignKey: "category_id",
-// 	targetKey: "id",
-// });
+// db.products foreignKey
+db.categories.hasMany(db.products, {
+	foreignKey: "category_id",
+	targetKey: "id",
+});
 
-// // db.productImages foreignKey
-// db.products.hasMany(db.productImages, {
-// 	foreignKey: "product_id",
-// 	targetKey: "id",
-// });
+// db.productImages foreignKey
+db.products.hasMany(db.productImages, {
+	foreignKey: "product_id",
+	targetKey: "id",
+});
 
-// // db.stocks foreignKey
-// db.products.hasMany(db.stocks, {
-// 	foreignKey: "product_id",
-// 	targetKey: "id",
-// });
-// db.warehouses.hasMany(db.stocks, {
-// 	foreignKey: "warehouse_id",
-// 	targetKey: "id",
-// });
+// db.stocks foreignKey
+db.products.hasMany(db.stocks, {
+	foreignKey: "product_id",
+	targetKey: "id",
+});
+db.warehouses.hasMany(db.stocks, {
+	foreignKey: "warehouse_id",
+	targetKey: "id",
+});
 
-// // db.stockHistories foreignKey
-// db.stocks.hasMany(db.stockHistories, {
-// 	foreignKey: "stock_id",
-// 	targetKey: "id",
-// });
+// db.stockHistories foreignKey
+db.stocks.hasMany(db.stockHistories, {
+	foreignKey: "stock_id",
+	targetKey: "id",
+});
 
-// // db.stockMutation foreignKey
-// db.warehouses.hasMany(db.stockMutations, {
-// 	foreignKey: "from_warehouse_id",
-// 	targetKey: "id",
-// });
-// db.warehouses.hasMany(db.stockMutations, {
-// 	foreignKey: "to_warehouse_id",
-// 	targetKey: "id",
-// });
-// db.stocks.hasMany(db.stockMutations, {
-// 	foreignKey: "stock_id",
-// 	targetKey: "id",
-// });
+// db.tokens foreignKey
+db.users.hasMany(db.tokens, { foreignKey: "user_id", targetKey: "id" });
 
-// // db.tokens foreignKey
-// db.users.hasMany(db.tokens, { foreignKey: "user_id", targetKey: "id" });
+// db.users foreignKey
+db.warehouses.hasMany(db.users, {
+	foreignKey: "warehouse_id",
+	targetKey: "id",
+});
 
-// // db.users foreignKey
-// db.warehouses.hasMany(db.users, {
-// 	foreignKey: "warehouse_id",
-// 	targetKey: "id",
-// });
+// db.warehouses foreignKey
+db.products.hasMany(db.warehouses, {
+	foreignKey: "product_id",
+	targetKey: "id",
+});
 
-// // db.warehouses foreignKey
-// db.products.hasMany(db.warehouses, {
-// 	foreignKey: "product_id",
-// 	targetKey: "id",
-// });
+// db.stockMutation foreignKey
+db.warehouses.hasMany(db.stockMutations, {
+	foreignKey: "from_warehouse_id",
+	targetKey: "id",
+});
+db.warehouses.hasMany(db.stockMutations, {
+	foreignKey: "to_warehouse_id",
+	targetKey: "id",
+});
+db.stocks.hasMany(db.stockMutations, {
+	foreignKey: "stock_id",
+	targetKey: "id",
+});
 
 module.exports = db;
