@@ -31,11 +31,7 @@ app.use(express.json());
 app.use("/api/product", router.productRouter);
 app.use("/api/category", router.categoryRouter);
 app.use("/api/rajaOngkir", router.rajaOngkirRouter);
-app.use(
-	"/api/productImg",
-	router.productImageController,
-	express.static(`${__dirname}/public/productImg`)
-);
+app.use("/api/productImg", express.static(`${__dirname}/public/productImg`));
 
 app.get("/api", (req, res) => {
 	res.send(`Hello, this is my API`);

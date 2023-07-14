@@ -30,15 +30,33 @@ const productController = {
 		try {
 			const { product_name, product_detail, price, weight, category_id } =
 				req.body;
-			await db.products
-				.create({
-					product_name,
-					product_detail,
-					price,
-					weight,
-					category_id,
-				})
-				.then((result) => res.send(result));
+
+			const imageUrls = []; // Array to store the image URLs
+
+			// Loop through each uploaded file
+			for (const file of req.files) {
+				const { filename } = file;
+				const imageUrl = process.env.product_img + filename;
+				imageUrls.push(imageUrl);
+			}
+
+			const product = await db.products.create({
+				product_name,
+				product_detail,
+				price,
+				weight,
+				category_id,
+			});
+
+			const productId = product.id;
+
+			for (const imageUrl of imageUrls) {
+				await db.product_images.create({
+					product_image: imageUrl,
+					product_id: productId,
+				});
+			}
+			res.send(product);
 		} catch (err) {
 			return res.status(500).send({ message: err.message });
 		}
