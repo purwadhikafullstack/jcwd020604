@@ -11,14 +11,15 @@ const db = require("./models");
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-	cors({
-		origin: [
-			process.env.WHITELISTED_DOMAIN &&
-				process.env.WHITELISTED_DOMAIN.split(","),
-		],
-	})
-);
+app.use(cors());
+// app.use(
+// 	cors({
+// 		origin: [
+// 			process.env.WHITELISTED_DOMAIN &&
+// 				process.env.WHITELISTED_DOMAIN.split(","),
+// 		],
+// 	})
+// );
 
 app.use(express.json());
 
@@ -27,9 +28,14 @@ app.use(express.json());
 // ===========================
 // NOTE : Add your routes here
 
-app.use("/product", router.productRouter);
-app.use("/category", router.categoryRouter);
-app.use("/rajaOngkir", router.rajaOngkirRouter);
+app.use("/api/product", router.productRouter);
+app.use("/api/category", router.categoryRouter);
+app.use("/api/rajaOngkir", router.rajaOngkirRouter);
+app.use(
+	"/api/productImg",
+	router.productImageController,
+	express.static(`${__dirname}/public/productImg`)
+);
 
 app.get("/api", (req, res) => {
 	res.send(`Hello, this is my API`);

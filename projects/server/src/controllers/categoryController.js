@@ -1,6 +1,6 @@
 const db = require("../models");
 
-const categoryControllers = {
+const categoryController = {
 	insertCat: async (req, res) => {
 		try {
 			const { category_name } = req.body;
@@ -28,4 +28,4 @@ const categoryControllers = {
 		}
 	},
 };
-module.exports = categoryControllers;
+module.exports = categoryController;

@@ -1,9 +1,11 @@
 const rajaOngkirController = require("./rajaOngkirController");
 const productController = require("./productController");
-const categoryControllers = require("./categoryController");
+const categoryController = require("./categoryController");
+const productImageController = require("./productImageController");
 
 module.exports = {
 	rajaOngkirController,
 	productController,
-	categoryControllers,
+	categoryController,
+	productImageController,
 };

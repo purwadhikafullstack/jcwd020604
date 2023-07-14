@@ -1,9 +1,27 @@
+const { Op, where } = require("sequelize");
 const db = require("../models");
 
 const productController = {
 	getAll: async (req, res) => {
 		try {
-			await db.products.findAll().then((result) => res.send(result));
+			const { category_id } = req.query;
+			const where = {};
+			if (category_id) {
+				where.category_id = category_id;
+			}
+			await db.products
+				.findAll({ where: where })
+				.then((result) => res.send(result));
+		} catch (err) {
+			res.status(500).send({ message: err.message });
+		}
+	},
+	getProductById: async (req, res) => {
+		try {
+			const { id } = req.params;
+			await db.products
+				.findOne({ where: { id } })
+				.then((result) => res.send(result));
 		} catch (err) {
 			res.status(500).send({ message: err.message });
 		}
