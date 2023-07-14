@@ -3,6 +3,7 @@ import img from "../assets/tshirt.webp";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
+import CarouselProduct from "./carauselProduct";
 
 export default function ProductDetail() {
 	const [product, setProduct] = useState(null);
@@ -14,8 +15,8 @@ export default function ProductDetail() {
 
 	async function getProductById() {
 		await api.get(`/product/${id}`).then((res) => {
-			console.log(res.data);
 			setProduct(res.data);
+			console.log(res.data);
 		});
 	}
 
@@ -28,16 +29,7 @@ export default function ProductDetail() {
 					alignItems={"start"}
 					flexWrap={"wrap"}
 				>
-					<Flex flexDir={"column"}>
-						<Image src={img} w={"100%"} h={"auto"} maxWidth={"900px"} />
-						<Flex maxW={"180px"}>
-							<Image src={img} />
-							<Image src={img} />
-							<Image src={img} />
-							<Image src={img} />
-							<Image src={img} />
-						</Flex>
-					</Flex>
+					<CarouselProduct />
 					<Flex flexDir={"column"} gap={"25px"} w={"450px"}>
 						<Flex fontSize={"22px"} fontWeight={"bold"}>
 							{/* {product.product_name} */}
