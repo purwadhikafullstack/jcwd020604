@@ -1,12 +1,20 @@
-import { Center, Flex, Image } from "@chakra-ui/react";
-import img from "../assets/tshirt.webp";
+import {
+	Center,
+	Flex,
+	Accordion,
+	AccordionItem,
+	AccordionButton,
+	AccordionPanel,
+	AccordionIcon,
+	Box,
+} from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
 import CarouselProduct from "./carauselProduct";
 
 export default function ProductDetail() {
-	const [product, setProduct] = useState(null);
+	const [product, setProduct] = useState([]);
 	const { id } = useParams();
 
 	useEffect(() => {
@@ -16,7 +24,6 @@ export default function ProductDetail() {
 	async function getProductById() {
 		await api.get(`/product/${id}`).then((res) => {
 			setProduct(res.data);
-			console.log(res.data);
 		});
 	}
 
@@ -32,14 +39,43 @@ export default function ProductDetail() {
 					<CarouselProduct />
 					<Flex flexDir={"column"} gap={"25px"} w={"450px"}>
 						<Flex fontSize={"22px"} fontWeight={"bold"}>
-							{/* {product.product_name} */}
+							{product.product_name}
 						</Flex>
 						<Flex fontSize={"18px"} fontWeight={"bold"}>
-							{/* {`Rp ${product.price.toLocaleString("id-ID")},00`} */}
+							Rp{" "}
+							{product.price
+								? product.price.toLocaleString("id-ID")
+								: "Price Not Available"}
+							,00
 						</Flex>
 						<Flex>
-							<Flex>Product Detail</Flex>
-							{/* <Flex>Product Desciption: {product.product_detail}</Flex> */}
+							<Accordion defaultIndex={[0]} allowMultiple w={"450px"}>
+								<AccordionItem>
+									<h2>
+										<AccordionButton>
+											<Box as="span" flex="1" textAlign="left">
+												Product Description:
+											</Box>
+											<AccordionIcon />
+										</AccordionButton>
+									</h2>
+									<AccordionPanel pb={4}>
+										{product.product_detail}
+									</AccordionPanel>
+								</AccordionItem>
+
+								<AccordionItem>
+									<h2>
+										<AccordionButton>
+											<Box as="span" flex="1" textAlign="left">
+												Product Weight:
+											</Box>
+											<AccordionIcon />
+										</AccordionButton>
+									</h2>
+									<AccordionPanel pb={4}>{product.weight} gram</AccordionPanel>
+								</AccordionItem>
+							</Accordion>
 						</Flex>
 					</Flex>
 				</Center>

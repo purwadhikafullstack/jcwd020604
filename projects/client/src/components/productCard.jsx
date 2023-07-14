@@ -8,7 +8,11 @@ export default function ProductCard({ val }) {
 			<Flex h={"auto"} flexDir={"column"} padding={"15px"}>
 				<Flex>{val.product_name}</Flex>
 				<Flex fontSize={"18px"} fontWeight={"bold"}>
-					{`Rp ${val.price.toLocaleString("id-ID")},00`}
+					Rp{" "}
+					{val.price
+						? val.price.toLocaleString("id-ID")
+						: "Price Not Available"}
+					,00
 				</Flex>
 			</Flex>
 		</Box>

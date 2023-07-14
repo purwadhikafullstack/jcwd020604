@@ -39,6 +39,7 @@ export default function CarouselProduct() {
 			w={"100%"}
 			maxWidth={"900px"}
 			overflow={"hidden"}
+			minW={"450px"}
 		>
 			{/* CSS files for react-slick */}
 			<link

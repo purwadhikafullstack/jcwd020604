@@ -22,6 +22,7 @@ export default function ProductCollection() {
 			.get("/product", { params: { category_id: selectedCategory } })
 			.then((res) => {
 				setProduct(res.data);
+				console.log(res.data);
 			});
 	}
 
