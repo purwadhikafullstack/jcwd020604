@@ -10,7 +10,10 @@ const productController = {
 				where.category_id = category_id;
 			}
 			await db.products
-				.findAll({ where: where })
+				.findAll({
+					where: where,
+					include: { model: db.product_images, as: "product_images" },
+				})
 				.then((result) => res.send(result));
 		} catch (err) {
 			res.status(500).send({ message: err.message });
@@ -20,7 +23,10 @@ const productController = {
 		try {
 			const { id } = req.params;
 			await db.products
-				.findOne({ where: { id } })
+				.findOne({
+					where: { id },
+					include: { model: db.product_images, as: "product_images" },
+				})
 				.then((result) => res.send(result));
 		} catch (err) {
 			res.status(500).send({ message: err.message });
@@ -64,6 +70,7 @@ const productController = {
 	deleteProduct: async (req, res) => {
 		try {
 			await db.products.destroy({ where: { id: req.params.id } });
+			await db.product_images.destroy({ where: { product_id: req.params.id } });
 			return res.status(200).send({
 				message: "Product deleted",
 			});
@@ -75,20 +82,43 @@ const productController = {
 		try {
 			const { product_name, product_detail, price, weight, category_id } =
 				req.body;
-			await db.products
-				.update(
-					{
-						product_name,
-						product_detail,
-						price,
-						weight,
-						category_id,
-					},
-					{
-						where: { id: req.params.id },
-					}
-				)
-				.then((result) => res.send(result));
+			const { id } = req.params;
+
+			const imageUrls = [];
+
+			for (const file of req.files) {
+				const { filename } = file;
+				const imageUrl = process.env.product_img + filename;
+				imageUrls.push(imageUrl);
+			}
+
+			// Update the product
+			const updatedProduct = await db.products.update(
+				{
+					product_name,
+					product_detail,
+					price,
+					weight,
+					category_id,
+				},
+				{
+					where: { id },
+					returning: true,
+				}
+			);
+
+			// Delete existing product images
+			await db.product_images.destroy({ where: { product_id: id } });
+
+			// Create product_images entries for each image
+			for (const imageUrl of imageUrls) {
+				await db.product_images.create({
+					product_image: imageUrl,
+					product_id: id,
+				});
+			}
+
+			res.send(updatedProduct[1][0]);
 		} catch (err) {
 			return res.status(500).send({ message: err.message });
 		}

@@ -84,17 +84,23 @@ db.orders.hasMany(db.order_details, {
 // db.products foreignKey
 db.categories.hasMany(db.products, {
 	foreignKey: "category_id",
-	as: "image",
+	targetKey: "id",
 });
+
 db.product_images.belongsTo(db.products, {
 	foreignKey: "product_id",
 });
 
+// db.categories foreignKey
+db.products.belongsTo(db.categories, {
+	foreignKey: "category_id",
+});
+
 // db.product_images foreignKey
-// db.products.hasMany(db.product_images, {
-// 	foreignKey: "product_id",
-// 	targetKey: "id",
-// });
+db.products.hasMany(db.product_images, {
+	foreignKey: "product_id",
+	targetKey: "id",
+});
 
 // db.stocks foreignKey
 db.products.hasMany(db.stocks, {

@@ -11,6 +11,10 @@ router.post(
 	productController.insert
 );
 router.delete("/:id", productController.deleteProduct);
-router.patch("/:id", productController.editProduct);
+router.patch(
+	"/:id",
+	fileUploader({ destinationFolder: "productImg" }).array("productImg", 5),
+	productController.editProduct
+);
 
 module.exports = router;

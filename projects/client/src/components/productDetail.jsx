@@ -36,7 +36,7 @@ export default function ProductDetail() {
 					alignItems={"start"}
 					flexWrap={"wrap"}
 				>
-					<CarouselProduct />
+					<CarouselProduct product={product} />
 					<Flex flexDir={"column"} gap={"25px"} w={"450px"}>
 						<Flex fontSize={"22px"} fontWeight={"bold"}>
 							{product.product_name}
