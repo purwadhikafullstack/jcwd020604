@@ -10,10 +10,12 @@ import {
 	Icon,
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense, lazy } from "react";
 import { api } from "../api/api";
-import ProductCard from "./productCard";
 import { Link } from "react-router-dom";
+import Loader from "../utils/Loader";
+
+const ProductCard = lazy(() => import("./productCard"));
 
 export default function ProductCollection() {
 	const [product, setProduct] = useState([]);
@@ -85,11 +87,38 @@ export default function ProductCollection() {
 		getAll();
 	};
 
+	// Grid Wrap
+	const [pageWidth, setPageWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		// Update the page width on window resize
+		const handleResize = () => {
+			setPageWidth(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		// Clean up the event listener
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	let templateColumns;
+
+	if (pageWidth <= 500) {
+		templateColumns = "repeat(2, 1fr)";
+	} else if (pageWidth <= 600) {
+		templateColumns = "repeat(3, 1fr)";
+	} else {
+		templateColumns = "repeat(4, 1fr)";
+	}
+
 	return (
 		<Center>
 			<Flex
 				w={"1600px"}
-				minW={"400px"}
+				minW={"390px"}
 				flexDir={"column"}
 				justifyContent={"center"}
 			>
@@ -145,6 +174,7 @@ export default function ProductCollection() {
 					alignItems={"center"}
 					fontSize={"15px"}
 					fontWeight={"bold"}
+					flexWrap={"wrap"}
 				>
 					<Flex fontStyle={"italic"} gap={"5px"} alignItems={"center"}>
 						<Flex fontSize={"22px"}>{product.length}</Flex>
@@ -174,12 +204,14 @@ export default function ProductCollection() {
 					</Flex>
 				</Flex>
 
-				<Grid padding={"20px"} templateColumns={"repeat(4, 1fr)"} gap={"10px"}>
+				<Grid padding={"20px"} templateColumns={templateColumns} gap={"10px"}>
 					{product.length
 						? product.map((val) => {
 								return (
-									<Link to={`/collection/${val.id}`}>
-										<ProductCard val={val} />
+									<Link to={`/collection/${val.id}`} borderRadius={"15px"}>
+										<Suspense fallback={<Loader />}>
+											<ProductCard val={val} borderRadius={"15px"} />
+										</Suspense>
 									</Link>
 								);
 						  })

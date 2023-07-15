@@ -44,10 +44,12 @@ export default function CarouselProduct() {
 		<Box
 			position={"relative"}
 			height={"600px"}
+			minH={"400px"}
 			w={"100%"}
 			maxWidth={"900px"}
 			overflow={"hidden"}
-			minW={"450px"}
+			minW={"390px"}
+			borderRadius={"15px"}
 		>
 			{/* CSS files for react-slick */}
 			<link

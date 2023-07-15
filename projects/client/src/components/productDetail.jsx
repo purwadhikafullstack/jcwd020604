@@ -48,15 +48,24 @@ export default function ProductDetail() {
 
 	return (
 		<Center>
-			<Flex w={"1600px"} minW={"400px"} flexDir={"column"}>
+			<Flex w={"1600px"} minW={"390px"} flexDir={"column"}>
 				<Center
 					margin={"60px 20px 60px"}
 					justifyContent={"space-between"}
 					alignItems={"start"}
 					flexWrap={"wrap"}
+					gap={"20px"}
 				>
 					<CarouselProduct product={product.product_images} />
-					<Flex flexDir={"column"} gap={"25px"} w={"450px"}>
+					<Flex
+						flexDir={"column"}
+						gap={"25px"}
+						minW={"390px"}
+						w={"500px"}
+						borderRadius={"15px"}
+						boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
+						padding={"15px"}
+					>
 						<Flex fontSize={"22px"} fontWeight={"bold"}>
 							{product.product_name}
 						</Flex>
@@ -68,11 +77,16 @@ export default function ProductDetail() {
 							,00
 						</Flex>
 						<Flex>
-							<Accordion allowMultiple w={"450px"}>
+							<Accordion allowMultiple minW={"390px"} w={"100%"}>
 								<AccordionItem>
 									<h2>
 										<AccordionButton>
-											<Box as="span" flex="1" textAlign="left">
+											<Box
+												as="span"
+												flex="1"
+												textAlign="left"
+												fontWeight={"bold"}
+											>
 												Product Description:
 											</Box>
 											<AccordionIcon />
@@ -86,7 +100,12 @@ export default function ProductDetail() {
 								<AccordionItem>
 									<h2>
 										<AccordionButton>
-											<Box as="span" flex="1" textAlign="left">
+											<Box
+												as="span"
+												flex="1"
+												textAlign="left"
+												fontWeight={"bold"}
+											>
 												Product Weight:
 											</Box>
 											<AccordionIcon />
@@ -104,26 +123,30 @@ export default function ProductDetail() {
 								onChange={setValue}
 								paddingLeft={"150px"}
 								paddingBottom={"50px"}
+								borderRadius={"5px"}
+								// margin={"5px"}
 							>
 								<NumberInputStepper
-									w={"150px"}
+									w={"160px"}
 									h={"50px"}
 									display={"flex"}
 									flexDir={"row"}
-									gap={"15px"}
+									gap={"10px"}
 									alignItems={"center"}
 								>
 									<NumberDecrementStepper
 										onClick={handleDecrement}
-										fontSize={"20px"}
+										fontSize={"15px"}
 										borderColor={"transparent"}
+										marginLeft={"10px"}
 									/>
-									<NumberInputField textAlign="center" />
+									<NumberInputField textAlign="center" paddingLeft={"30px"} />
 
 									<NumberIncrementStepper
 										onClick={handleIncrement}
-										fontSize={"20px"}
+										fontSize={"15px"}
 										borderColor={"transparent"}
+										marginRight={"10px"}
 									/>
 								</NumberInputStepper>
 							</NumberInput>
