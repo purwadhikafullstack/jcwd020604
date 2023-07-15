@@ -4,15 +4,47 @@ const db = require("../models");
 const productController = {
 	getAll: async (req, res) => {
 		try {
-			const { category_id } = req.query;
+			const { category_id, sort, search, page } = req.query;
 			const where = {};
+			const limit = 20;
+			let offset = 0;
+
 			if (category_id) {
 				where.category_id = category_id;
 			}
+
+			if (page && parseInt(page) > 1) {
+				offset = (parseInt(page) - 1) * limit;
+			}
+
+			const sortOptions = {
+				priceAsc: [["price", "ASC"]],
+				priceDesc: [["price", "DESC"]],
+				categoryAsc: [["category_id", "ASC"]],
+				categoryDesc: [["category_id", "DESC"]],
+				newest: [["createdAt", "DESC"]],
+			};
+			const sortOrder = sortOptions[sort] || null;
+
+			const searchOptions = {
+				product_name: {
+					[Op.like]: `%${search}%`,
+				},
+			};
+
+			const searchFilter = search ? searchOptions : null;
+
 			await db.products
-				.findAll({
-					where: where,
+				.findAndCountAll({
+					where: {
+						...where,
+						...searchFilter,
+					},
 					include: { model: db.product_images, as: "product_images" },
+					order: sortOrder,
+					limit: limit,
+					distinct: true,
+					offset: offset,
 				})
 				.then((result) => res.send(result));
 		} catch (err) {

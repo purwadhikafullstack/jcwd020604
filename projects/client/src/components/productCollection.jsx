@@ -1,4 +1,15 @@
-import { Center, Flex, Grid } from "@chakra-ui/react";
+import {
+	Button,
+	Center,
+	Flex,
+	Grid,
+	Select,
+	InputGroup,
+	Input,
+	InputRightElement,
+	Icon,
+} from "@chakra-ui/react";
+import { FaSearch } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
 import ProductCard from "./productCard";
@@ -8,6 +19,10 @@ export default function ProductCollection() {
 	const [product, setProduct] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
+	const [sort, setSort] = useState("");
+	const [search, setSearch] = useState("");
+	const [page, setPage] = useState(1);
+	const [totalPage, setTotalPage] = useState(0);
 
 	useEffect(() => {
 		getCategory();
@@ -15,13 +30,21 @@ export default function ProductCollection() {
 
 	useEffect(() => {
 		getAll();
-	}, [selectedCategory]);
+	}, [selectedCategory, sort, search, page]);
 
 	async function getAll() {
 		await api
-			.get("/product", { params: { category_id: selectedCategory } })
+			.get("/product", {
+				params: {
+					category_id: selectedCategory,
+					sort: sort,
+					search: search,
+					page: page,
+				},
+			})
 			.then((res) => {
-				setProduct(res.data);
+				setProduct(res.data.rows);
+				setTotalPage(Math.ceil(res.data.count / 20));
 			});
 	}
 
@@ -31,10 +54,35 @@ export default function ProductCollection() {
 		});
 	}
 
-	const handleClick = (categoryId) => {
+	const handleCategoryChange = (categoryId) => {
 		if (categoryId !== selectedCategory) {
 			setSelectedCategory(categoryId);
 		}
+	};
+
+	const handleSortChange = (sortOrder) => {
+		if (
+			sortOrder === "priceAsc" ||
+			sortOrder === "priceDesc" ||
+			sortOrder === "categoryAsc" ||
+			sortOrder === "categoryDesc" ||
+			sortOrder === "newest"
+		) {
+			setSort(sortOrder);
+		} else {
+			setSort(null);
+		}
+		setPage(1);
+	};
+
+	const handlePageChange = (newPage) => {
+		if (newPage !== page) {
+			setPage(newPage);
+		}
+	};
+
+	const handleSearchClick = () => {
+		getAll();
 	};
 
 	return (
@@ -61,7 +109,7 @@ export default function ProductCollection() {
 							backgroundColor: selectedCategory === "" ? "yellow" : "white",
 							border: selectedCategory === "" ? "1px solid white" : "1px solid",
 						}}
-						onClick={() => handleClick("")}
+						onClick={() => handleCategoryChange("")}
 					>
 						ALL ITEMS
 					</Flex>
@@ -83,7 +131,7 @@ export default function ProductCollection() {
 													? "1px solid white"
 													: "1px solid",
 										}}
-										onClick={() => handleClick(val.id)}
+										onClick={() => handleCategoryChange(val.id)}
 									>
 										{val.category_name}
 									</Flex>
@@ -103,12 +151,30 @@ export default function ProductCollection() {
 						<Flex>cases</Flex>
 					</Flex>
 					<Flex gap={"15px"} fontSize={"13px"}>
-						<Flex>Newest</Flex>
-						<Flex>Narrowing </Flex>
+						<Select
+							onChange={(e) => handleSortChange(e.target.value)}
+							placeholder="Sort product by:"
+						>
+							<option value="newest">Newest</option>
+							<option value="priceAsc">Lowest Price</option>
+							<option value="priceDesc">Highest Price</option>
+						</Select>
+						<InputGroup>
+							<Input
+								placeholder="Search..."
+								value={search}
+								onChange={(e) => setSearch(e.target.value)}
+							/>
+							<InputRightElement cursor={"pointer"}>
+								<Button border="none" onClick={handleSearchClick}>
+									<Icon as={FaSearch} color="gray.400" />
+								</Button>
+							</InputRightElement>
+						</InputGroup>
 					</Flex>
 				</Flex>
 
-				<Grid padding={"20px"} templateColumns={"repeat(4, 1fr)"}>
+				<Grid padding={"20px"} templateColumns={"repeat(4, 1fr)"} gap={"10px"}>
 					{product.length
 						? product.map((val) => {
 								return (
@@ -119,6 +185,30 @@ export default function ProductCollection() {
 						  })
 						: null}
 				</Grid>
+				<Center gap={"15px"}>
+					{page === 1 ? null : (
+						<Button
+							bgColor={"white"}
+							border={"1px"}
+							w={"117px"}
+							onClick={() => handlePageChange(page - 1)}
+						>
+							PREVIOUS
+						</Button>
+					)}
+					<Flex gap={"10px"}>
+						{page === totalPage ? null : (
+							<Button
+								bgColor={"white"}
+								border={"1px"}
+								w={"117px"}
+								onClick={() => handlePageChange(page + 1)}
+							>
+								NEXT
+							</Button>
+						)}
+					</Flex>
+				</Center>
 			</Flex>
 		</Center>
 	);

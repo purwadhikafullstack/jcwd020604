@@ -7,15 +7,26 @@ import {
 	AccordionPanel,
 	AccordionIcon,
 	Box,
+	NumberInput,
+	NumberInputField,
+	NumberInputStepper,
+	NumberIncrementStepper,
+	NumberDecrementStepper,
+	Grid,
+	GridItem,
+	Button,
+	Icon,
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
 import CarouselProduct from "./carauselProduct";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 
 export default function ProductDetail() {
 	const [product, setProduct] = useState([]);
 	const { id } = useParams();
+	const [value, setValue] = useState(1);
 
 	useEffect(() => {
 		getProductById();
@@ -26,6 +37,14 @@ export default function ProductDetail() {
 			setProduct(res.data);
 		});
 	}
+
+	const handleIncrement = () => {
+		setValue(value + 1);
+	};
+
+	const handleDecrement = () => {
+		setValue(value - 1);
+	};
 
 	return (
 		<Center>
@@ -49,7 +68,7 @@ export default function ProductDetail() {
 							,00
 						</Flex>
 						<Flex>
-							<Accordion defaultIndex={[0]} allowMultiple w={"450px"}>
+							<Accordion allowMultiple w={"450px"}>
 								<AccordionItem>
 									<h2>
 										<AccordionButton>
@@ -76,6 +95,49 @@ export default function ProductDetail() {
 									<AccordionPanel pb={4}>{product.weight} gram</AccordionPanel>
 								</AccordionItem>
 							</Accordion>
+						</Flex>
+						<Flex justifyContent={"space-between"} alignItems={"center"}>
+							<NumberInput
+								defaultValue={value}
+								min={1}
+								max={10}
+								onChange={setValue}
+								paddingLeft={"150px"}
+								paddingBottom={"50px"}
+							>
+								<NumberInputStepper
+									w={"150px"}
+									h={"50px"}
+									display={"flex"}
+									flexDir={"row"}
+									gap={"15px"}
+									alignItems={"center"}
+								>
+									<NumberDecrementStepper
+										onClick={handleDecrement}
+										fontSize={"20px"}
+										borderColor={"transparent"}
+									/>
+									<NumberInputField textAlign="center" />
+
+									<NumberIncrementStepper
+										onClick={handleIncrement}
+										fontSize={"20px"}
+										borderColor={"transparent"}
+									/>
+								</NumberInputStepper>
+							</NumberInput>
+							<Flex>Stock: 30</Flex>
+							<Button
+								w={"150px"}
+								h={"50px"}
+								bgColor={"yellow"}
+								fontWeight={"bold"}
+								_hover={{ bgColor: "yellow.200" }}
+							>
+								<Icon as={AiOutlineShoppingCart} fontSize={"25px"} />
+								CART
+							</Button>
 						</Flex>
 					</Flex>
 				</Center>
