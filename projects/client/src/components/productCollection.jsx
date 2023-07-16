@@ -203,6 +203,7 @@ export default function ProductCollection() {
 									onClick={() => {
 										const searchValue = inputFileRef.current.value;
 										setSearch(searchValue);
+										setPage(1);
 									}}
 								>
 									<Icon as={FaSearch} color="gray.400" />
@@ -238,23 +239,47 @@ export default function ProductCollection() {
 				)}
 
 				{product.length > 0 && (
-					<Center gap={"15px"}>
-						{page === 1 ? null : (
+					<Center gap={"25px"} marginBottom={"25px"}>
+						{page === 1 ? (
+							<Button
+								isDisabled
+								bgColor={"white"}
+								w={"117px"}
+								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
+							>
+								PREVIOUS
+							</Button>
+						) : (
 							<Button
 								bgColor={"white"}
-								border={"1px"}
 								w={"117px"}
-								onClick={() => handlePageChange(page - 1)}
+								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
+								onClick={() => {
+									handlePageChange(page - 1);
+									window.scrollTo({ top: 0, behavior: "smooth" });
+								}}
 							>
 								PREVIOUS
 							</Button>
 						)}
-						{page === totalPage ? null : (
+						{page === totalPage ? (
+							<Button
+								isDisabled
+								bgColor={"white"}
+								w={"117px"}
+								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
+							>
+								NEXT
+							</Button>
+						) : (
 							<Button
 								bgColor={"white"}
-								border={"1px"}
 								w={"117px"}
-								onClick={() => handlePageChange(page + 1)}
+								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
+								onClick={() => {
+									handlePageChange(page + 1);
+									window.scrollTo({ top: 0, behavior: "smooth" });
+								}}
 							>
 								NEXT
 							</Button>

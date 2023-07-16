@@ -12,8 +12,6 @@ import {
 	NumberInputStepper,
 	NumberIncrementStepper,
 	NumberDecrementStepper,
-	Grid,
-	GridItem,
 	Button,
 	Icon,
 } from "@chakra-ui/react";
@@ -28,7 +26,7 @@ export default function ProductDetail() {
 	const { uuid } = useParams();
 	const [value, setValue] = useState(1);
 
-	const stock = 90;
+	const stock = 0;
 	const isSoldOut = stock === 0;
 
 	useEffect(() => {
@@ -149,7 +147,6 @@ export default function ProductDetail() {
 								paddingLeft={"150px"}
 								paddingBottom={"50px"}
 								borderRadius={"5px"}
-								// margin={"5px"}
 								isDisabled={isSoldOut}
 							>
 								<NumberInputStepper
