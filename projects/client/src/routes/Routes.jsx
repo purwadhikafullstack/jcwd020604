@@ -6,7 +6,7 @@ import DetailPage from "../pages/user/ProductDetailPage";
 const routes = [
 	<Route path="/" element={<HomePage />}></Route>,
 	<Route path="/collection" element={<CollectionPage />}></Route>,
-	<Route path="/collection/:id" element={<DetailPage />}></Route>,
+	<Route path="/collection/:uuid" element={<DetailPage />}></Route>,
 ];
 
 export default routes;

@@ -25,7 +25,7 @@ import { AiOutlineShoppingCart } from "react-icons/ai";
 
 export default function ProductDetail() {
 	const [product, setProduct] = useState([]);
-	const { id } = useParams();
+	const { uuid } = useParams();
 	const [value, setValue] = useState(1);
 
 	useEffect(() => {
@@ -33,7 +33,7 @@ export default function ProductDetail() {
 	}, []);
 
 	async function getProductById() {
-		await api.get(`/product/${id}`).then((res) => {
+		await api.get(`/product/${uuid}`).then((res) => {
 			setProduct(res.data);
 		});
 	}
@@ -51,10 +51,14 @@ export default function ProductDetail() {
 			<Flex w={"1600px"} minW={"390px"} flexDir={"column"}>
 				<Center
 					margin={"60px 20px 60px"}
-					justifyContent={"space-between"}
+					justifyContent={"space-evenly"}
 					alignItems={"start"}
 					flexWrap={"wrap"}
 					gap={"20px"}
+					padding={"10px"}
+					border={"1px"}
+					borderRadius={"15px"}
+					borderColor={"#E6EBF2"}
 				>
 					<CarouselProduct product={product.product_images} />
 					<Flex

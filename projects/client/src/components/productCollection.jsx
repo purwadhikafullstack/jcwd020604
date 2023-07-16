@@ -10,7 +10,7 @@ import {
 	Icon,
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
-import { useState, useEffect, Suspense, lazy } from "react";
+import { useState, useEffect, Suspense, lazy, useRef } from "react";
 import { api } from "../api/api";
 import { Link } from "react-router-dom";
 import Loader from "../utils/Loader";
@@ -25,6 +25,8 @@ export default function ProductCollection() {
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
+	const inputFileRef = useRef(null);
+	const [loading, setLoading] = useState(false);
 
 	useEffect(() => {
 		getCategory();
@@ -35,6 +37,7 @@ export default function ProductCollection() {
 	}, [selectedCategory, sort, search, page]);
 
 	async function getAll() {
+		setLoading(true);
 		await api
 			.get("/product", {
 				params: {
@@ -47,6 +50,7 @@ export default function ProductCollection() {
 			.then((res) => {
 				setProduct(res.data.rows);
 				setTotalPage(Math.ceil(res.data.count / 20));
+				setLoading(false);
 			});
 	}
 
@@ -83,10 +87,6 @@ export default function ProductCollection() {
 		}
 	};
 
-	const handleSearchClick = () => {
-		getAll();
-	};
-
 	// Grid Wrap
 	const [pageWidth, setPageWidth] = useState(window.innerWidth);
 
@@ -106,9 +106,9 @@ export default function ProductCollection() {
 
 	let templateColumns;
 
-	if (pageWidth <= 500) {
+	if (pageWidth <= 600) {
 		templateColumns = "repeat(2, 1fr)";
-	} else if (pageWidth <= 600) {
+	} else if (pageWidth <= 800) {
 		templateColumns = "repeat(3, 1fr)";
 	} else {
 		templateColumns = "repeat(4, 1fr)";
@@ -160,7 +160,10 @@ export default function ProductCollection() {
 													? "1px solid white"
 													: "1px solid",
 										}}
-										onClick={() => handleCategoryChange(val.id)}
+										onClick={() => {
+											setPage(1);
+											handleCategoryChange(val.id);
+										}}
 									>
 										{val.category_name}
 									</Flex>
@@ -190,13 +193,15 @@ export default function ProductCollection() {
 							<option value="priceDesc">Highest Price</option>
 						</Select>
 						<InputGroup>
-							<Input
-								placeholder="Search..."
-								value={search}
-								onChange={(e) => setSearch(e.target.value)}
-							/>
+							<Input placeholder="Search..." ref={inputFileRef} />
 							<InputRightElement cursor={"pointer"}>
-								<Button border="none" onClick={handleSearchClick}>
+								<Button
+									border="none"
+									onClick={() => {
+										const searchValue = inputFileRef.current.value;
+										setSearch(searchValue);
+									}}
+								>
 									<Icon as={FaSearch} color="gray.400" />
 								</Button>
 							</InputRightElement>
@@ -208,15 +213,21 @@ export default function ProductCollection() {
 					{product.length
 						? product.map((val) => {
 								return (
-									<Link to={`/collection/${val.id}`} borderRadius={"15px"}>
+									<Link to={`/collection/${val.uuid}`} borderRadius={"15px"}>
 										<Suspense fallback={<Loader />}>
-											<ProductCard val={val} borderRadius={"15px"} />
+											{" "}
+											{loading ? (
+												<Loader />
+											) : (
+												<ProductCard val={val} borderRadius={"15px"} />
+											)}
 										</Suspense>
 									</Link>
 								);
 						  })
 						: null}
 				</Grid>
+
 				<Center gap={"15px"}>
 					{page === 1 ? null : (
 						<Button

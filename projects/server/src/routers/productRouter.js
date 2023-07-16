@@ -4,7 +4,8 @@ const productController = require("../controllers").productController;
 const { fileUploader, upload } = require("../middlewares/multer");
 
 router.get("/", productController.getAll);
-router.get("/:id", productController.getProductById);
+// router.get("/id/:id", productController.getProductById);
+router.get("/:uuid", productController.getProductByUuid);
 router.post(
 	"/",
 	fileUploader({ destinationFolder: "productImg" }).array("productImg", 5),

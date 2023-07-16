@@ -23,10 +23,10 @@ export default function CarouselProduct() {
 	const [slider, setSlider] = useState(<Slider />);
 	const [productImage, setProductImage] = useState([]);
 
-	const { id } = useParams();
+	const { uuid } = useParams();
 
 	async function getProductById() {
-		await api.get(`/product/${id}`).then((res) => {
+		await api.get(`/product/${uuid}`).then((res) => {
 			setProductImage(res.data.product_images.map((val) => val.product_image));
 		});
 	}
@@ -43,13 +43,12 @@ export default function CarouselProduct() {
 	return (
 		<Box
 			position={"relative"}
-			height={"600px"}
 			minH={"400px"}
-			w={"100%"}
-			maxWidth={"900px"}
+			w={["100%", "100%", "100%", "900px"]} // Adjust width based on screen size
+			h={"auto"} // Adjust width based on screen size
 			overflow={"hidden"}
 			minW={"390px"}
-			borderRadius={"15px"}
+			paddingBottom={"25px"}
 		>
 			{/* CSS files for react-slick */}
 			<link
@@ -95,8 +94,9 @@ export default function CarouselProduct() {
 			<Slider {...settings} ref={(slider) => setSlider(slider)}>
 				{productImage.map((url, index) => (
 					<Box
+						borderRadius={"15px"}
 						key={index}
-						height={"6xl"}
+						height={"xl"}
 						position="relative"
 						backgroundPosition="center"
 						backgroundRepeat="no-repeat"

@@ -51,12 +51,25 @@ const productController = {
 			res.status(500).send({ message: err.message });
 		}
 	},
-	getProductById: async (req, res) => {
+	// getProductById: async (req, res) => {
+	// 	try {
+	// 		const { id } = req.params;
+	// 		await db.products
+	// 			.findOne({
+	// 				where: { id },
+	// 				include: { model: db.product_images, as: "product_images" },
+	// 			})
+	// 			.then((result) => res.send(result));
+	// 	} catch (err) {
+	// 		res.status(500).send({ message: err.message });
+	// 	}
+	// },
+	getProductByUuid: async (req, res) => {
 		try {
-			const { id } = req.params;
+			const { uuid } = req.params;
 			await db.products
 				.findOne({
-					where: { id },
+					where: { uuid },
 					include: { model: db.product_images, as: "product_images" },
 				})
 				.then((result) => res.send(result));
