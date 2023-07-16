@@ -22,6 +22,19 @@ export default function CarouselProduct() {
 	// change the state
 	const [slider, setSlider] = useState(<Slider />);
 	const [productImage, setProductImage] = useState([]);
+	const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		const handleResize = () => {
+			setWindowWidth(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
 
 	const { uuid } = useParams();
 
@@ -96,7 +109,7 @@ export default function CarouselProduct() {
 					<Box
 						borderRadius={"15px"}
 						key={index}
-						height={"xl"}
+						height={windowWidth >= 600 ? "3xl" : "xl"}
 						position="relative"
 						backgroundPosition="center"
 						backgroundRepeat="no-repeat"

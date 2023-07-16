@@ -28,6 +28,9 @@ export default function ProductDetail() {
 	const { uuid } = useParams();
 	const [value, setValue] = useState(1);
 
+	const stock = 90;
+	const isSoldOut = stock === 0;
+
 	useEffect(() => {
 		getProductById();
 	}, []);
@@ -70,16 +73,34 @@ export default function ProductDetail() {
 						boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
 						padding={"15px"}
 					>
-						<Flex fontSize={"22px"} fontWeight={"bold"}>
-							{product.product_name}
+						<Flex justifyContent={"space-between"} alignItems={"center"}>
+							<Flex fontSize={"22px"} fontWeight={"bold"}>
+								{product.product_name}
+							</Flex>
+							{stock === 0 ? "Sold Out" : `Stock: ${stock}`}
 						</Flex>
-						<Flex fontSize={"18px"} fontWeight={"bold"}>
-							Rp{" "}
-							{product.price
-								? product.price.toLocaleString("id-ID")
-								: "Price Not Available"}
-							,00
-						</Flex>
+						{isSoldOut ? (
+							<Flex fontSize={"18px"} fontWeight={"bold"}>
+								<Flex style={{ textDecoration: "line-through" }}>
+									Rp{" "}
+									{product.price
+										? product.price.toLocaleString("id-ID")
+										: "Price Not Available"}
+									,00
+								</Flex>
+								<Flex style={{ color: "red", marginLeft: "8px" }}>
+									SOLD OUT
+								</Flex>
+							</Flex>
+						) : (
+							<Flex fontSize={"18px"} fontWeight={"bold"}>
+								Rp{" "}
+								{product.price
+									? product.price.toLocaleString("id-ID")
+									: "Price Not Available"}
+								,00
+							</Flex>
+						)}
 						<Flex>
 							<Accordion allowMultiple minW={"390px"} w={"100%"}>
 								<AccordionItem>
@@ -123,12 +144,13 @@ export default function ProductDetail() {
 							<NumberInput
 								defaultValue={value}
 								min={1}
-								max={10}
+								max={stock}
 								onChange={setValue}
 								paddingLeft={"150px"}
 								paddingBottom={"50px"}
 								borderRadius={"5px"}
 								// margin={"5px"}
+								isDisabled={isSoldOut}
 							>
 								<NumberInputStepper
 									w={"160px"}
@@ -154,13 +176,13 @@ export default function ProductDetail() {
 									/>
 								</NumberInputStepper>
 							</NumberInput>
-							<Flex>Stock: 30</Flex>
 							<Button
 								w={"150px"}
 								h={"50px"}
 								bgColor={"yellow"}
 								fontWeight={"bold"}
 								_hover={{ bgColor: "yellow.200" }}
+								isDisabled={isSoldOut}
 							>
 								<Icon as={AiOutlineShoppingCart} fontSize={"25px"} />
 								CART

@@ -1,6 +1,8 @@
 import { Box, Flex, Image } from "@chakra-ui/react";
 
-export default function ProductCard({ val }) {
+export default function ProductCard({ val, stock }) {
+	const isSoldOut = stock === 0;
+
 	return (
 		<Box
 			w={"100%"}
@@ -25,11 +27,26 @@ export default function ProductCard({ val }) {
 			>
 				<Flex>{val.product_name}</Flex>
 				<Flex fontSize={"18px"} fontWeight={"bold"}>
-					Rp{" "}
-					{val.price
-						? val.price.toLocaleString("id-ID")
-						: "Price Not Available"}
-					,00
+					{isSoldOut ? (
+						<Flex flexWrap={"wrap"}>
+							<Flex style={{ textDecoration: "line-through" }}>
+								Rp{" "}
+								{val.price
+									? val.price.toLocaleString("id-ID")
+									: "Price Not Available"}
+								,00
+							</Flex>
+							<Flex style={{ color: "red", marginLeft: "8px" }}>SOLD OUT</Flex>
+						</Flex>
+					) : (
+						<Flex>
+							Rp{" "}
+							{val.price
+								? val.price.toLocaleString("id-ID")
+								: "Price Not Available"}
+							,00
+						</Flex>
+					)}
 				</Flex>
 			</Flex>
 		</Box>

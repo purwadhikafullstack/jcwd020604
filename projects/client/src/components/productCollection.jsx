@@ -27,6 +27,7 @@ export default function ProductCollection() {
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
 	const [loading, setLoading] = useState(false);
+	const stock = 0;
 
 	useEffect(() => {
 		getCategory();
@@ -138,6 +139,7 @@ export default function ProductCollection() {
 							backgroundColor: selectedCategory === "" ? "yellow" : "white",
 							border: selectedCategory === "" ? "1px solid white" : "1px solid",
 						}}
+						borderRadius={"5px"}
 						onClick={() => handleCategoryChange("")}
 					>
 						ALL ITEMS
@@ -160,6 +162,7 @@ export default function ProductCollection() {
 													? "1px solid white"
 													: "1px solid",
 										}}
+										borderRadius={"5px"}
 										onClick={() => {
 											setPage(1);
 											handleCategoryChange(val.id);
@@ -208,38 +211,44 @@ export default function ProductCollection() {
 						</InputGroup>
 					</Flex>
 				</Flex>
+				{product.length > 0 ? (
+					<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
+						{product.map((val) => {
+							return (
+								<Link to={`/collection/${val.uuid}`} borderRadius={"15px"}>
+									<Suspense fallback={<Loader />}>
+										{loading ? (
+											<Loader />
+										) : (
+											<ProductCard
+												val={val}
+												stock={stock}
+												borderRadius={"15px"}
+											/>
+										)}
+									</Suspense>
+								</Link>
+							);
+						})}
+					</Grid>
+				) : (
+					<Center fontSize={"20px"} fontWeight={"bold"} marginTop={"40px"}>
+						Product not available
+					</Center>
+				)}
 
-				<Grid padding={"20px"} templateColumns={templateColumns} gap={"10px"}>
-					{product.length
-						? product.map((val) => {
-								return (
-									<Link to={`/collection/${val.uuid}`} borderRadius={"15px"}>
-										<Suspense fallback={<Loader />}>
-											{" "}
-											{loading ? (
-												<Loader />
-											) : (
-												<ProductCard val={val} borderRadius={"15px"} />
-											)}
-										</Suspense>
-									</Link>
-								);
-						  })
-						: null}
-				</Grid>
-
-				<Center gap={"15px"}>
-					{page === 1 ? null : (
-						<Button
-							bgColor={"white"}
-							border={"1px"}
-							w={"117px"}
-							onClick={() => handlePageChange(page - 1)}
-						>
-							PREVIOUS
-						</Button>
-					)}
-					<Flex gap={"10px"}>
+				{product.length > 0 && (
+					<Center gap={"15px"}>
+						{page === 1 ? null : (
+							<Button
+								bgColor={"white"}
+								border={"1px"}
+								w={"117px"}
+								onClick={() => handlePageChange(page - 1)}
+							>
+								PREVIOUS
+							</Button>
+						)}
 						{page === totalPage ? null : (
 							<Button
 								bgColor={"white"}
@@ -250,8 +259,8 @@ export default function ProductCollection() {
 								NEXT
 							</Button>
 						)}
-					</Flex>
-				</Center>
+					</Center>
+				)}
 			</Flex>
 		</Center>
 	);
