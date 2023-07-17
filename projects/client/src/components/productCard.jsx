@@ -1,8 +1,9 @@
 import { Box, Flex, Image } from "@chakra-ui/react";
+import { useState } from "react";
 
-export default function ProductCard({ val, stock }) {
+export default function ProductCard({ val }) {
+	const [stock, setStock] = useState(val.stocks[0]?.qty || 0);
 	const isSoldOut = stock === 0;
-
 	return (
 		<Box
 			w={"100%"}

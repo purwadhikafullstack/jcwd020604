@@ -25,8 +25,8 @@ export default function ProductDetail() {
 	const [product, setProduct] = useState([]);
 	const { uuid } = useParams();
 	const [value, setValue] = useState(1);
+	const [stock, setStock] = useState(0);
 
-	const stock = 0;
 	const isSoldOut = stock === 0;
 
 	useEffect(() => {
@@ -36,6 +36,7 @@ export default function ProductDetail() {
 	async function getProductById() {
 		await api.get(`/product/${uuid}`).then((res) => {
 			setProduct(res.data);
+			setStock(res.data.stocks[0]?.qty || 0);
 		});
 	}
 

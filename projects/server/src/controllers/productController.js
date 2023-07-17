@@ -40,11 +40,15 @@ const productController = {
 						...where,
 						...searchFilter,
 					},
-					include: { model: db.product_images, as: "product_images" },
+					include: [
+						{ model: db.product_images, as: "product_images" },
+						{ model: db.stocks, as: "stocks" },
+					],
 					order: sortOrder,
 					limit: limit,
 					distinct: true,
 					offset: offset,
+					// raw: true,
 				})
 				.then((result) => res.send(result));
 		} catch (err) {
@@ -70,7 +74,11 @@ const productController = {
 			await db.products
 				.findOne({
 					where: { uuid },
-					include: { model: db.product_images, as: "product_images" },
+					include: [
+						{ model: db.product_images, as: "product_images" },
+						{ model: db.stocks, as: "stocks" },
+					],
+					// raw: true,
 				})
 				.then((result) => res.send(result));
 		} catch (err) {
@@ -116,6 +124,7 @@ const productController = {
 		try {
 			await db.products.destroy({ where: { id: req.params.id } });
 			await db.product_images.destroy({ where: { product_id: req.params.id } });
+			await db.stocks.destroy({ where: { product_id: req.params.id } });
 			return res.status(200).send({
 				message: "Product deleted",
 			});

@@ -27,7 +27,6 @@ export default function ProductCollection() {
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
 	const [loading, setLoading] = useState(false);
-	const stock = 0;
 
 	useEffect(() => {
 		getCategory();
@@ -216,16 +215,12 @@ export default function ProductCollection() {
 					<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
 						{product.map((val) => {
 							return (
-								<Link to={`/collection/${val.uuid}`} borderRadius={"15px"}>
+								<Link to={`/collection/${val.uuid}`}>
 									<Suspense fallback={<Loader />}>
 										{loading ? (
 											<Loader />
 										) : (
-											<ProductCard
-												val={val}
-												stock={stock}
-												borderRadius={"15px"}
-											/>
+											<ProductCard val={val} borderRadius={"15px"} />
 										)}
 									</Suspense>
 								</Link>
