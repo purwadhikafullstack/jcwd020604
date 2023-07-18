@@ -43,6 +43,8 @@ const productController = {
 					include: [
 						{ model: db.product_images, as: "product_images" },
 						{ model: db.stocks, as: "stocks" },
+						{ model: db.categories },
+						// { model: db.warehouses, as: "warehouses" },
 					],
 					order: sortOrder,
 					limit: limit,

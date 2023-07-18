@@ -3,7 +3,7 @@ import HomePage from "../pages/HomePage";
 import CollectionPage from "../pages/user/ProductCollectionPage";
 import DetailPage from "../pages/user/ProductDetailPage";
 import AddProductPage from "../pages/admin/AddProductPage";
-import ProductListPage from "../pages/admin/ProductListPage";
+import AdminProductPage from "../pages/admin/AdminProductPage";
 
 const routes = [
 	<Route path="/" element={<HomePage />}></Route>,
@@ -12,7 +12,7 @@ const routes = [
 
 	// Admin Page
 	<Route path="/admin/product/addproduct" element={<AddProductPage />}></Route>,
-	<Route path="/admin/product" element={<ProductListPage />}></Route>,
+	<Route path="/admin/product" element={<AdminProductPage />}></Route>,
 ];
 
 export default routes;

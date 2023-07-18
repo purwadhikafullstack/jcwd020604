@@ -8,6 +8,7 @@ import {
 	Input,
 	InputRightElement,
 	Icon,
+	ButtonGroup,
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, Suspense, lazy, useRef } from "react";
@@ -37,6 +38,7 @@ export default function ProductCollection() {
 	}, [selectedCategory, sort, search, page]);
 
 	async function getAll() {
+		const limit = 20;
 		setLoading(true);
 		await api
 			.get("/product", {
@@ -234,7 +236,11 @@ export default function ProductCollection() {
 				)}
 
 				{product.length > 0 && (
-					<Center gap={"25px"} marginBottom={"25px"}>
+					<ButtonGroup
+						justifyContent={"center"}
+						gap={"25px"}
+						marginBottom={"25px"}
+					>
 						{page === 1 ? (
 							<Button
 								isDisabled
@@ -279,7 +285,7 @@ export default function ProductCollection() {
 								NEXT
 							</Button>
 						)}
-					</Center>
+					</ButtonGroup>
 				)}
 			</Flex>
 		</Center>

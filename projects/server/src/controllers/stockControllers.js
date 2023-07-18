@@ -1,6 +1,13 @@
 const db = require("../models");
 
 const stockController = {
+	getStock: async (req, res) => {
+		try {
+			await db.stocks.findAll().then((result) => res.status(200).send(result));
+		} catch (err) {
+			res.status(500).send({ message: err.message });
+		}
+	},
 	addStock: async (req, res) => {
 		const t = await db.sequelize.transaction();
 		try {
