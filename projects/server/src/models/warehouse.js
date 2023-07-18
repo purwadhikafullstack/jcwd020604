@@ -2,7 +2,7 @@ module.exports = (sequelize, Sequelize) => {
 	const warehouses = sequelize.define(
 		"warehouses",
 		{
-			name: Sequelize.STRING,
+			warehouse_name: Sequelize.STRING,
 			address: Sequelize.STRING,
 			province: Sequelize.STRING,
 			city: Sequelize.STRING,

@@ -16,22 +16,28 @@ import {
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import ProductList from "./productList";
 
 export default function AdminProduct() {
+	const nav = useNavigate();
 	const [product, setProduct] = useState([]);
 	const [category, setCategory] = useState([]);
+	const [warehouse, setWarehouse] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
 	const [sort, setSort] = useState("");
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
-	console.log(product);
 
 	useEffect(() => {
 		getCategory();
+	}, []);
+
+	useEffect(() => {
+		getWarehouse();
 	}, []);
 
 	useEffect(() => {
@@ -50,13 +56,19 @@ export default function AdminProduct() {
 			})
 			.then((res) => {
 				setProduct(res.data.rows);
-				setTotalPage(Math.ceil(res.data.count / 20));
+				setTotalPage(Math.ceil(res.data.count / 12));
 			});
 	}
 
 	async function getCategory() {
 		await api.get("/category").then((res) => {
 			setCategory(res.data);
+		});
+	}
+
+	async function getWarehouse() {
+		await api.get("/warehouse").then((res) => {
+			setWarehouse(res.data);
 		});
 	}
 
@@ -79,11 +91,23 @@ export default function AdminProduct() {
 				flexDir={"column"}
 			>
 				<Flex flexDir={"column"}>
+					<Menu>
+						<MenuButton as={Button} w={"150px"} marginBottom={"15px"}>
+							Add Data
+						</MenuButton>
+						<MenuList>
+							<MenuItem onClick={() => nav("/admin/product/addproduct")}>
+								Add Product
+							</MenuItem>
+							<MenuItem>Add Warehouse</MenuItem>
+							<MenuItem>Add Category</MenuItem>
+						</MenuList>
+					</Menu>
 					<Center gap={"15px"} paddingBottom={"15px"}>
 						<Select placeholder="All Warehouses">
-							<option value="newest">MMS Jogja</option>
-							<option value="priceAsc">MMS Batam</option>
-							<option value="priceDesc">MMS Jakarta</option>
+							{warehouse.length
+								? warehouse.map((val) => <option>{val.warehouse_name}</option>)
+								: null}
 						</Select>
 						<Select
 							placeholder="All Type of Category"

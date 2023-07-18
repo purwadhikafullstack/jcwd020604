@@ -38,7 +38,6 @@ export default function ProductCollection() {
 	}, [selectedCategory, sort, search, page]);
 
 	async function getAll() {
-		const limit = 20;
 		setLoading(true);
 		await api
 			.get("/product", {
@@ -51,7 +50,7 @@ export default function ProductCollection() {
 			})
 			.then((res) => {
 				setProduct(res.data.rows);
-				setTotalPage(Math.ceil(res.data.count / 20));
+				setTotalPage(Math.ceil(res.data.count / 12));
 				setLoading(false);
 			});
 	}

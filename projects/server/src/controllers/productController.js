@@ -6,7 +6,7 @@ const productController = {
 		try {
 			const { category_id, sort, search, page } = req.query;
 			const where = {};
-			const limit = 20;
+			const limit = 12;
 			let offset = 0;
 
 			if (category_id) {

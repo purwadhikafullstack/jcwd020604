@@ -16,7 +16,7 @@ import { useState, useRef, useEffect } from "react";
 import { useFormik } from "formik";
 import { api } from "../api/api";
 
-export default function AddProduct() {
+export default function AddCategory() {
 	const nav = useNavigate();
 	const inputFileRef = useRef(null);
 
