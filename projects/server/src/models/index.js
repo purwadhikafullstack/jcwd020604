@@ -103,9 +103,6 @@ db.stocks.hasMany(db.stockHistories, {
 	targetKey: "id",
 });
 
-// db.tokens foreignKey
-db.users.hasMany(db.tokens, { foreignKey: "user_id", targetKey: "id" });
-
 // db.users foreignKey
 db.warehouses.hasMany(db.users, {
 	foreignKey: "warehouse_id",
