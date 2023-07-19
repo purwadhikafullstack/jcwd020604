@@ -159,7 +159,7 @@ export default function AdminProduct() {
 					<Flex
 						padding={"7px"}
 						borderBottom={"1px"}
-						fontWeight={500}
+						fontWeight={600}
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
@@ -183,7 +183,7 @@ export default function AdminProduct() {
 					justifyContent={"end"}
 					alignItems={"center"}
 				>
-					<Flex>{product.length} from BUTUH DI FIX Products</Flex>
+					<Flex>{product.length} from (BUTUH DI FIX) Products</Flex>
 					{page === 1 ? null : (
 						<Button
 							onClick={() => {
