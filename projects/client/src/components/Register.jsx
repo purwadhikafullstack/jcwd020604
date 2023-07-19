@@ -10,7 +10,9 @@ import {
     Text,
     useColorModeValue,
     FormErrorMessage,
-    useToast
+    useToast,
+    Spacer,
+    Divider
   } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
 import axios from "axios";
@@ -49,7 +51,6 @@ import { useNavigate } from "react-router-dom";
           duration: 3000,
           isClosable: true,
         });
-  
       } catch (err) {
         toast({
           title: err.response?.data?.message,
@@ -106,9 +107,18 @@ import { useNavigate } from "react-router-dom";
                       Sign up
                     </Button>
                   </Stack>
-                  <Stack pt={6}>
+                  <Stack pt={4}>
                     <Text align={'center'}>
-                      Already a user? <Link color={'blue.400'}>Login</Link>
+                      Already a user? 
+                      <Link to={'/login'}>
+                        <Text cursor={'pointer'} textColor={'blue.500'} _hover={{textColor: 'blue.600'}}
+                        >Login</Text>
+                      </Link>
+                      <Text>or</Text>
+                      <Link to={'/'}>
+                        <Text cursor={'pointer'} textColor={'yellow.500'} _hover={{textColor: 'yellow.600'}}
+                        >Cancel ?</Text>
+                      </Link>
                     </Text>
                   </Stack>
               </form>

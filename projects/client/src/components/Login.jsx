@@ -10,6 +10,7 @@ import {
     Stack,
     Button,
     Heading,
+    Text,
     useColorModeValue,
     useToast,
   } from '@chakra-ui/react';
@@ -55,13 +56,6 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
               })
               .catch((err) =>
                 console.log(err.response.data),
-                // toast({
-                //   title: err.response.data,
-                //   status: "error",
-                //   position: "top",
-                //   duration: 1000,
-                //   isClosable: true,
-                // })
                 );
     console.log(token);
             await axios
@@ -69,9 +63,6 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
                 headers: {
                   Authorization: `Bearer ${token}`,
                 },
-                // params: {
-                //   token,
-                // },
               })
               .then((res) => {
                 console.log(res.data);
@@ -126,19 +117,42 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
                   </InputRightElement>
                 </InputGroup>
               </FormControl>
-              <Stack spacing={10} pt={2}>
-                <Link to={'/'}>
-                <Button
-                  loadingText="Submitting"
-                  size="lg"
-                  bg={'blue.400'}
-                  color={'white'}
-                  _hover={{
-                    bg: 'blue.500',
-                  }} onClick={login}>
-                  Sign In
-                </Button>
-                </Link>
+              <Stack spacing={10}>
+                  <Link to={'/login'}>
+                    <Button
+                      loadingText="Submitting"
+                      size="lg"
+                      w={'100%'}
+                      bg={'blue.400'}
+                      color={'white'}
+                      _hover={{
+                        bg: 'blue.500',
+                      }} onClick={login}>
+                      Sign In
+                    </Button>
+                  </Link>
+                  <Link to={'/register'}>
+                    <Button
+                      loadingText="Submitting"
+                      size="lg"
+                      w={'100%'}
+                      bg={'green.400'}
+                      color={'white'}
+                      _hover={{
+                        bg: 'green.500',
+                      }}>
+                      Register
+                    </Button>
+                  </Link>
+                  <Stack>
+                    <Text align={'center'}>
+                      Back to 
+                      <Link to={'/'}>
+                        <Text cursor={'pointer'} textColor={'blue.500'} _hover={{textColor: 'blue.600'}}
+                        >Homepage</Text>
+                      </Link>
+                    </Text>
+                  </Stack>
               </Stack>
             </Stack>
           </Box>

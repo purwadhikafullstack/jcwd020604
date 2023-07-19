@@ -57,7 +57,7 @@ const userController = {
       const hashPassword = await bcrypt.hash(password, 10);
 
       await db.users.update(
-        { password: hashPassword, fullname, verified: 1 },
+        { password: hashPassword, fullname, verified: 1, role: "USER" },
         { where: { email } }
       );
 

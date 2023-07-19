@@ -6,6 +6,7 @@ import {
   HStack,
   IconButton,
   Image,
+  Input,
   Button,
   Menu,
   MenuButton,
@@ -13,9 +14,11 @@ import {
   useColorModeValue,
   Stack,
   Text,
-  useToast
+  useToast,
+  InputRightElement,
+  InputGroup
 } from '@chakra-ui/react';
-import {FiLogOut, FiLogIn} from "react-icons/fi";
+import {FiLogOut, FiLogIn, FiShoppingCart, FiSearch} from "react-icons/fi";
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -42,7 +45,7 @@ export default function Navbar() {
       isClosable: true
     })
   }
-  
+
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -59,24 +62,45 @@ export default function Navbar() {
               <Image
               src={Logo}
               minW={'50px'}
-              w={'20px'}>
+              w={'20px'}
+              cursor={'pointer'}>
               </Image>
             </Box>
             <HStack
               as={'nav'}
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
+              {user.role === "ADMIN" ? (
+              <>
                 <Flex><Link to={'/'}>Dashboard</Link></Flex>
-                <Flex><Link to={'/#'}>Products</Link></Flex>
-                  {/* {user && user.role === "ADMIN" && (
-                    <Flex><Link to={'/users'}></Link>Users</Flex>
-                  )}; */}
+                <Flex><Link to={'/#'}>Tops</Link></Flex>
+                <Flex><Link to={'/#'}>Bottoms</Link></Flex>
+                <Flex><Link to={'/#'}>Outerwares</Link></Flex>
+                <Flex><Link to={'/#'}>Accerories</Link></Flex>
+                <Flex><Link to={'/#'}>Users</Link></Flex>
+              </>) : (
+              <>
+                <Flex><Link to={'/#'}>Tops</Link></Flex>
+                <Flex><Link to={'/#'}>Bottoms</Link></Flex>
+                <Flex><Link to={'/#'}>Outerwares</Link></Flex>
+                <Flex><Link to={'/#'}>Accerories</Link></Flex>
+              </>)}
+            <Flex>
+                <InputGroup>
+                  <InputRightElement pointerEvents='none'>
+                    <FiSearch color='gray.300' cursor={'pointer'} />
+                  </InputRightElement>
+                  <Input type='tel' placeholder='Search . . .' />
+                </InputGroup>
+            </Flex>
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
+          <Box m={2} pr={4} cursor={'pointer'}>
+            <FiShoppingCart/>
+          </Box>
             <Menu>
-             
-              {user.fullname ? (<> <Text mr={2}><Text as={'b'}>{user.fullname}</Text></Text>
+              {user.fullname ? (<><Text fontSize={'12px'} mr={2}>Welcome <Text as={'b'}>{user.fullname}</Text></Text>
               <MenuButton
                 as={Button}
                 rounded={'full'}
@@ -90,7 +114,7 @@ export default function Navbar() {
                   }
                 />
               </MenuButton>
-              <Link to={'/'}> <Button onClick={logout} size={'sm'} variant={'ghost'} leftIcon={<FiLogOut/>}>Logout</Button></Link>
+              <Link to={'/'}><Button onClick={logout} size={'sm'} variant={'ghost'} leftIcon={<FiLogOut/>} _hover={{color:'red'}}>Logout</Button></Link>
              </>) : (<> <Link to={'/login'}>
               <Button size={'sm'} variant={'ghost'} leftIcon={<FiLogIn/>}>Login</Button>
               </Link></>)}
@@ -101,17 +125,41 @@ export default function Navbar() {
         {isOpen ? (
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
-              <Text>Dashboard</Text>
-              <Text><Link to={'#'}>Products</Link></Text>
-              {/* {user && user.role === "ADMIN" && (
-                <Flex><Link to={'/users'}></Link>Users</Flex>
-              )}; */}
+            {user.role === "ADMIN" ? (
+              <>
+               <InputGroup>
+                  <InputRightElement pointerEvents='none'>
+                    <FiSearch color='gray.300' />
+                  </InputRightElement>
+                  <Input type='tel' placeholder='Search . . .' />
+                </InputGroup>
+                <Flex><Link to={'/'}>Dashboard</Link></Flex>
+                <Flex><Link to={'/#'}>Tops</Link></Flex>
+                <Flex><Link to={'/#'}>Bottoms</Link></Flex>
+                <Flex><Link to={'/#'}>Outerwares</Link></Flex>
+                <Flex><Link to={'/#'}>Accerories</Link></Flex>
+                <Flex><Link to={'/#'}>Users</Link></Flex>
+              </>) : (
+              <>
+                <InputGroup>
+                  <InputRightElement pointerEvents='none'>
+                    <FiSearch color='gray.300' />
+                  </InputRightElement>
+                  <Input type='tel' placeholder='Search . . .' />
+                </InputGroup>
+                <Flex><Link to={'/#'}>Tops</Link></Flex>
+                <Flex><Link to={'/#'}>Bottoms</Link></Flex>
+                <Flex><Link to={'/#'}>Outerwares</Link></Flex>
+                <Flex><Link to={'/#'}>Accerories</Link></Flex>
+                <Box>
+            </Box>
+              </>)}
             </Stack>
           </Box>
         ) : null}
       </Box>
 
-      <Box p={4}>Main Content Here</Box>
+      <Box p={4}></Box>
     </>
   );
 }
