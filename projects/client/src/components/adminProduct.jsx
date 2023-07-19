@@ -13,7 +13,10 @@ import {
 	MenuList,
 	MenuItem,
 	ButtonGroup,
+	MenuDivider,
 } from "@chakra-ui/react";
+import { ChevronDownIcon } from "@chakra-ui/icons";
+
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
@@ -92,15 +95,23 @@ export default function AdminProduct() {
 			>
 				<Flex flexDir={"column"}>
 					<Menu>
-						<MenuButton as={Button} w={"150px"} marginBottom={"15px"}>
-							Add Data
+						<MenuButton
+							as={Button}
+							w={"150px"}
+							marginBottom={"15px"}
+							rightIcon={<ChevronDownIcon />}
+						>
+							Manage Data
 						</MenuButton>
 						<MenuList>
 							<MenuItem onClick={() => nav("/admin/product/addproduct")}>
 								Add Product
 							</MenuItem>
-							<MenuItem>Add Warehouse</MenuItem>
 							<MenuItem>Add Category</MenuItem>
+							<MenuItem>Add Warehouse</MenuItem>
+							<MenuDivider />
+							<MenuItem color={"red"}>Delete Category</MenuItem>
+							<MenuItem color={"red"}>Delete Warehouse</MenuItem>
 						</MenuList>
 					</Menu>
 					<Center gap={"15px"} paddingBottom={"15px"}>

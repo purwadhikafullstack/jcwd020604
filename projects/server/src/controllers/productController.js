@@ -80,7 +80,6 @@ const productController = {
 						{ model: db.product_images, as: "product_images" },
 						{ model: db.stocks, as: "stocks" },
 					],
-					// raw: true,
 				})
 				.then((result) => res.send(result));
 		} catch (err) {
