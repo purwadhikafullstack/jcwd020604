@@ -9,13 +9,14 @@ function userReducer(state = init, action) {
     return {
       ...state,
       id: action.payload.id,
+      fullname: action.payload.fullname,
       email: action.payload.email,
-      // password: action.payload.password,
-      name: action.payload.name,
-      address: action.payload.birthdate,
+      role: action.payload.role,
       avatar_url: action.payload.avatar_url,
+      // password: action.payload.password,
     };
   } else if (action.type === "logout") {
+    console.log('tess');
     return init;
   }
 

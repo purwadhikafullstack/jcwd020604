@@ -9,9 +9,6 @@ import {
   Button,
   Menu,
   MenuButton,
-  MenuList,
-  MenuItem,
-  MenuDivider,
   useDisclosure,
   useColorModeValue,
   Stack,
@@ -22,29 +19,30 @@ import {FiLogOut, FiLogIn} from "react-icons/fi";
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { LogOut, reset} from '../redux/authSlice';
 import Logo from "../assets/Logo.png";
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {user} = useSelector((state) => state.auth);
+  const user = useSelector((state) => state.auth);
   const toast = useToast();
 
-  const logout = () => {
-    dispatch(LogOut());
-    dispatch(reset());
-    toast({
-      title:"Anda berhasil logout",
-      status:'success',
-      position:'top-right',
-      duration: 3000,
-      isClosable: false
+  function logout() {
+    localStorage.removeItem("auth");
+    dispatch({
+      type: "logout",
     });
-    navigate("/login");
-  };
-
+    navigate('/login')
+    toast({
+      title: "Anda telah logout",
+      status: "success",
+      position: "top",
+      isClosable: true
+    })
+  }
+  
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
@@ -69,15 +67,16 @@ export default function Navbar() {
               spacing={4}
               display={{ base: 'none', md: 'flex' }}>
                 <Flex><Link to={'/'}>Dashboard</Link></Flex>
-                <Flex><Link to={'/products'}>Products</Link></Flex>
-                  {user && user.role === "ADMIN" && (
+                <Flex><Link to={'/#'}>Products</Link></Flex>
+                  {/* {user && user.role === "ADMIN" && (
                     <Flex><Link to={'/users'}></Link>Users</Flex>
-                  )};
+                  )}; */}
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
             <Menu>
-              <Text mr={2}>Welcome <Text as={'b'}>{user && user.fullname}</Text></Text>
+             
+              {user.fullname ? (<> <Text mr={2}><Text as={'b'}>{user.fullname}</Text></Text>
               <MenuButton
                 as={Button}
                 rounded={'full'}
@@ -91,14 +90,10 @@ export default function Navbar() {
                   }
                 />
               </MenuButton>
-              <MenuList>
-                <MenuItem>
-                <Button size={'sm'} variant={'ghost'} leftIcon={<FiLogIn/>}>Login</Button></MenuItem>
-                <MenuDivider />
-                <MenuItem>
-                <Button onClick={logout} size={'sm'} variant={'ghost'} leftIcon={<FiLogOut/>}>Logout</Button>
-                </MenuItem>
-              </MenuList>
+              <Link to={'/'}> <Button onClick={logout} size={'sm'} variant={'ghost'} leftIcon={<FiLogOut/>}>Logout</Button></Link>
+             </>) : (<> <Link to={'/login'}>
+              <Button size={'sm'} variant={'ghost'} leftIcon={<FiLogIn/>}>Login</Button>
+              </Link></>)}
             </Menu>
           </Flex>
         </Flex>
@@ -107,10 +102,10 @@ export default function Navbar() {
           <Box pb={4} display={{ md: 'none' }}>
             <Stack as={'nav'} spacing={4}>
               <Text>Dashboard</Text>
-              <Text><Link to={'/products'}>Products</Link></Text>
-              {user && user.role === "ADMIN" && (
+              <Text><Link to={'#'}>Products</Link></Text>
+              {/* {user && user.role === "ADMIN" && (
                 <Flex><Link to={'/users'}></Link>Users</Flex>
-              )};
+              )}; */}
             </Stack>
           </Box>
         ) : null}

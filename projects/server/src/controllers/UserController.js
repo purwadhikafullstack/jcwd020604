@@ -111,7 +111,7 @@ const userController = {
       const generateToken = nanoid();
       if (!token) {
         token = await db.tokens.create({
-          expired: moment().add(1, "h").format(),
+          expired: moment().add(1, "d").format(),
           token: generateToken,
           userId: JSON.stringify(userId),
           status: "LOGIN",
