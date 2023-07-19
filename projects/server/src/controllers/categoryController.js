@@ -109,7 +109,7 @@ const categoryController = {
 		const t = await db.sequelize.transaction();
 
 		try {
-			const category = await db.categories.findByPk(id);
+			const category = await db.categories.findOne({ where: { id } });
 
 			if (!category) {
 				return res.status(404).send({ message: "Category not found." });
