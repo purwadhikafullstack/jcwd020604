@@ -4,13 +4,6 @@ const db = require("../models");
 const stockController = {
 	getStock: async (req, res) => {
 		try {
-			const limit = 10;
-			let offset = 0;
-
-			if (page && parseInt(page) > 1) {
-				offset = (parseInt(page) - 1) * limit;
-			}
-
 			await db.stocks
 				.findAll({
 					where: {
@@ -31,14 +24,14 @@ const stockController = {
 				})
 				.then((result) => res.status(200).send(result));
 		} catch (err) {
-			console.log(err);
 			res.status(500).send({ message: err.message });
 		}
 	},
 	addStock: async (req, res) => {
+		const { qty, product_id, warehouse_id } = req.body;
 		const t = await db.sequelize.transaction();
+
 		try {
-			const { qty, product_id, warehouse_id } = req.body;
 			await db.stocks
 				.create(
 					{

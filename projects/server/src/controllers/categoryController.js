@@ -18,11 +18,11 @@ const categoryController = {
 		try {
 			const category = await db.categories.findOne({ where: { id } });
 			if (!category) {
-				return res.status(404).json({ message: "Category not found" });
+				return res.status(404).send({ message: "Category not found" });
 			}
-			return res.status(200).json(category);
-		} catch (error) {
-			return res.status(500).json({ message: "Internal server error" });
+			return res.status(200).send(category);
+		} catch (err) {
+			return res.status(500).send({ message: err.message });
 		}
 	},
 	insertCatategory: async (req, res) => {
@@ -44,11 +44,9 @@ const categoryController = {
 		try {
 			const existingCategory = await db.categories.findOne({
 				where: { category_name },
-				transaction: t,
 			});
 
 			if (existingCategory) {
-				await t.rollback(); // Rollback the transaction
 				return res.status(400).send({ message: "Category already exists." });
 			}
 
@@ -62,6 +60,7 @@ const categoryController = {
 
 			res.status(200).send(newCategory);
 		} catch (err) {
+			await t.rollback();
 			return res.status(500).send({
 				message: err.message,
 			});
@@ -86,11 +85,9 @@ const categoryController = {
 		try {
 			const existingCategory = await db.categories.findOne({
 				where: { category_name },
-				transaction: t,
 			});
 
 			if (existingCategory && existingCategory.id !== id) {
-				await t.rollback();
 				return res.status(400).send({ message: "Category already exists." });
 			}
 
@@ -103,6 +100,7 @@ const categoryController = {
 
 			res.status(200).send({ message: "Category updated successfully." });
 		} catch (err) {
+			await t.rollback();
 			res.status(500).send({ message: err.message });
 		}
 	},
@@ -111,12 +109,9 @@ const categoryController = {
 		const t = await db.sequelize.transaction();
 
 		try {
-			const category = await db.categories.findByPk(id, {
-				transaction: t,
-			});
+			const category = await db.categories.findByPk(id);
 
 			if (!category) {
-				await t.rollback();
 				return res.status(404).send({ message: "Category not found." });
 			}
 
@@ -129,6 +124,7 @@ const categoryController = {
 
 			res.status(200).send({ message: "Category deleted successfully." });
 		} catch (err) {
+			await t.rollback();
 			res.status(500).send({ message: err.message });
 		}
 	},

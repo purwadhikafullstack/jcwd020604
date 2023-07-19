@@ -1,5 +1,6 @@
 const { Op, where } = require("sequelize");
 const db = require("../models");
+const Joi = require("joi");
 
 const productController = {
 	getAll: async (req, res) => {
@@ -71,25 +72,54 @@ const productController = {
 	// 	}
 	// },
 	getProductByUuid: async (req, res) => {
+		const { uuid } = req.params;
 		try {
-			const { uuid } = req.params;
-			await db.products
-				.findOne({
-					where: { uuid },
-					include: [
-						{ model: db.product_images, as: "product_images" },
-						{ model: db.stocks, as: "stocks" },
-					],
-				})
-				.then((result) => res.send(result));
+			const product = await db.products.findOne({
+				where: { uuid },
+				include: [
+					{ model: db.product_images, as: "product_images" },
+					{ model: db.stocks, as: "stocks" },
+				],
+			});
+			if (!product) {
+				return res.status(404).send({ message: "Product not found" });
+			}
+			return res.send(result);
 		} catch (err) {
 			res.status(500).send({ message: err.message });
 		}
 	},
 	insert: async (req, res) => {
+		const t = await db.sequelize.transaction();
+
+		const productSchema = Joi.object({
+			product_name: Joi.string().required(),
+			product_detail: Joi.string().required(),
+			price: Joi.number().required(),
+			weight: Joi.number().required(),
+			category_id: Joi.number().required(),
+		});
+
+		const { error } = productSchema.validate(req.body);
+
+		if (error) {
+			return res.status(400).send({ message: error.details[0].message });
+		}
+
 		try {
 			const { product_name, product_detail, price, weight, category_id } =
 				req.body;
+
+			// Check if the product_name already exists
+			const existingProduct = await db.products.findOne({
+				where: { product_name },
+			});
+
+			if (existingProduct) {
+				return res
+					.status(400)
+					.send({ message: "Product with the same name already exists" });
+			}
 
 			const imageUrls = []; // Array to store the image URLs
 
@@ -106,6 +136,7 @@ const productController = {
 				price,
 				weight,
 				category_id,
+				transaction: t,
 			});
 
 			const productId = product.id;
@@ -114,23 +145,15 @@ const productController = {
 				await db.product_images.create({
 					product_image: imageUrl,
 					product_id: productId,
+					transaction: t,
 				});
 			}
+			await t.commit();
+
 			res.send(product);
 		} catch (err) {
+			await t.rollback();
 			return res.status(500).send({ message: err.message });
-		}
-	},
-	deleteProduct: async (req, res) => {
-		try {
-			await db.products.destroy({ where: { id: req.params.id } });
-			await db.product_images.destroy({ where: { product_id: req.params.id } });
-			await db.stocks.destroy({ where: { product_id: req.params.id } });
-			return res.status(200).send({
-				message: "Product deleted",
-			});
-		} catch (err) {
-			res.status(500).send({ message: err.message });
 		}
 	},
 	editProduct: async (req, res) => {
@@ -176,6 +199,18 @@ const productController = {
 			res.send(updatedProduct[1][0]);
 		} catch (err) {
 			return res.status(500).send({ message: err.message });
+		}
+	},
+	deleteProduct: async (req, res) => {
+		try {
+			await db.products.destroy({ where: { id: req.params.id } });
+			await db.product_images.destroy({ where: { product_id: req.params.id } });
+			await db.stocks.destroy({ where: { product_id: req.params.id } });
+			return res.status(200).send({
+				message: "Product deleted",
+			});
+		} catch (err) {
+			res.status(500).send({ message: err.message });
 		}
 	},
 };
