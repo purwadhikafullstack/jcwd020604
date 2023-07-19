@@ -107,8 +107,12 @@ export default function AdminProduct() {
 							<MenuItem onClick={() => nav("/admin/product/addproduct")}>
 								Add Product
 							</MenuItem>
-							<MenuItem>Add Category</MenuItem>
-							<MenuItem>Add Warehouse</MenuItem>
+							<MenuItem onClick={() => nav("/admin/product/addcategory")}>
+								Add Category
+							</MenuItem>
+							<MenuItem onClick={() => nav("/admin/product/addwarehouse")}>
+								Add Warehouse
+							</MenuItem>
 							<MenuDivider />
 							<MenuItem color={"red"}>Delete Category</MenuItem>
 							<MenuItem color={"red"}>Delete Warehouse</MenuItem>

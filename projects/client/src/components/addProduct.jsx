@@ -9,6 +9,7 @@ import {
 	Text,
 	Image,
 	Box,
+	useToast,
 } from "@chakra-ui/react";
 import { HiOutlineUpload } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
@@ -17,8 +18,106 @@ import { useFormik } from "formik";
 import { api } from "../api/api";
 
 export default function AddProduct() {
-	const nav = useNavigate();
+	const [category, setCategory] = useState([]);
+	const [selectedFile, setSelectedFile] = useState(null);
+	const [img, setImg] = useState();
 	const inputFileRef = useRef(null);
+	const toast = useToast();
+	const nav = useNavigate();
+
+	useEffect(() => {
+		getCategory();
+	}, []);
+
+	async function getCategory() {
+		await api.get("/category").then((res) => {
+			setCategory(res.data);
+		});
+	}
+
+	const formik = useFormik({
+		initialValues: {
+			product_name: "",
+			product_detail: "",
+			price: "",
+			weight: "",
+			category_id: "",
+			filename: "",
+		},
+		onSubmit: async () => {
+			const {
+				product_name,
+				product_detail,
+				price,
+				weight,
+				category_id,
+				filename,
+			} = formik.values;
+			const product = new FormData();
+			product.append("product_name", product_name);
+			product.append("product_detail", product_detail);
+			product.append("price", price);
+			product.append("weight", weight);
+			product.append("category_id", category_id);
+			product.append("productImg", filename);
+
+			await api.post("/product", product).then((res) => {
+				toast({
+					title: `Add Product Success`,
+					status: "success",
+					duration: 3000,
+				});
+				nav("/admin/product");
+			});
+		},
+	});
+
+	async function inputHandler(event) {
+		const { value, id } = event.target;
+		formik.setFieldValue(id, value);
+	}
+
+	const handleFile = async (event) => {
+		const file = event.target.files[0];
+		formik.setFieldValue("filename", file);
+		setSelectedFile(file);
+
+		//buat ngemuncuin gambar----------
+		const reader = new FileReader();
+		reader.onload = () => {
+			setImg(reader.result);
+		};
+		reader.readAsDataURL(file);
+		//--------------------------------
+	};
+
+	const [isFormFilled, setIsFormFilled] = useState(false);
+
+	// Function to check if all required form fields are filled
+	const checkFormFilled = () => {
+		const {
+			product_name,
+			product_detail,
+			price,
+			weight,
+			category_id,
+			filename,
+		} = formik.values;
+
+		setIsFormFilled(
+			product_name.trim() !== "" &&
+				product_detail.trim() !== "" &&
+				price.trim() !== "" &&
+				weight.trim() !== "" &&
+				category_id.trim() !== "" &&
+				filename
+		);
+	};
+
+	// Call the checkFormFilled function whenever the form values change
+	useEffect(() => {
+		checkFormFilled();
+	}, [formik.values]);
 
 	return (
 		<Center>
@@ -33,23 +132,18 @@ export default function AddProduct() {
 				gap={"30px"}
 				fontWeight={500}
 			>
-				<Flex>Product Information</Flex>
+				<Flex fontWeight={600}>Product Information</Flex>
 				<Flex flexDir={"column"} gap={"20px"}>
-					<Flex alignItems={"center"}>
-						<Flex w={"180px"} marginRight={"170px"}>
-							Warehouse:
-						</Flex>
-						<Select placeholder="Choose your warehouse" w={"400px"}>
-							<option value="newest">Newest</option>
-							<option value="priceAsc">Lowest Price</option>
-							<option value="priceDesc">Highest Price</option>
-						</Select>
-					</Flex>
 					<Flex alignItems={"center"}>
 						<Flex w={"180px"} marginRight={"170px"}>
 							Product Name:
 						</Flex>
-						<Input placeholder="e.g. MMS Shirt" w={"400px"} />
+						<Input
+							placeholder="e.g. MMS Shirt"
+							w={"400px"}
+							id="product_name"
+							onChange={inputHandler}
+						/>
 					</Flex>
 					<Flex>
 						<Flex w={"180px"} marginRight={"170px"}>
@@ -58,23 +152,53 @@ export default function AddProduct() {
 						<Textarea
 							placeholder="e.g. A T-shirt with an impressive"
 							w={"400px"}
+							id="product_detail"
+							onChange={inputHandler}
+						/>
+					</Flex>
+
+					<Flex alignItems={"center"}>
+						<Flex w={"180px"} marginRight={"170px"}>
+							Price:
+						</Flex>
+						<Input
+							type="number"
+							placeholder="e.g. 500000"
+							w={"400px"}
+							id="price"
+							onChange={inputHandler}
+						/>
+					</Flex>
+					<Flex alignItems={"center"}>
+						<Flex w={"180px"} marginRight={"170px"}>
+							Weight:
+						</Flex>
+						<Input
+							type="number"
+							placeholder="e.g. 100 "
+							w={"400px"}
+							id="weight"
+							onChange={inputHandler}
 						/>
 					</Flex>
 					<Flex alignItems={"center"}>
 						<Flex w={"180px"} marginRight={"170px"}>
 							Product Category:
 						</Flex>
-						<Select placeholder="Choose category" w={"400px"}>
-							<option value="newest">Newest</option>
-							<option value="priceAsc">Lowest Price</option>
-							<option value="priceDesc">Highest Price</option>
+						<Select
+							placeholder="Choose category"
+							w={"400px"}
+							id="category_id"
+							onChange={inputHandler}
+						>
+							{category.length
+								? category.map((val) => (
+										<option key={val.id} value={val.id}>
+											{val.category_name}
+										</option>
+								  ))
+								: null}
 						</Select>
-					</Flex>
-					<Flex alignItems={"center"}>
-						<Flex w={"180px"} marginRight={"170px"}>
-							Price:
-						</Flex>
-						<Input placeholder="e.g. MMS Shirt" w={"400px"} />
 					</Flex>
 					<Flex alignItems={"center"}>
 						<Flex flexDir={"column"} marginRight={"170px"}>
@@ -125,12 +249,6 @@ export default function AddProduct() {
 							</Text>
 						</Box>
 					</Flex>
-					<Flex alignItems={"center"}>
-						<Flex w={"180px"} marginRight={"170px"}>
-							Stock:
-						</Flex>
-						<Input type="number" placeholder="e.g. 50 " w={"400px"} />
-					</Flex>
 				</Flex>
 				<Flex justifyContent={"flex-end"}>
 					<Flex gap={"8px"}>
@@ -149,6 +267,8 @@ export default function AddProduct() {
 							color={"white"}
 							bgColor={"#369A64"}
 							_hover={{ bgColor: "#358A54" }}
+							onClick={formik.handleSubmit}
+							isDisabled={!isFormFilled}
 						>
 							Add Product
 						</Button>
