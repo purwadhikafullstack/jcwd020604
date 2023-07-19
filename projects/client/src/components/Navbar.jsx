@@ -1,71 +1,122 @@
+import React from 'react';
 import {
-    Button,
-    Flex,
-    Heading,
-    Image,
-    Stack,
-    Text,
-    useBreakpointValue,
-  } from '@chakra-ui/react';
-  import {Link} from "react-router-dom";
-  
-  export default function Navbar() {
-    return (
-      <Stack minH={'100vh'} direction={{ base: 'column', md: 'row' }}>
-        <Flex p={8} flex={1} align={'center'} justify={'center'}>
-          <Stack spacing={6} w={'full'} maxW={'lg'}>
-            <Heading fontSize={{ base: '3xl', md: '4xl', lg: '5xl' }}>
-              <Text
-                as={'span'}
-                position={'relative'}
-                _after={{
-                  content: "''",
-                  width: 'full',
-                  height: useBreakpointValue({ base: '20%', md: '30%' }),
-                  position: 'absolute',
-                  bottom: 1,
-                  left: 0,
-                  bg: 'blue.400',
-                  zIndex: -1,
-                }}>
-                MMS
-              </Text>
-              <br />{' '}
-              <Text color={'blue.400'} as={'span'}>
-                ECOMMERCE WAREHOUSE
-              </Text>{' '}
-            </Heading>
-            <Text fontSize={{ base: 'md', lg: 'lg' }} color={'gray.500'}>
-              The project board is an exclusive resource for contract work. It's
-              perfect for freelancers, agencies, and moonlighters.
-            </Text>
-            <Stack direction={{ base: 'column', md: 'row' }} spacing={4}>
-              <Link to={"/login"}>
-              <Button
-                rounded={'full'}
-                bg={'blue.400'}
-                color={'white'}
-                _hover={{
-                  bg: 'blue.500',
-                }}>
-                Sign In
-              </Button>
-              </Link>
-              <Link to={'/register'}>
-                <Button rounded={'full'}>Sign Up</Button>
-              </Link>
-            </Stack>
-          </Stack>
-        </Flex>
-        <Flex flex={1}>
-          <Image
-            alt={'Login Image'}
-            objectFit={'cover'}
-            src={
-              'https://images.unsplash.com/photo-1527689368864-3a821dbccc34?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80'
-            }
+  Box,
+  Flex,
+  Avatar,
+  HStack,
+  IconButton,
+  Image,
+  Button,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
+  MenuDivider,
+  useDisclosure,
+  useColorModeValue,
+  Stack,
+  Text,
+  useToast
+} from '@chakra-ui/react';
+import {FiLogOut, FiLogIn} from "react-icons/fi";
+import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { LogOut, reset} from '../redux/authSlice';
+import Logo from "../assets/Logo.png";
+
+export default function Navbar() {
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const {user} = useSelector((state) => state.auth);
+  const toast = useToast();
+
+  const logout = () => {
+    dispatch(LogOut());
+    dispatch(reset());
+    toast({
+      title:"Anda berhasil logout",
+      status:'success',
+      position:'top-right',
+      duration: 3000,
+      isClosable: false
+    });
+    navigate("/login");
+  };
+
+  return (
+    <>
+      <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
+        <Flex h={16} alignItems={'center'} justifyContent={'space-between'}>
+          <IconButton
+            size={'md'}
+            icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
+            aria-label={'Open Menu'}
+            display={{ md: 'none' }}
+            onClick={isOpen ? onClose : onOpen}
           />
+          <HStack spacing={8} alignItems={'center'}>
+            <Box>
+              <Image
+              src={Logo}
+              minW={'50px'}
+              w={'20px'}>
+              </Image>
+            </Box>
+            <HStack
+              as={'nav'}
+              spacing={4}
+              display={{ base: 'none', md: 'flex' }}>
+                <Flex><Link to={'/'}>Dashboard</Link></Flex>
+                <Flex><Link to={'/products'}>Products</Link></Flex>
+                  {user && user.role === "ADMIN" && (
+                    <Flex><Link to={'/users'}></Link>Users</Flex>
+                  )};
+            </HStack>
+          </HStack>
+          <Flex alignItems={'center'}>
+            <Menu>
+              <Text mr={2}>Welcome <Text as={'b'}>{user && user.fullname}</Text></Text>
+              <MenuButton
+                as={Button}
+                rounded={'full'}
+                variant={'link'}
+                cursor={'pointer'}
+                minW={0}>
+                <Avatar
+                  size={'sm'}
+                  src={
+                    'https://images.unsplash.com/photo-1493666438817-866a91353ca9?ixlib=rb-0.3.5&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&s=b616b2c5b373a80ffc9636ba24f7a4a9'
+                  }
+                />
+              </MenuButton>
+              <MenuList>
+                <MenuItem>
+                <Button size={'sm'} variant={'ghost'} leftIcon={<FiLogIn/>}>Login</Button></MenuItem>
+                <MenuDivider />
+                <MenuItem>
+                <Button onClick={logout} size={'sm'} variant={'ghost'} leftIcon={<FiLogOut/>}>Logout</Button>
+                </MenuItem>
+              </MenuList>
+            </Menu>
+          </Flex>
         </Flex>
-      </Stack>
-    );
-  }
+
+        {isOpen ? (
+          <Box pb={4} display={{ md: 'none' }}>
+            <Stack as={'nav'} spacing={4}>
+              <Text>Dashboard</Text>
+              <Text><Link to={'/products'}>Products</Link></Text>
+              {user && user.role === "ADMIN" && (
+                <Flex><Link to={'/users'}></Link>Users</Flex>
+              )};
+            </Stack>
+          </Box>
+        ) : null}
+      </Box>
+
+      <Box p={4}>Main Content Here</Box>
+    </>
+  );
+}

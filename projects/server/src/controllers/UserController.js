@@ -38,7 +38,7 @@ const userController = {
         });
         mailer({
           subject: "email verification link",
-          to: "6ehrevmjr9@gixenmixen.com",
+          to: email,
           text: registerTemplate,
         });
 
