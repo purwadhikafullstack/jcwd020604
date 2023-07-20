@@ -25,8 +25,6 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	const [warehouse, setWarehouse] = useState({
 		warehouse_name: "",
 	});
-	console.log(province.rajaongkir);
-	// console.log(city);
 
 	useEffect(() => {
 		getAllProvince();
