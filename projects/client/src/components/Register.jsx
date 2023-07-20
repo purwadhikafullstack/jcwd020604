@@ -10,12 +10,10 @@ import {
     Text,
     useColorModeValue,
     FormErrorMessage,
-    useToast,
-    Spacer,
-    Divider
+    useToast
   } from '@chakra-ui/react';
 import { Link } from "react-router-dom";
-import axios from "axios";
+import { api } from '../api/api';
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
@@ -44,7 +42,7 @@ import { useNavigate } from "react-router-dom";
 
     const register = async (values) => {
       try {
-        await axios.post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, values);
+        await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, values);
         toast({
           title: "Periksa email verifikasi anda",
           status: "success",

@@ -10,6 +10,8 @@ import {
   Button,
   Menu,
   MenuButton,
+  MenuList,
+  MenuItem,
   useDisclosure,
   useColorModeValue,
   Stack,
@@ -21,7 +23,7 @@ import {
 import {FiLogOut, FiLogIn, FiShoppingCart, FiSearch} from "react-icons/fi";
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom'
 import Logo from "../assets/Logo.png";
 
 export default function Navbar() {
@@ -73,11 +75,8 @@ export default function Navbar() {
               {user.role === "ADMIN" ? (
               <>
                 <Flex><Link to={'/'}>Dashboard</Link></Flex>
-                <Flex><Link to={'/#'}>Tops</Link></Flex>
-                <Flex><Link to={'/#'}>Bottoms</Link></Flex>
-                <Flex><Link to={'/#'}>Outerwares</Link></Flex>
-                <Flex><Link to={'/#'}>Accerories</Link></Flex>
-                <Flex><Link to={'/#'}>Users</Link></Flex>
+                <Flex><Link to={'/#'}>Products</Link></Flex>
+                <Flex cursor={'pointer'} onClick={()=>navigate("/user_list")}>Users</Flex>
               </>) : (
               <>
                 <Flex><Link to={'/#'}>Tops</Link></Flex>
@@ -114,6 +113,13 @@ export default function Navbar() {
                   }
                 />
               </MenuButton>
+              <MenuList>
+                {user.role === "ADMIN" ? (
+                <><MenuItem onClick={()=>navigate("/admin_profile")}>Manage Profile</MenuItem></>
+                ) : (
+                <><MenuItem onClick={()=>navigate("/user_profile")}>Manage Profile</MenuItem></>)}
+              
+              </MenuList>
               <Link to={'/'}><Button onClick={logout} size={'sm'} variant={'ghost'} leftIcon={<FiLogOut/>} _hover={{color:'red'}}>Logout</Button></Link>
              </>) : (<> <Link to={'/login'}>
               <Button size={'sm'} variant={'ghost'} leftIcon={<FiLogIn/>}>Login</Button>
@@ -134,11 +140,8 @@ export default function Navbar() {
                   <Input type='tel' placeholder='Search . . .' />
                 </InputGroup>
                 <Flex><Link to={'/'}>Dashboard</Link></Flex>
-                <Flex><Link to={'/#'}>Tops</Link></Flex>
-                <Flex><Link to={'/#'}>Bottoms</Link></Flex>
-                <Flex><Link to={'/#'}>Outerwares</Link></Flex>
-                <Flex><Link to={'/#'}>Accerories</Link></Flex>
-                <Flex><Link to={'/#'}>Users</Link></Flex>
+                <Flex><Link to={'/#'}>Products</Link></Flex>
+                <Flex cursor={'pointer'} onClick={()=>navigate("/user_list")}>Users</Flex>
               </>) : (
               <>
                 <InputGroup>

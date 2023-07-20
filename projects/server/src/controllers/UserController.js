@@ -8,6 +8,45 @@ const handlebars = require("handlebars");
 const { where } = require("sequelize");
 
 const userController = {
+  getAll: async (req, res) => {
+		try {
+			const user = await db.users.findAll();
+			return res.send(user);
+		} catch (err) {
+			console.log(err.message);
+			res.status(500).send({
+				message: err.message,
+			});
+		}
+	},
+
+  getUsersById: async(req, res) => {
+    try {
+        const response = await db.users.findOne({
+            where:{
+                uuid: req.params.id
+            }
+        });
+        res.status(200).json(response);
+    } catch (error) {
+        console.log(error.message);
+    }
+  },
+
+  createUser: async (req, res) => {
+		try {
+      const {fullname, email, password, role} = req.body;
+      const hashPassword = await bcrypt.hash(password, 10);
+			const addUser = await db.users.create({ fullname, email, password: hashPassword, verified: 1, role: role });
+			return res.send(addUser);
+		} catch (err) {
+			console.log(err.message);
+			res.status(500).send({
+				message: err.message,
+			});
+		}
+	},
+
   register: async (req, res) => {
     try {
       const { email } = req.body;

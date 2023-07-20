@@ -16,7 +16,7 @@ import {
   } from '@chakra-ui/react';
 import { useState } from 'react';
 import { Link , useNavigate} from "react-router-dom";
-import axios from "axios";
+import { api } from '../api/api';
 import { useDispatch } from "react-redux";
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
   
@@ -44,21 +44,18 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
               title: "Isi data dengan benar",
               status: "warning",
               position: "top",
-              duration: 1000,
-              isClosable: true,
+              duration: 3000,
+              isClosable: false,
             });
           } else {
-            await axios
+            await api
               .post(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, user)
               .then((res) => {
                 localStorage.setItem("auth", JSON.stringify(res.data.token));
                 token = res.data.token;
-              })
-              .catch((err) =>
-                console.log(err.response.data),
-                );
-    console.log(token);
-            await axios
+              });
+            console.log(token);
+            await api
               .get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
                 headers: {
                   Authorization: `Bearer ${token}`,
@@ -70,6 +67,13 @@ import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
                   type: "login",
                   payload: res.data,
                 });
+                toast({
+                  title: "Selamat datang",
+                  status: "success",
+                  position: "top",
+                  duration: 3000,
+                  isClosable: false,
+                })
                 nav("/");
               });
           }

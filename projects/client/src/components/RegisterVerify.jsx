@@ -9,9 +9,7 @@ import {
   InputGroup,
   InputLeftElement,
   VStack,
-  Text,
   useToast,
-  Center,
   InputRightElement,
 } from "@chakra-ui/react";
 import {
@@ -19,7 +17,7 @@ import {
   FaLock,
 } from "react-icons/fa";
 import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-import axios from "axios";
+import { api } from '../api/api';
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
@@ -70,7 +68,7 @@ export default function Verify() {
   async function verif(values) {
     const { password, fullname } = values;
     try {
-      await axios.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify`, {
+      await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify`, {
         email,
         password,
         fullname,
