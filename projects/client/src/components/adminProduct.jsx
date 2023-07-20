@@ -7,15 +7,13 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	Image,
 	Menu,
 	MenuButton,
 	MenuList,
 	MenuItem,
 	ButtonGroup,
-	MenuDivider,
 } from "@chakra-ui/react";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { DeleteIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
@@ -94,30 +92,54 @@ export default function AdminProduct() {
 				flexDir={"column"}
 			>
 				<Flex flexDir={"column"}>
-					<Menu>
-						<MenuButton
-							as={Button}
-							w={"150px"}
-							marginBottom={"15px"}
-							rightIcon={<ChevronDownIcon />}
-						>
-							Manage Data
-						</MenuButton>
-						<MenuList>
-							<MenuItem onClick={() => nav("/admin/product/addproduct")}>
-								Add Product
-							</MenuItem>
-							<MenuItem onClick={() => nav("/admin/product/addcategory")}>
-								Add Category
-							</MenuItem>
-							<MenuItem onClick={() => nav("/admin/product/addwarehouse")}>
-								Add Warehouse
-							</MenuItem>
-							<MenuDivider />
-							<MenuItem color={"red"}>Delete Category</MenuItem>
-							<MenuItem color={"red"}>Delete Warehouse</MenuItem>
-						</MenuList>
-					</Menu>
+					<Flex fontWeight={600}>Manage Data</Flex>
+					<Flex gap={"10px"}>
+						<Menu>
+							<MenuButton
+								as={Button}
+								paddingLeft={"9px"}
+								marginBottom={"15px"}
+								rightIcon={<AddIcon />}
+							></MenuButton>
+							<MenuList>
+								<MenuItem onClick={() => nav("/admin/product/addproduct")}>
+									Add Product
+								</MenuItem>
+								<MenuItem onClick={() => nav("/admin/product/addcategory")}>
+									Add Category
+								</MenuItem>
+								<MenuItem onClick={() => nav("/admin/product/addwarehouse")}>
+									Add Warehouse
+								</MenuItem>
+							</MenuList>
+						</Menu>
+						<Menu>
+							<MenuButton
+								as={Button}
+								paddingLeft={"9px"}
+								marginBottom={"15px"}
+								rightIcon={<EditIcon />}
+							></MenuButton>
+							<MenuList>
+								<MenuItem>Edit Category</MenuItem>
+								<MenuItem>Edit Warehouse</MenuItem>
+							</MenuList>
+						</Menu>
+						<Menu>
+							<MenuButton
+								as={Button}
+								bgColor={"red"}
+								color={"white"}
+								paddingLeft={"9px"}
+								marginBottom={"15px"}
+								rightIcon={<DeleteIcon />}
+							></MenuButton>
+							<MenuList>
+								<MenuItem color={"red"}>Delete Category</MenuItem>
+								<MenuItem color={"red"}>Delete Warehouse</MenuItem>
+							</MenuList>
+						</Menu>
+					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
 						<Select placeholder="All Warehouses">
 							{warehouse.length

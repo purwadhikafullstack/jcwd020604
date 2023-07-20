@@ -1,64 +1,48 @@
 import {
 	Center,
 	Flex,
-	Select,
-	Icon,
 	Button,
 	Input,
-	Textarea,
-	Text,
-	Image,
-	Box,
 	useToast,
+	useDisclosure,
 } from "@chakra-ui/react";
-import { HiOutlineUpload } from "react-icons/hi";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
-import { useFormik } from "formik";
+import { useState } from "react";
 import { api } from "../api/api";
 
 export default function AddCategory() {
 	const toast = useToast();
 	const nav = useNavigate();
+	const [category, setCategory] = useState({
+		category_name: "",
+	});
 
-	const formik = useFormik({
-		initialValues: {
-			category_name: "",
-		},
-		onSubmit: async () => {
-			const { category_name } = formik.values;
-			const category = new FormData();
-			category.append("category_name", category_name);
-
-			await api.post("/category", category).then((res) => {
+	const onSubmit = async () => {
+		await api
+			.post("/category", category)
+			.then((res) => {
 				toast({
 					title: `Add Category Success`,
 					status: "success",
 					duration: 3000,
 				});
 				nav("/admin/product");
+			})
+			.catch((err) => {
+				toast({
+					title: err.response.data.message,
+					status: "error",
+					duration: 3000,
+				});
 			});
-		},
-	});
-
-	async function inputHandler(event) {
-		const { value, id } = event.target;
-		formik.setFieldValue(id, value);
-	}
-
-	const [isFormFilled, setIsFormFilled] = useState(false);
-
-	// Function to check if all required form fields are filled
-	const checkFormFilled = () => {
-		const { category_name } = formik.values;
-
-		setIsFormFilled(category_name.trim() !== "");
 	};
 
-	// Call the checkFormFilled function whenever the form values change
-	useEffect(() => {
-		checkFormFilled();
-	}, [formik.values]);
+	async function inputHandler(e) {
+		const { id, value } = e.target;
+		const temp = { ...category };
+		temp[id] = value;
+		setCategory(temp);
+	}
 
 	return (
 		<Center>
@@ -104,8 +88,8 @@ export default function AddCategory() {
 							color={"white"}
 							bgColor={"#369A64"}
 							_hover={{ bgColor: "#358A54" }}
-							onClick={formik.handleSubmit}
-							isDisabled={!isFormFilled}
+							onClick={onSubmit}
+							isDisabled={!category.category_name ? true : false}
 						>
 							Add Product
 						</Button>

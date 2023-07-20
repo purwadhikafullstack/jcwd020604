@@ -115,9 +115,7 @@ const productController = {
 			});
 
 			if (existingProduct) {
-				return res
-					.status(400)
-					.send({ message: "Product with the same name already exists" });
+				throw new Error("Product with the same name already exists");
 			}
 
 			const imageUrls = []; // Array to store the image URLs

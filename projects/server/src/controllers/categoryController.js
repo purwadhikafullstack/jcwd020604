@@ -47,7 +47,7 @@ const categoryController = {
 			});
 
 			if (existingCategory) {
-				return res.status(400).send({ message: "Category already exists." });
+				throw new Error("Category with the same name already exists");
 			}
 
 			// Create a new category
