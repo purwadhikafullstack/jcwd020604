@@ -23,6 +23,7 @@ import { api } from "../api/api";
 import ProductList from "./productList";
 import AddCategoryModal from "./addCategoryModal";
 import AddProductModal from "./addProductModal";
+import AddWarehouseModal from "./addWarehouseModal";
 
 export default function AdminProduct() {
 	const nav = useNavigate();
@@ -44,6 +45,11 @@ export default function AdminProduct() {
 		isOpen: isAddCategoryModalOpen,
 		onOpen: onAddCategoryModalOpen,
 		onClose: onAddCategoryModalClose,
+	} = useDisclosure();
+	const {
+		isOpen: isAddWarehouseModalOpen,
+		onOpen: onAddWarehouseModalOpen,
+		onClose: onAddWarehouseModalClose,
 	} = useDisclosure();
 
 	useEffect(() => {
@@ -105,7 +111,9 @@ export default function AdminProduct() {
 				flexDir={"column"}
 			>
 				<Flex flexDir={"column"}>
-					<Flex fontWeight={600}>Manage Data</Flex>
+					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
+						Manage Data
+					</Flex>
 					<Flex gap={"10px"}>
 						<Menu>
 							<MenuButton
@@ -119,7 +127,7 @@ export default function AdminProduct() {
 								<MenuItem onClick={onAddCategoryModalOpen}>
 									Add Category
 								</MenuItem>
-								<MenuItem onClick={() => nav("/admin/product/addwarehouse")}>
+								<MenuItem onClick={onAddWarehouseModalOpen}>
 									Add Warehouse
 								</MenuItem>
 							</MenuList>
@@ -249,6 +257,12 @@ export default function AdminProduct() {
 				<AddCategoryModal
 					isOpen={isAddCategoryModalOpen}
 					onClose={onAddCategoryModalClose}
+					getCategory={getCategory}
+				/>
+				<AddWarehouseModal
+					isOpen={isAddWarehouseModalOpen}
+					onClose={onAddWarehouseModalClose}
+					getWarehouse={getWarehouse}
 				/>
 			</Flex>
 		</Center>

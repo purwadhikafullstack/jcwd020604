@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { api } from "../api/api";
 
-export default function AddCategoryModal({ isOpen, onClose }) {
+export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 	const toast = useToast();
 	const nav = useNavigate();
 	const [category, setCategory] = useState({
@@ -32,6 +32,8 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 					status: "success",
 					duration: 3000,
 				});
+				onClose();
+				getCategory();
 				nav("/admin/product");
 			})
 			.catch((err) => {

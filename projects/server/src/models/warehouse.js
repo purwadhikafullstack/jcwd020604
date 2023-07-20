@@ -7,8 +7,8 @@ module.exports = (sequelize, Sequelize) => {
 			province: Sequelize.STRING,
 			city: Sequelize.STRING,
 			district: Sequelize.STRING,
-			latitude: Sequelize.INTEGER,
-			longitude: Sequelize.INTEGER,
+			latitude: Sequelize.STRING,
+			longitude: Sequelize.STRING,
 		},
 		{
 			paranoid: true,

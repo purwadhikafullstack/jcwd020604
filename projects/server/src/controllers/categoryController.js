@@ -25,7 +25,7 @@ const categoryController = {
 			return res.status(500).send({ message: err.message });
 		}
 	},
-	insertCatategory: async (req, res) => {
+	insertCategory: async (req, res) => {
 		const { category_name } = req.body;
 		const t = await db.sequelize.transaction();
 
