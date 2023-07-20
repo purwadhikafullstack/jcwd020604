@@ -85,9 +85,7 @@ const warehouseController = {
 			});
 
 			if (existingWarehouse) {
-				return res
-					.status(409)
-					.send({ message: "Warehouse with this name already exists." });
+				throw new Error("Warehouse with this name already exists.");
 			}
 
 			const response = await axios.get(
