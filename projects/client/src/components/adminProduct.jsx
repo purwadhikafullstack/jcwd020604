@@ -12,6 +12,7 @@ import {
 	MenuList,
 	MenuItem,
 	ButtonGroup,
+	useDisclosure,
 } from "@chakra-ui/react";
 import { DeleteIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
 
@@ -20,6 +21,8 @@ import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import ProductList from "./productList";
+import AddCategoryModal from "./addCategoryModal";
+import AddProductModal from "./addProductModal";
 
 export default function AdminProduct() {
 	const nav = useNavigate();
@@ -32,6 +35,16 @@ export default function AdminProduct() {
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
+	const {
+		isOpen: isAddProductModalOpen,
+		onOpen: onAddProductModalOpen,
+		onClose: onAddProductModalClose,
+	} = useDisclosure();
+	const {
+		isOpen: isAddCategoryModalOpen,
+		onOpen: onAddCategoryModalOpen,
+		onClose: onAddCategoryModalClose,
+	} = useDisclosure();
 
 	useEffect(() => {
 		getCategory();
@@ -102,10 +115,8 @@ export default function AdminProduct() {
 								rightIcon={<AddIcon />}
 							></MenuButton>
 							<MenuList>
-								<MenuItem onClick={() => nav("/admin/product/addproduct")}>
-									Add Product
-								</MenuItem>
-								<MenuItem onClick={() => nav("/admin/product/addcategory")}>
+								<MenuItem onClick={onAddProductModalOpen}>Add Product</MenuItem>
+								<MenuItem onClick={onAddCategoryModalOpen}>
 									Add Category
 								</MenuItem>
 								<MenuItem onClick={() => nav("/admin/product/addwarehouse")}>
@@ -231,6 +242,14 @@ export default function AdminProduct() {
 						</Button>
 					)}
 				</ButtonGroup>
+				<AddProductModal
+					isOpen={isAddProductModalOpen}
+					onClose={onAddProductModalClose}
+				/>
+				<AddCategoryModal
+					isOpen={isAddCategoryModalOpen}
+					onClose={onAddCategoryModalClose}
+				/>
 			</Flex>
 		</Center>
 	);
