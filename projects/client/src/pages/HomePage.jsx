@@ -1,9 +1,9 @@
-import Test from "../components/test";
+import Navbar from "../components/Navbar";
 
 export default function HomePage() {
 	return (
 		<>
-			<Test />
+			<Navbar />
 		</>
 	);
 }
