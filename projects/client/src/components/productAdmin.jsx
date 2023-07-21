@@ -24,6 +24,7 @@ import ProductList from "./productList";
 import AddCategoryModal from "./addCategoryModal";
 import AddProductModal from "./addProductModal";
 import AddWarehouseModal from "./addWarehouseModal";
+import { color } from "framer-motion";
 
 export default function AdminProduct() {
 	const nav = useNavigate();

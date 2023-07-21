@@ -26,7 +26,7 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 	const onSubmit = async () => {
 		await api
 			.post("/category", category)
-			.then((res) => {
+			.then(() => {
 				toast({
 					title: `Add Category Success`,
 					status: "success",

@@ -35,9 +35,8 @@ const warehouseController = {
 					},
 				}
 			);
-			res.send(result.data);
+			res.send(result.data.rajaongkir.results);
 		} catch (err) {
-			console.log(err);
 			res.status(500).send({
 				message: err.message,
 			});
@@ -53,9 +52,8 @@ const warehouseController = {
 					},
 				}
 			);
-			res.send(result.data);
+			res.send(result.data.rajaongkir.results);
 		} catch (err) {
-			console.log(err);
 			res.status(500).send({
 				message: err.message,
 			});
@@ -70,13 +68,12 @@ const warehouseController = {
 			city: Joi.string().required(),
 			district: Joi.string().required(),
 		});
+		const { error, value } = warehouseSchema.validate(req.body);
+		if (error) {
+			return res.status(400).send({ message: error.details[0].message });
+		}
 
 		try {
-			const { error, value } = warehouseSchema.validate(req.body);
-			if (error) {
-				return res.status(400).send({ message: error.details[0].message });
-			}
-
 			const { warehouse_name, address, district, city, province } = value;
 
 			// Check if a warehouse with the same warehouse_name already exists
@@ -148,7 +145,7 @@ const warehouseController = {
 
 			if (existingWarehouse && existingWarehouse.id !== id) {
 				return res
-					.status(409)
+					.status(400)
 					.send({ message: "Warehouse name already exists." });
 			}
 

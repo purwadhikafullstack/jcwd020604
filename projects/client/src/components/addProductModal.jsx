@@ -20,7 +20,6 @@ import { api } from "../api/api";
 
 export default function AddCategoryModal({ isOpen, onClose }) {
 	const [category, setCategory] = useState([]);
-	const [productImages, setProductImages] = useState([]);
 	const toast = useToast();
 
 	useEffect(() => {
@@ -50,7 +49,7 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 					<FormControl>
 						<FormLabel>Product Name:</FormLabel>
 						<Input
-							placeholder="e.g. MMS Shirt"
+							placeholder="e.g. MMS T-shirt"
 							id="product_name"
 							onChange={inputHandler}
 						/>

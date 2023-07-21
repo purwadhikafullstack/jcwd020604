@@ -16,15 +16,14 @@ import {
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
-export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
+export default function AddWarehouseModal({ isOpen, onClose }) {
 	const toast = useToast();
 	const nav = useNavigate();
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
-	const [warehouse, setWarehouse] = useState({
-		warehouse_name: "",
-	});
 
 	useEffect(() => {
 		getAllProvince();
@@ -33,6 +32,46 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	useEffect(() => {
 		getAllCity();
 	}, []);
+
+	const formik = useFormik({
+		initialValues: {
+			warehouse_name: "",
+			address: "",
+			province: "",
+			city: "",
+			district: "",
+		},
+		// validationSchema: Yup.object().shape({
+		// 	warehouse_name: Yup.string().required(),
+		// 	address: Yup.string().required(),
+		// 	province: Yup.string().required(),
+		// 	city: Yup.string().required(),
+		// 	district: Yup.string().required(),
+		// }),
+		onSubmit: async () => {
+			const { warehouse_name, address, province, city, district } =
+				formik.values;
+			const warehouse = { warehouse_name, address, province, city, district };
+			await api
+				.post("/warehouse", warehouse)
+				.then(() => {
+					toast({
+						title: `Add Warehouse Success`,
+						status: "success",
+						duration: 3000,
+					});
+					onClose();
+					nav("/admin/product");
+				})
+				.catch((err) => {
+					toast({
+						title: err.response.data.message,
+						status: "error",
+						duration: 3000,
+					});
+				});
+		},
+	});
 
 	async function getAllProvince() {
 		await api.get("/warehouse/getAll/province").then((res) => {
@@ -45,46 +84,16 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 		});
 	}
 
-	const onSubmit = async () => {
-		await api
-			.post("/warehouse", warehouse)
-			.then((res) => {
-				toast({
-					title: `Add Warehouse Success`,
-					status: "success",
-					duration: 3000,
-				});
-				onClose();
-				getWarehouse();
-				nav("/admin/product");
-			})
-			.catch((err) => {
-				toast({
-					title: err.response.data.message,
-					status: "error",
-					duration: 3000,
-				});
-			});
-	};
-
-	async function inputHandler(e) {
-		const { id, value } = e.target;
-		const temp = { ...warehouse };
-		temp[id] = value;
-		setWarehouse(temp);
+	async function inputHandler(event) {
+		const { value, id } = event.target;
+		console.log({ id, value });
+		formik.setFieldValue(id, value);
 	}
-
-	const resetWarehouse = () => {
-		setWarehouse({
-			warehouse_name: "",
-		});
-	};
 
 	return (
 		<Modal
 			isOpen={isOpen}
 			onClose={() => {
-				resetWarehouse();
 				onClose();
 			}}
 		>
@@ -117,7 +126,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 							{city.length
 								? city.map((val) => (
 										<option key={val.id} value={val.id}>
-											{val.city}
+											{val.city_name}
 										</option>
 								  ))
 								: null}
@@ -140,12 +149,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 				</ModalBody>
 
 				<ModalFooter>
-					<Button
-						onClick={onSubmit}
-						isDisabled={!warehouse.warehouse_name ? true : false}
-						colorScheme="blue"
-						mr={3}
-					>
+					<Button onClick={formik.handleSubmit} colorScheme="blue" mr={3}>
 						Add Warehouse
 					</Button>
 				</ModalFooter>
