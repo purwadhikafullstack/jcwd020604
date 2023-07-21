@@ -12,14 +12,11 @@ import {
     Button, 
     useToast, 
     HStack, 
-    InputGroup, 
-    InputRightElement 
+    InputGroup
 } 
 from '@chakra-ui/react';
-import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 
 const AddUser = () => {
-    const [showPassword, setShowPassword] = useState(false);
     const [fullname, setFullName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -31,7 +28,7 @@ const AddUser = () => {
     const saveUser = async (e) => {
         e.preventDefault();
         try {
-            await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/users`, {
+            await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/users/v1`, {
                 fullname, email, password, role
             });
             toast({
@@ -40,7 +37,7 @@ const AddUser = () => {
                 duration:3000,
                 isClosable:false
             });
-            navigate("/");
+            navigate("/user_list");
         } catch (error) {
             toast({
                 title:"There is error when input user",
@@ -67,21 +64,13 @@ const AddUser = () => {
                 <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
-                  <Input type={showPassword ? 'text' : 'password'} placeholder='Password' id='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
-                  <InputRightElement h={'full'}>
-                    <Button
-                      variant={'ghost'}
-                      onClick={() =>
-                        setShowPassword((showPassword) => !showPassword)
-                      }>
-                      {showPassword ? <ViewIcon /> : <ViewOffIcon />}
-                    </Button>
-                  </InputRightElement>
+                  <Input type='password' placeholder='Password' id='password'
+                   value={password} onChange={(e) => setPassword(e.target.value)}/>
                 </InputGroup>
               </FormControl>
                 <FormControl isRequired>
-                    <FormLabel>Gender</FormLabel>
-                    <Select placeholder='Select Gender' value={role} onChange={(e) => setRole(e.target.value)}>
+                    <FormLabel>Role</FormLabel>
+                    <Select placeholder='Select Role' value={role} onChange={(e) => setRole(e.target.value)}>
                         <option value={'W_ADMIN'}>Warehouse Admin</option>
                         <option value={'USER'}>User</option>
                     </Select>

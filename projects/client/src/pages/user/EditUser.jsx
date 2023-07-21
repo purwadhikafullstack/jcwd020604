@@ -5,12 +5,12 @@ import { Box,FormControl, FormLabel, Input, FormHelperText, Container, Select, B
 
 const EditUser = () => {
     const [fullname, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [role, setRole] = useState('W_ADMIN');
+    // const [email, setEmail] = useState('');
+    // const [role, setRole] = useState('W_ADMIN');
     
     const navigate = useNavigate();
     const toast = useToast();
-    const {id} = useParams();
+    const {uuid} = useParams();
 
     useEffect(() => {
         getUserById();
@@ -19,8 +19,8 @@ const EditUser = () => {
     const updateUser = async (e) => {
         e.preventDefault();
         try {
-            await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`, {
-                fullname, email, role
+            await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/v2/${uuid}`, {
+                fullname
             });
             toast({
                 title:"User has been updated",
@@ -43,10 +43,10 @@ const EditUser = () => {
     };
 
     const getUserById = async () => {
-        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`);
+        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${uuid}`);
         setFullName(response.data.fullname);
-        setEmail(response.data.email);
-        setRole(response.data.role);
+        // setEmail(response.data.email);
+        // setRole(response.data.role);
     }
 
     return (
@@ -56,7 +56,7 @@ const EditUser = () => {
                     <FormLabel>Name</FormLabel>
                     <Input type='text' value={fullname} onChange={(e) => setFullName(e.target.value)} />
                 </FormControl>
-                <FormControl isRequired>
+                {/* <FormControl isRequired>
                     <FormLabel>Email address</FormLabel>
                     <Input type='email' value={email} onChange={(e) => setEmail(e.target.value)}/>
                     <FormHelperText>We'll never share your email.</FormHelperText>
@@ -67,10 +67,10 @@ const EditUser = () => {
                         <option value={'W_ADMIN'}>Warehouse Admin</option>
                         <option value={'USER'}>User</option>
                     </Select>
-                </FormControl>
+                </FormControl> */}
                 <Box mt={2}>
                     <HStack>
-                        <Button size={'sm'} w={'20%'} type='submit' colorScheme='twitter'>Update</Button>
+                        <Button size={'sm'} w={'20%'} type='submit' colorScheme='twitter' onClick={() => navigate("/user_list")}>Update</Button>
                         <Button size={'sm'} w={'20%'} colorScheme={'orange'} onClick={() => navigate("/user_list")}>Cancel</Button>
                     </HStack>
                 </Box>

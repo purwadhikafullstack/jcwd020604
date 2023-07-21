@@ -37,8 +37,14 @@ const userController = {
 		try {
       const {fullname, email, password, role} = req.body;
       const hashPassword = await bcrypt.hash(password, 10);
-			const addUser = await db.users.create({ fullname, email, password: hashPassword, verified: 1, role: role });
-			return res.send(addUser);
+		  await db.users.create({ 
+        fullname, 
+        email, 
+        password: hashPassword, 
+        verified: 1, 
+        role
+      });
+      res.status(201).json({msg:"User has been created"});
 		} catch (err) {
 			console.log(err.message);
 			res.status(500).send({
@@ -46,6 +52,41 @@ const userController = {
 			});
 		}
 	},
+
+  editUser: async (req, res) => {
+    try {
+      const { fullname } = req.body;
+      await db.users.update(
+        {
+         fullname
+        },
+        {
+          where: {
+            uuid: req.params.id,
+          },
+        }
+      );
+      res.status(200).json({msg:"User has been updated"});
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  deleteUser: async(req, res) => {
+    try {
+        await db.users.destroy({
+            where:{
+                id: req.params.id
+            }
+        });
+        res.status(200).json({msg:"User has been deleted"});
+    } catch (error) {
+        console.log(error.message);
+    }
+  },
 
   register: async (req, res) => {
     try {

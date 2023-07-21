@@ -18,9 +18,10 @@ import {
   Text,
   useToast,
   InputRightElement,
-  InputGroup
+  InputGroup,
+  useColorMode
 } from '@chakra-ui/react';
-import {FiLogOut, FiLogIn, FiShoppingCart, FiSearch} from "react-icons/fi";
+import {FiLogOut, FiLogIn, FiShoppingCart, FiSearch, FiMoon, FiSun} from "react-icons/fi";
 import { HamburgerIcon, CloseIcon } from '@chakra-ui/icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom'
@@ -28,6 +29,7 @@ import Logo from "../assets/Logo.png";
 
 export default function Navbar() {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { colorMode, toggleColorMode } = useColorMode();
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -95,6 +97,13 @@ export default function Navbar() {
             </HStack>
           </HStack>
           <Flex alignItems={'center'}>
+          <IconButton
+              icon={colorMode === "light" ? <FiSun /> : <FiMoon />}
+              isRound={"true"}
+              size={'md'}
+              alignSelf={"flex-end"}
+              onClick={toggleColorMode}
+			    ></IconButton>
           <Box m={2} pr={4} cursor={'pointer'}>
             <FiShoppingCart/>
           </Box>
