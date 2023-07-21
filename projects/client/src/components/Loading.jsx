@@ -1,5 +1,5 @@
 import { Center, Image } from "@chakra-ui/react";
-import LoadingLogo from "../assets/loading.svg";
+import LoadingLogo from "../assets/Infinity.svg";
 
 export default function Loading(props) {
   return (
