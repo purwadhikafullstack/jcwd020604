@@ -41,20 +41,19 @@ export default function AddWarehouseModal({ isOpen, onClose }) {
 			city: "",
 			district: "",
 		},
-		// validationSchema: Yup.object().shape({
-		// 	warehouse_name: Yup.string().required(),
-		// 	address: Yup.string().required(),
-		// 	province: Yup.string().required(),
-		// 	city: Yup.string().required(),
-		// 	district: Yup.string().required(),
-		// }),
+		validationSchema: Yup.object().shape({
+			warehouse_name: Yup.string().required(),
+			address: Yup.string().required(),
+			province: Yup.string().required(),
+			city: Yup.string().required(),
+			district: Yup.string().required(),
+		}),
 		onSubmit: async () => {
-			const { warehouse_name, address, province, city, district } =
-				formik.values;
-			const warehouse = { warehouse_name, address, province, city, district };
-			await api
-				.post("/warehouse", warehouse)
-				.then(() => {
+			try {
+				const { warehouse_name, address, province, city, district } =
+					formik.values;
+				if (formik.isValid) {
+					const res = await api.post("/warehouse", formik.values);
 					toast({
 						title: `Add Warehouse Success`,
 						status: "success",
@@ -62,14 +61,14 @@ export default function AddWarehouseModal({ isOpen, onClose }) {
 					});
 					onClose();
 					nav("/admin/product");
-				})
-				.catch((err) => {
-					toast({
-						title: err.response.data.message,
-						status: "error",
-						duration: 3000,
-					});
+				}
+			} catch (err) {
+				toast({
+					title: err.response.data.message,
+					status: "error",
+					duration: 3000,
 				});
+			}
 		},
 	});
 
@@ -106,7 +105,7 @@ export default function AddWarehouseModal({ isOpen, onClose }) {
 						<FormLabel>Warehouse Name:</FormLabel>
 						<Input
 							placeholder="e.g. MMS Jogja"
-							id="category_name"
+							id="warehouse_name"
 							onChange={inputHandler}
 						/>
 						<FormLabel>Address:</FormLabel>
