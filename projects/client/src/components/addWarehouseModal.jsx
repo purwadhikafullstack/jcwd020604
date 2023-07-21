@@ -73,14 +73,21 @@ export default function AddWarehouseModal({ isOpen, onClose }) {
 	});
 
 	async function getAllProvince() {
-		await api.get("/warehouse/getAll/province").then((res) => {
+		try {
+			const res = await api.get("/warehouse/getAll/province");
 			setProvince(res.data);
-		});
+		} catch (error) {
+			console.log(error);
+		}
 	}
+
 	async function getAllCity() {
-		await api.get("/warehouse/getAll/city").then((res) => {
+		try {
+			const res = await api.get("/warehouse/getAll/city");
 			setCity(res.data);
-		});
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	async function inputHandler(event) {

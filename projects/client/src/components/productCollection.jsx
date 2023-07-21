@@ -38,27 +38,31 @@ export default function ProductCollection() {
 	}, [selectedCategory, sort, search, page]);
 
 	async function getAll() {
-		setLoading(true);
-		await api
-			.get("/product", {
+		try {
+			setLoading(true);
+			const res = await api.get("/product", {
 				params: {
 					category_id: selectedCategory,
 					sort: sort,
 					search: search,
 					page: page,
 				},
-			})
-			.then((res) => {
-				setProduct(res.data.rows);
-				setTotalPage(Math.ceil(res.data.count / 12));
-				setLoading(false);
 			});
+			setProduct(res.data.rows);
+			setTotalPage(Math.ceil(res.data.count / 12));
+			setLoading(false);
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	async function getCategory() {
-		await api.get("/category").then((res) => {
+		try {
+			const res = await api.get("/category");
 			setCategory(res.data);
-		});
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	const handleCategoryChange = (categoryId) => {

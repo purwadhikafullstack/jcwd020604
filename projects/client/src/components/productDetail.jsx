@@ -34,10 +34,13 @@ export default function ProductDetail() {
 	}, []);
 
 	async function getProductById() {
-		await api.get(`/product/${uuid}`).then((res) => {
+		try {
+			const res = await api.get(`/product/${uuid}`);
 			setProduct(res.data);
 			setStock(res.data.stocks[0]?.qty || 0);
-		});
+		} catch (error) {
+			console.log(error);
+		}
 	}
 
 	const handleIncrement = () => {
