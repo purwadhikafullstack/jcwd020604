@@ -19,7 +19,7 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddWarehouseModal({ isOpen, onClose }) {
+export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	const toast = useToast();
 	const nav = useNavigate();
 	const [city, setCity] = useState([]);
@@ -60,6 +60,7 @@ export default function AddWarehouseModal({ isOpen, onClose }) {
 						duration: 3000,
 					});
 					onClose();
+					getWarehouse();
 					nav("/admin/product");
 				}
 			} catch (err) {
@@ -73,26 +74,17 @@ export default function AddWarehouseModal({ isOpen, onClose }) {
 	});
 
 	async function getAllProvince() {
-		try {
-			const res = await api.get("/warehouse/getAll/province");
-			setProvince(res.data);
-		} catch (error) {
-			console.log(error);
-		}
+		const res = await api.get("/warehouse/getAll/province");
+		setProvince(res.data);
 	}
 
 	async function getAllCity() {
-		try {
-			const res = await api.get("/warehouse/getAll/city");
-			setCity(res.data);
-		} catch (error) {
-			console.log(error);
-		}
+		const res = await api.get("/warehouse/getAll/city");
+		setCity(res.data);
 	}
 
 	async function inputHandler(event) {
 		const { value, id } = event.target;
-		console.log({ id, value });
 		formik.setFieldValue(id, value);
 	}
 

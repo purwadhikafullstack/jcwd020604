@@ -26,21 +26,18 @@ export default function ProductDetail() {
 	const { uuid } = useParams();
 	const [value, setValue] = useState(1);
 	const [stock, setStock] = useState(0);
+	console.log(product);
 
 	const isSoldOut = stock === 0;
 
 	useEffect(() => {
-		getProductById();
+		getProductByUuid();
 	}, []);
 
-	async function getProductById() {
-		try {
-			const res = await api.get(`/product/${uuid}`);
-			setProduct(res.data);
-			setStock(res.data.stocks[0]?.qty || 0);
-		} catch (error) {
-			console.log(error);
-		}
+	async function getProductByUuid() {
+		const res = await api.get(`/product/${uuid}`);
+		setProduct(res.data);
+		setStock(res.data.stocks[0]?.qty || 0);
 	}
 
 	const handleIncrement = () => {

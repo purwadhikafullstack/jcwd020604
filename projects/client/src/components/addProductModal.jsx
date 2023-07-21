@@ -27,12 +27,8 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 	}, []);
 
 	async function getCategory() {
-		try {
-			const res = await api.get("/category");
-			setCategory(res.data);
-		} catch (error) {
-			console.log(error);
-		}
+		const res = await api.get("/category");
+		setCategory(res.data);
 	}
 
 	async function inputHandler(e) {

@@ -83,7 +83,7 @@ const productController = {
 			if (!product) {
 				return res.status(404).send({ message: "Product not found" });
 			}
-			return res.send(result);
+			return res.send(product);
 		} catch (err) {
 			res.status(500).send({ message: err.message });
 		}

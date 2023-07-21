@@ -83,21 +83,13 @@ export default function AdminProduct() {
 	}
 
 	async function getCategory() {
-		try {
-			const res = await api.get("/category");
-			setCategory(res.data);
-		} catch (error) {
-			console.log(error);
-		}
+		const res = await api.get("/category");
+		setCategory(res.data);
 	}
 
 	async function getWarehouse() {
-		try {
-			const res = await api.get("/warehouse");
-			setWarehouse(res.data);
-		} catch (error) {
-			console.log(error);
-		}
+		const res = await api.get("/warehouse");
+		setWarehouse(res.data);
 	}
 
 	const handlePageChange = (newPage) => {
