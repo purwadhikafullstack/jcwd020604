@@ -59,8 +59,7 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 		formik.setFieldValue(id, value);
 	}
 
-	const isAddButtonEnabled =
-		formik.dirty && formik.values.category_name.trim() !== "";
+	const isAddButtonEnabled = formik.dirty && formik.isValid;
 
 	const handleModalClose = () => {
 		formik.resetForm();

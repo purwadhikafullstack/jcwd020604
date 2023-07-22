@@ -13,66 +13,36 @@ import {
 	useToast,
 	Select,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 
-export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
+export default function EditWarehouseModal({ isOpen, onClose }) {
+	const [warehouse, setWarehouse] = useState([]);
+	const [selectedWarehouse, setSelectedWarehouse] = useState(null);
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
-	const toast = useToast();
-	const nav = useNavigate();
+	console.log(selectedWarehouse);
 
 	useEffect(() => {
+		getWarehouse();
 		getAllProvince();
-	}, []);
-
-	useEffect(() => {
 		getAllCity();
 	}, []);
+	useEffect(() => {
+		getWarehouseById();
+	}, [selectedWarehouse]);
 
-	const formik = useFormik({
-		initialValues: {
-			warehouse_name: "",
-			address: "",
-			province: "",
-			city: "",
-			district: "",
-		},
-		validationSchema: Yup.object().shape({
-			warehouse_name: Yup.string().required(),
-			address: Yup.string().required(),
-			province: Yup.string().required(),
-			city: Yup.string().required(),
-			district: Yup.string().required(),
-		}),
-		onSubmit: async () => {
-			try {
-				const { warehouse_name, address, province, city, district } =
-					formik.values;
-				if (formik.isValid) {
-					const res = await api.post("/warehouse", formik.values);
-					toast({
-						title: `Add Warehouse Success`,
-						description: "The warehouse has been added successfully.",
-						status: "success",
-						duration: 3000,
-					});
-					onClose();
-					getWarehouse();
-					nav("/admin/product");
-				}
-			} catch (error) {
-				toast({
-					title: error.response.data.message,
-					status: "error",
-					duration: 3000,
-				});
-			}
-		},
-	});
+	async function getWarehouseById() {
+		if (selectedWarehouse) {
+			const res = await api.get(`/warehouse/${selectedWarehouse}`);
+			setSelectedWarehouse(res.data);
+		}
+	}
+
+	async function getWarehouse() {
+		const res = await api.get("/warehouse");
+		setWarehouse(res.data);
+	}
 
 	async function getAllProvince() {
 		const res = await api.get("/warehouse/getAll/province");
@@ -85,14 +55,12 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	}
 
 	async function inputHandler(event) {
-		const { value, id } = event.target;
-		formik.setFieldValue(id, value);
+		const { value } = event.target;
+		setSelectedWarehouse(value); // Set the selected warehouse ID
 	}
 
-	const isAddButtonEnabled = formik.dirty && formik.isValid;
-
 	const handleModalClose = () => {
-		formik.resetForm();
+		// formik.resetForm();
 		onClose();
 	};
 
@@ -100,10 +68,20 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Add Warehouse</ModalHeader>
+				<ModalHeader>Edit Warehouse</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
+						<FormLabel>Select Warehouse:</FormLabel>
+						<Select onChange={inputHandler} placeholder="Choose Warehouse">
+							{warehouse.length
+								? warehouse.map((val) => (
+										<option key={val.id} value={val.id}>
+											{val.warehouse_name}
+										</option>
+								  ))
+								: null}
+						</Select>
 						<FormLabel>Warehouse Name:</FormLabel>
 						<Input
 							placeholder="e.g. MMS Jogja"
@@ -151,12 +129,11 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 
 				<ModalFooter>
 					<Button
-						onClick={formik.handleSubmit}
+						// onClick={formik.handleSubmit}
 						colorScheme="blue"
 						mr={3}
-						isDisabled={!isAddButtonEnabled}
 					>
-						Add Warehouse
+						Edit Warehouse
 					</Button>
 				</ModalFooter>
 			</ModalContent>

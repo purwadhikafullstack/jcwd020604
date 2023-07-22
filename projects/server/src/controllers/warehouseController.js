@@ -21,6 +21,7 @@ const warehouseController = {
 			if (!warehouse) {
 				return res.status(404).send({ message: "Warehouse not found" });
 			}
+			return res.send(warehouse);
 		} catch (err) {
 			return res.status(500).send({ message: err.message });
 		}

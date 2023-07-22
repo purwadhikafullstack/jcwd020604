@@ -8,7 +8,6 @@ const fileUploader = ({
 }) => {
 	const storageConfig = multer.diskStorage({
 		destination: (req, file, cb) => {
-			console.log("sadsadada");
 			cb(null, `${__dirname}/../public/${destinationFolder}`);
 		},
 
@@ -24,7 +23,6 @@ const fileUploader = ({
 		storage: storageConfig,
 
 		fileFilter: (req, file, cb) => {
-			console.log(file);
 			if (file.mimetype.split("/")[0] != fileType) {
 				return cb(null, false);
 			}
@@ -40,7 +38,6 @@ const upload = multer({
 		fileSize: 10000000, //byte
 	},
 	fileFilter: (req, file, cb) => {
-		console.log(file);
 		if (file.mimetype.split("/")[0] != "image") {
 			return cb(null, false);
 		}

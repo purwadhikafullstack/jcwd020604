@@ -26,6 +26,7 @@ import AddProductModal from "./addProductModal";
 import AddWarehouseModal from "./addWarehouseModal";
 import DeleteCategoryModal from "./deleteCategoryModal";
 import DeleteWarehouseModal from "./deleteWarehouseModal";
+import EditWarehouseModal from "./editWarehouseModal";
 
 export default function AdminProduct() {
 	const nav = useNavigate();
@@ -52,6 +53,11 @@ export default function AdminProduct() {
 		isOpen: isAddWarehouseModalOpen,
 		onOpen: onAddWarehouseModalOpen,
 		onClose: onAddWarehouseModalClose,
+	} = useDisclosure();
+	const {
+		isOpen: isEditWarehouseModalOpen,
+		onOpen: onEditWarehouseModalOpen,
+		onClose: onEditWarehouseModalClose,
 	} = useDisclosure();
 	const {
 		isOpen: isDeleteCategoryModalOpen,
@@ -152,7 +158,9 @@ export default function AdminProduct() {
 							></MenuButton>
 							<MenuList>
 								<MenuItem>Edit Category</MenuItem>
-								<MenuItem>Edit Warehouse</MenuItem>
+								<MenuItem onClick={onEditWarehouseModalOpen}>
+									Edit Warehouse
+								</MenuItem>
 							</MenuList>
 						</Menu>
 						<Menu>
@@ -277,6 +285,11 @@ export default function AdminProduct() {
 				<AddWarehouseModal
 					isOpen={isAddWarehouseModalOpen}
 					onClose={onAddWarehouseModalClose}
+					getWarehouse={getWarehouse}
+				/>
+				<EditWarehouseModal
+					isOpen={isEditWarehouseModalOpen}
+					onClose={onEditWarehouseModalClose}
 					getWarehouse={getWarehouse}
 				/>
 				<DeleteWarehouseModal

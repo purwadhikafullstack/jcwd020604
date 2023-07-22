@@ -44,7 +44,7 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 			price: "",
 			weight: "",
 			category_id: "",
-			productImg: [],
+			productImages: [], // To store the selected image files
 		},
 		validationSchema: Yup.object().shape({
 			product_name: Yup.string().required(),
@@ -55,8 +55,14 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 		}),
 		onSubmit: async () => {
 			try {
-				const { product_name, product_detail, price, weight, category_id } =
-					formik.values;
+				const {
+					product_name,
+					product_detail,
+					price,
+					weight,
+					category_id,
+					productImages,
+				} = formik.values;
 				if (formik.isValid) {
 					const res = await api.post("/product", formik.values);
 					toast({
@@ -99,15 +105,11 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 	}
 
 	const isAddButtonEnabled =
-		formik.dirty &&
-		formik.values.product_name.trim() !== "" &&
-		formik.values.product_detail.trim() !== "" &&
-		(formik.values.price !== "" || 0) &&
-		(formik.values.weight !== "" || 0) &&
-		(formik.values.category_id.trim() !== "" || 0);
+		formik.dirty && formik.isValid && selectedImages.length > 0;
 
 	const handleModalClose = () => {
 		formik.resetForm();
+		setSelectedImages([]);
 		onClose();
 	};
 
