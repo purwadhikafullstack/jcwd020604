@@ -139,11 +139,13 @@ const productController = {
 			const productId = product.id;
 
 			for (const imageUrl of imageUrls) {
-				await db.product_images.create({
-					product_image: imageUrl,
-					product_id: productId,
-					transaction: t,
-				});
+				await db.product_images.create(
+					{
+						product_image: imageUrl,
+						product_id: productId,
+					},
+					{ transaction: t }
+				);
 			}
 			await t.commit();
 

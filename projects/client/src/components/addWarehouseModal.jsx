@@ -20,10 +20,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 
 export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
-	const toast = useToast();
-	const nav = useNavigate();
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
+	const toast = useToast();
+	const nav = useNavigate();
 
 	useEffect(() => {
 		getAllProvince();
@@ -56,6 +56,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 					const res = await api.post("/warehouse", formik.values);
 					toast({
 						title: `Add Warehouse Success`,
+						description: "The warehouse has been added successfully.",
 						status: "success",
 						duration: 3000,
 					});
@@ -88,13 +89,21 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 		formik.setFieldValue(id, value);
 	}
 
+	const isAddButtonEnabled =
+		formik.dirty &&
+		formik.values.warehouse_name.trim() !== "" &&
+		formik.values.address.trim() !== "" &&
+		formik.values.province !== "" &&
+		formik.values.city !== "" &&
+		formik.values.district.trim() !== "";
+
+	const handleModalClose = () => {
+		formik.resetForm();
+		onClose();
+	};
+
 	return (
-		<Modal
-			isOpen={isOpen}
-			onClose={() => {
-				onClose();
-			}}
-		>
+		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader>Add Warehouse</ModalHeader>
@@ -147,7 +156,12 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 				</ModalBody>
 
 				<ModalFooter>
-					<Button onClick={formik.handleSubmit} colorScheme="blue" mr={3}>
+					<Button
+						onClick={formik.handleSubmit}
+						colorScheme="blue"
+						mr={3}
+						isDisabled={!isAddButtonEnabled}
+					>
 						Add Warehouse
 					</Button>
 				</ModalFooter>

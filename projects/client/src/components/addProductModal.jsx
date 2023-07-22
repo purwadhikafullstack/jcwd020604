@@ -13,14 +13,20 @@ import {
 	useToast,
 	Textarea,
 	Select,
+	Flex,
+	Image,
 } from "@chakra-ui/react";
-
+import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
+import { useFormik } from "formik";
+import * as Yup from "yup";
 
 export default function AddCategoryModal({ isOpen, onClose }) {
 	const [category, setCategory] = useState([]);
+	const [selectedImages, setSelectedImages] = useState([]);
 	const toast = useToast();
+	const nav = useNavigate();
 
 	useEffect(() => {
 		getCategory();
@@ -31,15 +37,82 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 		setCategory(res.data);
 	}
 
-	async function inputHandler(e) {
-		const { id, value } = e.target;
-		const temp = { ...category };
-		temp[id] = value;
-		setCategory(temp);
+	const formik = useFormik({
+		initialValues: {
+			product_name: "",
+			product_detail: "",
+			price: "",
+			weight: "",
+			category_id: "",
+			productImg: [],
+		},
+		validationSchema: Yup.object().shape({
+			product_name: Yup.string().required(),
+			product_detail: Yup.string().required(),
+			price: Yup.number().min(0).required(),
+			weight: Yup.number().min(0).required(),
+			category_id: Yup.number().required(),
+		}),
+		onSubmit: async () => {
+			try {
+				const { product_name, product_detail, price, weight, category_id } =
+					formik.values;
+				if (formik.isValid) {
+					const res = await api.post("/product", formik.values);
+					toast({
+						title: `Add Product Success`,
+						description: "The product has been added successfully.",
+						status: "success",
+						duration: 3000,
+					});
+					onClose();
+					nav("/admin/product");
+				}
+			} catch (error) {
+				toast({
+					title: error.response.data.message,
+					status: "error",
+					duration: 3000,
+				});
+			}
+		},
+	});
+
+	const handleImageChange = (event) => {
+		const files = event.target.files;
+		const images = [];
+		const maxImages = 5; // Set the maximum number of images to 5
+
+		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
+			const file = files[i];
+			const imageUrl = URL.createObjectURL(file);
+			images.push(imageUrl);
+		}
+
+		setSelectedImages(images);
+		formik.setFieldValue("productImages", files.slice(0, maxImages)); // Store up to the first 5 selected image files in formik state
+	};
+
+	async function inputHandler(event) {
+		const { value, id } = event.target;
+		formik.setFieldValue(id, value);
 	}
 
+	const isAddButtonEnabled =
+		formik.dirty &&
+		formik.values.product_name.trim() !== "" &&
+		formik.values.product_detail.trim() !== "" &&
+		(formik.values.price !== "" || 0) &&
+		(formik.values.weight !== "" || 0) &&
+		(formik.values.category_id.trim() !== "" || 0);
+
+	const handleModalClose = () => {
+		formik.resetForm();
+		onClose();
+	};
+
 	return (
-		<Modal isOpen={isOpen} onClose={onClose}>
+		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader>Add Product</ModalHeader>
@@ -86,21 +159,45 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 								  ))
 								: null}
 						</Select>
-						<FormLabel>Product Image:</FormLabel>
+						<FormLabel>Product Images:</FormLabel>
 						<Input
 							accept="image/png, image/jpeg"
 							type="file"
-							id="filename"
+							id="productImg"
 							paddingTop={"4px"}
+							multiple
+							onChange={handleImageChange}
 						/>
+						{/* Preview the selected images */}
+						{selectedImages.length ? (
+							<Flex
+								flexWrap={"wrap"}
+								flexDir={"row"}
+								justifyContent={"center"}
+								mt={"10px"}
+								border={"1px"}
+								borderRadius={"9px"}
+								borderColor={"#E6EBF2"}
+							>
+								{selectedImages.map((imageUrl, index) => (
+									<Image
+										key={index}
+										src={imageUrl}
+										alt={`Product Image ${index + 1}`}
+										style={{ width: "100px", height: "100px", margin: "8px" }}
+									/>
+								))}
+							</Flex>
+						) : null}
 					</FormControl>
 				</ModalBody>
 
 				<ModalFooter>
 					<Button
-						isDisabled={!category.category_name ? true : false}
+						onClick={formik.handleSubmit}
 						colorScheme="blue"
 						mr={3}
+						isDisabled={!isAddButtonEnabled}
 					>
 						Add Product
 					</Button>

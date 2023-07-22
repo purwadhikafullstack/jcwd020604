@@ -36,6 +36,7 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 					const res = await api.post("/category", formik.values);
 					toast({
 						title: `Add Category Success`,
+						description: "The category has been added successfully.",
 						status: "success",
 						duration: 3000,
 					});
@@ -58,13 +59,16 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 		formik.setFieldValue(id, value);
 	}
 
+	const isAddButtonEnabled =
+		formik.dirty && formik.values.category_name.trim() !== "";
+
+	const handleModalClose = () => {
+		formik.resetForm();
+		onClose();
+	};
+
 	return (
-		<Modal
-			isOpen={isOpen}
-			onClose={() => {
-				onClose();
-			}}
-		>
+		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
 				<ModalHeader>Add Category</ModalHeader>
@@ -81,7 +85,12 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 				</ModalBody>
 
 				<ModalFooter>
-					<Button onClick={formik.handleSubmit} colorScheme="blue" mr={3}>
+					<Button
+						onClick={formik.handleSubmit}
+						colorScheme="blue"
+						mr={3}
+						isDisabled={!isAddButtonEnabled}
+					>
 						Add Category
 					</Button>
 				</ModalFooter>

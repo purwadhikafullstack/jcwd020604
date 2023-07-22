@@ -5,15 +5,21 @@ const alphabet =
 const nanoid = customAlphabet(alphabet, 10);
 
 module.exports = (sequelize, Sequelize) => {
-	const products = sequelize.define("products", {
-		uuid: {
-			type: Sequelize.STRING(10),
-			defaultValue: () => nanoid(),
+	const products = sequelize.define(
+		"products",
+		{
+			uuid: {
+				type: Sequelize.STRING(10),
+				defaultValue: () => nanoid(),
+			},
+			product_name: Sequelize.STRING,
+			product_detail: Sequelize.TEXT,
+			price: Sequelize.INTEGER,
+			weight: Sequelize.INTEGER,
 		},
-		product_name: Sequelize.STRING,
-		product_detail: Sequelize.TEXT,
-		price: Sequelize.INTEGER,
-		weight: Sequelize.INTEGER,
-	});
+		{
+			paranoid: true,
+		}
+	);
 	return products;
 };
