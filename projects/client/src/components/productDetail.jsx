@@ -26,7 +26,6 @@ export default function ProductDetail() {
 	const { uuid } = useParams();
 	const [value, setValue] = useState(1);
 	const [stock, setStock] = useState(0);
-	console.log(product);
 
 	const isSoldOut = stock === 0;
 

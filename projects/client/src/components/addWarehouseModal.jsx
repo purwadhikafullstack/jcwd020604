@@ -63,9 +63,9 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 					getWarehouse();
 					nav("/admin/product");
 				}
-			} catch (err) {
+			} catch (error) {
 				toast({
-					title: err.response.data.message,
+					title: error.response.data.message,
 					status: "error",
 					duration: 3000,
 				});

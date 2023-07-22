@@ -25,6 +25,7 @@ import AddCategoryModal from "./addCategoryModal";
 import AddProductModal from "./addProductModal";
 import AddWarehouseModal from "./addWarehouseModal";
 import { color } from "framer-motion";
+import DeleteWarehouseModal from "./deleteWarehouseModal";
 
 export default function AdminProduct() {
 	const nav = useNavigate();
@@ -51,6 +52,11 @@ export default function AdminProduct() {
 		isOpen: isAddWarehouseModalOpen,
 		onOpen: onAddWarehouseModalOpen,
 		onClose: onAddWarehouseModalClose,
+	} = useDisclosure();
+	const {
+		isOpen: isDeleteWarehouseModalOpen,
+		onOpen: onDeleteWarehouseModalOpen,
+		onClose: onDeleteWarehouseModalClose,
 	} = useDisclosure();
 
 	useEffect(() => {
@@ -155,7 +161,9 @@ export default function AdminProduct() {
 							></MenuButton>
 							<MenuList>
 								<MenuItem color={"red"}>Delete Category</MenuItem>
-								<MenuItem color={"red"}>Delete Warehouse</MenuItem>
+								<MenuItem color={"red"} onClick={onDeleteWarehouseModalOpen}>
+									Delete Warehouse
+								</MenuItem>
 							</MenuList>
 						</Menu>
 					</Flex>
@@ -262,6 +270,11 @@ export default function AdminProduct() {
 				<AddWarehouseModal
 					isOpen={isAddWarehouseModalOpen}
 					onClose={onAddWarehouseModalClose}
+					getWarehouse={getWarehouse}
+				/>
+				<DeleteWarehouseModal
+					isOpen={isDeleteWarehouseModalOpen}
+					onClose={onDeleteWarehouseModalClose}
 					getWarehouse={getWarehouse}
 				/>
 			</Flex>
