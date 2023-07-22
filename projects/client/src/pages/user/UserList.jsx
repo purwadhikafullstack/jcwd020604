@@ -36,14 +36,13 @@ const UserList = () => {
 
     const deleteUser = async(id) => {
         try {
-            await api.delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/v3/${id}`);
+            await api.delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`);
             toast({
                 title:"User has been deleted",
                 status:"success",
                 duration:3000,
                 isClosable:false
             });
-            setUsers();
         } catch (error) {
             toast({
                 title:"There is something error while executing this command",

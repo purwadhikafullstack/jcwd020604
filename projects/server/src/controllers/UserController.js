@@ -6,6 +6,7 @@ const mailer = require("../lib/mailer");
 const fs = require("fs").promises;
 const handlebars = require("handlebars");
 const { where } = require("sequelize");
+const Joi = require('joi');
 
 const userController = {
   getAll: async (req, res) => {
@@ -24,7 +25,7 @@ const userController = {
     try {
         const response = await db.users.findOne({
             where:{
-                uuid: req.params.id
+                id: req.params.id
             }
         });
         res.status(200).json(response);
@@ -33,36 +34,71 @@ const userController = {
     }
   },
 
-  createUser: async (req, res) => {
-		try {
-      const {fullname, email, password, role} = req.body;
-      const hashPassword = await bcrypt.hash(password, 10);
-		  await db.users.create({ 
-        fullname, 
-        email, 
-        password: hashPassword, 
-        verified: 1, 
-        role
+  getUsersByRole: async (req, res) => {
+    try {
+      const { role } = req.params;
+      const response = await db.users.findAll({
+        where: {
+          role: role,
+        },
       });
-      res.status(201).json({msg:"User has been created"});
-		} catch (err) {
-			console.log(err.message);
-			res.status(500).send({
-				message: err.message,
-			});
-		}
-	},
+      res.status(200).json(response);
+    } catch (error) {
+      console.log(error.message);
+      res.status(500).send({
+        message: error.message,
+      });
+    }
+  },
+  
+
+  createUser: async (req, res) => {
+    const userSchema = Joi.object({
+      fullname: Joi.string().required(),
+      email: Joi.string().email().required(),
+      password: Joi.string().min(6).required(),
+      verified: Joi.boolean().required(),
+      role: Joi.string().valid('W_ADMIN', 'USER').required(),
+    });
+    const { error, value } = userSchema.validate(req.body);
+    if (error) {
+        return res.status(400).send({ message: error.details[0].message });
+    }
+    try {
+      const { fullname, email, password, role } = value;
+      const hashPassword = await bcrypt.hash(password, 10);
+  
+      await db.users.create({
+        fullname,
+        email,
+        password: hashPassword,
+        verified: 1,
+        role,
+      });
+  
+      res.status(201).json({ msg: "User has been created" });
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
 
   editUser: async (req, res) => {
     try {
-      const { fullname } = req.body;
+      const { fullname, email, password, verified, role } = req.body;
       await db.users.update(
         {
-         fullname
+          fullname,
+          email,
+          password,
+          verified,
+          role,
         },
         {
           where: {
-            uuid: req.params.id,
+            id: req.params.id,
           },
         }
       );
