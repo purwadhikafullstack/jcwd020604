@@ -78,13 +78,10 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 		setCity(res.data);
 	}
 
-	async function inputHandler(event) {
-		const { value, id } = event.target;
-		const temp = { ...data };
-		temp[id] = value;
-		setData(temp);
-		setSelectedWarehouse(value);
-	}
+	const handleWarehouseSelect = (event) => {
+		// Update the selectedWarehouse state when a warehouse is selected from the dropdown
+		setSelectedWarehouse(event.target.value);
+	};
 
 	const handleModalClose = () => {
 		// formik.resetForm();
@@ -100,7 +97,10 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 				<ModalBody pb={6}>
 					<FormControl>
 						<FormLabel>Select Warehouse:</FormLabel>
-						<Select onChange={inputHandler} placeholder="Choose Warehouse">
+						<Select
+							placeholder="Choose Warehouse"
+							onChange={handleWarehouseSelect}
+						>
 							{warehouse.length
 								? warehouse.map((val) => (
 										<option key={val.id} value={val.id}>
@@ -113,29 +113,31 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						<Input
 							placeholder="e.g. MMS Jogja"
 							id="warehouse_name"
-							onChange={inputHandler}
 							defaultValue={data.warehouse_name}
+							onChange={(e) =>
+								setData({ ...data, warehouse_name: e.target.value })
+							} // Update the warehouse_name in the data state when the input changes
 						/>
 						<FormLabel>Address:</FormLabel>
 						<Input
 							placeholder="e.g. Jalan Malioboro"
 							id="address"
-							onChange={inputHandler}
 							defaultValue={data.address}
+							onChange={(e) => setData({ ...data, address: e.target.value })}
 						/>
 						<FormLabel>District:</FormLabel>
 						<Input
 							placeholder="e.g. Gedongtengen "
 							id="district"
-							onChange={inputHandler}
 							defaultValue={data.district}
+							onChange={(e) => setData({ ...data, district: e.target.value })}
 						/>
 						<FormLabel>City:</FormLabel>
 						<Select
 							id="city"
-							onChange={inputHandler}
 							value={data.city}
 							placeholder="Choose City"
+							onChange={(e) => setData({ ...data, city: e.target.value })}
 						>
 							{city.length
 								? city.map((val) => (
@@ -148,9 +150,9 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						<FormLabel>Province:</FormLabel>
 						<Select
 							id="province"
-							onChange={inputHandler}
 							value={data.province}
 							placeholder="Choose Province"
+							onChange={(e) => setData({ ...data, province: e.target.value })}
 						>
 							{province.length
 								? province.map((val) => (
