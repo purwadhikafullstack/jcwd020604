@@ -1,26 +1,19 @@
 import {
-	Center,
 	Flex,
-	Select,
-	InputGroup,
-	Input,
-	InputRightElement,
 	Icon,
-	Button,
 	Image,
 	Menu,
 	MenuButton,
 	MenuList,
 	MenuItem,
 } from "@chakra-ui/react";
-import { FaSearch } from "react-icons/fa";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { useState, useEffect } from "react";
-import { api } from "../api/api";
 
 export default function ProductList({ val }) {
 	const stock = val.stocks[0]?.qty || 0;
 	const isSoldOut = stock === 0;
+
+	// const editModal = useDisclosure();
 
 	return (
 		<Flex
@@ -61,7 +54,11 @@ export default function ProductList({ val }) {
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
 				<MenuList>
-					<MenuItem>Edit</MenuItem>
+					<MenuItem
+					// onClick={editModal.onOpen}
+					>
+						Edit
+					</MenuItem>
 					<MenuItem>Remove</MenuItem>
 				</MenuList>
 			</Menu>

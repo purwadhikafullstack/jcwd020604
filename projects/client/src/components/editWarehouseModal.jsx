@@ -15,19 +15,22 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
+import { useParams } from "react-router-dom";
 
 export default function EditWarehouseModal({ isOpen, onClose }) {
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState(null);
+	const [data, setData] = useState({});
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
-	console.log(selectedWarehouse);
+	const { id } = useParams();
 
 	useEffect(() => {
 		getWarehouse();
 		getAllProvince();
 		getAllCity();
 	}, []);
+
 	useEffect(() => {
 		getWarehouseById();
 	}, [selectedWarehouse]);
@@ -35,7 +38,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	async function getWarehouseById() {
 		if (selectedWarehouse) {
 			const res = await api.get(`/warehouse/${selectedWarehouse}`);
-			setSelectedWarehouse(res.data);
+			setData(res.data);
 		}
 	}
 
@@ -55,8 +58,11 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	}
 
 	async function inputHandler(event) {
-		const { value } = event.target;
-		setSelectedWarehouse(value); // Set the selected warehouse ID
+		const { value, id } = event.target;
+		const temp = { ...data };
+		temp[id] = value;
+		setData(temp);
+		setSelectedWarehouse(value);
 	}
 
 	const handleModalClose = () => {
@@ -87,21 +93,29 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 							placeholder="e.g. MMS Jogja"
 							id="warehouse_name"
 							onChange={inputHandler}
+							defaultValue={data.warehouse_name}
 						/>
 						<FormLabel>Address:</FormLabel>
 						<Input
 							placeholder="e.g. Jalan Malioboro"
 							id="address"
 							onChange={inputHandler}
+							defaultValue={data.address}
 						/>
 						<FormLabel>District:</FormLabel>
 						<Input
 							placeholder="e.g. Gedongtengen "
 							id="district"
 							onChange={inputHandler}
+							defaultValue={data.district}
 						/>
 						<FormLabel>City:</FormLabel>
-						<Select placeholder="Choose City" id="city" onChange={inputHandler}>
+						<Select
+							placeholder={data.city}
+							defaultValue={data.city}
+							id="city"
+							onChange={inputHandler}
+						>
 							{city.length
 								? city.map((val) => (
 										<option key={val.id} value={val.id}>
@@ -112,7 +126,8 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						</Select>
 						<FormLabel>Province:</FormLabel>
 						<Select
-							placeholder="Choose Province"
+							placeholder={data.province}
+							defaultValue={data.province}
 							id="province"
 							onChange={inputHandler}
 						>

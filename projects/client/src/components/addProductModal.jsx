@@ -25,6 +25,7 @@ import * as Yup from "yup";
 export default function AddCategoryModal({ isOpen, onClose }) {
 	const [category, setCategory] = useState([]);
 	const [selectedImages, setSelectedImages] = useState([]);
+	const [selectedFiles, setSelectedFiles] = useState([]);
 	const toast = useToast();
 	const nav = useNavigate();
 
@@ -44,7 +45,7 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 			price: "",
 			weight: "",
 			category_id: "",
-			productImages: [], // To store the selected image files
+			productImg: [], // To store the selected image files
 		},
 		validationSchema: Yup.object().shape({
 			product_name: Yup.string().required(),
@@ -55,16 +56,17 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 		}),
 		onSubmit: async () => {
 			try {
-				const {
-					product_name,
-					product_detail,
-					price,
-					weight,
-					category_id,
-					productImages,
-				} = formik.values;
+				const formData = new FormData();
+				formData.append("product_name", formik.values.product_name);
+				formData.append("product_detail", formik.values.product_detail);
+				formData.append("price", formik.values.price);
+				formData.append("weight", formik.values.weight);
+				formData.append("category_id", formik.values.category_id);
+				for (const files of selectedFiles) {
+					formData.append("productImg", files);
+				}
 				if (formik.isValid) {
-					const res = await api.post("/product", formik.values);
+					const res = await api.post("/product", formData);
 					toast({
 						title: `Add Product Success`,
 						description: "The product has been added successfully.",
@@ -86,6 +88,7 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 
 	const handleImageChange = (event) => {
 		const files = event.target.files;
+		setSelectedFiles(files);
 		const images = [];
 		const maxImages = 5; // Set the maximum number of images to 5
 
@@ -96,7 +99,7 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 		}
 
 		setSelectedImages(images);
-		formik.setFieldValue("productImages", files.slice(0, maxImages)); // Store up to the first 5 selected image files in formik state
+		formik.setFieldValue("productImg", [...files].slice(0, maxImages)); // Store up to the first 5 selected image files in formik state
 	};
 
 	async function inputHandler(event) {

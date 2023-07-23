@@ -91,19 +91,19 @@ const productController = {
 	insert: async (req, res) => {
 		const t = await db.sequelize.transaction();
 
-		const productSchema = Joi.object({
-			product_name: Joi.string().required(),
-			product_detail: Joi.string().required(),
-			price: Joi.number().required(),
-			weight: Joi.number().required(),
-			category_id: Joi.number().required(),
-		});
+		// const productSchema = Joi.object({
+		// 	product_name: Joi.string().required(),
+		// 	product_detail: Joi.string().required(),
+		// 	price: Joi.number().required(),
+		// 	weight: Joi.number().required(),
+		// 	category_id: Joi.number().required(),
+		// });
 
-		const { error } = productSchema.validate(req.body);
+		// const { error } = productSchema.validate(req.body);
 
-		if (error) {
-			return res.status(400).send({ message: error.details[0].message });
-		}
+		// if (error) {
+		// 	return res.status(400).send({ message: error.details[0].message });
+		// }
 
 		try {
 			const { product_name, product_detail, price, weight, category_id } =
@@ -117,38 +117,26 @@ const productController = {
 			if (existingProduct) {
 				throw new Error("Product with the same name already exists");
 			}
-
+			const product = await db.products.create(
+				{
+					product_name,
+					product_detail,
+					price,
+					weight,
+					category_id,
+				},
+				{ transaction: t }
+			);
 			const imageUrls = []; // Array to store the image URLs
-
+			const productId = product.id;
 			// Loop through each uploaded file
 			for (const file of req.files) {
 				const { filename } = file;
 				const imageUrl = process.env.product_img + filename;
-				imageUrls.push(imageUrl);
+				imageUrls.push({ product_image: imageUrl, product_id: productId });
 			}
-
-			const product = await db.products.create({
-				product_name,
-				product_detail,
-				price,
-				weight,
-				category_id,
-				transaction: t,
-			});
-
-			const productId = product.id;
-
-			for (const imageUrl of imageUrls) {
-				await db.product_images.create(
-					{
-						product_image: imageUrl,
-						product_id: productId,
-					},
-					{ transaction: t }
-				);
-			}
+			await db.product_images.bulkCreate(imageUrls, { transaction: t });
 			await t.commit();
-
 			res.send(product);
 		} catch (err) {
 			await t.rollback();
