@@ -24,6 +24,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
 	const { id } = useParams();
+	const toast = useToast();
 
 	useEffect(() => {
 		getWarehouse();
@@ -34,6 +35,26 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	useEffect(() => {
 		getWarehouseById();
 	}, [selectedWarehouse]);
+
+	async function editWarehouse() {
+		try {
+			await api.patch(`/warehouse/${selectedWarehouse}`, data);
+
+			toast({
+				title: "Warehouse updated successfully.",
+				status: "success",
+				duration: 3000,
+				isClosable: true,
+			});
+			onClose();
+		} catch (error) {
+			toast({
+				title: error.response.data.message,
+				status: "error",
+				duration: 3000,
+			});
+		}
+	}
 
 	async function getWarehouseById() {
 		if (selectedWarehouse) {
@@ -111,10 +132,10 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						/>
 						<FormLabel>City:</FormLabel>
 						<Select
-							placeholder={data.city}
-							defaultValue={data.city}
 							id="city"
 							onChange={inputHandler}
+							placeholder="Choose City"
+							value={data.city}
 						>
 							{city.length
 								? city.map((val) => (
@@ -126,10 +147,10 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						</Select>
 						<FormLabel>Province:</FormLabel>
 						<Select
-							placeholder={data.province}
-							defaultValue={data.province}
 							id="province"
 							onChange={inputHandler}
+							placeholder="Choose Province"
+							value={data.province}
 						>
 							{province.length
 								? province.map((val) => (
@@ -143,11 +164,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 				</ModalBody>
 
 				<ModalFooter>
-					<Button
-						// onClick={formik.handleSubmit}
-						colorScheme="blue"
-						mr={3}
-					>
+					<Button onClick={editWarehouse} colorScheme="blue" mr={3}>
 						Edit Warehouse
 					</Button>
 				</ModalFooter>
