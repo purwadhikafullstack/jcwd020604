@@ -6,7 +6,6 @@ import {
     Text,
     IconButton,
     Button,
-    Center,
     VStack,
     HStack,
     Wrap,
@@ -20,208 +19,248 @@ import {
     Avatar,
     Image,
     Stack,
-    useColorModeValue,
-    ButtonGroup,
-    Spacer,
+    ButtonGroup
   } from '@chakra-ui/react';
   import {
     MdFacebook,
     MdOutlineEmail,
   } from 'react-icons/md';
-  import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
-  import { useNavigate } from 'react-router-dom';
-  import { useSelector } from 'react-redux';
+import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Formik, Form, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
   
   export default function UserProfile() {
     const user = useSelector((state) => state.auth);
     const navigate = useNavigate();
+
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+
+  const validationSchema = Yup.object().shape({
+    name: Yup.string().required('Name is required'),
+    address: Yup.string().required('Address is required'),
+  });
+
+  const initialValues = {
+    name: user.fullname,
+    email: user.email,
+    address: '',
+  };
+
+  const handleSubmit = (values, { setSubmitting }) => {
+    setIsFormSubmitted(true);
+    setSubmitting(false);
+  };
+
     return (
       <Container bg="#9DC4FB" maxW="full" mt={0} centerContent overflow="hidden">
-        <Flex>
-          <Box
-            bg="#02054B"
-            color="white"
-            borderRadius="lg"
-            m={{ sm: 4, md: 16, lg: 10 }}
-            p={{ sm: 5, md: 5, lg: 16 }}>
-                <Flex justifyContent={'center'} alignItems={'center'}>
-                    <Heading>Contact</Heading>
-                </Flex>
-                <Text display={'flex'} justifyContent={'center'} alignItems={'center'} mt={{ sm: 3, md: 3, lg: 5 }} color="gray.500">
-                    Fill up the form below to contact
-                </Text>
-            <Box p={4}>
-              <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }}>
-                <WrapItem>
-                  <Box>
-                      <VStack pl={0} spacing={2} alignItems="flex-start">
-                        <Box bg="white" w={'300px'} borderRadius="lg">
-                            <Box m={0} color="#0B0E3F">
-                            <VStack spacing={2} maxW={'300px'}
-                                w={'full'}
-                                bg={useColorModeValue('white', 'gray.800')}
-                                boxShadow={'2xl'}
-                                rounded={'lg'}
-                                overflow={'hidden'}>
-                                <Image
-                                h={'120px'}
-                                w={'full'}
-                                src={
-                                    'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
-                                }
-                                objectFit={'cover'}
-                                />
-                                <Flex justify={'center'} mt={-12}>
-                                <Avatar
-                                    size={'xl'}
-                                    src={
-                                    'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ'
-                                    }
-                                    alt={'Author'}
-                                    css={{
-                                    border: '2px solid white',
-                                    }}
-                                />
-                                </Flex>
-
-                                <Box p={6}>
-                                <Stack spacing={0} align={'center'} mb={5}>
-                                    <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
-                                    {user.fullname}
-                                    </Heading>
-                                    <Text color={'gray.500'}>{user.email}</Text>
-                                </Stack>
-
-                                <Stack direction={'row'} justify={'center'} spacing={6}>
-                                    <Stack spacing={0} align={'center'}>
-                                    <Text fontWeight={600}>23k</Text>
-                                    <Text fontSize={'sm'} color={'gray.500'}>
-                                        Followers
-                                    </Text>
-                                    </Stack>
-                                    <Stack spacing={0} align={'center'}>
-                                    <Text fontWeight={600}>23k</Text>
-                                    <Text fontSize={'sm'} color={'gray.500'}>
-                                        Followers
-                                    </Text>
-                                    </Stack>
-                                </Stack>
-
-                                <Button
+        <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        {({isSubmitting}) => (
+          <Form>
+            <Flex>
+              <Box
+                bg="#02054B"
+                color="white"
+                borderRadius="lg"
+                m={{ sm: 4, md: 16, lg: 10 }}
+                p={{ sm: 5, md: 5, lg: 16 }}>
+                    <Flex justifyContent={'center'} alignItems={'center'}>
+                        <Heading>Profile</Heading>
+                    </Flex>
+                    <Text display={'flex'} justifyContent={'center'} alignItems={'center'} mt={{ sm: 3, md: 3, lg: 5 }} color="gray.500">
+                        Fill up the form below to update
+                    </Text>
+                <Box p={4}>
+                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }}>
+                    <WrapItem>
+                      <Box>
+                          <VStack pl={0} spacing={2} alignItems={"flex-start"}>
+                            <Box bg="white" w={'300px'} borderRadius="lg" alignItems={{base:"flex-start", md: "center", sm: "center"}}>
+                                <Box m={0} color="#0B0E3F">
+                                <VStack spacing={2} maxW={'300px'}
                                     w={'full'}
-                                    mt={8}
-                                    bg={useColorModeValue('#151f21', 'gray.900')}
-                                    color={'white'}
-                                    rounded={'md'}
-                                    _hover={{
-                                    transform: 'translateY(-2px)',
-                                    boxShadow: 'lg',
-                                    }}>
-                                    Change Image
-                                </Button>
+                                    bg={'whiteAlpha.200'}
+                                    boxShadow={'2xl'}
+                                    rounded={'lg'}
+                                    overflow={'hidden'}>
+                                    <Image
+                                    h={'120px'}
+                                    w={'full'}
+                                    src={
+                                        'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
+                                    }
+                                    objectFit={'cover'}
+                                    />
+                                    <Flex justify={'center'} mt={-12}>
+                                    <Avatar
+                                        size={'xl'}
+                                        src={
+                                        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ'
+                                        }
+                                        alt={'Author'}
+                                        css={{
+                                        border: '2px solid white',
+                                        }}
+                                    />
+                                    </Flex>
+
+                                    <Box p={6}>
+                                    <Stack spacing={0} align={'center'} mb={5}>
+                                        <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
+                                        {user.fullname}
+                                        </Heading>
+                                        <Text color={'gray.500'}>{user.email}</Text>
+                                    </Stack>
+
+                                    <Stack direction={'row'} justify={'center'} spacing={6}>
+                                        <Stack spacing={0} align={'center'}>
+                                        <Text fontWeight={600}>23k</Text>
+                                        <Text fontSize={'sm'} color={'gray.500'}>
+                                            Followers
+                                        </Text>
+                                        </Stack>
+                                        <Stack spacing={0} align={'center'}>
+                                        <Text fontWeight={600}>23k</Text>
+                                        <Text fontSize={'sm'} color={'gray.500'}>
+                                            Followers
+                                        </Text>
+                                        </Stack>
+                                    </Stack>
+
+                                    <Button
+                                        w={'full'}
+                                        mt={8}
+                                        bg={'gray.900'}
+                                        color={'white'}
+                                        rounded={'md'}
+                                        _hover={{
+                                        transform: 'translateY(-2px)',
+                                        boxShadow: 'lg',
+                                        }}>
+                                        Change Image
+                                    </Button>
+                                    </Box>
+                                </VStack>
                                 </Box>
-                            </VStack>
                             </Box>
-                        </Box>
-                      </VStack>
-                    <Box py={{ base: 4, sm: 5, md: 8, lg: 10 }}>
-                    </Box>
-                    <HStack
-                      mt={{ lg: 10, md: 10 }}
-                      spacing={5}
-                      px={5}
-                      alignItems="flex-start">
-                      <IconButton
-                        aria-label="facebook"
-                        variant="ghost"
-                        color={'white'}
-                        size="lg"
-                        isRound={true}
-                        _hover={{ bg: '#0D74FF' }}
-                        icon={<MdFacebook size="28px" />}
-                      />
-                      <IconButton
-                        aria-label="github"
-                        variant="ghost"
-                        color={'white'}
-                        size="lg"
-                        isRound={true}
-                        _hover={{ bg: '#0D74FF' }}
-                        icon={<BsGithub size="28px" />}
-                      />
-                      <IconButton
-                        aria-label="discord"
-                        variant="ghost"
-                        color={'white'}
-                        size="lg"
-                        isRound={true}
-                        _hover={{ bg: '#0D74FF' }}
-                        icon={<BsDiscord size="28px" />}
-                      />
-                    </HStack>
-                  </Box>
-                </WrapItem>
-                <WrapItem>
-                  <Box bg="white" borderRadius="lg">
-                    <Box m={8} color="#0B0E3F">
-                      <VStack spacing={5}>
-                        <FormControl id="name">
-                          <FormLabel>Your Name</FormLabel>
-                          <InputGroup borderColor="#E0E1E7">
-                            <InputLeftElement
-                              pointerEvents="none"
-                              children={<BsPerson color="gray.800" />}
-                            />
-                            <Input type="text" size="md" placeholder={user.fullname}/>
-                          </InputGroup>
-                        </FormControl>
-                        <FormControl id="email">
-                          <FormLabel>Email</FormLabel>
-                          <InputGroup borderColor="#E0E1E7">
-                            <InputLeftElement
-                              pointerEvents="none"
-                              children={<MdOutlineEmail color="gray.800" />}
-                            />
-                            <Input type="email" readOnly={true} size="md" placeholder={user.email}/>
-                          </InputGroup>
-                        </FormControl>
-                        <FormControl id="name">
-                          <FormLabel>Address</FormLabel>
-                          <Textarea
-                            borderColor="gray.300"
-                            _hover={{
-                              borderRadius: 'gray.300',
-                            }}
-                            placeholder="Changes Address"
+                          </VStack>
+                        {/* <Box py={{ base: 4, sm: 5, md: 8, lg: 10 }}>
+                        </Box> */}
+                        <HStack
+                          mt={{ lg: 10, md: 10 }}
+                          spacing={5}
+                          px={5}
+                          alignItems="flex-start">
+                          <IconButton
+                            aria-label="facebook"
+                            variant="ghost"
+                            color={'white'}
+                            size="lg"
+                            isRound={true}
+                            _hover={{ bg: '#0D74FF' }}
+                            icon={<MdFacebook size="28px" />}
                           />
-                        </FormControl>
-                        <FormControl id="button">
-                            <ButtonGroup>
-                            <Button
-                                variant="solid"
-                                bg="#0D74FF"
-                                color="white"
-                                _hover={{}}>
-                                Save
-                            </Button>
-                            <Button
-                                variant="solid"
-                                bg="#FA8B44"
-                                color="white"
-                                _hover={{}}
-                                onClick={() => navigate("/")}>
-                                Cancel
-                            </Button>
-                            </ButtonGroup>
-                        </FormControl>
-                      </VStack>
-                    </Box>
-                  </Box>
-                </WrapItem>
-              </Wrap>
-            </Box>
-          </Box>
-        </Flex>
+                          <IconButton
+                            aria-label="github"
+                            variant="ghost"
+                            color={'white'}
+                            size="lg"
+                            isRound={true}
+                            _hover={{ bg: '#0D74FF' }}
+                            icon={<BsGithub size="28px" />}
+                          />
+                          <IconButton
+                            aria-label="discord"
+                            variant="ghost"
+                            color={'white'}
+                            size="lg"
+                            isRound={true}
+                            _hover={{ bg: '#0D74FF' }}
+                            icon={<BsDiscord size="28px" />}
+                          />
+                        </HStack>
+                      </Box>
+                    </WrapItem>
+                    <WrapItem>
+                      <Box bg="white" borderRadius="lg">
+                        <Box m={8} color="#0B0E3F">
+                          <VStack spacing={5}>
+                          <Field name="name">
+                                {({ field }) => (
+                                  <FormControl id="name" isInvalid={isFormSubmitted && !!field.error}>
+                                    <FormLabel>Your Name</FormLabel>
+                                    <InputGroup borderColor="#E0E1E7">
+                                      <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
+                                      <Input {...field} type="text" size="md" />
+                                    </InputGroup>
+                                    <ErrorMessage name="name" component={Text} color="red.500" />
+                                  </FormControl>
+                                )}
+                            </Field>
+                            <FormControl id="email">
+                              <FormLabel>Email</FormLabel>
+                              <InputGroup borderColor="#E0E1E7">
+                                <InputLeftElement
+                                  pointerEvents="none"
+                                  children={<MdOutlineEmail color="gray.800" />}
+                                />
+                                <Input type="email" readOnly={true} size="md" placeholder={user.email}/>
+                              </InputGroup>
+                            </FormControl>
+                            <FormControl id="address">
+                                <FormLabel>Address</FormLabel>
+                                <Field name="address">
+                                  {({ field }) => (
+                                    <Textarea
+                                      {...field}
+                                      borderColor="gray.300"
+                                      _hover={{
+                                        borderRadius: 'gray.300',
+                                      }}
+                                      placeholder="Changes Address"
+                                    />
+                                  )}
+                                </Field>
+                                <ErrorMessage name="address" component={Text} color="red.500" />
+                                </FormControl>
+                                  <FormControl id="button">
+                                    <ButtonGroup>
+                                      <Button
+                                        type="submit"
+                                        variant="solid"
+                                        bg="#0D74FF"
+                                        color="white"
+                                        isLoading={isSubmitting}
+                                      >
+                                        Save
+                                      </Button>
+                                      <Button
+                                        variant="solid"
+                                        bg="#FA8B44"
+                                        color="white"
+                                        onClick={() => navigate("/")}
+                                      >
+                                        Cancel
+                                      </Button>
+                                  </ButtonGroup>
+                              </FormControl>
+                          </VStack>
+                        </Box>
+                      </Box>
+                    </WrapItem>
+                  </Wrap>
+                </Box>
+              </Box>
+            </Flex>
+          </Form>
+        )}
+      </Formik>
       </Container>
     );
   }

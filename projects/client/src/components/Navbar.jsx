@@ -46,7 +46,8 @@ export default function Navbar() {
       title: "Anda telah logout",
       status: "success",
       position: "top",
-      isClosable: true
+      duration: 3000,
+      isClosable: false
     })
   }
 
@@ -126,8 +127,7 @@ export default function Navbar() {
                 {user.role === "ADMIN" ? (
                 <><MenuItem onClick={()=>navigate("/admin_profile")}>Manage Profile</MenuItem></>
                 ) : (
-                <><MenuItem onClick={()=>navigate("/user_profile")}>Manage Profile</MenuItem>,
-                <MenuItem onClick={()=>navigate("/reset_password")}>Reset Password</MenuItem></>)}
+                <><MenuItem onClick={()=>navigate("/user_profile")}>Manage Profile</MenuItem></>)}
               </MenuList>
               <Link to={'/'}><Button onClick={logout} size={'sm'} variant={'ghost'} leftIcon={<FiLogOut/>} _hover={{color:'red'}}>Logout</Button></Link>
              </>) : (<> <Link to={'/login'}>

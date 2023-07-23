@@ -7,10 +7,11 @@ router.post("/register", userController.register);
 
 router.get("/users", userController.getAll);
 router.get("/users/:id", userController.getUsersById);
-router.get("/users/:role", userController.getUsersByRole);
+router.get("/users/role/:role", userController.getUsersByRole);
 router.post("/users", userController.createUser);
-router.patch("/users/:id", userController.editUser);
-router.delete("/users/:id", userController.deleteUser);
+router.patch("/users/role/:role/:id", userController.editUser);
+router.patch("/users/:id", userController.editUserV2);
+router.delete("/users/role/:role/:id", userController.deleteUser);
 
 // Email verification
 router.patch("/verify", userController.verify);

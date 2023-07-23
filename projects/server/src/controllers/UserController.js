@@ -44,14 +44,12 @@ const userController = {
       });
       res.status(200).json(response);
     } catch (error) {
-      console.log(error.message);
       res.status(500).send({
         message: error.message,
       });
     }
   },
   
-
   createUser: async (req, res) => {
     const userSchema = Joi.object({
       fullname: Joi.string().required(),
@@ -95,6 +93,31 @@ const userController = {
           password,
           verified,
           role,
+        },
+        {
+          where: {
+            id: req.params.id,
+          },
+        }
+      );
+      res.status(200).json({msg:"User has been updated"});
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  editUserV2: async (req, res) => {
+    try {
+      const { fullname, avatar_url, address } = req.body;
+      await db.users.update(
+        {
+          fullname,
+          avatar_url,
+          verified: 1,
+          address
         },
         {
           where: {
@@ -167,6 +190,7 @@ const userController = {
       return res.status(500).send(err.message);
     }
   },
+
   verify: async (req, res) => {
     try {
       const { email, password, fullname } = req.body;
@@ -185,6 +209,7 @@ const userController = {
       return res.status(500).send(err.message);
     }
   },
+
   login: async (req, res) => {
     try {
       const { email, password } = req.body;
@@ -255,6 +280,7 @@ const userController = {
       return res.status(500).send(err.message);
     }
   },
+
   getByTokenV2: async (req, res, next) => {
     try {
       let token = req.headers.authorization;

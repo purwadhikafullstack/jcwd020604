@@ -112,7 +112,7 @@ export default function Login() {
                     </FormControl>
                   )}
                 </Field>
-                <Stack spacing={10} mt={4}>
+                <Stack spacing={4} mt={4}>
                   <Button
                     type="submit"
                     isLoading={Formik.isSubmitting}
@@ -141,6 +141,11 @@ export default function Login() {
                       Register
                     </Button>
                   </Link>
+                  <Link to={'/reset_password'}>
+                      <Text cursor={'pointer'} display={'flex'} alignItems={'center'} justifyContent={'center'} textColor={'green.500'} _hover={{textColor: 'green.600'}}>
+                        Forgot Password
+                      </Text>
+                    </Link>
                   <Text align={'center'}>
                     Back to 
                     <Link to={'/'}>

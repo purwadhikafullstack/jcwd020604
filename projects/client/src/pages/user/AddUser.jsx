@@ -12,11 +12,14 @@ import {
     Button, 
     useToast, 
     HStack, 
-    InputGroup
+    InputGroup,
+    InputRightElement
 } 
 from '@chakra-ui/react';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import * as Yup from 'yup';
+import { useState } from 'react';
 
 const validationSchema = Yup.object().shape({
     fullname: Yup.string().min(6, "Full name min 6 character").required('Name is required'),
@@ -36,6 +39,7 @@ const validationSchema = Yup.object().shape({
 const AddUser = () => {
     const navigate = useNavigate();
     const toast = useToast();
+    const [showPassword, setShowPassword] = useState(false);
 
     const saveUser = async (values) => {
         try {
@@ -100,6 +104,14 @@ const AddUser = () => {
                                     <FormLabel>Password</FormLabel>
                                     <InputGroup>
                                         <Input {...field} type="password" placeholder="Password" />
+                                        <InputRightElement h={'full'}>
+                                            <Button
+                                                variant={'ghost'}
+                                                onClick={() => setShowPassword((showPassword) => !showPassword)}
+                                            >
+                                            {showPassword ? <ViewIcon /> : <ViewOffIcon />}
+                                         </Button>
+                        </InputRightElement>
                                     </InputGroup>
                                     <ErrorMessage name="password" component={FormHelperText} />
                                 </FormControl>

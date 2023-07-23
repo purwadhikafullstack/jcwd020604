@@ -1,28 +1,45 @@
 import React,{useState, useEffect} from 'react';
 import { api } from '../../api/api';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box,FormControl, FormLabel, Input, Container, Button, useToast, HStack,FormHelperText,InputGroup,Select } from '@chakra-ui/react';
+import { 
+  FormControl, 
+  FormLabel, 
+  Input, 
+  Modal, 
+  Button, 
+  useToast, 
+  FormHelperText,
+  InputGroup,
+  Select, 
+  ModalHeader, 
+  ModalContent, 
+  ModalCloseButton, 
+  ModalBody, 
+  ModalFooter } from '@chakra-ui/react';
 
-const EditUser = () => {
-    const [fullname, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [verified, setVerified] = useState(true);
-    const [role, setRole] = useState('W_ADMIN');
+export default function EditUser (props) {
+  const [users, setUsers] = useState({
+    name: "",
+    email: "",
+    password: "",
+    verified: true,
+    role: "",
+  });
+    console.log(users);
     const navigate = useNavigate();
     const toast = useToast();
     const { id } = useParams();
   
     useEffect(() => {
       getUserById();
-    }, []);
+    }, [props.id]);
+
+    console.log(props.id);
   
-    const updateUser = async (e) => {
-      e.preventDefault();
+    const updateUser = async () => {
+      // e.preventDefault();
       try {
-        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`, {
-          fullname, email, password, verified, role
-        });
+        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${props.id}`, users);
         toast({
           title: "User has been updated",
           status: "success",
@@ -45,12 +62,8 @@ const EditUser = () => {
   
     const getUserById = async () => {
       try {
-        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`);
-        setFullName(response.data.fullname);
-        setEmail(response.data.email);
-        setPassword(response.data.password);
-        setVerified(response.data.verified);
-        setRole(response.data.role);
+        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.id}`);
+        setUsers(response.data);
       } catch (error) {
         console.log(error);
         toast({
@@ -61,56 +74,70 @@ const EditUser = () => {
           isClosable: false,
         });
         console.log(error);
-        navigate("/user_list");
       }
+    };
+
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setUsers((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
     };
   
     return (
-      <Container>
-        <form onSubmit={updateUser}>
-        <FormControl isRequired>
+      <>
+      <Modal isOpen = {props.isOpen} onClose={props.onClose}>
+        <ModalContent>
+            <ModalHeader>Edit</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+            <FormControl isRequired>
                     <FormLabel>Name</FormLabel>
-                    <Input type='text' value={fullname} onChange={(e) => setFullName(e.target.value)} />
+                    <Input type='text' name="name"
+                onChange={handleInputChange}/>
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>Email address</FormLabel>
-                    <Input type='email' value={email} onChange={(e) => setEmail(e.target.value)}/>
+                    <Input type='email' name="email"
+                onChange={handleInputChange}/>
                     <FormHelperText>We'll never share your email.</FormHelperText>
                 </FormControl>
                 <FormControl id="password" isRequired>
                 <FormLabel>Password</FormLabel>
                 <InputGroup>
-                  <Input type='password' placeholder='Password' id='password'
-                   value={password} onChange={(e) => setPassword(e.target.value)}/>
+                  <Input  type="password"
+                  name="password"
+                  placeholder="Password"
+                  id="password"
+                  onChange={handleInputChange}
+                   />
                 </InputGroup>
               </FormControl>
               <FormControl isRequired>
                     <FormLabel>Verified</FormLabel>
-                    <Select placeholder='Select Role' value={verified} onChange={(e) => setVerified(e.target.value)}>
+                    <Select placeholder='Select Role' name="verified" onChange={handleInputChange}>
                         <option value={true}>Verified</option>
                         <option value={false}>Unverified</option>
                     </Select>
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>Role</FormLabel>
-                    <Select placeholder='Select Role' value={role} onChange={(e) => setRole(e.target.value)}>
+                    <Select placeholder='Select Role' name='role' onChange={handleInputChange}>
                         <option value={'W_ADMIN'}>Warehouse Admin</option>
                         <option value={'USER'}>User</option>
                     </Select>
                 </FormControl>
-          <Box mt={2}>
-            <HStack>
-              <Button size={'sm'} w={'20%'} type="submit" colorScheme="twitter">
-                Update
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={() => updateUser()}>
+                Save
               </Button>
-              <Button size={'sm'} w={'20%'} colorScheme="orange" onClick={() => navigate("/user_list")}>
-                Cancel
-              </Button>
-            </HStack>
-          </Box>
-        </form>
-      </Container>
+              <Button colorScheme='orange' onClick={props.onClose}>Cancel</Button>
+            </ModalFooter>
+        </ModalContent>
+        </Modal>
+      </>
     );
   };
   
-  export default EditUser;

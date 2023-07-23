@@ -13,19 +13,25 @@ import {
     Text,
     Stack,
     HStack,
-    useToast
+    useToast,
+    useDisclosure
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import { api } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import EditUser from './EditUser';
 
 const UserList = () => {
+    const editUser = useDisclosure();
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
     const toast = useToast();
+    const { role = "W_ADMIN" } = useParams();
+    const [adminId, setAdminId] = useState();
+    console.log(adminId);
     
     useEffect(() => {
-        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users`)
+        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}`)
             .then((response) => {
                 setUsers(response.data);
             })
@@ -36,7 +42,9 @@ const UserList = () => {
 
     const deleteUser = async(id) => {
         try {
-            await api.delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`);
+            await api.delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}/${id}`);
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
+
             toast({
                 title:"User has been deleted",
                 status:"success",
@@ -53,6 +61,7 @@ const UserList = () => {
         }
     }
 
+
     return (
         <>
         <Stack>
@@ -65,7 +74,6 @@ const UserList = () => {
                 </Box>
             </HStack>
         </Stack>
-        <form onSubmit={deleteUser}>
             <TableContainer>
                 <Table variant={'striped'} size={'sm'}>
                     <Thead>
@@ -86,9 +94,9 @@ const UserList = () => {
                             <Td>{user.role}</Td>
                             <Td>
                                 <ButtonGroup display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                                    <Button colorScheme={'green'} size={'sm'} onClick={() => navigate("/edit_user")}>Edit</Button>
+                                    <Button colorScheme={'green'} size={'sm'} onClick={()=> {editUser.onOpen();setAdminId(user.id)} }>Edit</Button>
                                     <Button colorScheme={'facebook'} size={'sm'}>Assign</Button>
-                                    <Button colorScheme={'red'} size={'sm'}type='submit' onClick={() => navigate("/user_list")}>Delete</Button>
+                                    <Button colorScheme={'red'} size={'sm'} onClick={() => {deleteUser(user.id); navigate("/user_list")}}>Delete</Button>
                                 </ButtonGroup>
                             </Td>
                         </Tr>
@@ -96,7 +104,7 @@ const UserList = () => {
                     </Tbody>
                 </Table>
             </TableContainer>
-        </form>
+            <EditUser id={adminId} isOpen={editUser.isOpen} onClose={editUser.onClose}/>
         </>
     );
 }
