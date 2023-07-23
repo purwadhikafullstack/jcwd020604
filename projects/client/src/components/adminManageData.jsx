@@ -14,7 +14,7 @@ import {
 	ButtonGroup,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { DeleteIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, AddIcon, EditIcon, HamburgerIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
@@ -108,11 +108,11 @@ export default function AdminManageData() {
 			>
 				<Flex flexDir={"column"}>
 					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
-						Manage Data
+						Manage Stock Data
 					</Flex>
 					<Flex gap={"10px"}>
 						<Link to={`/admin/product`}>
-							<Button>Product List</Button>
+							<Button leftIcon={<HamburgerIcon />}>Product List</Button>
 						</Link>
 						<Menu>
 							<MenuButton

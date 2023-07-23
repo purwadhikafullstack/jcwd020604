@@ -14,7 +14,7 @@ import {
 	ButtonGroup,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { DeleteIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
+import { DeleteIcon, AddIcon, EditIcon, ArrowBackIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
@@ -81,13 +81,15 @@ export default function AdminProduct() {
 				justifyContent={"center"}
 				flexDir={"column"}
 			>
-				<Link to={`/admin/managedata`}>
-					<Button>Back</Button>
-				</Link>
-				<Flex flexDir={"column"}>
-					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
+				<Flex flexDir={"column"} paddingBottom={"15px"}>
+					<Flex fontWeight={600} fontSize={"23px"}>
 						Manage Product
 					</Flex>
+				</Flex>
+				<Flex pb={"15px"}>
+					<Link to={`/admin/managedata`}>
+						<Button leftIcon={<ArrowBackIcon />}>Back</Button>
+					</Link>
 				</Flex>
 				<Center gap={"15px"} paddingBottom={"15px"}>
 					<Select
@@ -137,11 +139,10 @@ export default function AdminProduct() {
 						Product Name
 					</Flex>
 
-					<Flex w={"230px"}>Descrition</Flex>
+					<Flex w={"230px"}>Description</Flex>
 					<Flex w={"230px"}>Category</Flex>
 					<Flex w={"230px"}>Price (Rp)</Flex>
-					<Flex w={"150px"}>Weight</Flex>
-					<Flex w={"230px"}>Status</Flex>
+					<Flex w={"230px"}>Weight</Flex>
 					<Flex w={"25px"}></Flex>
 				</Flex>
 				{product.map((val) => {
