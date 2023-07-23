@@ -53,7 +53,6 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 			});
 			onClose();
 			getWarehouse();
-			nav("/admin/product");
 		} catch (error) {
 			toast({
 				title: error.response.data.message,

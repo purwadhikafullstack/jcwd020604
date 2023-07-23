@@ -18,7 +18,7 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
+export default function AddCategoryModal({ isOpen, onClose }) {
 	const toast = useToast();
 	const nav = useNavigate();
 
@@ -41,8 +41,6 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 						duration: 3000,
 					});
 					onClose();
-					getCategory();
-					nav("/admin/product");
 				}
 			} catch (error) {
 				toast({

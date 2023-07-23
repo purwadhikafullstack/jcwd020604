@@ -53,7 +53,6 @@ export default function DeleteCategoryModal({ isOpen, onClose }) {
 			});
 			onClose();
 			getCategory();
-			nav("/admin/product");
 		} catch (error) {
 			toast({
 				title: error.response.data.message,

@@ -134,8 +134,8 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						<Select
 							id="city"
 							onChange={inputHandler}
-							placeholder="Choose City"
 							value={data.city}
+							placeholder="Choose City"
 						>
 							{city.length
 								? city.map((val) => (
@@ -149,8 +149,8 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						<Select
 							id="province"
 							onChange={inputHandler}
-							placeholder="Choose Province"
 							value={data.province}
+							placeholder="Choose Province"
 						>
 							{province.length
 								? province.map((val) => (

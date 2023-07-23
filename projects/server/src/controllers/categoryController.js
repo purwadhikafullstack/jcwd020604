@@ -4,9 +4,13 @@ const Joi = require("joi");
 const categoryController = {
 	getCategory: async (req, res) => {
 		try {
-			await db.categories
-				.findAll()
-				.then((result) => res.status(200).send(result));
+			const categories = await db.categories.findAll();
+
+			const sortedCategories = categories.sort((a, b) => {
+				return a.category_name.localeCompare(b.category_name);
+			});
+
+			res.status(200).send(sortedCategories);
 		} catch (err) {
 			res.status(500).send({
 				message: err.message,

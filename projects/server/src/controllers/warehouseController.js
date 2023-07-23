@@ -5,9 +5,13 @@ const Joi = require("joi");
 const warehouseController = {
 	getWarehouse: async (req, res) => {
 		try {
-			await db.warehouses
-				.findAll()
-				.then((result) => res.status(200).send(result));
+			const warehouses = await db.warehouses.findAll();
+
+			const sortedWarehouses = warehouses.sort((a, b) => {
+				return a.warehouse_name.localeCompare(b.warehouse_name);
+			});
+
+			res.status(200).send(sortedWarehouses);
 		} catch (err) {
 			res.status(500).send({
 				message: err.message,

@@ -18,7 +18,7 @@ import { DeleteIcon, AddIcon, EditIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import ProductList from "./productList";
 import AddCategoryModal from "./addCategoryModal";
@@ -27,8 +27,9 @@ import AddWarehouseModal from "./addWarehouseModal";
 import DeleteCategoryModal from "./deleteCategoryModal";
 import DeleteWarehouseModal from "./deleteWarehouseModal";
 import EditWarehouseModal from "./editWarehouseModal";
+import EditCategoryModal from "./editCategoryModal";
 
-export default function AdminProduct() {
+export default function AdminManageData() {
 	const nav = useNavigate();
 	const [product, setProduct] = useState([]);
 	const [category, setCategory] = useState([]);
@@ -39,36 +40,14 @@ export default function AdminProduct() {
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
-	const {
-		isOpen: isAddProductModalOpen,
-		onOpen: onAddProductModalOpen,
-		onClose: onAddProductModalClose,
-	} = useDisclosure();
-	const {
-		isOpen: isAddCategoryModalOpen,
-		onOpen: onAddCategoryModalOpen,
-		onClose: onAddCategoryModalClose,
-	} = useDisclosure();
-	const {
-		isOpen: isAddWarehouseModalOpen,
-		onOpen: onAddWarehouseModalOpen,
-		onClose: onAddWarehouseModalClose,
-	} = useDisclosure();
-	const {
-		isOpen: isEditWarehouseModalOpen,
-		onOpen: onEditWarehouseModalOpen,
-		onClose: onEditWarehouseModalClose,
-	} = useDisclosure();
-	const {
-		isOpen: isDeleteCategoryModalOpen,
-		onOpen: onDeleteCategoryModalOpen,
-		onClose: onDeleteCategoryModalClose,
-	} = useDisclosure();
-	const {
-		isOpen: isDeleteWarehouseModalOpen,
-		onOpen: onDeleteWarehouseModalOpen,
-		onClose: onDeleteWarehouseModalClose,
-	} = useDisclosure();
+
+	const addProductModal = useDisclosure();
+	const addCategoryModal = useDisclosure();
+	const editCategoryModal = useDisclosure();
+	const deleteCategoryModal = useDisclosure();
+	const addWarehouseModal = useDisclosure();
+	const editWarehouseModal = useDisclosure();
+	const deleteWarehouseModal = useDisclosure();
 
 	useEffect(() => {
 		getCategory();
@@ -132,6 +111,9 @@ export default function AdminProduct() {
 						Manage Data
 					</Flex>
 					<Flex gap={"10px"}>
+						<Link to={`/admin/product`}>
+							<Button>Product List</Button>
+						</Link>
 						<Menu>
 							<MenuButton
 								as={Button}
@@ -140,11 +122,13 @@ export default function AdminProduct() {
 								rightIcon={<AddIcon />}
 							></MenuButton>
 							<MenuList>
-								<MenuItem onClick={onAddProductModalOpen}>Add Product</MenuItem>
-								<MenuItem onClick={onAddCategoryModalOpen}>
+								<MenuItem onClick={addProductModal.onOpen}>
+									Add Product
+								</MenuItem>
+								<MenuItem onClick={addCategoryModal.onOpen}>
 									Add Category
 								</MenuItem>
-								<MenuItem onClick={onAddWarehouseModalOpen}>
+								<MenuItem onClick={addWarehouseModal.onOpen}>
 									Add Warehouse
 								</MenuItem>
 							</MenuList>
@@ -157,8 +141,10 @@ export default function AdminProduct() {
 								rightIcon={<EditIcon />}
 							></MenuButton>
 							<MenuList>
-								<MenuItem>Edit Category</MenuItem>
-								<MenuItem onClick={onEditWarehouseModalOpen}>
+								<MenuItem onClick={editCategoryModal.onOpen}>
+									Edit Category
+								</MenuItem>
+								<MenuItem onClick={editWarehouseModal.onOpen}>
 									Edit Warehouse
 								</MenuItem>
 							</MenuList>
@@ -173,10 +159,10 @@ export default function AdminProduct() {
 								rightIcon={<DeleteIcon />}
 							></MenuButton>
 							<MenuList>
-								<MenuItem color={"red"} onClick={onDeleteCategoryModalOpen}>
+								<MenuItem color={"red"} onClick={deleteCategoryModal.onOpen}>
 									Delete Category
 								</MenuItem>
-								<MenuItem color={"red"} onClick={onDeleteWarehouseModalOpen}>
+								<MenuItem color={"red"} onClick={deleteWarehouseModal.onOpen}>
 									Delete Warehouse
 								</MenuItem>
 							</MenuList>
@@ -274,31 +260,32 @@ export default function AdminProduct() {
 					)}
 				</ButtonGroup>
 				<AddProductModal
-					isOpen={isAddProductModalOpen}
-					onClose={onAddProductModalClose}
+					isOpen={addProductModal.isOpen}
+					onClose={addProductModal.onClose}
 				/>
 				<AddCategoryModal
-					isOpen={isAddCategoryModalOpen}
-					onClose={onAddCategoryModalClose}
-					getCategory={getCategory}
+					isOpen={addCategoryModal.isOpen}
+					onClose={addCategoryModal.onClose}
 				/>
-				<AddWarehouseModal
-					isOpen={isAddWarehouseModalOpen}
-					onClose={onAddWarehouseModalClose}
-					getWarehouse={getWarehouse}
-				/>
-				<EditWarehouseModal
-					isOpen={isEditWarehouseModalOpen}
-					onClose={onEditWarehouseModalClose}
-					getWarehouse={getWarehouse}
-				/>
-				<DeleteWarehouseModal
-					isOpen={isDeleteWarehouseModalOpen}
-					onClose={onDeleteWarehouseModalClose}
+				<EditCategoryModal
+					isOpen={editCategoryModal.isOpen}
+					onClose={editCategoryModal.onClose}
 				/>
 				<DeleteCategoryModal
-					isOpen={isDeleteCategoryModalOpen}
-					onClose={onDeleteCategoryModalClose}
+					isOpen={deleteCategoryModal.isOpen}
+					onClose={deleteCategoryModal.onClose}
+				/>
+				<AddWarehouseModal
+					isOpen={addWarehouseModal.isOpen}
+					onClose={addWarehouseModal.onClose}
+				/>
+				<EditWarehouseModal
+					isOpen={editWarehouseModal.isOpen}
+					onClose={editWarehouseModal.onClose}
+				/>
+				<DeleteWarehouseModal
+					isOpen={deleteWarehouseModal.isOpen}
+					onClose={deleteWarehouseModal.onClose}
 				/>
 			</Flex>
 		</Center>
