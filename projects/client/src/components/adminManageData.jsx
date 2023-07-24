@@ -142,10 +142,10 @@ export default function AdminManageData() {
 							></MenuButton>
 							<MenuList>
 								<MenuItem onClick={editCategoryModal.onOpen}>
-									Edit Category
+									View / Edit Category
 								</MenuItem>
 								<MenuItem onClick={editWarehouseModal.onOpen}>
-									Edit Warehouse
+									View / Edit Warehouse
 								</MenuItem>
 							</MenuList>
 						</Menu>

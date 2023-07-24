@@ -125,23 +125,31 @@ const warehouseController = {
 		}
 	},
 	editWarehouse: async (req, res) => {
-		const t = await db.sequelize.transaction();
-
-		// const schema = Joi.object({
-		// 	warehouse_name: Joi.string().required(),
-		// 	address: Joi.string().required(),
-		// 	province: Joi.string().required(),
-		// 	city: Joi.string().required(),
-		// 	district: Joi.string().required(),
-		// });
-
-		// const { error } = schema.validate(req.body);
-		// if (error) {
-		// 	return res.status(400).send({ message: error.details[0].message });
-		// }
-
 		const { warehouse_name, address, province, city, district } = req.body;
 		const { id } = req.params;
+		const t = await db.sequelize.transaction();
+
+		const schema = Joi.object({
+			warehouse_name: Joi.string().required(),
+			address: Joi.string().required(),
+			province: Joi.string().required(),
+			city: Joi.string().required(),
+			district: Joi.string().required(),
+		});
+
+		const validation = schema.validate({
+			warehouse_name,
+			address,
+			province,
+			city,
+			district,
+		});
+
+		if (validation.error) {
+			return res
+				.status(400)
+				.send({ message: validation.error.details[0].message });
+		}
 
 		try {
 			const existingWarehouse = await db.warehouses.findOne({
