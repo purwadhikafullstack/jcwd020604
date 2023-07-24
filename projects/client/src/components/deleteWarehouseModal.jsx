@@ -51,8 +51,9 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 				status: "success",
 				duration: 3000,
 			});
-			onClose();
 			getWarehouse();
+			onClose();
+			nav("/admin/managedata");
 		} catch (error) {
 			toast({
 				title: error.response.data.message,

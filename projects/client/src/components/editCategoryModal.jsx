@@ -14,6 +14,8 @@ import {
 	Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { api } from "../api/api";
 
 export default function EditCategoryModal({ isOpen, onClose }) {
@@ -21,6 +23,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 	const [selectedCategory, setSelectedCategory] = useState([]);
 	const [data, setData] = useState({});
 	const toast = useToast();
+	const nav = useNavigate();
 
 	useEffect(() => {
 		getCategory();
@@ -41,7 +44,9 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 				isClosable: true,
 			});
 			getCategory();
+			resetInputFields();
 			onClose();
+			nav("/admin/managedata");
 		} catch (error) {
 			toast({
 				title: error.response.data.message,

@@ -62,6 +62,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 					});
 					getWarehouse();
 					onClose();
+					nav("/admin/managedata");
 				}
 			} catch (error) {
 				toast({

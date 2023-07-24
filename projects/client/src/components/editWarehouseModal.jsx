@@ -14,6 +14,8 @@ import {
 	Select,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import { api } from "../api/api";
 
 export default function EditWarehouseModal({ isOpen, onClose }) {
@@ -23,6 +25,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
 	const toast = useToast();
+	const nav = useNavigate();
 
 	useEffect(() => {
 		getWarehouse();
@@ -45,7 +48,9 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 				isClosable: true,
 			});
 			getWarehouse();
+			resetInputFields();
 			onClose();
+			nav("/admin/managedata");
 		} catch (error) {
 			toast({
 				title: error.response.data.message,
@@ -117,9 +122,10 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 							placeholder="e.g. MMS Jogja"
 							id="warehouse_name"
 							defaultValue={data.warehouse_name}
-							onChange={(e) =>
-								setData({ ...data, warehouse_name: e.target.value })
-							} // Update the warehouse_name in the data state when the input changes
+							// onChange={(e) =>
+							// 	setData({ ...data, warehouse_name: e.target.value })
+							// } // Update the warehouse_name in the data state when the input changes
+							isDisabled
 						/>
 						<FormLabel>Address:</FormLabel>
 						<Input
