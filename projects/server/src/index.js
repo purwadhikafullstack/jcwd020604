@@ -21,6 +21,8 @@ app.use(express.json());
 // NOTE : Add your routes here
 app.use("/api/auth", router.userRouter);
 app.use("/api/rajaOngkir", router.rajaOngkirRouter);
+app.use("/api/address", router.addressRouter);
+app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
 
 app.get("/api", (req, res) => {
 	res.send(`Hello, this is my API`);

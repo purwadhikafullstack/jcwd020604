@@ -1,82 +1,149 @@
 import React,{useState, useEffect} from 'react';
 import { api } from '../../api/api';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Box,FormControl, FormLabel, Input, FormHelperText, Container, Select, Button, useToast, HStack } from '@chakra-ui/react';
+import { 
+  FormControl, 
+  FormLabel, 
+  Input, 
+  Modal, 
+  Button, 
+  useToast, 
+  FormHelperText,
+  InputGroup,
+  Select, 
+  ModalHeader, 
+  ModalContent, 
+  ModalCloseButton, 
+  ModalBody, 
+  ModalFooter } from '@chakra-ui/react';
 
-const EditUser = () => {
-    const [fullname, setFullName] = useState('');
-    const [email, setEmail] = useState('');
-    const [role, setRole] = useState('W_ADMIN');
-    
+export default function EditUser (props) {
+  const [users, setUsers] = useState({
+    name: "",
+    email: "",
+    password: "",
+    verified: true,
+    role: "",
+  });
+    console.log(users);
     const navigate = useNavigate();
     const toast = useToast();
-    const {id} = useParams();
-
+  
     useEffect(() => {
+      if (props.id){
         getUserById();
-    },[]);
+        console.log(props.id);
+      }
+    }, [props.id]);
 
-    const updateUser = async (e) => {
-        e.preventDefault();
-        try {
-            await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`, {
-                fullname, email, role
-            });
-            toast({
-                title:"User has been updated",
-                status:"success",
-                duration:3000,
-                position:"top-right",
-                isClosable:false
-            });
-            navigate("/");
-        } catch (error) {
-            toast({
-                title:"There is error when input user",
-                status:'error',
-                duration:3000,
-                position:"top",
-                isClosable:false
-            });
-            console.log(error);
-        }
+    console.log(props.id);
+  
+    const updateUser = async () => {
+      try {
+        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.id}`, users);
+        toast({
+          title: "User has been updated",
+          status: "success",
+          duration: 3000,
+          position: "top-right",
+          isClosable: false,
+        });
+        navigate("/user_list");
+        props.fetchData();
+        props.onClose();
+      } catch (error) {
+        toast({
+          title: "There is an error when updating the user",
+          status: "error",
+          duration: 3000,
+          position: "top",
+          isClosable: false,
+        });
+        console.log(error);
+      }
+    };
+  
+    const getUserById = async () => {
+      try {
+        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.id}`);
+        setUsers(response.data);
+      } catch (error) {
+        console.log(error);
+        toast({
+          title: "Error fetching user details",
+          status: "error",
+          duration: 3000,
+          position: "top",
+          isClosable: false,
+        });
+        console.log(error);
+      }
     };
 
-    const getUserById = async () => {
-        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`);
-        setFullName(response.data.fullname);
-        setEmail(response.data.email);
-        setRole(response.data.role);
-    }
-
+    const handleInputChange = (e) => {
+      const { name, value } = e.target;
+      setUsers((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    };
+  
     return (
-        <Container>
-            <form onSubmit={updateUser}>
-                <FormControl isRequired>
+      <>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <ModalContent>
+            <ModalHeader>Edit Data {users.fullname}</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody pb={6}>
+            <FormControl isRequired>
                     <FormLabel>Name</FormLabel>
-                    <Input type='text' value={fullname} onChange={(e) => setFullName(e.target.value)} />
+                    <Input type='text' name="fullname"
+                    value={users.fullname}
+                    onChange={handleInputChange}/>
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>Email address</FormLabel>
-                    <Input type='email' value={email} onChange={(e) => setEmail(e.target.value)}/>
+                    <Input type='email' name="email"
+                    value={users.email}
+                    onChange={handleInputChange}/>
                     <FormHelperText>We'll never share your email.</FormHelperText>
                 </FormControl>
+                <FormControl id="password" isRequired>
+                  <FormLabel>Password</FormLabel>
+                  <InputGroup>
+                    <Input  type="password"
+                    name="password"
+                    placeholder="Password"
+                    readOnly={true}
+                    id="password"
+                    onChange={handleInputChange}
+                    />
+                  </InputGroup>
+                </FormControl>
+              <FormControl isRequired>
+                    <FormLabel>Verified</FormLabel>
+                    <Select placeholder='Select Option' name="verified" defaultValue={users.verified} onChange={handleInputChange}>
+                        <option value={true}>Verified</option>
+                        <option value={false}>Unverified</option>
+                    </Select>
+                </FormControl>
                 <FormControl isRequired>
-                    <FormLabel>Gender</FormLabel>
-                    <Select placeholder='Select Gender' value={role} onChange={(e) => setRole(e.target.value)}>
+                    <FormLabel>Role</FormLabel>
+                    <Select placeholder='Select Role' name='role' defaultValue={users.role} onChange={handleInputChange}>
                         <option value={'W_ADMIN'}>Warehouse Admin</option>
                         <option value={'USER'}>User</option>
                     </Select>
                 </FormControl>
-                <Box mt={2}>
-                    <HStack>
-                        <Button size={'sm'} w={'20%'} type='submit' colorScheme='twitter'>Update</Button>
-                        <Button size={'sm'} w={'20%'} colorScheme={'orange'} onClick={() => navigate("/user_list")}>Cancel</Button>
-                    </HStack>
-                </Box>
-            </form>
-        </Container>
+            </ModalBody>
+            <ModalFooter>
+              <Button colorScheme='blue' mr={3} onClick={() => updateUser()}>
+                Save
+              </Button>
+              <Button colorScheme='orange' onClick={props.onClose}>Cancel</Button>
+            </ModalFooter>
+        </ModalContent>
+        </Modal>
+      </>
     );
-}
-
-export default EditUser;
+  };
+  

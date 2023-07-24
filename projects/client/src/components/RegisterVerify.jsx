@@ -36,7 +36,7 @@ export default function Verify() {
   const validationSchema = Yup.object().shape({
     fullname: Yup.string()
       .min(6, "Full name min 6 character")
-      .required("Email is required"),
+      .required("Name is required"),
     password: Yup.string()
       .matches(/^(?=.*[A-Z])/, "Must contain at least one uppercase")
       .matches(/^(?=.*[a-z])/, "Must contain at least one lowercase")

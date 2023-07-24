@@ -12,35 +12,66 @@ import {
     Box,
     Text,
     Stack,
-    HStack
+    HStack,
+    useToast,
+    useDisclosure
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import { api } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import EditUser from './EditUser';
 
 const UserList = () => {
+    const editUser = useDisclosure();
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
-
+    const toast = useToast();
+    const { role = "W_ADMIN" } = useParams();
+    const [adminId, setAdminId] = useState();
+    console.log(adminId);
+    
     useEffect(() => {
-        getUsers();
+     fetchData();
     }, []);
 
-    const getUsers = async() => {
-        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users`);
-        console.log(response.data);
-        setUsers(response.data);
-    };
-
-    useEffect(() => {
-        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users`)
+    const fetchData = async() => {
+        try {
+            api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}`)
             .then((response) => {
                 setUsers(response.data);
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, []);
+        } catch (error) {
+            toast({
+                title:"There is something error while executing this command",
+                status:"error",
+                duration:3000,
+                isClosable:false
+            });
+        }
+    }
+
+    const deleteUser = async(id) => {
+        try {
+            await api.delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}/${id}`);
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
+            toast({
+                title:"User has been deleted",
+                status:"success",
+                duration:3000,
+                isClosable:false
+            });
+        } catch (error) {
+            toast({
+                title:"There is something error while executing this command",
+                status:"error",
+                duration:3000,
+                isClosable:false
+            });
+        }
+    }
 
     return (
         <>
@@ -74,9 +105,9 @@ const UserList = () => {
                             <Td>{user.role}</Td>
                             <Td>
                                 <ButtonGroup display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                                    <Button colorScheme={'green'} size={'sm'} onClick={() => navigate("/edit_user")}>Edit</Button>
+                                    <Button colorScheme={'green'} size={'sm'} onClick={()=> {editUser.onOpen();setAdminId(user.id)} }>Edit</Button>
                                     <Button colorScheme={'facebook'} size={'sm'}>Assign</Button>
-                                    <Button colorScheme={'red'} size={'sm'}>Delete</Button>
+                                    <Button colorScheme={'red'} size={'sm'} onClick={() => {deleteUser(user.id); navigate("/user_list")}}>Delete</Button>
                                 </ButtonGroup>
                             </Td>
                         </Tr>
@@ -84,6 +115,7 @@ const UserList = () => {
                     </Tbody>
                 </Table>
             </TableContainer>
+            <EditUser id={adminId} isOpen={editUser.isOpen} onClose={editUser.onClose} fetchData={fetchData}/>
         </>
     );
 }
