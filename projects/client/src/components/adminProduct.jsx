@@ -7,14 +7,9 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
 	ButtonGroup,
-	useDisclosure,
 } from "@chakra-ui/react";
-import { DeleteIcon, AddIcon, EditIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import { ArrowBackIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
@@ -23,7 +18,6 @@ import { api } from "../api/api";
 import ProductList from "./productList";
 
 export default function AdminProduct() {
-	const nav = useNavigate();
 	const [product, setProduct] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [selectedCategory, setSelectedCategory] = useState("");
@@ -145,9 +139,11 @@ export default function AdminProduct() {
 					<Flex w={"230px"}>Weight</Flex>
 					<Flex w={"25px"}></Flex>
 				</Flex>
-				{product.map((val) => {
-					return <ProductList val={val} />;
-				})}
+				{product.length
+					? product.map((val) => {
+							return <ProductList val={val} />;
+					  })
+					: null}
 				<ButtonGroup
 					paddingTop={"15px"}
 					justifyContent={"end"}

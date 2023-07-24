@@ -6,14 +6,67 @@ import {
 	MenuButton,
 	MenuList,
 	MenuItem,
+	useToast,
+	useDisclosure,
 } from "@chakra-ui/react";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import DeleteProductModal from "./deleteProductModal";
+import { useNavigate } from "react-router-dom";
+
+import { api } from "../api/api";
+import EditProductModal from "./editProductModal";
+import { useState } from "react";
 
 export default function ProductList({ val }) {
 	const stock = val.stocks[0]?.qty || 0;
 	const isSoldOut = stock === 0;
+	const deleteProductModal = useDisclosure();
+	const editProductModal = useDisclosure();
+	const [data, setData] = useState({});
+	const toast = useToast();
+	const nav = useNavigate();
 
-	// const editModal = useDisclosure();
+	async function editProduct() {
+		try {
+			await api.patch(`/category/${val.id}`, data);
+
+			toast({
+				title: "Category updated successfully.",
+				status: "success",
+				duration: 3000,
+				isClosable: true,
+			});
+			editProductModal.onClose();
+			nav("/admin/managedata");
+		} catch (error) {
+			toast({
+				title: error.response.data.message,
+				status: "error",
+				duration: 3000,
+			});
+		}
+	}
+
+	async function deleteProduct() {
+		try {
+			await api.delete(`/product/${val.id}`);
+
+			toast({
+				title: "Product Deleted",
+				description: "The product has been deleted successfully.",
+				status: "success",
+				duration: 3000,
+			});
+			deleteProductModal.onClose();
+			nav("/admin/product");
+		} catch (error) {
+			toast({
+				title: error.response.data.message,
+				status: "error",
+				duration: 3000,
+			});
+		}
+	}
 
 	return (
 		<Flex
@@ -44,7 +97,7 @@ export default function ProductList({ val }) {
 			</Flex>
 			<Flex w={"230px"}>
 				{isSoldOut ? (
-					<Flex style={{ color: "red" }}>SOLD OUT</Flex>
+					<Flex style={{ color: "red" }}>EMPTY</Flex>
 				) : (
 					<Flex style={{ color: "green" }}>AVAILABLE</Flex>
 				)}
@@ -54,14 +107,23 @@ export default function ProductList({ val }) {
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
 				<MenuList>
-					<MenuItem
-					// onClick={editModal.onOpen}
-					>
-						Edit
+					<MenuItem onClick={editProductModal.onOpen}>Edit</MenuItem>
+					<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
+						Remove
 					</MenuItem>
-					<MenuItem>Remove</MenuItem>
 				</MenuList>
 			</Menu>
+			<EditProductModal
+				isOpen={editProductModal.isOpen}
+				onClose={editProductModal.onClose}
+				editProduct={editProduct}
+				val={val}
+			/>
+			<DeleteProductModal
+				isOpen={deleteProductModal.isOpen}
+				onClose={deleteProductModal.onClose}
+				deleteProduct={deleteProduct}
+			/>
 		</Flex>
 	);
 }
