@@ -188,7 +188,7 @@ import { api } from '../../api/api';
                                         transform: 'translateY(-2px)',
                                         boxShadow: 'lg',
                                         }}
-                                        onClick={() => inputFileRef.current.click()}>
+                                        onClick={() => {inputFileRef.current.click(); navigate("/user_profile")}}>
                                         Change Image
                                     </Button>
                                     </Box>

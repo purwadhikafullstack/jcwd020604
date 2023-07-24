@@ -90,9 +90,9 @@ export default function EditUser (props) {
   
     return (
       <>
-      <Modal isOpen = {props.isOpen} onClose={props.onClose}>
+      <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalContent>
-            <ModalHeader>Edit</ModalHeader>
+            <ModalHeader>Edit Data {users.fullname}</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
             <FormControl isRequired>
@@ -122,7 +122,7 @@ export default function EditUser (props) {
                 </FormControl>
               <FormControl isRequired>
                     <FormLabel>Verified</FormLabel>
-                    <Select placeholder='Select Role' name="verified" defaultValue={users.verified} onChange={handleInputChange}>
+                    <Select placeholder='Select Option' name="verified" defaultValue={users.verified} onChange={handleInputChange}>
                         <option value={true}>Verified</option>
                         <option value={false}>Unverified</option>
                     </Select>
