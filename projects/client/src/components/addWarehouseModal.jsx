@@ -19,7 +19,7 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddWarehouseModal({ isOpen, onClose }) {
+export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
 	const toast = useToast();
@@ -60,6 +60,7 @@ export default function AddWarehouseModal({ isOpen, onClose }) {
 						status: "success",
 						duration: 3000,
 					});
+					getWarehouse();
 					onClose();
 				}
 			} catch (error) {

@@ -40,6 +40,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 				duration: 3000,
 				isClosable: true,
 			});
+			getCategory();
 			onClose();
 		} catch (error) {
 			toast({
@@ -63,12 +64,16 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 	}
 
 	const handleWarehouseSelect = (event) => {
-		// Update the selectedWarehouse state when a warehouse is selected from the dropdown
 		setSelectedCategory(event.target.value);
 	};
 
+	const resetInputFields = () => {
+		setData({});
+		setSelectedCategory([]);
+	};
+
 	const handleModalClose = () => {
-		// formik.resetForm();
+		resetInputFields();
 		onClose();
 	};
 
@@ -76,7 +81,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Edit Category</ModalHeader>
+				<ModalHeader>Category Detail</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
@@ -108,7 +113,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 
 				<ModalFooter>
 					<Button onClick={editCategory} colorScheme="blue" mr={3}>
-						Edit Warehouse
+						Save
 					</Button>
 				</ModalFooter>
 			</ModalContent>

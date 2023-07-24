@@ -266,6 +266,7 @@ export default function AdminManageData() {
 				<AddCategoryModal
 					isOpen={addCategoryModal.isOpen}
 					onClose={addCategoryModal.onClose}
+					getCategory={getCategory}
 				/>
 				<EditCategoryModal
 					isOpen={editCategoryModal.isOpen}
@@ -278,6 +279,7 @@ export default function AdminManageData() {
 				<AddWarehouseModal
 					isOpen={addWarehouseModal.isOpen}
 					onClose={addWarehouseModal.onClose}
+					getWarehouse={getWarehouse}
 				/>
 				<EditWarehouseModal
 					isOpen={editWarehouseModal.isOpen}

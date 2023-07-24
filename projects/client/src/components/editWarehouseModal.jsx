@@ -15,7 +15,6 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { api } from "../api/api";
-import { useParams } from "react-router-dom";
 
 export default function EditWarehouseModal({ isOpen, onClose }) {
 	const [warehouse, setWarehouse] = useState([]);
@@ -23,7 +22,6 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	const [data, setData] = useState({});
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
-	const { id } = useParams();
 	const toast = useToast();
 
 	useEffect(() => {
@@ -46,6 +44,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 				duration: 3000,
 				isClosable: true,
 			});
+			getWarehouse();
 			onClose();
 		} catch (error) {
 			toast({
@@ -79,12 +78,16 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	}
 
 	const handleWarehouseSelect = (event) => {
-		// Update the selectedWarehouse state when a warehouse is selected from the dropdown
 		setSelectedWarehouse(event.target.value);
 	};
 
+	const resetInputFields = () => {
+		setData({});
+		setSelectedWarehouse([]);
+	};
+
 	const handleModalClose = () => {
-		// formik.resetForm();
+		resetInputFields();
 		onClose();
 	};
 
@@ -92,7 +95,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Edit Warehouse</ModalHeader>
+				<ModalHeader>Warehouse Detail</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
@@ -167,7 +170,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 
 				<ModalFooter>
 					<Button onClick={editWarehouse} colorScheme="blue" mr={3}>
-						Edit Warehouse
+						Save
 					</Button>
 				</ModalFooter>
 			</ModalContent>
