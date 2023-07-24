@@ -28,18 +28,19 @@ export default function EditUser (props) {
     console.log(users);
     const navigate = useNavigate();
     const toast = useToast();
-    const { id } = useParams();
   
     useEffect(() => {
-      getUserById();
+      if (props.id){
+        getUserById();
+        console.log(props.id);
+      }
     }, [props.id]);
 
     console.log(props.id);
   
     const updateUser = async () => {
-      // e.preventDefault();
       try {
-        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${props.id}`, users);
+        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.id}`, users);
         toast({
           title: "User has been updated",
           status: "success",
@@ -48,6 +49,8 @@ export default function EditUser (props) {
           isClosable: false,
         });
         navigate("/user_list");
+        props.fetchData();
+        props.onClose();
       } catch (error) {
         toast({
           title: "There is an error when updating the user",
@@ -94,36 +97,39 @@ export default function EditUser (props) {
             <ModalBody pb={6}>
             <FormControl isRequired>
                     <FormLabel>Name</FormLabel>
-                    <Input type='text' name="name"
-                onChange={handleInputChange}/>
+                    <Input type='text' name="fullname"
+                    value={users.fullname}
+                    onChange={handleInputChange}/>
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>Email address</FormLabel>
                     <Input type='email' name="email"
-                onChange={handleInputChange}/>
+                    value={users.email}
+                    onChange={handleInputChange}/>
                     <FormHelperText>We'll never share your email.</FormHelperText>
                 </FormControl>
                 <FormControl id="password" isRequired>
-                <FormLabel>Password</FormLabel>
-                <InputGroup>
-                  <Input  type="password"
-                  name="password"
-                  placeholder="Password"
-                  id="password"
-                  onChange={handleInputChange}
-                   />
-                </InputGroup>
-              </FormControl>
+                  <FormLabel>Password</FormLabel>
+                  <InputGroup>
+                    <Input  type="password"
+                    name="password"
+                    placeholder="Password"
+                    readOnly={true}
+                    id="password"
+                    onChange={handleInputChange}
+                    />
+                  </InputGroup>
+                </FormControl>
               <FormControl isRequired>
                     <FormLabel>Verified</FormLabel>
-                    <Select placeholder='Select Role' name="verified" onChange={handleInputChange}>
+                    <Select placeholder='Select Role' name="verified" defaultValue={users.verified} onChange={handleInputChange}>
                         <option value={true}>Verified</option>
                         <option value={false}>Unverified</option>
                     </Select>
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>Role</FormLabel>
-                    <Select placeholder='Select Role' name='role' onChange={handleInputChange}>
+                    <Select placeholder='Select Role' name='role' defaultValue={users.role} onChange={handleInputChange}>
                         <option value={'W_ADMIN'}>Warehouse Admin</option>
                         <option value={'USER'}>User</option>
                     </Select>

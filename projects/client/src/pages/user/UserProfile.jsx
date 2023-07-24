@@ -19,6 +19,7 @@ import {
     Avatar,
     Image,
     Stack,
+    Select,
     ButtonGroup
   } from '@chakra-ui/react';
   import {
@@ -26,15 +27,29 @@ import {
     MdOutlineEmail,
   } from 'react-icons/md';
 import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
+import { api } from '../../api/api';
   
   export default function UserProfile() {
     const user = useSelector((state) => state.auth);
     const navigate = useNavigate();
+    const inputFileRef = useRef(null);
+    const dispatch = useDispatch();
+    const [city, setCity] = useState("");
+    const [province, setProvince] = useState("");
+    console.log(city);
+    console.log(province);
+
+    const [selectedFile, setSelectedFile] = useState(null);
+
+    const handleFile = (e) => {
+      setSelectedFile(e.target.files[0]);
+      console.log(e.target.files[0]);
+    };
 
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
 
@@ -49,10 +64,43 @@ import * as Yup from 'yup';
     address: '',
   };
 
+  useEffect(() => {
+    if(selectedFile){
+      uploadAvatar();
+    }
+  },[selectedFile]);
+
   const handleSubmit = (values, { setSubmitting }) => {
     setIsFormSubmitted(true);
     setSubmitting(false);
   };
+
+  async function uploadAvatar() {
+		const formData = new FormData();
+		formData.append("userImg", selectedFile);
+		console.log(selectedFile);
+		await api
+			.post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData)
+			.then((res) => {
+        navigate("/user_profile")
+			});
+	}
+
+  const getUserCity = async () => {
+    const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/address/getAll/city`)
+    setCity(res.data);
+  }
+
+  const getUserProvince = async () => {
+    const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/address/getAll/province`)
+    setCity(res.data);
+    setProvince(res.data);
+  }
+
+  useEffect(() => {
+    getUserCity();
+    getUserProvince();
+  },[])
 
     return (
       <Container bg="#9DC4FB" maxW="full" mt={0} centerContent overflow="hidden">
@@ -92,16 +140,14 @@ import * as Yup from 'yup';
                                     <Image
                                     h={'120px'}
                                     w={'full'}
-                                    src={
-                                        'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'
-                                    }
+                                    src={'https://images.unsplash.com/photo-1612865547334-09cb8cb455da?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80'}
                                     objectFit={'cover'}
                                     />
                                     <Flex justify={'center'} mt={-12}>
                                     <Avatar
                                         size={'xl'}
                                         src={
-                                        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?ixlib=rb-1.2.1&q=80&fm=jpg&crop=faces&fit=crop&h=200&w=200&ixid=eyJhcHBfaWQiOjE3Nzg0fQ'
+                                          user.avatar_url
                                         }
                                         alt={'Author'}
                                         css={{
@@ -117,22 +163,21 @@ import * as Yup from 'yup';
                                         </Heading>
                                         <Text color={'gray.500'}>{user.email}</Text>
                                     </Stack>
-
                                     <Stack direction={'row'} justify={'center'} spacing={6}>
                                         <Stack spacing={0} align={'center'}>
-                                        <Text fontWeight={600}>23k</Text>
+                                        <Text fontWeight={600}>Role</Text>
                                         <Text fontSize={'sm'} color={'gray.500'}>
-                                            Followers
-                                        </Text>
-                                        </Stack>
-                                        <Stack spacing={0} align={'center'}>
-                                        <Text fontWeight={600}>23k</Text>
-                                        <Text fontSize={'sm'} color={'gray.500'}>
-                                            Followers
+                                            {user.role}
                                         </Text>
                                         </Stack>
                                     </Stack>
-
+                                    <Input
+                                        accept="image/png, image/jpeg"
+                                        ref={inputFileRef}
+                                        type="file"
+                                        display={"none"}
+                                        onChange={handleFile}
+                                      />
                                     <Button
                                         w={'full'}
                                         mt={8}
@@ -142,7 +187,8 @@ import * as Yup from 'yup';
                                         _hover={{
                                         transform: 'translateY(-2px)',
                                         boxShadow: 'lg',
-                                        }}>
+                                        }}
+                                        onClick={() => inputFileRef.current.click()}>
                                         Change Image
                                     </Button>
                                     </Box>
@@ -190,6 +236,8 @@ import * as Yup from 'yup';
                     <WrapItem>
                       <Box bg="white" borderRadius="lg">
                         <Box m={8} color="#0B0E3F">
+                          {user.role === "W_ADMIN" ? (
+                          <>
                           <VStack spacing={5}>
                           <Field name="name">
                                 {({ field }) => (
@@ -213,44 +261,97 @@ import * as Yup from 'yup';
                                 <Input type="email" readOnly={true} size="md" placeholder={user.email}/>
                               </InputGroup>
                             </FormControl>
-                            <FormControl id="address">
-                                <FormLabel>Address</FormLabel>
-                                <Field name="address">
-                                  {({ field }) => (
-                                    <Textarea
-                                      {...field}
-                                      borderColor="gray.300"
-                                      _hover={{
-                                        borderRadius: 'gray.300',
-                                      }}
-                                      placeholder="Changes Address"
-                                    />
-                                  )}
-                                </Field>
-                                <ErrorMessage name="address" component={Text} color="red.500" />
-                                </FormControl>
                                   <FormControl id="button">
                                     <ButtonGroup>
                                       <Button
                                         type="submit"
                                         variant="solid"
-                                        bg="#0D74FF"
-                                        color="white"
+                                        colorScheme='blue'
                                         isLoading={isSubmitting}
                                       >
                                         Save
                                       </Button>
                                       <Button
                                         variant="solid"
-                                        bg="#FA8B44"
-                                        color="white"
+                                        colorScheme='orange'
                                         onClick={() => navigate("/")}
                                       >
                                         Cancel
                                       </Button>
                                   </ButtonGroup>
                               </FormControl>
-                          </VStack>
+                          </VStack></>
+                          ):(
+                          <> 
+                          <VStack spacing={5}>
+                            <Field name="name">
+                                  {({ field }) => (
+                                    <FormControl id="name" isInvalid={isFormSubmitted && !!field.error}>
+                                      <FormLabel>Your Name</FormLabel>
+                                      <InputGroup borderColor="#E0E1E7">
+                                        <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
+                                        <Input {...field} type="text" size="md" />
+                                      </InputGroup>
+                                      <ErrorMessage name="name" component={Text} color="red.500" />
+                                    </FormControl>
+                                  )}
+                              </Field>
+                              <FormControl id="email">
+                                <FormLabel>Email</FormLabel>
+                                <InputGroup borderColor="#E0E1E7">
+                                  <InputLeftElement
+                                    pointerEvents="none"
+                                    children={<MdOutlineEmail color="gray.800" />}
+                                  />
+                                  <Input type="email" readOnly={true} size="md" placeholder={user.email}/>
+                                </InputGroup>
+                              </FormControl>
+                              <FormControl id="address">
+                                  <FormLabel>Address</FormLabel>
+                                  <Field name="address">
+                                    {({ field }) => (
+                                      <Textarea
+                                        {...field}
+                                        borderColor="gray.300"
+                                        _hover={{
+                                          borderRadius: 'gray.300',
+                                        }}
+                                        placeholder="Changes Address"
+                                      />
+                                    )}
+                                  </Field>
+                                  <ErrorMessage name="address" component={Text} color="red.500" />
+                                </FormControl>
+                                <Select>
+                                  {city.length? city.map((val) => (
+                                    <option>{val.city_name}</option>
+                                  )) : null}
+                                </Select>
+                                <Select>
+                                  {province.length? province.map((val) => (
+                                    <option>{val.province}</option>
+                                  )) : null}
+                                </Select>
+                                    <FormControl id="button">
+                                      <ButtonGroup>
+                                        <Button
+                                          type="submit"
+                                          variant="solid"
+                                          colorScheme='blue'
+                                          isLoading={isSubmitting}
+                                        >
+                                          Save
+                                        </Button>
+                                        <Button
+                                          variant="solid"
+                                          colorScheme='orange'
+                                          onClick={() => navigate("/")}
+                                        >
+                                          Cancel
+                                        </Button>
+                                    </ButtonGroup>
+                                </FormControl>
+                            </VStack></>)}
                         </Box>
                       </Box>
                     </WrapItem>

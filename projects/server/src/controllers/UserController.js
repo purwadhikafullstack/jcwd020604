@@ -323,5 +323,19 @@ const userController = {
   getUserByToken: async (req, res) => {
     res.send(req.user);
   },
+
+  insertImage: async (req, res) => {
+    const t = await db.sequelize.transaction();
+    try {
+        const {filename} = req.file;
+        // Check if the product_name already exists
+        await db.users.update({avatar_url: process.env.user_img + filename}, { where: {id: req.params.id}, transaction: t });
+        await t.commit();
+        res.send({message: "Upload berhasil"});
+    } catch (err) {
+        await t.rollback();
+        return res.status(500).send({ message: err.message });
+    }
+},
 };
 module.exports = userController;

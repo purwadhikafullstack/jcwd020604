@@ -31,20 +31,32 @@ const UserList = () => {
     console.log(adminId);
     
     useEffect(() => {
-        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}`)
+     fetchData();
+    }, []);
+
+    const fetchData = async() => {
+        try {
+            api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}`)
             .then((response) => {
                 setUsers(response.data);
             })
             .catch((error) => {
                 console.error(error);
             });
-    }, []);
+        } catch (error) {
+            toast({
+                title:"There is something error while executing this command",
+                status:"error",
+                duration:3000,
+                isClosable:false
+            });
+        }
+    }
 
     const deleteUser = async(id) => {
         try {
             await api.delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}/${id}`);
             setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
-
             toast({
                 title:"User has been deleted",
                 status:"success",
@@ -60,7 +72,6 @@ const UserList = () => {
             });
         }
     }
-
 
     return (
         <>
@@ -104,7 +115,7 @@ const UserList = () => {
                     </Tbody>
                 </Table>
             </TableContainer>
-            <EditUser id={adminId} isOpen={editUser.isOpen} onClose={editUser.onClose}/>
+            <EditUser id={adminId} isOpen={editUser.isOpen} onClose={editUser.onClose} fetchData={fetchData}/>
         </>
     );
 }
