@@ -34,7 +34,6 @@ app.use("/api/stock", router.stockRouter);
 app.use("/api/warehouse", router.warehouseRouter);
 app.use("/api/productImg", express.static(`${__dirname}/public/productImg`));
 app.use("/api/auth", router.userRouter);
-app.use("/api/rajaOngkir", router.rajaOngkirRouter);
 app.use("/api/address", router.addressRouter);
 app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
 
