@@ -3,9 +3,11 @@ import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes } from "react-router-dom";
 import routes from "./routes/Routes";
+import Loading from "./components/Loading";
 
 function App() {
 	const [message, setMessage] = useState("");
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		(async () => {
@@ -15,9 +17,20 @@ function App() {
 			setMessage(data?.message || "");
 		})();
 	}, []);
+
+	useEffect(() => {
+		setTimeout(() => {
+			setIsLoading(false);
+		}, 1000);
+	}, [isLoading]);
+	
 	return (
 		<>
-			<Routes>{routes.map((val) => val)}</Routes>
+			{isLoading ? (
+        		<Loading />
+     		) : (
+        		<Routes>{routes.map((val) => val)}</Routes>
+      		)}
 		</>
 	);
 }
