@@ -1,5 +1,6 @@
 const { Op } = require("sequelize");
 const db = require("../models");
+const Joi = require("joi");
 
 const stockController = {
 	getStock: async (req, res) => {
@@ -19,7 +20,10 @@ const stockController = {
 						},
 					],
 				},
-				include: [{ model: db.products }, { model: db.warehouses }],
+				include: [
+					{ model: db.products, include: [{ model: db.product_images }] },
+					{ model: db.warehouses },
+				],
 			});
 			res.status(200).send(stock);
 		} catch (err) {

@@ -77,8 +77,8 @@ export default function AddStockModal({
 								? product.map((val) => <option>{val.product_name}</option>)
 								: null}
 						</Select>
-						<Center flexDir={"column"}>
-							<FormLabel>Stock Amount:</FormLabel>
+						<Center flexDir={"column"} pt={"15px"}>
+							<FormLabel pl={"18px"}>Stock Amount:</FormLabel>
 							<HStack w="170px">
 								<Button {...dec}>-</Button>
 								<Input textAlign={"center"} type="number" {...input} />

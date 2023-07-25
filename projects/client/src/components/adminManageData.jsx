@@ -28,13 +28,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import ProductList from "./productList";
 import AddCategoryModal from "./addCategoryModal";
-import AddProductModal from "./addProductModal";
 import AddWarehouseModal from "./addWarehouseModal";
 import DeleteCategoryModal from "./deleteCategoryModal";
 import DeleteWarehouseModal from "./deleteWarehouseModal";
 import EditWarehouseModal from "./editWarehouseModal";
 import EditCategoryModal from "./editCategoryModal";
 import AddStockModal from "./addStockModal";
+import StockList from "./stockList";
 
 export default function AdminManageData() {
 	// const [selectedCategory, setSelectedCategory] = useState("");
@@ -56,6 +56,7 @@ export default function AdminManageData() {
 	const addWarehouseModal = useDisclosure();
 	const editWarehouseModal = useDisclosure();
 	const deleteWarehouseModal = useDisclosure();
+	console.log(stock);
 
 	useEffect(() => {
 		getCategory();
@@ -107,7 +108,7 @@ export default function AdminManageData() {
 			>
 				<Flex flexDir={"column"}>
 					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
-						Manage Stock Data
+						Manage Data
 					</Flex>
 					<Flex>
 						<Flex gap={"10px"} w={"100%"}>
@@ -122,9 +123,6 @@ export default function AdminManageData() {
 									rightIcon={<AddIcon />}
 								></MenuButton>
 								<MenuList>
-									<MenuItem onClick={addProductModal.onOpen}>
-										Add Product
-									</MenuItem>
 									<MenuItem onClick={addCategoryModal.onOpen}>
 										Add Category
 									</MenuItem>
@@ -191,21 +189,10 @@ export default function AdminManageData() {
 								  ))
 								: null}
 						</Select>
-						{/* <Select placeholder="All Status">
-							<option value="priceAsc">Available</option>
-							<option value="newest">Sold Out</option>
-						</Select> */}
 						<InputGroup>
 							<Input placeholder="Search..." ref={inputFileRef} />
 							<InputRightElement cursor={"pointer"}>
-								<Button
-									border="none"
-									// onClick={() => {
-									// 	const searchValue = inputFileRef.current.value;
-									// 	setSearch(searchValue);
-									// 	setPage(1);
-									// }}
-								>
+								<Button border="none">
 									<Icon as={FaSearch} color="gray.400" />
 								</Button>
 							</InputRightElement>
@@ -223,16 +210,16 @@ export default function AdminManageData() {
 						</Flex>
 
 						<Flex w={"195px"}>Warehouse</Flex>
-						<Flex w={"195px"}>Stock</Flex>
 						<Flex w={"195px"}>Category</Flex>
+						<Flex w={"195px"}>Stock</Flex>
 						<Flex w={"195px"}>Status</Flex>
 						<Flex w={"25px"}></Flex>
 					</Flex>
-					{/* {product.length
-						? product.map((val) => {
-								return <ProductList val={val} />;
+					{stock.length
+						? stock.map((val) => {
+								return <StockList val={val} />;
 						  })
-						: null} */}
+						: null}
 				</Flex>
 				{/* <ButtonGroup
 					paddingTop={"15px"}
@@ -265,10 +252,7 @@ export default function AdminManageData() {
 					isOpen={addStockModal.isOpen}
 					onClose={addStockModal.onClose}
 				/>
-				<AddProductModal
-					isOpen={addProductModal.isOpen}
-					onClose={addProductModal.onClose}
-				/>
+
 				<AddCategoryModal
 					isOpen={addCategoryModal.isOpen}
 					onClose={addCategoryModal.onClose}

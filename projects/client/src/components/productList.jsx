@@ -18,8 +18,6 @@ import EditProductModal from "./editProductModal";
 import { useState } from "react";
 
 export default function ProductList({ val }) {
-	const stock = val.stocks[0]?.qty || 0;
-	const isSoldOut = stock === 0;
 	const deleteProductModal = useDisclosure();
 	const editProductModal = useDisclosure();
 	const [data, setData] = useState({});
@@ -115,7 +113,7 @@ export default function ProductList({ val }) {
 				</MenuButton>
 				<MenuList>
 					<MenuItem onClick={editProductModal.onOpen}>
-						View / Edit detail
+						View / Edit Product
 					</MenuItem>
 					<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
 						Remove

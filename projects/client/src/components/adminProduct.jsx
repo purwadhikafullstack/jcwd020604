@@ -8,14 +8,16 @@ import {
 	Icon,
 	Button,
 	ButtonGroup,
+	useDisclosure,
 } from "@chakra-ui/react";
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import ProductList from "./productList";
+import AddProductModal from "./addProductModal";
 
 export default function AdminProduct() {
 	const [product, setProduct] = useState([]);
@@ -26,6 +28,8 @@ export default function AdminProduct() {
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
+
+	const addProductModal = useDisclosure();
 
 	useEffect(() => {
 		getCategory();
@@ -77,9 +81,23 @@ export default function AdminProduct() {
 					</Flex>
 				</Flex>
 				<Flex pb={"15px"} w={"100%"} justifyContent={"space-between"}>
-					<Link to={`/admin/managedata`}>
-						<Button leftIcon={<ArrowBackIcon />}>Back</Button>
-					</Link>
+					<Flex gap={"10px"}>
+						<Link to={`/admin/managedata`}>
+							<Button leftIcon={<ArrowBackIcon />}>Back</Button>
+						</Link>
+						<Button
+							as={Button}
+							paddingLeft={"9px"}
+							marginBottom={"15px"}
+							rightIcon={<AddIcon />}
+							colorScheme="green"
+							onClick={addProductModal.onOpen}
+						/>
+						<AddProductModal
+							isOpen={addProductModal.isOpen}
+							onClose={addProductModal.onClose}
+						/>
+					</Flex>
 					<Flex gap={"15px"} paddingBottom={"15px"}>
 						<Select
 							w={"418px"}
