@@ -1,4 +1,5 @@
 import { Route } from "react-router-dom";
+import HomePage from "../pages/HomePage";
 import CollectionPage from "../pages/user/ProductCollectionPage";
 import DetailPage from "../pages/user/ProductDetailPage";
 import AdminManageDataPage from "../pages/admin/AdminManageDataPage";
