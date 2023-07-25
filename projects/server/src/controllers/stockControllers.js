@@ -21,7 +21,10 @@ const stockController = {
 					],
 				},
 				include: [
-					{ model: db.products, include: [{ model: db.product_images }] },
+					{
+						model: db.products,
+						include: [{ model: db.product_images }, { model: db.categories }],
+					},
 					{ model: db.warehouses },
 				],
 			});
@@ -49,6 +52,16 @@ const stockController = {
 		}
 
 		try {
+			const existingStock = await db.stocks.findOne({
+				where: { product_id, warehouse_id },
+			});
+
+			if (existingStock) {
+				return res.status(409).send({
+					message: "Stock for the given product and warehouse already exists.",
+				});
+			}
+
 			const newStock = await db.stocks.create(
 				{
 					qty,

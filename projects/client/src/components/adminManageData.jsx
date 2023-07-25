@@ -26,7 +26,6 @@ import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
-import ProductList from "./productList";
 import AddCategoryModal from "./addCategoryModal";
 import AddWarehouseModal from "./addWarehouseModal";
 import DeleteCategoryModal from "./deleteCategoryModal";
@@ -49,14 +48,12 @@ export default function AdminManageData() {
 	const inputFileRef = useRef(null);
 
 	const addStockModal = useDisclosure();
-	const addProductModal = useDisclosure();
 	const addCategoryModal = useDisclosure();
 	const editCategoryModal = useDisclosure();
 	const deleteCategoryModal = useDisclosure();
 	const addWarehouseModal = useDisclosure();
 	const editWarehouseModal = useDisclosure();
 	const deleteWarehouseModal = useDisclosure();
-	console.log(stock);
 
 	useEffect(() => {
 		getCategory();

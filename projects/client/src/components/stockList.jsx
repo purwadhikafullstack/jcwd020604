@@ -41,13 +41,13 @@ export default function StockList({ val }) {
 				<Flex w={"270px"}>{val.product.product_name}</Flex>
 			</Flex>
 			<Flex w={"195px"}>{val.warehouse.warehouse_name}</Flex>
-			<Flex w={"195px"}>{val.product.category_id}</Flex>
+			<Flex w={"195px"}>{val.product.category.category_name}</Flex>
 			<Flex w={"195px"}>{val.qty}</Flex>
 			<Flex w={"195px"}>
 				{isSoldOut ? (
-					<Flex color={"red"}>Empty</Flex>
+					<Flex color={"red"}>Out of stock</Flex>
 				) : (
-					<Flex color={"green"}>Available</Flex>
+					<Flex color={"green"}>Ready stock</Flex>
 				)}
 			</Flex>
 			<Menu>
@@ -55,7 +55,7 @@ export default function StockList({ val }) {
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
 				<MenuList>
-					<MenuItem>View / Edit Stock</MenuItem>
+					<MenuItem>Edit</MenuItem>
 					<MenuItem color={"red"}>Remove</MenuItem>
 				</MenuList>
 			</Menu>
