@@ -228,11 +228,11 @@ export default function AdminManageData() {
 						<Flex w={"230px"}>Status</Flex>
 						<Flex w={"25px"}></Flex>
 					</Flex>
-					{product.length
+					{/* {product.length
 						? product.map((val) => {
 								return <ProductList val={val} />;
 						  })
-						: null}
+						: null} */}
 				</Flex>
 				<ButtonGroup
 					paddingTop={"15px"}

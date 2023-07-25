@@ -28,11 +28,29 @@ export default function EditProductModal({
 	editProduct,
 	val,
 }) {
+	const [selectedImages, setSelectedImages] = useState([]);
 	const [category, setCategory] = useState([]);
+	const [selectedFiles, setSelectedFiles] = useState([]);
+	const imagesProduct = val.product_images;
 
 	useEffect(() => {
 		getCategory();
 	}, []);
+
+	const handleImageChange = (event) => {
+		const files = event.target.files;
+		setSelectedFiles(files);
+		const images = [];
+		const maxImages = 5; // Set the maximum number of images to 5
+
+		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
+			const file = files[i];
+			const imageUrl = URL.createObjectURL(file);
+			images.push(imageUrl);
+		}
+
+		setSelectedImages(images);
+	};
 
 	async function getCategory() {
 		const res = await api.get("/category");
@@ -53,7 +71,7 @@ export default function EditProductModal({
 							id="product_name"
 							value={val.product_name}
 						/>
-						<FormLabel> Product Description:</FormLabel>
+						<FormLabel>Product Description:</FormLabel>
 						<Textarea
 							placeholder="e.g. A T-shirt with an impressive"
 							id="product_detail"
@@ -88,15 +106,35 @@ export default function EditProductModal({
 								: null}
 						</Select>
 						<FormLabel>Product Images:</FormLabel>
+						{imagesProduct.length ? (
+							<Flex
+								flexWrap={"wrap"}
+								flexDir={"row"}
+								justifyContent={"center"}
+								mt={"10px"}
+								border={"1px"}
+								borderRadius={"9px"}
+								borderColor={"#E6EBF2"}
+							>
+								{imagesProduct.map((val) => (
+									<Image
+										src={val.product_image}
+										style={{ width: "100px", height: "100px", margin: "8px" }}
+									/>
+								))}
+							</Flex>
+						) : null}
+						<FormLabel>Change Product Images:</FormLabel>
 						<Input
 							accept="image/png, image/jpeg"
 							type="file"
 							id="productImg"
 							paddingTop={"4px"}
 							multiple
+							onChange={handleImageChange}
 						/>
 						{/* Preview the selected images */}
-						{/* {selectedImages.length ? (
+						{selectedImages.length ? (
 							<Flex
 								flexWrap={"wrap"}
 								flexDir={"row"}
@@ -115,10 +153,9 @@ export default function EditProductModal({
 									/>
 								))}
 							</Flex>
-						) : null} */}
+						) : null}
 					</FormControl>
 				</ModalBody>
-
 				<ModalFooter>
 					<Button colorScheme="blue" mr={3} onClick={editProduct}>
 						Save

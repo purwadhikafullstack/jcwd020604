@@ -174,14 +174,6 @@ const productController = {
 					.send({ message: "Product name already exists." });
 			}
 
-			const imageUrls = [];
-
-			for (const file of req.files) {
-				const { filename } = file;
-				const imageUrl = process.env.product_img + filename;
-				imageUrls.push(imageUrl);
-			}
-
 			// Update the product
 			await db.products.update(
 				{
@@ -198,22 +190,21 @@ const productController = {
 				}
 			);
 
+			const imageUrls = []; // Array to store the image URLs
+
+			// Loop through each uploaded file (similar to the insert function)
+			for (const file of req.files) {
+				const { filename } = file;
+				const imageUrl = process.env.product_img + filename;
+				imageUrls.push({ product_image: imageUrl, product_id: id });
+			}
+
 			// Delete existing product images
 			await db.product_images.destroy({
 				where: { product_id: id },
 				transaction: t,
 			});
-
-			// Create product_images entries for each image
-			for (const imageUrl of imageUrls) {
-				await db.product_images.create(
-					{
-						product_image: imageUrl,
-						product_id: id,
-					},
-					{ transaction: t }
-				);
-			}
+			await db.product_images.bulkCreate(imageUrls, { transaction: t });
 			await t.commit();
 			res.status(200).send({ message: "Product updated successfully." });
 		} catch (err) {

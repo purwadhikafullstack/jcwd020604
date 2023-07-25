@@ -136,7 +136,7 @@ export default function AdminProduct() {
 					<Flex w={"230px"}>Description</Flex>
 					<Flex w={"230px"}>Category</Flex>
 					<Flex w={"230px"}>Price (Rp)</Flex>
-					<Flex w={"230px"}>Weight</Flex>
+					<Flex w={"230px"}>Weight (g)</Flex>
 					<Flex w={"25px"}></Flex>
 				</Flex>
 				{product.length

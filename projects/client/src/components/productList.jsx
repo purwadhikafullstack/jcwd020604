@@ -81,12 +81,22 @@ export default function ProductList({ val }) {
 					w={"50px"}
 					h={"50px"}
 					borderRadius={"4px"}
-					src={val.product_images[0].product_image}
+					src={
+						val.product_images[0] ? val.product_images[0].product_image : null
+					}
 				/>
 				<Flex w={"270px"}>{val.product_name}</Flex>
 			</Flex>
-			<Flex w={"230px"}>MMS</Flex>
-			<Flex w={"150px"}>{stock}</Flex>
+			<Flex
+				w={"230px"}
+				style={{
+					overflow: "hidden",
+					whiteSpace: "nowrap",
+					textOverflow: "ellipsis",
+				}}
+			>
+				{val.product_detail}
+			</Flex>
 			<Flex w={"230px"}>{val.category.category_name}</Flex>
 			<Flex w={"230px"}>
 				<Flex>
@@ -95,13 +105,7 @@ export default function ProductList({ val }) {
 						: "Price Not Available"}
 				</Flex>
 			</Flex>
-			<Flex w={"230px"}>
-				{isSoldOut ? (
-					<Flex style={{ color: "red" }}>EMPTY</Flex>
-				) : (
-					<Flex style={{ color: "green" }}>AVAILABLE</Flex>
-				)}
-			</Flex>
+			<Flex w={"230px"}>{val.weight}</Flex>
 			<Menu>
 				<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
 					<Icon as={BiDotsHorizontalRounded} />{" "}
