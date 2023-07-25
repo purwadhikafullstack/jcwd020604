@@ -200,7 +200,7 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 				<ModalFooter>
 					<Button
 						onClick={formik.handleSubmit}
-						colorScheme="blue"
+						colorScheme="green"
 						mr={3}
 						isDisabled={!isAddButtonEnabled}
 					>

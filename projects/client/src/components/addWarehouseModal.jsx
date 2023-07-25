@@ -152,7 +152,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 				<ModalFooter>
 					<Button
 						onClick={formik.handleSubmit}
-						colorScheme="blue"
+						colorScheme="green"
 						mr={3}
 						isDisabled={!isAddButtonEnabled}
 					>

@@ -8,14 +8,16 @@ import {
 	Icon,
 	Button,
 	ButtonGroup,
+	useDisclosure,
 } from "@chakra-ui/react";
-import { ArrowBackIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import ProductList from "./productList";
+import AddProductModal from "./addProductModal";
 
 export default function AdminProduct() {
 	const [product, setProduct] = useState([]);
@@ -27,29 +29,27 @@ export default function AdminProduct() {
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
 
+	const addProductModal = useDisclosure();
+
 	useEffect(() => {
 		getCategory();
 	}, []);
 
 	useEffect(() => {
-		getAll();
+		getProduct();
 	}, [selectedCategory, sort, search, page]);
 
-	async function getAll() {
-		try {
-			const res = await api.get("/product", {
-				params: {
-					category_id: selectedCategory,
-					sort: sort,
-					search: search,
-					page: page,
-				},
-			});
-			setProduct(res.data.rows);
-			setTotalPage(Math.ceil(res.data.count / 12));
-		} catch (error) {
-			console.log(error);
-		}
+	async function getProduct() {
+		const res = await api.get("/product", {
+			params: {
+				category_id: selectedCategory,
+				sort: sort,
+				search: search,
+				page: page,
+			},
+		});
+		setProduct(res.data.rows);
+		setTotalPage(Math.ceil(res.data.count / 12));
 	}
 
 	async function getCategory() {
@@ -80,48 +80,59 @@ export default function AdminProduct() {
 						Manage Product
 					</Flex>
 				</Flex>
-				<Flex pb={"15px"}>
-					<Link to={`/admin/managedata`}>
-						<Button leftIcon={<ArrowBackIcon />}>Back</Button>
-					</Link>
+				<Flex pb={"15px"} w={"100%"} justifyContent={"space-between"}>
+					<Flex gap={"10px"}>
+						<Link to={`/admin/managedata`}>
+							<Button leftIcon={<ArrowBackIcon />}>Back</Button>
+						</Link>
+						<Button
+							as={Button}
+							paddingLeft={"9px"}
+							marginBottom={"15px"}
+							rightIcon={<AddIcon />}
+							colorScheme="green"
+							onClick={addProductModal.onOpen}
+						/>
+						<AddProductModal
+							isOpen={addProductModal.isOpen}
+							onClose={addProductModal.onClose}
+						/>
+					</Flex>
+					<Flex gap={"15px"} paddingBottom={"15px"}>
+						<Select
+							w={"418px"}
+							placeholder="All Type of Category"
+							value={selectedCategory}
+							onChange={(event) => {
+								setPage(1);
+								setSelectedCategory(event.target.value);
+							}}
+						>
+							{category.length
+								? category.map((val) => (
+										<option key={val.id} value={val.id}>
+											{val.category_name}
+										</option>
+								  ))
+								: null}
+						</Select>
+						<InputGroup w={"418px"}>
+							<Input placeholder="Search..." ref={inputFileRef} />
+							<InputRightElement cursor={"pointer"}>
+								<Button
+									border="none"
+									onClick={() => {
+										const searchValue = inputFileRef.current.value;
+										setSearch(searchValue);
+										setPage(1);
+									}}
+								>
+									<Icon as={FaSearch} color="gray.400" />
+								</Button>
+							</InputRightElement>
+						</InputGroup>
+					</Flex>
 				</Flex>
-				<Center gap={"15px"} paddingBottom={"15px"}>
-					<Select
-						placeholder="All Type of Category"
-						value={selectedCategory}
-						onChange={(event) => {
-							setPage(1);
-							setSelectedCategory(event.target.value);
-						}}
-					>
-						{category.length
-							? category.map((val) => (
-									<option key={val.id} value={val.id}>
-										{val.category_name}
-									</option>
-							  ))
-							: null}
-					</Select>
-					<Select placeholder="All Status">
-						<option value="priceAsc">Available</option>
-						<option value="newest">Sold Out</option>
-					</Select>
-					<InputGroup>
-						<Input placeholder="Search..." ref={inputFileRef} />
-						<InputRightElement cursor={"pointer"}>
-							<Button
-								border="none"
-								onClick={() => {
-									const searchValue = inputFileRef.current.value;
-									setSearch(searchValue);
-									setPage(1);
-								}}
-							>
-								<Icon as={FaSearch} color="gray.400" />
-							</Button>
-						</InputRightElement>
-					</InputGroup>
-				</Center>
 				<Flex
 					padding={"7px"}
 					borderBottom={"1px"}
@@ -133,10 +144,10 @@ export default function AdminProduct() {
 						Product Name
 					</Flex>
 
-					<Flex w={"230px"}>Description</Flex>
-					<Flex w={"230px"}>Category</Flex>
-					<Flex w={"230px"}>Price (Rp)</Flex>
-					<Flex w={"230px"}>Weight</Flex>
+					<Flex w={"300px"}>Description</Flex>
+					<Flex w={"160px"}>Category</Flex>
+					<Flex w={"160px"}>Price (Rp)</Flex>
+					<Flex w={"160px"}>Weight (g)</Flex>
 					<Flex w={"25px"}></Flex>
 				</Flex>
 				{product.length

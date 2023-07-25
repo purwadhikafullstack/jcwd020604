@@ -28,11 +28,29 @@ export default function EditProductModal({
 	editProduct,
 	val,
 }) {
+	const [selectedImages, setSelectedImages] = useState([]);
 	const [category, setCategory] = useState([]);
+	const [selectedFiles, setSelectedFiles] = useState([]);
+	const imagesProduct = val.product_images;
 
 	useEffect(() => {
 		getCategory();
 	}, []);
+
+	const handleImageChange = (event) => {
+		const files = event.target.files;
+		setSelectedFiles(files);
+		const images = [];
+		const maxImages = 5; // Set the maximum number of images to 5
+
+		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
+			const file = files[i];
+			const imageUrl = URL.createObjectURL(file);
+			images.push(imageUrl);
+		}
+
+		setSelectedImages(images);
+	};
 
 	async function getCategory() {
 		const res = await api.get("/category");
@@ -51,33 +69,33 @@ export default function EditProductModal({
 						<Input
 							placeholder="e.g. MMS T-shirt"
 							id="product_name"
-							value={val.product_name}
+							defaultValue={val.product_name}
 						/>
-						<FormLabel> Product Description:</FormLabel>
+						<FormLabel>Product Description:</FormLabel>
 						<Textarea
 							placeholder="e.g. A T-shirt with an impressive"
 							id="product_detail"
-							value={val.product_detail}
+							defaultValue={val.product_detail}
 						/>
 						<FormLabel>Price:</FormLabel>
 						<Input
 							type="number"
 							placeholder="e.g. 500000"
 							id="price"
-							value={val.price}
+							defaultValue={val.price}
 						/>
 						<FormLabel>Weight:</FormLabel>
 						<Input
 							type="number"
 							placeholder="e.g. 100 "
 							id="weight"
-							value={val.weight}
+							defaultValue={val.weight}
 						/>
 						<FormLabel> Product Category:</FormLabel>
 						<Select
 							placeholder="Choose category"
 							id="category_id"
-							value={val.category_id}
+							defaultValue={val.category_id}
 						>
 							{category.length
 								? category.map((val) => (
@@ -88,15 +106,35 @@ export default function EditProductModal({
 								: null}
 						</Select>
 						<FormLabel>Product Images:</FormLabel>
+						{imagesProduct.length ? (
+							<Flex
+								flexWrap={"wrap"}
+								flexDir={"row"}
+								justifyContent={"center"}
+								mt={"10px"}
+								border={"1px"}
+								borderRadius={"9px"}
+								borderColor={"#E6EBF2"}
+							>
+								{imagesProduct.map((val) => (
+									<Image
+										src={val.product_image}
+										style={{ width: "100px", height: "100px", margin: "8px" }}
+									/>
+								))}
+							</Flex>
+						) : null}
+						<FormLabel>Change Product Images:</FormLabel>
 						<Input
 							accept="image/png, image/jpeg"
 							type="file"
 							id="productImg"
 							paddingTop={"4px"}
 							multiple
+							onChange={handleImageChange}
 						/>
 						{/* Preview the selected images */}
-						{/* {selectedImages.length ? (
+						{selectedImages.length ? (
 							<Flex
 								flexWrap={"wrap"}
 								flexDir={"row"}
@@ -115,10 +153,9 @@ export default function EditProductModal({
 									/>
 								))}
 							</Flex>
-						) : null} */}
+						) : null}
 					</FormControl>
 				</ModalBody>
-
 				<ModalFooter>
 					<Button colorScheme="blue" mr={3} onClick={editProduct}>
 						Save
