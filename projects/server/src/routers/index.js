@@ -1,9 +1,15 @@
-const rajaOngkirRouter = require("./rajaOngkirRouter");
+const productRouter = require("./productRouter");
+const categoryRouter = require("./categoryRouter");
+const stockRouter = require("./stockRouter");
+const warehouseRouter = require("./warehouseRouter");
 const userRouter = require("./UserRouter");
 const addressRouter = require("./AddressRouter");
 
 module.exports = {
-	rajaOngkirRouter,
+	productRouter,
+	categoryRouter,
+	stockRouter,
+	warehouseRouter,
 	userRouter,
-	addressRouter
+	addressRouter,
 };
