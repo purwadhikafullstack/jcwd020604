@@ -1,13 +1,15 @@
-const rajaOngkirController = require("./rajaOngkirController");
 const productController = require("./productController");
-const categoryControllers = require("./categoryController");
+const categoryController = require("./categoryController");
+const stockController = require("./stockControllers");
+const warehouseController = require("./warehouseController");
 const userController = require("./UserController");
 const addressController = require("./AddressController");
 
 module.exports = {
-	rajaOngkirController,
 	productController,
-	categoryControllers,
+	categoryController,
+	stockController,
+	warehouseController,
 	userController,
 	addressController,
 };

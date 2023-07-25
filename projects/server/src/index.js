@@ -12,6 +12,14 @@ const db = require("./models");
 const PORT = process.env.PORT || 8000;
 const app = express();
 app.use(cors());
+// app.use(
+// 	cors({
+// 		origin: [
+// 			process.env.WHITELISTED_DOMAIN &&
+// 				process.env.WHITELISTED_DOMAIN.split(","),
+// 		],
+// 	})
+// );
 
 app.use(express.json());
 
@@ -19,9 +27,13 @@ app.use(express.json());
 
 // ===========================
 // NOTE : Add your routes here
+
+app.use("/api/product", router.productRouter);
+app.use("/api/category", router.categoryRouter);
+app.use("/api/stock", router.stockRouter);
+app.use("/api/warehouse", router.warehouseRouter);
+app.use("/api/productImg", express.static(`${__dirname}/public/productImg`));
 app.use("/api/auth", router.userRouter);
-app.use("/product", router.productRouter);
-app.use("/category", router.categoryRouter);
 app.use("/api/rajaOngkir", router.rajaOngkirRouter);
 app.use("/api/address", router.addressRouter);
 app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
