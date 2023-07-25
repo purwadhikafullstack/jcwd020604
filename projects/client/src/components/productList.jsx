@@ -88,30 +88,35 @@ export default function ProductList({ val }) {
 				<Flex w={"270px"}>{val.product_name}</Flex>
 			</Flex>
 			<Flex
-				w={"230px"}
+				w={"300px"}
 				style={{
 					overflow: "hidden",
 					whiteSpace: "nowrap",
 					textOverflow: "ellipsis",
 				}}
 			>
-				{val.product_detail}
+				{val.product_detail.length > 35
+					? val.product_detail.substring(0, 35) + "..."
+					: val.product_detail}
+				{/* {val.product_detail} */}
 			</Flex>
-			<Flex w={"230px"}>{val.category.category_name}</Flex>
-			<Flex w={"230px"}>
+			<Flex w={"160px"}>{val.category.category_name}</Flex>
+			<Flex w={"160px"}>
 				<Flex>
 					{val.price
 						? val.price.toLocaleString("id-ID")
 						: "Price Not Available"}
 				</Flex>
 			</Flex>
-			<Flex w={"230px"}>{val.weight}</Flex>
+			<Flex w={"160px"}>{val.weight}</Flex>
 			<Menu>
 				<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
 				<MenuList>
-					<MenuItem onClick={editProductModal.onOpen}>Edit</MenuItem>
+					<MenuItem onClick={editProductModal.onOpen}>
+						View / Edit detail
+					</MenuItem>
 					<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
 						Remove
 					</MenuItem>

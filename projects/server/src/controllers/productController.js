@@ -35,24 +35,23 @@ const productController = {
 
 			const searchFilter = search ? searchOptions : null;
 
-			await db.products
-				.findAndCountAll({
-					where: {
-						...where,
-						...searchFilter,
-					},
-					include: [
-						{ model: db.product_images, as: "product_images" },
-						{ model: db.stocks, as: "stocks" },
-						{ model: db.categories },
-					],
-					order: sortOrder,
-					limit: limit,
-					distinct: true,
-					offset: offset,
-					// raw: true,
-				})
-				.then((result) => res.send(result));
+			const product = await db.products.findAndCountAll({
+				where: {
+					...where,
+					...searchFilter,
+				},
+				include: [
+					{ model: db.product_images, as: "product_images" },
+					{ model: db.stocks, as: "stocks" },
+					{ model: db.categories },
+				],
+				order: sortOrder,
+				limit: limit,
+				distinct: true,
+				offset: offset,
+				// raw: true,
+			});
+			res.status(200).send(product);
 		} catch (err) {
 			res.status(500).send({ message: err.message });
 		}
@@ -90,26 +89,32 @@ const productController = {
 	},
 	insert: async (req, res) => {
 		const t = await db.sequelize.transaction();
+		const { product_name, product_detail, price, weight, category_id } =
+			req.body;
 
-		// const productSchema = Joi.object({
-		// 	product_name: Joi.string().required(),
-		// 	product_detail: Joi.string().required(),
-		// 	price: Joi.number().required(),
-		// 	weight: Joi.number().required(),
-		// 	category_id: Joi.number().required(),
-		// });
+		const productSchema = Joi.object({
+			product_name: Joi.string().required(),
+			product_detail: Joi.string().required(),
+			price: Joi.number().required(),
+			weight: Joi.number().required(),
+			category_id: Joi.number().required(),
+		});
 
-		// const { error } = productSchema.validate(req.body);
+		const validation = productSchema.validate({
+			product_name,
+			product_detail,
+			price,
+			weight,
+			category_id,
+		});
 
-		// if (error) {
-		// 	return res.status(400).send({ message: error.details[0].message });
-		// }
+		if (validation.error) {
+			return res
+				.status(400)
+				.send({ message: validation.error.details[0].message });
+		}
 
 		try {
-			const { product_name, product_detail, price, weight, category_id } =
-				req.body;
-
-			// Check if the product_name already exists
 			const existingProduct = await db.products.findOne({
 				where: { product_name },
 			});
@@ -144,6 +149,9 @@ const productController = {
 		}
 	},
 	editProduct: async (req, res) => {
+		const { product_name, product_detail, price, weight, category_id } =
+			req.body;
+		const { id } = req.params;
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
@@ -154,14 +162,19 @@ const productController = {
 			category_id: Joi.number().required(),
 		});
 
-		const { error } = schema.validate(req.body);
-		if (error) {
-			return res.status(400).send({ message: error.details[0].message });
-		}
+		const validation = schema.validate({
+			product_name,
+			product_detail,
+			price,
+			weight,
+			category_id,
+		});
 
-		const { product_name, product_detail, price, weight, category_id } =
-			req.body;
-		const { id } = req.params;
+		if (validation.error) {
+			return res
+				.status(400)
+				.send({ message: validation.error.details[0].message });
+		}
 
 		try {
 			const existingProduct = await db.products.findOne({
@@ -185,7 +198,6 @@ const productController = {
 				},
 				{
 					where: { id },
-					returning: true,
 					transaction: t,
 				}
 			);
@@ -200,10 +212,10 @@ const productController = {
 			}
 
 			// Delete existing product images
-			await db.product_images.destroy({
-				where: { product_id: id },
-				transaction: t,
-			});
+			// await db.product_images.destroy({
+			// 	where: { product_id: id },
+			// 	transaction: t,
+			// });
 			await db.product_images.bulkCreate(imageUrls, { transaction: t });
 			await t.commit();
 			res.status(200).send({ message: "Product updated successfully." });

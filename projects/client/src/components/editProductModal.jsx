@@ -69,33 +69,33 @@ export default function EditProductModal({
 						<Input
 							placeholder="e.g. MMS T-shirt"
 							id="product_name"
-							value={val.product_name}
+							defaultValue={val.product_name}
 						/>
 						<FormLabel>Product Description:</FormLabel>
 						<Textarea
 							placeholder="e.g. A T-shirt with an impressive"
 							id="product_detail"
-							value={val.product_detail}
+							defaultValue={val.product_detail}
 						/>
 						<FormLabel>Price:</FormLabel>
 						<Input
 							type="number"
 							placeholder="e.g. 500000"
 							id="price"
-							value={val.price}
+							defaultValue={val.price}
 						/>
 						<FormLabel>Weight:</FormLabel>
 						<Input
 							type="number"
 							placeholder="e.g. 100 "
 							id="weight"
-							value={val.weight}
+							defaultValue={val.weight}
 						/>
 						<FormLabel> Product Category:</FormLabel>
 						<Select
 							placeholder="Choose category"
 							id="category_id"
-							value={val.category_id}
+							defaultValue={val.category_id}
 						>
 							{category.length
 								? category.map((val) => (
