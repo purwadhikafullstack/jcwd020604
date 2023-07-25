@@ -90,7 +90,7 @@ export default function AddStockModal({
 
 				<ModalFooter>
 					<Button colorScheme="green" mr={3}>
-						Add
+						Add Stock
 					</Button>
 				</ModalFooter>
 			</ModalContent>

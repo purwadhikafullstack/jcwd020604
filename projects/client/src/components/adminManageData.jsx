@@ -113,7 +113,7 @@ export default function AdminManageData() {
 					<Flex>
 						<Flex gap={"10px"} w={"100%"}>
 							<Link to={`/admin/product`}>
-								<Button leftIcon={<HamburgerIcon />}>Product List</Button>
+								<Button leftIcon={<HamburgerIcon />}>Product Data</Button>
 							</Link>
 							<Menu>
 								<MenuButton
