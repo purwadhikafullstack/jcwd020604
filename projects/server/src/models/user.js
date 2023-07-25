@@ -2,6 +2,14 @@ module.exports = (sequelize, Sequelize) => {
 	const users = sequelize.define(
 		"users",
 		{
+			uuid:{
+				type: Sequelize.STRING,
+				defaultValue: Sequelize.UUIDV4,
+				allowNull: false,
+				validate: {
+					notEmpty: true
+				}
+			},
 			email: {
 				type: Sequelize.STRING,
 				unique: true,

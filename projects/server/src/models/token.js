@@ -15,6 +15,9 @@ module.exports = (sequelize, Sequelize) => {
 			status: {
 				type: Sequelize.ENUM("LOGIN", "FORGOT-PASSWORD", "VERIFY"),
 			},
+			userId: {
+				type: Sequelize.STRING
+			}
 		},
 		{
 			paranoid: true,
