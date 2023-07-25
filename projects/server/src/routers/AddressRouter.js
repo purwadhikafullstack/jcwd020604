@@ -4,6 +4,7 @@ const addressController = require("../controllers").addressController;
 
 router.get("/getAll/province/", addressController.getAllProvince);
 router.get("/getAll/city/", addressController.getAllCity);
+router.get("/users/:id", addressController.getAddressByUserId);
 
 router.post("/", addressController.insertAddress);
 router.patch("/:id", addressController.editAddress);

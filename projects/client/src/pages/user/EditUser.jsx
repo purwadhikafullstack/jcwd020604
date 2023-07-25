@@ -1,6 +1,6 @@
 import React,{useState, useEffect} from 'react';
 import { api } from '../../api/api';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { 
   FormControl, 
   FormLabel, 

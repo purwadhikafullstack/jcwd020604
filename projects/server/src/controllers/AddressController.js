@@ -37,24 +37,34 @@ const addressController = {
 			});
 		}
 	},
+
+	getAddressByUserId: async (req, res) => {
+		try {
+			const response = await db.addresses.findOne({
+				where:{
+					user_id: req.params.id
+				}
+			});
+			res.status(200).json(response);
+		} catch (error) {
+			console.log(error.message);
+		}
+	},
+
 	insertAddress: async (req, res) => {
 		const t = await db.sequelize.transaction();
-		// const addressSchema = Joi.object({
-		// 	address: Joi.string().required(),
-		// 	province: Joi.string().required(),
-		// 	city: Joi.string().required(),
-		// 	district: Joi.string().required(),
-		// });
-		// const { error, value } = addressSchema.validate(req.body);
-		// if (error) {
-		// 	return res.status(400).send({ message: error.details[0].message });
-		// }
 		try {
-			const { address, district, city, province } = req.body;
+			const { user_id, fullname, address, district, city, province } = req.body;
 			// Check if a warehouse with the same warehouse_name already exists
 			const existingAddress = await db.addresses.findOne({
 				where: { address },
 			});
+
+			// Check if the user exists
+			const user = await db.users.findByPk(user_id);
+				if (!user) {
+				return res.status(404).json({ error: 'User not found.' });
+			}
 
 			if (existingAddress) {
 				throw new Error("Address with this name already exists.");
@@ -77,6 +87,8 @@ const addressController = {
 			// Create a new warehouse record with the retrieved latitude and longitude
 			const addresses = await db.addresses.create(
 				{
+					user_id: user_id,
+					fullname,
 					address,
 					province,
 					city,

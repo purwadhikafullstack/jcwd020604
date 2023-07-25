@@ -20,6 +20,7 @@ import { useState, useEffect } from 'react';
 import { api } from '../../api/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import EditUser from './EditUser';
+import Navbar from '../../components/Navbar';
 
 const UserList = () => {
     const editUser = useDisclosure();
@@ -75,6 +76,7 @@ const UserList = () => {
 
     return (
         <>
+        <Navbar/>
         <Stack>
             <HStack>
                 <Box m={2}>

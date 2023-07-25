@@ -24,6 +24,7 @@ const userController = {
   getUsersById: async(req, res) => {
     try {
         const response = await db.users.findOne({
+          include: [{model: db.addresses}],
             where:{
                 id: req.params.id
             }
