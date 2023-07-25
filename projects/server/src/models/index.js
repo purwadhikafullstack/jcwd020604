@@ -63,6 +63,7 @@ db.warehouses = require("./warehouse")(sequelize, Sequelize); // id: product
 
 // db.addresses foreignKey
 db.users.hasMany(db.addresses, { foreignKey: "user_id", targetKey: "id" });
+db.addresses.belongsTo(db.users, { foreignKey: "user_id"});
 
 // db.carts foreignKey
 db.stocks.hasMany(db.carts, { foreignKey: "stock_id", targetKey: "id" });
