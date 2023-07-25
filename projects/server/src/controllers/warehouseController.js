@@ -125,18 +125,12 @@ const warehouseController = {
 		}
 	},
 	editWarehouse: async (req, res) => {
-		const {
-			// warehouse_name,
-			address,
-			province,
-			city,
-			district,
-		} = req.body;
+		const { warehouse_name, address, province, city, district } = req.body;
 		const { id } = req.params;
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
-			// warehouse_name: Joi.string().required(),
+			warehouse_name: Joi.string().required(),
 			address: Joi.string().required(),
 			province: Joi.string().required(),
 			city: Joi.string().required(),
@@ -144,7 +138,7 @@ const warehouseController = {
 		});
 
 		const validation = schema.validate({
-			// warehouse_name,
+			warehouse_name,
 			address,
 			province,
 			city,
@@ -158,15 +152,15 @@ const warehouseController = {
 		}
 
 		try {
-			// const existingWarehouse = await db.warehouses.findOne({
-			// 	where: { warehouse_name },
-			// });
+			const existingWarehouse = await db.warehouses.findOne({
+				where: { warehouse_name },
+			});
 
-			// if (existingWarehouse && existingWarehouse.id !== id) {
-			// 	return res
-			// 		.status(400)
-			// 		.send({ message: "Warehouse name already exists." });
-			// }
+			if (existingWarehouse && existingWarehouse.id !== id) {
+				return res
+					.status(400)
+					.send({ message: "Warehouse name already exists." });
+			}
 
 			const response = await axios.get(
 				"https://api.opencagedata.com/geocode/v1/json",
@@ -184,7 +178,7 @@ const warehouseController = {
 
 			await db.warehouses.update(
 				{
-					// warehouse_name,
+					warehouse_name,
 					address,
 					province,
 					city,

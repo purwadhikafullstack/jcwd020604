@@ -122,10 +122,9 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 							placeholder="e.g. MMS Jogja"
 							id="warehouse_name"
 							defaultValue={data.warehouse_name}
-							// onChange={(e) =>
-							// 	setData({ ...data, warehouse_name: e.target.value })
-							// } // Update the warehouse_name in the data state when the input changes
-							isDisabled
+							onChange={(e) =>
+								setData({ ...data, warehouse_name: e.target.value })
+							}
 						/>
 						<FormLabel>Address:</FormLabel>
 						<Input
