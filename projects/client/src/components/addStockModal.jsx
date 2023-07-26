@@ -22,7 +22,7 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddStockModal({ isOpen, onClose }) {
+export default function AddStockModal({ isOpen, onClose, getStock }) {
 	const toast = useToast();
 	const nav = useNavigate();
 	const [product, setProduct] = useState([]);
@@ -56,6 +56,7 @@ export default function AddStockModal({ isOpen, onClose }) {
 						status: "success",
 						duration: 3000,
 					});
+					getStock();
 					onClose();
 					nav("/admin/managedata");
 				}

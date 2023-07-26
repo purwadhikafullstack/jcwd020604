@@ -5,7 +5,29 @@ const Joi = require("joi");
 const stockController = {
 	getStock: async (req, res) => {
 		try {
-			const stock = await db.stocks.findAll({
+			const { warehouse_id, sort, search } = req.query;
+			const where = {};
+			const limit = 12;
+			// let offset = 0;
+
+			if (warehouse_id) {
+				where.warehouse_id = warehouse_id;
+			}
+
+			const page = req?.query?.page || 1;
+			let offset = (parseInt(page) - 1) * limit;
+
+			const sortOptions = {
+				qtyAsc: [["qty", "ASC"]],
+				qtyDesc: [["qty", "DESC"]],
+				productAsc: [["product_id", "ASC"]],
+				productDesc: [["product_id", "DESC"]],
+				warehouseAsc: [["warehouse_id", "ASC"]],
+				warehouseDesc: [["warehouse_id", "DESC"]],
+			};
+			const sortOrder = sortOptions[sort] || null;
+
+			const stock = await db.stocks.findAndCountAll({
 				where: {
 					[Op.and]: [
 						{
@@ -13,11 +35,23 @@ const stockController = {
 								[Op.like]: `%${req.query.warehouse_id || ""}%`,
 							},
 						},
+
 						{
 							"$product.product_name$": {
-								[Op.like]: `%${req.query.product_name || ""}%`,
+								[Op.like]: `%${search || ""}%`,
 							},
 						},
+						{
+							"$product.category.category_name$": {
+								[Op.like]: `%${req.query.selectedCategory || ""}%`,
+							},
+						},
+
+						// {
+						// 	"$warehouse.warehouse_name$": {
+						// 		[Op.like]: `%${!null}%`,
+						// 	},
+						// },
 					],
 				},
 				include: [
@@ -27,8 +61,15 @@ const stockController = {
 					},
 					{ model: db.warehouses },
 				],
+				// limit: limit,
+				// offset: offset,
+				// distinct: true,
+				order: sortOrder,
 			});
-			res.status(200).send(stock);
+			res.status(200).send({
+				count: stock.count,
+				rows: stock.rows.slice(offset, limit * page),
+			});
 		} catch (err) {
 			res.status(500).send({ message: err.message });
 		}

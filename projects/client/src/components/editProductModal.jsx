@@ -23,7 +23,7 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function EditProductModal({ isOpen, onClose, val }) {
+export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 	const [selectedImages, setSelectedImages] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [selectedFiles, setSelectedFiles] = useState([]);
@@ -55,6 +55,7 @@ export default function EditProductModal({ isOpen, onClose, val }) {
 				status: "success",
 				duration: 3000,
 			});
+			getProduct();
 			nav("/admin/product");
 			onClose();
 		} catch (error) {

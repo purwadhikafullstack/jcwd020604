@@ -10,7 +10,12 @@ import {
 	ButtonGroup,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { AddIcon, ArrowBackIcon, UpDownIcon } from "@chakra-ui/icons";
+import {
+	AddIcon,
+	ArrowBackIcon,
+	RepeatIcon,
+	UpDownIcon,
+} from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
@@ -52,6 +57,19 @@ export default function AdminProduct() {
 		setTotalPage(Math.ceil(res.data.count / 12));
 	}
 
+	const handleSortChange = (sortOrder) => {
+		if (sortOrder === sort) {
+			setSort(
+				sortOrder.includes("Asc")
+					? sortOrder.replace("Asc", "Desc")
+					: sortOrder.replace("Desc", "Asc")
+			);
+		} else {
+			setSort(sortOrder);
+		}
+		setPage(1);
+	};
+
 	async function getCategory() {
 		const res = await api.get("/category");
 		setCategory(res.data);
@@ -61,6 +79,14 @@ export default function AdminProduct() {
 		if (newPage !== page) {
 			setPage(newPage);
 		}
+	};
+
+	const handleReset = () => {
+		getProduct();
+		setSelectedCategory("");
+		setSort("");
+		setSearch("");
+		setPage(1);
 	};
 
 	return (
@@ -96,9 +122,13 @@ export default function AdminProduct() {
 						<AddProductModal
 							isOpen={addProductModal.isOpen}
 							onClose={addProductModal.onClose}
+							getProduct={getProduct}
 						/>
 					</Flex>
 					<Flex gap={"15px"} paddingBottom={"15px"}>
+						<Button onClick={handleReset}>
+							<RepeatIcon />
+						</Button>
 						<Select
 							w={"418px"}
 							placeholder="All Type of Category"
@@ -140,41 +170,97 @@ export default function AdminProduct() {
 					borderColor={"#E6EBF2"}
 					gap={"7"}
 				>
-					<Flex w={"325px"} paddingLeft={"55px"} alignItems={"center"}>
-						Product Name
-						<UpDownIcon ml={"10px"} />
+					<Flex w={"325px"} paddingLeft={"55px"}>
+						<Flex
+							onClick={() =>
+								handleSortChange(
+									"product" + (sort === "productAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+							alignItems={"center"}
+						>
+							Product Name
+							<UpDownIcon ml={"10px"} />
+							{sort === "productAsc" ? sort === "productDesc" : null}
+						</Flex>
 					</Flex>
 
 					<Flex w={"300px"} alignItems={"center"}>
-						Description
-						<UpDownIcon ml={"10px"} />
+						<Flex
+						// onClick={() =>
+						// 	handleSortChange("desc" + (sort === "descAsc" ? "Desc" : "Asc"))
+						// }
+						// cursor="pointer"
+						>
+							Description
+							{/* {sort === "descAsc" ? sort === "descDesc" : null} */}
+							{/* <UpDownIcon ml={"10px"} /> */}
+						</Flex>
 					</Flex>
-					<Flex w={"160px"} alignItems={"center"}>
-						Category
-						<UpDownIcon ml={"10px"} />
+					<Flex w={"160px"}>
+						<Flex
+							onClick={() =>
+								handleSortChange(
+									"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+							alignItems={"center"}
+						>
+							Category
+							{sort === "categoryAsc" ? sort === "categoryDesc" : null}
+							<UpDownIcon ml={"10px"} />
+						</Flex>
 					</Flex>
-					<Flex w={"160px"} alignItems={"center"}>
-						Price (Rp)
-						<UpDownIcon ml={"10px"} />
+					<Flex w={"160px"}>
+						<Flex
+							onClick={() =>
+								handleSortChange(
+									"price" + (sort === "priceAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+							alignItems={"center"}
+						>
+							Price (Rp)
+							{sort === "priceAsc" ? sort === "priceDesc" : null}
+							<UpDownIcon ml={"10px"} />
+						</Flex>
 					</Flex>
-					<Flex w={"160px"} alignItems={"center"}>
-						Weight (g)
-						<UpDownIcon ml={"10px"} />
+					<Flex w={"160px"}>
+						<Flex
+							onClick={() =>
+								handleSortChange(
+									"weight" + (sort === "weightAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+							alignItems={"center"}
+						>
+							Weight (g)
+							{sort === "weightAsc" ? sort === "weightDesc" : null}
+							<UpDownIcon ml={"10px"} />
+						</Flex>
 					</Flex>
 					<Flex w={"25px"}></Flex>
 				</Flex>
-				{product.length
-					? product.map((val) => {
-							return <ProductList val={val} />;
-					  })
-					: null}
+				{product.length ? (
+					product.map((val) => {
+						return <ProductList val={val} getProduct={getProduct} />;
+					})
+				) : (
+					<Center fontSize={"20px"} fontWeight={"bold"} marginTop={"40px"}>
+						Product not found
+					</Center>
+				)}
 				<ButtonGroup
 					paddingTop={"15px"}
 					justifyContent={"end"}
 					alignItems={"center"}
 				>
-					<Flex>{product.length} from (BUTUH DI FIX) Products</Flex>
-					{page === 1 ? null : (
+					{/* <Flex>{product.length} from (BUTUH DI FIX) Products</Flex> */}
+					{page === 1 || product.length === 0 ? null : (
 						<Button
 							onClick={() => {
 								handlePageChange(page - 1);
@@ -184,7 +270,7 @@ export default function AdminProduct() {
 							Previous
 						</Button>
 					)}
-					{page === totalPage ? null : (
+					{page === totalPage || product.length === 0 ? null : (
 						<Button
 							onClick={() => {
 								handlePageChange(page + 1);

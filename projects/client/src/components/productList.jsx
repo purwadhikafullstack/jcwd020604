@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import EditProductModal from "./editProductModal";
 
-export default function ProductList({ val }) {
+export default function ProductList({ val, getProduct }) {
 	const deleteProductModal = useDisclosure();
 	const editProductModal = useDisclosure();
 	const toast = useToast();
@@ -32,6 +32,7 @@ export default function ProductList({ val }) {
 				status: "success",
 				duration: 3000,
 			});
+			getProduct();
 			deleteProductModal.onClose();
 			nav("/admin/product");
 		} catch (error) {
@@ -75,7 +76,13 @@ export default function ProductList({ val }) {
 					: val.product_detail}
 				{/* {val.product_detail} */}
 			</Flex>
-			<Flex w={"160px"}>{val.category.category_name}</Flex>
+			<Flex w={"160px"}>
+				{val.category == null ? (
+					<Flex>Category not found</Flex>
+				) : (
+					val.category.category_name
+				)}
+			</Flex>
 			<Flex w={"160px"}>
 				<Flex>
 					{val.price
@@ -101,6 +108,7 @@ export default function ProductList({ val }) {
 				isOpen={editProductModal.isOpen}
 				onClose={editProductModal.onClose}
 				val={val}
+				getProduct={getProduct}
 			/>
 			<DeleteProductModal
 				isOpen={deleteProductModal.isOpen}

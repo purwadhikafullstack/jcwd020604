@@ -19,10 +19,16 @@ const productController = {
 			}
 
 			const sortOptions = {
-				priceAsc: [["price", "ASC"]],
-				priceDesc: [["price", "DESC"]],
+				productAsc: [["product_name", "ASC"]],
+				productDesc: [["product_name", "DESC"]],
+				desctAsc: [["product_detail", "ASC"]],
+				descDesc: [["product_detail", "DESC"]],
 				categoryAsc: [["category_id", "ASC"]],
 				categoryDesc: [["category_id", "DESC"]],
+				priceAsc: [["price", "ASC"]],
+				priceDesc: [["price", "DESC"]],
+				weightAsc: [["weight", "ASC"]],
+				weightDesc: [["weight", "DESC"]],
 				newest: [["createdAt", "DESC"]],
 			};
 			const sortOrder = sortOptions[sort] || null;
@@ -49,7 +55,6 @@ const productController = {
 				limit: limit,
 				distinct: true,
 				offset: offset,
-				// raw: true,
 			});
 			res.status(200).send(product);
 		} catch (err) {

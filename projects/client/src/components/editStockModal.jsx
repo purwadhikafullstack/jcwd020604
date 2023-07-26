@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
 
-export default function EditStockModal({ isOpen, onClose, val }) {
+export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 	const [stock, setStock] = useState(val);
 	const toast = useToast();
 	const nav = useNavigate();
@@ -29,6 +29,7 @@ export default function EditStockModal({ isOpen, onClose, val }) {
 				status: "success",
 				duration: 3000,
 			});
+			getStock();
 			nav("/admin/managedata");
 			onClose();
 		} catch (error) {
@@ -56,7 +57,7 @@ export default function EditStockModal({ isOpen, onClose, val }) {
 				<ModalBody pb={6}>
 					<FormControl>
 						<FormLabel>Warehouse</FormLabel>
-						<Input value={val.warehouse.warehouse_name} />
+						<Input value={val?.warehouse?.warehouse_name} />
 						<FormLabel>Product</FormLabel>
 						<Input value={val.product.product_name} />
 						<FormLabel>Stocks</FormLabel>

@@ -21,6 +21,7 @@ import {
 	HamburgerIcon,
 	PlusSquareIcon,
 	UpDownIcon,
+	RepeatIcon,
 } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
@@ -37,16 +38,17 @@ import AddStockModal from "./addStockModal";
 import StockList from "./stockList";
 
 export default function AdminManageData() {
-	// const [selectedCategory, setSelectedCategory] = useState("");
-	// const [sort, setSort] = useState("");
-	// const [search, setSearch] = useState("");
-	// const [page, setPage] = useState(1);
-	// const [totalPage, setTotalPage] = useState(0);
 	const [warehouse, setWarehouse] = useState([]);
-	const [product, setProduct] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [stock, setStock] = useState([]);
 	const inputFileRef = useRef(null);
+	const [selectedCategory, setSelectedCategory] = useState("");
+	const [selectedWarehouse, setSelectedWarehouse] = useState("");
+	const [sort, setSort] = useState("");
+	const [search, setSearch] = useState("");
+	const [page, setPage] = useState("");
+	const [totalPage, setTotalPage] = useState(0);
+	const [product, setProduct] = useState([]);
 
 	const addStockModal = useDisclosure();
 	const addCategoryModal = useDisclosure();
@@ -64,11 +66,26 @@ export default function AdminManageData() {
 
 	useEffect(() => {
 		getStock();
-	}, []);
+	}, [selectedWarehouse, sort, search, page]);
+	useEffect(() => {
+		getStock();
+	}, [search]);
+	useEffect(() => {
+		getStock();
+	}, [selectedCategory]);
 
 	async function getStock() {
-		const res = await api.get("/stock");
-		setStock(res.data);
+		const res = await api.get("/stock", {
+			params: {
+				warehouse_id: selectedWarehouse,
+				selectedCategory,
+				sort: sort,
+				search: search,
+				// page: page,
+			},
+		});
+		setStock(res.data.rows);
+		setTotalPage(Math.ceil(res.data.count / 12));
 	}
 
 	async function getProduct() {
@@ -86,11 +103,36 @@ export default function AdminManageData() {
 		setWarehouse(res.data);
 	}
 
-	// const handlePageChange = (newPage) => {
-	// 	if (newPage !== page) {
-	// 		setPage(newPage);
-	// 	}
-	// };
+	const handleSortChange = (sortOrder) => {
+		if (sortOrder === sort) {
+			setSort(
+				sortOrder.includes("Asc")
+					? sortOrder.replace("Asc", "Desc")
+					: sortOrder.replace("Desc", "Asc")
+			);
+		} else {
+			setSort(sortOrder);
+		}
+		setPage(1);
+	};
+
+	const handlePageChange = (newPage) => {
+		if (newPage !== page) {
+			setPage(newPage);
+		}
+	};
+
+	const handleReset = () => {
+		getStock();
+		getProduct();
+		getCategory();
+		getWarehouse();
+		setSelectedCategory("");
+		setSelectedWarehouse("");
+		setSort("");
+		setSearch("");
+		setPage(1);
+	};
 
 	return (
 		<Center flexDir={"column"}>
@@ -164,6 +206,9 @@ export default function AdminManageData() {
 								</MenuList>
 							</Menu>
 						</Flex>
+						<Button onClick={handleReset} mr={"10px"}>
+							<RepeatIcon />
+						</Button>
 						<Button
 							justifyContent={"end"}
 							colorScheme="green"
@@ -173,15 +218,30 @@ export default function AdminManageData() {
 						</Button>
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
-						<Select placeholder="All Warehouses">
+						<Select
+							placeholder="All Warehouses"
+							value={selectedWarehouse}
+							onChange={(event) => {
+								// setPage(1);
+								setSelectedWarehouse(event.target.value);
+							}}
+						>
 							{warehouse.length
-								? warehouse.map((val) => <option>{val.warehouse_name}</option>)
+								? warehouse.map((val) => (
+										<option key={val.id} value={val.id}>
+											{val.warehouse_name}
+										</option>
+								  ))
 								: null}
 						</Select>
-						<Select placeholder="All Type of Category">
+						<Select
+							placeholder="All Type of Category"
+							value={selectedCategory}
+							onChange={(e) => setSelectedCategory(e.target.value)}
+						>
 							{category.length
 								? category.map((val) => (
-										<option key={val.id} value={val.id}>
+										<option key={val.id} value={val.category_name}>
 											{val.category_name}
 										</option>
 								  ))
@@ -190,7 +250,10 @@ export default function AdminManageData() {
 						<InputGroup>
 							<Input placeholder="Search..." ref={inputFileRef} />
 							<InputRightElement cursor={"pointer"}>
-								<Button border="none">
+								<Button
+									border="none"
+									onClick={() => setSearch(inputFileRef.current.value)}
+								>
 									<Icon as={FaSearch} color="gray.400" />
 								</Button>
 							</InputRightElement>
@@ -203,40 +266,73 @@ export default function AdminManageData() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"325px"} paddingLeft={"55px"} alignItems={"center"}>
-							Product Name
-							<UpDownIcon ml={"10px"} />
+						<Flex w={"325px"} paddingLeft={"55px"}>
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"product" + (sort === "productAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Product Name
+								<UpDownIcon ml={"10px"} />
+								{sort === "productAsc" ? sort === "productDesc" : null}
+							</Flex>
 						</Flex>
 
 						<Flex w={"195px"} alignItems={"center"}>
-							Warehouse
-							<UpDownIcon ml={"10px"} />
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Warehouse
+								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
 						</Flex>
 						<Flex w={"195px"} alignItems={"center"}>
-							Category
-							<UpDownIcon ml={"10px"} />
+							<Flex alignItems={"center"}>
+								Category
+								{/* <UpDownIcon ml={"10px"} /> */}
+							</Flex>
 						</Flex>
 						<Flex w={"195px"} alignItems={"center"}>
-							Stock
-							<UpDownIcon ml={"10px"} />
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
+								}
+								cursor="pointer"
+							>
+								Stock
+								<UpDownIcon ml={"10px"} />
+								{sort === "qtyAsc" ? sort === "qtyDesc" : null}
+							</Flex>
 						</Flex>
 						<Flex w={"195px"} alignItems={"center"}>
-							Status
+							<Flex alignItems={"center"}>Status</Flex>
 						</Flex>
 						<Flex w={"25px"}></Flex>
 					</Flex>
 					{stock.length
 						? stock.map((val) => {
-								return <StockList val={val} />;
+								return <StockList val={val} getStock={getStock} />;
 						  })
 						: null}
 				</Flex>
-				{/* <ButtonGroup
+				<ButtonGroup
 					paddingTop={"15px"}
 					justifyContent={"end"}
 					alignItems={"center"}
 				>
-					<Flex>{product.length} from (BUTUH DI FIX) Products</Flex>
+					{/* <Flex>{product.length} from (BUTUH DI FIX) Products</Flex> */}
 					{page === 1 ? null : (
 						<Button
 							onClick={() => {
@@ -257,10 +353,11 @@ export default function AdminManageData() {
 							Next
 						</Button>
 					)}
-				</ButtonGroup> */}
+				</ButtonGroup>
 				<AddStockModal
 					isOpen={addStockModal.isOpen}
 					onClose={addStockModal.onClose}
+					getStock={getStock}
 				/>
 
 				<AddCategoryModal
