@@ -20,6 +20,7 @@ import {
 	EditIcon,
 	HamburgerIcon,
 	PlusSquareIcon,
+	UpDownIcon,
 } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
@@ -202,14 +203,26 @@ export default function AdminManageData() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"325px"} paddingLeft={"55px"}>
+						<Flex w={"325px"} paddingLeft={"55px"} alignItems={"center"}>
 							Product Name
+							<UpDownIcon ml={"10px"} />
 						</Flex>
 
-						<Flex w={"195px"}>Warehouse</Flex>
-						<Flex w={"195px"}>Category</Flex>
-						<Flex w={"195px"}>Stock</Flex>
-						<Flex w={"195px"}>Status</Flex>
+						<Flex w={"195px"} alignItems={"center"}>
+							Warehouse
+							<UpDownIcon ml={"10px"} />
+						</Flex>
+						<Flex w={"195px"} alignItems={"center"}>
+							Category
+							<UpDownIcon ml={"10px"} />
+						</Flex>
+						<Flex w={"195px"} alignItems={"center"}>
+							Stock
+							<UpDownIcon ml={"10px"} />
+						</Flex>
+						<Flex w={"195px"} alignItems={"center"}>
+							Status
+						</Flex>
 						<Flex w={"25px"}></Flex>
 					</Flex>
 					{stock.length

@@ -85,7 +85,7 @@ const stockController = {
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
-			qty: Joi.string().required(),
+			qty: Joi.number().required(),
 		});
 
 		const validation = schema.validate({ qty });
@@ -97,15 +97,7 @@ const stockController = {
 		}
 
 		try {
-			await db.stocks.update(
-				{
-					qty,
-				},
-				{
-					where: { id },
-					transaction: t,
-				}
-			);
+			await db.stocks.update({ qty }, { where: { id: id }, transaction: t });
 			await t.commit();
 			res.send({ message: "Stock updated successfully" });
 		} catch (err) {
@@ -124,6 +116,7 @@ const stockController = {
 			}
 
 			await db.stocks.destroy({ where: { id: id }, transaction: t });
+			await t.commit();
 			res.status(200).send({ message: "Stock deleted successfully" });
 		} catch (err) {
 			await t.rollback();

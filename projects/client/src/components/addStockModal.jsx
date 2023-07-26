@@ -27,10 +27,11 @@ export default function AddStockModal({ isOpen, onClose }) {
 	const nav = useNavigate();
 	const [product, setProduct] = useState([]);
 	const [warehouse, setWarehouse] = useState([]);
+	console.log(product);
 
 	useEffect(() => {
 		getWarehouse();
-		getProduct();
+		getAllProduct();
 	}, []);
 
 	const formik = useFormik({
@@ -68,9 +69,9 @@ export default function AddStockModal({ isOpen, onClose }) {
 		},
 	});
 
-	async function getProduct() {
-		const res = await api.get("/product", {});
-		setProduct(res.data.rows);
+	async function getAllProduct() {
+		const res = await api.get("/product/getAllProduct/getAll");
+		setProduct(res.data);
 	}
 
 	async function getWarehouse() {

@@ -15,6 +15,7 @@ import {
 	Select,
 	Flex,
 	Image,
+	Toast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -22,20 +23,53 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function EditProductModal({
-	isOpen,
-	onClose,
-	editProduct,
-	val,
-}) {
+export default function EditProductModal({ isOpen, onClose, val }) {
 	const [selectedImages, setSelectedImages] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [selectedFiles, setSelectedFiles] = useState([]);
+	const [product, setProduct] = useState(val);
 	const imagesProduct = val.product_images;
+	const toast = useToast();
+	const nav = useNavigate();
 
 	useEffect(() => {
 		getCategory();
 	}, []);
+
+	const editProduct = async () => {
+		const formData = new FormData();
+		formData.append("product_name", product.product_name);
+		formData.append("product_detail", product.product_detail);
+		formData.append("price", product.price);
+		formData.append("weight", product.weight);
+		formData.append("category_id", product.category_id);
+		if (selectedFiles) {
+			for (const files of selectedFiles) {
+				formData.append("productImg", files);
+			}
+		}
+		try {
+			await api.patch(`/product/${val.id}`, formData);
+			toast({
+				title: "Product updated successfully.",
+				status: "success",
+				duration: 3000,
+			});
+			nav("/admin/product");
+			onClose();
+		} catch (error) {
+			toast({
+				title: error.response.data.message,
+				status: "error",
+				duration: 3000,
+			});
+		}
+	};
+
+	async function getCategory() {
+		const res = await api.get("/category");
+		setCategory(res.data);
+	}
 
 	const handleImageChange = (event) => {
 		const files = event.target.files;
@@ -50,11 +84,22 @@ export default function EditProductModal({
 		}
 
 		setSelectedImages(images);
+
+		const productImages = [];
+		for (const file of files) {
+			productImages.push(file);
+		}
+		setProduct((prevProduct) => ({
+			...prevProduct,
+			product_images: productImages,
+		}));
 	};
 
-	async function getCategory() {
-		const res = await api.get("/category");
-		setCategory(res.data);
+	function inputHandler(e) {
+		const { id, value } = e.target;
+		const temp = { ...product };
+		temp[id] = value;
+		setProduct(temp);
 	}
 
 	return (
@@ -70,12 +115,14 @@ export default function EditProductModal({
 							placeholder="e.g. MMS T-shirt"
 							id="product_name"
 							defaultValue={val.product_name}
+							onChange={inputHandler}
 						/>
 						<FormLabel>Product Description:</FormLabel>
 						<Textarea
 							placeholder="e.g. A T-shirt with an impressive"
 							id="product_detail"
 							defaultValue={val.product_detail}
+							onChange={inputHandler}
 						/>
 						<FormLabel>Price:</FormLabel>
 						<Input
@@ -83,6 +130,7 @@ export default function EditProductModal({
 							placeholder="e.g. 500000"
 							id="price"
 							defaultValue={val.price}
+							onChange={inputHandler}
 						/>
 						<FormLabel>Weight:</FormLabel>
 						<Input
@@ -90,12 +138,14 @@ export default function EditProductModal({
 							placeholder="e.g. 100 "
 							id="weight"
 							defaultValue={val.weight}
+							onChange={inputHandler}
 						/>
 						<FormLabel> Product Category:</FormLabel>
 						<Select
 							placeholder="Choose category"
 							id="category_id"
 							defaultValue={val.category_id}
+							onChange={inputHandler}
 						>
 							{category.length
 								? category.map((val) => (
@@ -128,7 +178,7 @@ export default function EditProductModal({
 						<Input
 							accept="image/png, image/jpeg"
 							type="file"
-							id="productImg"
+							id="product_images"
 							paddingTop={"4px"}
 							multiple
 							onChange={handleImageChange}
