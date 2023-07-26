@@ -36,7 +36,11 @@ export default function ProductDetail() {
 	async function getProductByUuid() {
 		const res = await api.get(`/product/${uuid}`);
 		setProduct(res.data);
-		setStock(res.data.stocks[0]?.qty || 0);
+		const totalQty = res.data.stocks.reduce(
+			(accumulator, stock) => accumulator + stock.qty,
+			0
+		);
+		setStock(totalQty || 0);
 	}
 
 	const handleIncrement = () => {
