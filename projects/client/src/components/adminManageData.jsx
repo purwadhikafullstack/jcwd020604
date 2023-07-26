@@ -20,13 +20,13 @@ import {
 	EditIcon,
 	HamburgerIcon,
 	PlusSquareIcon,
+	UpDownIcon,
 } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
-import ProductList from "./productList";
 import AddCategoryModal from "./addCategoryModal";
 import AddWarehouseModal from "./addWarehouseModal";
 import DeleteCategoryModal from "./deleteCategoryModal";
@@ -49,14 +49,12 @@ export default function AdminManageData() {
 	const inputFileRef = useRef(null);
 
 	const addStockModal = useDisclosure();
-	const addProductModal = useDisclosure();
 	const addCategoryModal = useDisclosure();
 	const editCategoryModal = useDisclosure();
 	const deleteCategoryModal = useDisclosure();
 	const addWarehouseModal = useDisclosure();
 	const editWarehouseModal = useDisclosure();
 	const deleteWarehouseModal = useDisclosure();
-	console.log(stock);
 
 	useEffect(() => {
 		getCategory();
@@ -205,14 +203,26 @@ export default function AdminManageData() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"325px"} paddingLeft={"55px"}>
+						<Flex w={"325px"} paddingLeft={"55px"} alignItems={"center"}>
 							Product Name
+							<UpDownIcon ml={"10px"} />
 						</Flex>
 
-						<Flex w={"195px"}>Warehouse</Flex>
-						<Flex w={"195px"}>Category</Flex>
-						<Flex w={"195px"}>Stock</Flex>
-						<Flex w={"195px"}>Status</Flex>
+						<Flex w={"195px"} alignItems={"center"}>
+							Warehouse
+							<UpDownIcon ml={"10px"} />
+						</Flex>
+						<Flex w={"195px"} alignItems={"center"}>
+							Category
+							<UpDownIcon ml={"10px"} />
+						</Flex>
+						<Flex w={"195px"} alignItems={"center"}>
+							Stock
+							<UpDownIcon ml={"10px"} />
+						</Flex>
+						<Flex w={"195px"} alignItems={"center"}>
+							Status
+						</Flex>
 						<Flex w={"25px"}></Flex>
 					</Flex>
 					{stock.length

@@ -10,7 +10,7 @@ import {
 	ButtonGroup,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { AddIcon, ArrowBackIcon } from "@chakra-ui/icons";
+import { AddIcon, ArrowBackIcon, UpDownIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
@@ -140,14 +140,27 @@ export default function AdminProduct() {
 					borderColor={"#E6EBF2"}
 					gap={"7"}
 				>
-					<Flex w={"325px"} paddingLeft={"55px"}>
+					<Flex w={"325px"} paddingLeft={"55px"} alignItems={"center"}>
 						Product Name
+						<UpDownIcon ml={"10px"} />
 					</Flex>
 
-					<Flex w={"300px"}>Description</Flex>
-					<Flex w={"160px"}>Category</Flex>
-					<Flex w={"160px"}>Price (Rp)</Flex>
-					<Flex w={"160px"}>Weight (g)</Flex>
+					<Flex w={"300px"} alignItems={"center"}>
+						Description
+						<UpDownIcon ml={"10px"} />
+					</Flex>
+					<Flex w={"160px"} alignItems={"center"}>
+						Category
+						<UpDownIcon ml={"10px"} />
+					</Flex>
+					<Flex w={"160px"} alignItems={"center"}>
+						Price (Rp)
+						<UpDownIcon ml={"10px"} />
+					</Flex>
+					<Flex w={"160px"} alignItems={"center"}>
+						Weight (g)
+						<UpDownIcon ml={"10px"} />
+					</Flex>
 					<Flex w={"25px"}></Flex>
 				</Flex>
 				{product.length

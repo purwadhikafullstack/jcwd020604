@@ -15,35 +15,12 @@ import { useNavigate } from "react-router-dom";
 
 import { api } from "../api/api";
 import EditProductModal from "./editProductModal";
-import { useState } from "react";
 
 export default function ProductList({ val }) {
 	const deleteProductModal = useDisclosure();
 	const editProductModal = useDisclosure();
-	const [data, setData] = useState({});
 	const toast = useToast();
 	const nav = useNavigate();
-
-	async function editProduct() {
-		try {
-			await api.patch(`/category/${val.id}`, data);
-
-			toast({
-				title: "Category updated successfully.",
-				status: "success",
-				duration: 3000,
-				isClosable: true,
-			});
-			editProductModal.onClose();
-			nav("/admin/managedata");
-		} catch (error) {
-			toast({
-				title: error.response.data.message,
-				status: "error",
-				duration: 3000,
-			});
-		}
-	}
 
 	async function deleteProduct() {
 		try {
@@ -123,7 +100,6 @@ export default function ProductList({ val }) {
 			<EditProductModal
 				isOpen={editProductModal.isOpen}
 				onClose={editProductModal.onClose}
-				editProduct={editProduct}
 				val={val}
 			/>
 			<DeleteProductModal

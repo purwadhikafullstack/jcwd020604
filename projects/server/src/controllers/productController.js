@@ -56,6 +56,24 @@ const productController = {
 			res.status(500).send({ message: err.message });
 		}
 	},
+	getAllProduct: async (req, res) => {
+		try {
+			const product = await db.products.findAll({
+				attributes: ["id", "product_name"],
+				raw: true,
+			});
+
+			const sortedProduct = product.sort((a, b) => {
+				return a.product_name.localeCompare(b.product_name);
+			});
+
+			res.status(200).send(sortedProduct);
+		} catch (err) {
+			res.status(500).send({
+				message: err.message,
+			});
+		}
+	},
 	// getProductById: async (req, res) => {
 	// 	try {
 	// 		const { id } = req.params;
@@ -197,26 +215,30 @@ const productController = {
 					category_id,
 				},
 				{
-					where: { id },
+					where: { id: id },
 					transaction: t,
 				}
 			);
 
-			const imageUrls = []; // Array to store the image URLs
+			if (req.files && req.files.length > 0) {
+				const imageUrls = []; // Array to store the image URLs
 
-			// Loop through each uploaded file (similar to the insert function)
-			for (const file of req.files) {
-				const { filename } = file;
-				const imageUrl = process.env.product_img + filename;
-				imageUrls.push({ product_image: imageUrl, product_id: id });
+				// Loop through each uploaded file (similar to the insert function)
+				for (const file of req.files) {
+					const { filename } = file;
+					const imageUrl = process.env.product_img + filename;
+					imageUrls.push({ product_image: imageUrl, product_id: id });
+				}
+
+				// Delete existing product images
+				await db.product_images.destroy(
+					{
+						where: { product_id: id },
+					},
+					{ transaction: t }
+				);
+				await db.product_images.bulkCreate(imageUrls, { transaction: t });
 			}
-
-			// Delete existing product images
-			// await db.product_images.destroy({
-			// 	where: { product_id: id },
-			// 	transaction: t,
-			// });
-			await db.product_images.bulkCreate(imageUrls, { transaction: t });
 			await t.commit();
 			res.status(200).send({ message: "Product updated successfully." });
 		} catch (err) {

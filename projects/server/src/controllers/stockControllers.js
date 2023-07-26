@@ -21,7 +21,10 @@ const stockController = {
 					],
 				},
 				include: [
-					{ model: db.products, include: [{ model: db.product_images }] },
+					{
+						model: db.products,
+						include: [{ model: db.product_images }, { model: db.categories }],
+					},
 					{ model: db.warehouses },
 				],
 			});
@@ -49,6 +52,16 @@ const stockController = {
 		}
 
 		try {
+			const existingStock = await db.stocks.findOne({
+				where: { product_id, warehouse_id },
+			});
+
+			if (existingStock) {
+				return res.status(409).send({
+					message: "Stock for the given product and warehouse already exists.",
+				});
+			}
+
 			const newStock = await db.stocks.create(
 				{
 					qty,
@@ -72,7 +85,7 @@ const stockController = {
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
-			qty: Joi.string().required(),
+			qty: Joi.number().required(),
 		});
 
 		const validation = schema.validate({ qty });
@@ -84,15 +97,7 @@ const stockController = {
 		}
 
 		try {
-			await db.stocks.update(
-				{
-					qty,
-				},
-				{
-					where: { id },
-					transaction: t,
-				}
-			);
+			await db.stocks.update({ qty }, { where: { id: id }, transaction: t });
 			await t.commit();
 			res.send({ message: "Stock updated successfully" });
 		} catch (err) {
@@ -111,6 +116,7 @@ const stockController = {
 			}
 
 			await db.stocks.destroy({ where: { id: id }, transaction: t });
+			await t.commit();
 			res.status(200).send({ message: "Stock deleted successfully" });
 		} catch (err) {
 			await t.rollback();
