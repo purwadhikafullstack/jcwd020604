@@ -42,11 +42,11 @@ export default function AdminManageData() {
 	const [category, setCategory] = useState([]);
 	const [stock, setStock] = useState([]);
 	const inputFileRef = useRef(null);
-	const [selectedCategory, setSelectedCategory] = useState("");
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
+	const [selectedProduct, setSelectedProduct] = useState("");
 	const [sort, setSort] = useState("");
 	const [search, setSearch] = useState("");
-	const [page, setPage] = useState("");
+	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const [product, setProduct] = useState([]);
 
@@ -61,35 +61,29 @@ export default function AdminManageData() {
 	useEffect(() => {
 		getCategory();
 		getWarehouse();
-		getProduct();
+		getAllProduct();
 	}, []);
 
 	useEffect(() => {
 		getStock();
-	}, [selectedWarehouse, sort, search, page]);
-	useEffect(() => {
-		getStock();
-	}, [search]);
-	useEffect(() => {
-		getStock();
-	}, [selectedCategory]);
+	}, [selectedWarehouse, selectedProduct, sort, search, page]);
 
 	async function getStock() {
 		const res = await api.get("/stock", {
 			params: {
 				warehouse_id: selectedWarehouse,
-				selectedCategory,
+				product_id: selectedProduct,
 				sort: sort,
 				search: search,
-				// page: page,
+				page: page,
 			},
 		});
 		setStock(res.data.rows);
 		setTotalPage(Math.ceil(res.data.count / 12));
 	}
 
-	async function getProduct() {
-		const res = await api.get("/product");
+	async function getAllProduct() {
+		const res = await api.get("/product/getAllProduct/getAll");
 		setProduct(res.data);
 	}
 
@@ -124,10 +118,10 @@ export default function AdminManageData() {
 
 	const handleReset = () => {
 		getStock();
-		getProduct();
+		getAllProduct();
 		getCategory();
 		getWarehouse();
-		setSelectedCategory("");
+		setSelectedProduct("");
 		setSelectedWarehouse("");
 		setSort("");
 		setSearch("");
@@ -219,10 +213,26 @@ export default function AdminManageData() {
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
 						<Select
+							placeholder="All Type of Products"
+							value={selectedProduct}
+							onChange={(event) => {
+								setPage(1);
+								setSelectedProduct(event.target.value);
+							}}
+						>
+							{product.length
+								? product.map((val) => (
+										<option key={val.id} value={val.id}>
+											{val.product_name}
+										</option>
+								  ))
+								: null}
+						</Select>
+						<Select
 							placeholder="All Warehouses"
 							value={selectedWarehouse}
 							onChange={(event) => {
-								// setPage(1);
+								setPage(1);
 								setSelectedWarehouse(event.target.value);
 							}}
 						>
@@ -230,19 +240,6 @@ export default function AdminManageData() {
 								? warehouse.map((val) => (
 										<option key={val.id} value={val.id}>
 											{val.warehouse_name}
-										</option>
-								  ))
-								: null}
-						</Select>
-						<Select
-							placeholder="All Type of Category"
-							value={selectedCategory}
-							onChange={(e) => setSelectedCategory(e.target.value)}
-						>
-							{category.length
-								? category.map((val) => (
-										<option key={val.id} value={val.category_name}>
-											{val.category_name}
 										</option>
 								  ))
 								: null}
@@ -298,9 +295,18 @@ export default function AdminManageData() {
 							</Flex>
 						</Flex>
 						<Flex w={"195px"} alignItems={"center"}>
-							<Flex alignItems={"center"}>
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
 								Category
-								{/* <UpDownIcon ml={"10px"} /> */}
+								{sort === "categoryAsc" ? sort === "categoryDesc" : null}
+								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
 						<Flex w={"195px"} alignItems={"center"}>
@@ -332,7 +338,6 @@ export default function AdminManageData() {
 					justifyContent={"end"}
 					alignItems={"center"}
 				>
-					{/* <Flex>{product.length} from (BUTUH DI FIX) Products</Flex> */}
 					{page === 1 ? null : (
 						<Button
 							onClick={() => {

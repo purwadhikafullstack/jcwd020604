@@ -5,14 +5,8 @@ const Joi = require("joi");
 const stockController = {
 	getStock: async (req, res) => {
 		try {
-			const { warehouse_id, sort, search } = req.query;
-			const where = {};
+			const { warehouse_id, product_id, sort, search } = req.query;
 			const limit = 12;
-			// let offset = 0;
-
-			if (warehouse_id) {
-				where.warehouse_id = warehouse_id;
-			}
 
 			const page = req?.query?.page || 1;
 			let offset = (parseInt(page) - 1) * limit;
@@ -20,16 +14,23 @@ const stockController = {
 			const sortOptions = {
 				qtyAsc: [["qty", "ASC"]],
 				qtyDesc: [["qty", "DESC"]],
-				productAsc: [["product_id", "ASC"]],
-				productDesc: [["product_id", "DESC"]],
-				warehouseAsc: [["warehouse_id", "ASC"]],
-				warehouseDesc: [["warehouse_id", "DESC"]],
+				productAsc: [[{ model: db.products }, "product_name", "ASC"]],
+				productDesc: [[{ model: db.products }, "product_name", "DESC"]],
+				warehouseAsc: [[{ model: db.warehouses }, "warehouse_name", "ASC"]],
+				warehouseDesc: [[{ model: db.warehouses }, "warehouse_name", "DESC"]],
+				categoryAsc: [[{ model: db.products }, "category_id", "ASC"]],
+				categoryDesc: [[{ model: db.products }, "category_id", "DESC"]],
 			};
 			const sortOrder = sortOptions[sort] || null;
 
 			const stock = await db.stocks.findAndCountAll({
 				where: {
 					[Op.and]: [
+						{
+							product_id: {
+								[Op.like]: `%${req.query.product_id || ""}%`,
+							},
+						},
 						{
 							warehouse_id: {
 								[Op.like]: `%${req.query.warehouse_id || ""}%`,
@@ -41,11 +42,11 @@ const stockController = {
 								[Op.like]: `%${search || ""}%`,
 							},
 						},
-						{
-							"$product.category.category_name$": {
-								[Op.like]: `%${req.query.selectedCategory || ""}%`,
-							},
-						},
+						// {
+						// 	"$product.category.category_name$": {
+						// 		[Op.like]: `%${req.query.selectedCategory || ""}%`,
+						// 	},
+						// },
 
 						// {
 						// 	"$warehouse.warehouse_name$": {
@@ -61,9 +62,7 @@ const stockController = {
 					},
 					{ model: db.warehouses },
 				],
-				// limit: limit,
-				// offset: offset,
-				// distinct: true,
+				distinct: true,
 				order: sortOrder,
 			});
 			res.status(200).send({
