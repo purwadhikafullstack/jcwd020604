@@ -1,11 +1,12 @@
 const { Op } = require("sequelize");
 const db = require("../models");
 const Joi = require("joi");
+const stockHistory = require("./stockHistoryControllers");
 
 const stockController = {
 	getStock: async (req, res) => {
 		try {
-			const { warehouse_id, product_id, sort, search } = req.query;
+			const { sort, search } = req.query;
 			const limit = 12;
 
 			const page = req?.query?.page || 1;
@@ -101,7 +102,6 @@ const stockController = {
 					message: "Stock for the given product and warehouse already exists.",
 				});
 			}
-
 			const newStock = await db.stocks.create(
 				{
 					qty,
@@ -110,7 +110,9 @@ const stockController = {
 				},
 				{ transaction: t }
 			);
+
 			await t.commit();
+			await stockHistory.addStockHistory(newStock, "IN", "MANUAL");
 			res.status(200).send(newStock);
 		} catch (err) {
 			await t.rollback();

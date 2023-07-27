@@ -30,8 +30,20 @@ import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
+import HistoryList from "./historyList";
 
 export default function StockHistory() {
+	const [history, setHistory] = useState();
+
+	useEffect(() => {
+		getHistory();
+	}, []);
+
+	async function getHistory() {
+		const res = await api.get("/stockhistory");
+		setHistory(res.data);
+	}
+
 	return (
 		<Center flexDir={"column"}>
 			<Flex
@@ -61,23 +73,23 @@ export default function StockHistory() {
 						<Input type={"month"} w={"525px"} />
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
-						<Select placeholder="Select Status">
-							{/* {product.length
-								? product.map((val) => (
-										<option key={val.id} value={val.id}>
-											{val.product_name}
+						<Select placeholder="Select Warehouse">
+							{/* {warehouse.length
+								? warehouse.map((val) => (
+                                    <option key={val.id} value={val.id}>
+											{val.warehouse_name}
 										</option>
 								  ))
 								: null} */}
 						</Select>
 						<Select placeholder="Select Reference">
-							{/* {warehouse.length
-								? warehouse.map((val) => (
-										<option key={val.id} value={val.id}>
-											{val.warehouse_name}
-										</option>
-								  ))
-								: null} */}
+							{/* {product.length
+                                ? product.map((val) => (
+                                    <option key={val.id} value={val.id}>   
+                                            {val.warehouse_name}                                     {val.product_name}
+                                      </option>
+                                  ))
+                                : null} */}
 						</Select>
 						<InputGroup>
 							<Input
@@ -101,32 +113,31 @@ export default function StockHistory() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"285px"} paddingLeft={"55px"}>
+						<Flex w={"210px"} ml={"55px"}>
 							<Flex alignItems={"center"} cursor="pointer">
-								Product Name
+								Stock
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-
-						<Flex w={"205px"} alignItems={"center"}>
+						<Flex w={"210px"} alignItems={"center"}>
 							<Flex alignItems={"center"} cursor="pointer">
 								Amount
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"205px"} alignItems={"center"}>
+						<Flex w={"210px"} alignItems={"center"}>
 							<Flex alignItems={"center"} cursor="pointer">
 								Status
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"205px"} alignItems={"center"}>
+						<Flex w={"210px"} alignItems={"center"}>
 							<Flex alignItems={"center"} cursor="pointer">
 								Reference
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"205px"} alignItems={"center"}>
+						<Flex w={"210px"} alignItems={"center"}>
 							<Flex alignItems={"center"} cursor="pointer">
 								Created At
 								<UpDownIcon ml={"10px"} />
@@ -134,11 +145,11 @@ export default function StockHistory() {
 						</Flex>
 						<Flex w={"25px"}></Flex>
 					</Flex>
-					{/* {stock.length
-						? stock.map((val) => {
-								return <StockList val={val} getStock={getStock} />;
+					{history?.length
+						? history?.map((val) => {
+								return <HistoryList val={val} getHistory={getHistory} />;
 						  })
-						: null} */}
+						: null}
 				</Flex>
 			</Flex>
 		</Center>
