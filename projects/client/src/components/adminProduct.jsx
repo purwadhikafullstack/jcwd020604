@@ -103,7 +103,7 @@ export default function AdminProduct() {
 			>
 				<Flex flexDir={"column"} paddingBottom={"15px"}>
 					<Flex fontWeight={600} fontSize={"23px"}>
-						Manage Product
+						Product Data
 					</Flex>
 				</Flex>
 				<Flex pb={"15px"} w={"100%"} justifyContent={"space-between"}>

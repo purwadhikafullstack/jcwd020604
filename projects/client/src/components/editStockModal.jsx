@@ -11,6 +11,8 @@ import {
 	FormLabel,
 	Input,
 	useToast,
+	HStack,
+	Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -60,13 +62,18 @@ export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 						<Input value={val?.warehouse?.warehouse_name} />
 						<FormLabel>Product</FormLabel>
 						<Input value={val.product.product_name} />
-						<FormLabel>Stocks</FormLabel>
-						<Input
-							type="number"
-							id="qty"
-							defaultValue={val.qty}
-							onChange={inputHandler}
-						/>
+						<Center flexDir={"column"} pt={"15px"}>
+							<FormLabel pl={"18px"}>Stocks</FormLabel>
+							<HStack w="100px">
+								<Input
+									textAlign={"center"}
+									type="number"
+									id="qty"
+									defaultValue={val.qty}
+									onChange={inputHandler}
+								/>
+							</HStack>
+						</Center>
 					</FormControl>
 				</ModalBody>
 				<ModalFooter>

@@ -22,6 +22,7 @@ import {
 	PlusSquareIcon,
 	UpDownIcon,
 	RepeatIcon,
+	TimeIcon,
 } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
@@ -146,9 +147,9 @@ export default function AdminManageData() {
 					</Flex>
 					<Flex>
 						<Flex gap={"10px"} w={"100%"}>
-							<Link to={`/admin/product`}>
-								<Button leftIcon={<HamburgerIcon />}>Product Data</Button>
-							</Link>
+							<Button colorScheme="green" onClick={addStockModal.onOpen}>
+								Add Stock
+							</Button>
 							<Menu>
 								<MenuButton
 									as={Button}
@@ -203,13 +204,14 @@ export default function AdminManageData() {
 						<Button onClick={handleReset} mr={"10px"}>
 							<RepeatIcon />
 						</Button>
-						<Button
-							justifyContent={"end"}
-							colorScheme="green"
-							onClick={addStockModal.onOpen}
-						>
-							Add Stock
-						</Button>
+						<Link to={`/admin/stockhistory`}>
+							<Button mr={"10px"} leftIcon={<TimeIcon />} px={"10px"}>
+								Stock History
+							</Button>
+						</Link>
+						<Link to={`/admin/product`}>
+							<Button leftIcon={<HamburgerIcon />}>Product Data</Button>
+						</Link>
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
 						<Select

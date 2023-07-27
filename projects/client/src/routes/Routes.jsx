@@ -13,6 +13,7 @@ import AdminProfile from "../pages/user/UserProfile";
 import AddUser from "../pages/user/AddUser";
 import EditUser from "../pages/user/EditUser";
 import ResetPassword from "../pages/reset/ResetPassword";
+import StockHistoryPage from "../pages/admin/StockHistoryPage";
 // import ProtectedPages from "./ProtectedPages";
 
 const routes = [
@@ -23,6 +24,7 @@ const routes = [
 	// Admin Page
 	<Route path="/admin/managedata" element={<AdminManageDataPage />}></Route>,
 	<Route path="/admin/product" element={<AdminProductPage />}></Route>,
+	<Route path="/admin/stockhistory" element={<StockHistoryPage />}></Route>,
 
 	// Martin
 	<Route path="/" element={<HomePage />}></Route>,
