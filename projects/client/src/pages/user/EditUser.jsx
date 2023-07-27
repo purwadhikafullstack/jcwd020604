@@ -30,22 +30,22 @@ export default function EditUser (props) {
     const toast = useToast();
   
     useEffect(() => {
-      if (props.id){
+      if (props.uuid){
         getUserById();
-        console.log(props.id);
+        console.log(props.uuid);
       }
-    }, [props.id]);
+    }, [props.uuid]);
 
     console.log(props.id);
   
     const updateUser = async () => {
       try {
-        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.id}`, users);
+        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.uuid}`, users);
         toast({
           title: "User has been updated",
           status: "success",
           duration: 3000,
-          position: "top-right",
+          position: "top",
           isClosable: false,
         });
         navigate("/user_list");
@@ -65,7 +65,7 @@ export default function EditUser (props) {
   
     const getUserById = async () => {
       try {
-        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.id}`);
+        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.uuid}`);
         setUsers(response.data);
       } catch (error) {
         console.log(error);

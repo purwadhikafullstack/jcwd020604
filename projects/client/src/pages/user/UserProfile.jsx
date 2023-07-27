@@ -31,8 +31,6 @@ import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { api } from '../../api/api';
 import Navbar from '../../components/Navbar';
 
@@ -41,7 +39,6 @@ export default function UserProfile() {
   const navigate = useNavigate();
   const inputFileRef = useRef(null);
   const dispatch = useDispatch();
-  const [address, setAddress] = useState("");
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const toast = useToast();
@@ -56,46 +53,25 @@ export default function UserProfile() {
     console.log(e.target.files[0]);
   };
 
-const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required'),
-  address: Yup.string().required('Address is required'),
-});
-
-const initialValues = {
-  name: user.fullname,
-  email: user.email,
-  address: '',
-  province: '',
-  city: ''
-};
-
 useEffect(() => {
   if(selectedFile){
     uploadAvatar();
   }
 },[selectedFile]);
 
-const handleSubmit = (values, { setSubmitting }) => {
-  setIsFormSubmitted(true);
-  saveUser(values);
-  setSubmitting(false);
-};
-
 async function uploadAvatar() {
   const formData = new FormData();
   formData.append("userImg", selectedFile);
   console.log(selectedFile);
   await api
-  .post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData)
+  .post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.uuid}`, formData)
   .then((res) => {
       navigate("/user_profile")
     });
 }
 
 const getAddressById = async () => {
-  const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.id}`)
+  const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`)
   console.log(res.data);
 }
 
@@ -115,38 +91,18 @@ useEffect(() => {
   getAddressById();
 },[])
 
-const saveUser = async (values) => {
-  try {
-      await api.post(`${process.env.REACT_APP_API_BASE_URL}/address/`, values);
-      toast({
-          title:"User has been updated",
-          status:"success",
-          duration:3000,
-          isClosable:false
-      });
-      navigate("/user_profile");
-  } catch (error) {
-      toast({
-          title:"There is an error when input user",
-          status:'error',
-          duration:3000,
-          isClosable:false
-      });
-      console.log(error);
-  }
-}
+const handleInputChange = (e) => {
+  const { name, value } = e.target;
+  user((prevState) => ({
+    ...prevState,
+    [name]: value,
+  }));
+};
 
   return (
     <>
     <Navbar/>
       <Container maxW="full" centerContent overflow="hidden">
-        <Formik
-        initialValues={initialValues}
-        validationSchema={validationSchema}
-        onSubmit={handleSubmit}
-      >
-        {({isSubmitting}) => (
-          <Form>
             <Flex>
               <Box
                 color="white"
@@ -161,11 +117,11 @@ const saveUser = async (values) => {
                         Fill up the form below to update
                     </Text>
                 <Box p={4}>
-                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }}>
+                  <Wrap>
                     <WrapItem>
                       <Box>
                           <VStack pl={0} spacing={2} alignItems={"flex-start"}>
-                            <Box bg="white" w={'300px'} borderRadius="lg" alignItems={{base:"flex-start", md: "center", sm: "center"}}>
+                            <Box bg="white" w={'300px'} borderRadius="lg" alignItems={{base:"center", md: "center", sm: "center"}}>
                                 <Box m={0} color="#0B0E3F">
                                 <VStack spacing={2} maxW={'300px'}
                                     w={'full'}
@@ -270,22 +226,19 @@ const saveUser = async (values) => {
                       </Box>
                     </WrapItem>
                     <WrapItem>
-                      <Box bg="white" borderRadius="lg" boxShadow={'2xl'} overflow={'hidden'}>
+                      <Box bg="white" borderRadius="lg" boxShadow={'2xl'} overflow={'hidden'} h={'83%'}>
+                        <Text display={'flex'} justifyContent={'center'} alignItems={'center'} mt={{ sm: 3, md: 3, lg: 5 }} color="gray.500">
+                            Edit Your Data
+                        </Text>
                         <Box m={8} color="#0B0E3F">
-                          <> 
                           <VStack spacing={5}>
-                            <Field name="name">
-                                  {({ field }) => (
-                                    <FormControl id="name" isInvalid={isFormSubmitted && !!field.error}>
+                                    <FormControl id="name">
                                       <FormLabel>Your Name</FormLabel>
                                       <InputGroup borderColor="#E0E1E7">
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
-                                        <Input {...field} type="text" size="md" />
+                                        <Input type="text" size="md" onChange={handleInputChange} />
                                       </InputGroup>
-                                      <ErrorMessage name="name" component={Text} color="red.500" />
                                     </FormControl>
-                                  )}
-                              </Field>
                               <FormControl id="email">
                                 <FormLabel>Email</FormLabel>
                                 <InputGroup borderColor="#E0E1E7">
@@ -296,65 +249,88 @@ const saveUser = async (values) => {
                                   <Input type="email" readOnly={true} size="md" placeholder={user.email}/>
                                 </InputGroup>
                               </FormControl>
-                              <FormControl id="address">
-                                  <FormLabel>Address</FormLabel>
-                                  <Field name="address">
-                                    {({ field }) => (
-                                      <Textarea
-                                        {...field}
-                                        borderColor="gray.300"
-                                        _hover={{
-                                          borderRadius: 'gray.300',
-                                        }}
-                                        placeholder={''}
-                                      />
-                                    )}
-                                  </Field>
-                                  <ErrorMessage name="address" component={Text} color="red.500" />
-                                </FormControl>
-                                <Select name='city'>
-                                  {city.length? city.map((val) => (
-                                    <option>{val.city_name}</option>
-                                  )) : null}
-                                </Select>
-                                <Select name='province'>
-                                  {province.length? province.map((val) => (
-                                    <option>{val.province}</option>
-                                  )) : null}
-                                </Select>
-                                    <FormControl id="button">
+                              <FormControl id="button">
                                       <ButtonGroup>
                                         <Button
                                           type="submit"
                                           variant="solid"
                                           colorScheme='blue'
-                                          w={'100px'}
-                                          isLoading={isSubmitting}
+                                          h={'30px'}
+                                          w={'70px'}
                                         >
                                           Save
                                         </Button>
                                         <Button
                                           variant="solid"
                                           colorScheme='orange'
-                                          w={'100px'}
+                                          h={'30px'}
+                                          w={'70px'}
                                           onClick={() => navigate("/")}
                                         >
                                           Cancel
                                         </Button>
                                     </ButtonGroup>
-                                </FormControl>
+                                    </FormControl>
+                                    <Box>Props alamat disini</Box>
                             </VStack>
-                            </>
                         </Box>
+                      </Box>
+                    </WrapItem>
+                    <WrapItem>
+                      <Box  bg="white" borderRadius="lg" boxShadow={'2xl'} overflow={'hidden'} h={'83%'}>
+                        <Text display={'flex'} justifyContent={'center'} alignItems={'center'} mt={{ sm: 3, md: 3, lg: 5 }} color="gray.500">
+                            Add Address
+                        </Text>
+                        <Box m={8} color="#0B0E3F">
+                        <VStack spacing={5}>
+                          <FormControl id="address">
+                                    <FormLabel>Address</FormLabel>                                 
+                                        <Textarea
+                                          borderColor="gray.300"
+                                          _hover={{
+                                            borderRadius: 'gray.300',
+                                          }}
+                                          placeholder={'Isi alamat yang sesuai'}
+                                        />
+                                </FormControl>
+                                  <Select name='city'>
+                                    {city.length? city.map((val) => (
+                                      <option>{val.city_name}</option>
+                                    )) : null}
+                                  </Select>
+                                  <Select name='province'>
+                                    {province.length? province.map((val) => (
+                                      <option>{val.province}</option>
+                                    )) : null}
+                                  </Select>
+                                      <FormControl id="button">
+                                        <ButtonGroup>
+                                          <Button
+                                            type="submit"
+                                            variant="solid"
+                                            colorScheme='blue'
+                                            w={'100px'}
+                                          >
+                                            Save
+                                          </Button>
+                                          <Button
+                                            variant="solid"
+                                            colorScheme='orange'
+                                            w={'100px'}
+                                            onClick={() => navigate("/")}
+                                          >
+                                            Cancel
+                                          </Button>
+                                      </ButtonGroup>
+                                      </FormControl>
+                                </VStack>
+                            </Box>
                       </Box>
                     </WrapItem>
                   </Wrap>
                 </Box>
               </Box>
             </Flex>
-          </Form>
-        )}
-      </Formik>
       </Container>
     </>
   );

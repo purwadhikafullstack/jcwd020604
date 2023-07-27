@@ -13,6 +13,7 @@ import AdminProfile from "../pages/user/UserProfile";
 import AddUser from "../pages/user/AddUser";
 import EditUser from "../pages/user/EditUser";
 import ResetPassword from "../pages/reset/ResetPassword";
+import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 // import ProtectedPages from "./ProtectedPages";
 
 const routes = [
@@ -30,6 +31,8 @@ const routes = [
 	<Route path="/login" element={<Login />}></Route>,
 	<Route path="/verify" element={<Verify />}></Route>,
 	<Route path="/reset_password" element={<ResetPassword />}></Route>,
+	<Route path="/reset-password/:token" element={<ConfirmResetPassword />}></Route>,
+
 
 	<Route path="/user_profile" element={<UserProfile />}></Route>,
 	<Route path="/user_list" element={<UserList />}></Route>,

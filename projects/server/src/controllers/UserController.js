@@ -26,7 +26,7 @@ const userController = {
         const response = await db.users.findOne({
           include: [{model: db.addresses}],
             where:{
-                id: req.params.id
+                uuid: req.params.uuid
             }
         });
         res.status(200).json(response);
@@ -97,7 +97,7 @@ const userController = {
         },
         {
           where: {
-            id: req.params.id,
+            uuid: req.params.uuid,
           },
         }
       );
@@ -122,7 +122,7 @@ const userController = {
         },
         {
           where: {
-            id: req.params.id,
+            uuid: req.params.uuid,
           },
         }
       );
@@ -139,7 +139,7 @@ const userController = {
     try {
         await db.users.destroy({
             where:{
-                id: req.params.id
+                uuid: req.params.uuid
             }
         });
         res.status(200).json({msg:"User has been deleted"});
@@ -284,8 +284,13 @@ const userController = {
 
   getByTokenV2: async (req, res, next) => {
     try {
-      let token = req.headers.authorization;
+      const {password} = req.body
+      let token= req.headers.authorization;
+      console.log(req.headers)
+      console.log(password)
+      console.log(token)
       token = token.split(" ")[1];
+      console.log('hbhv');
       console.log(token);
       let p = await db.tokens.findOne({
         where: {
@@ -294,7 +299,7 @@ const userController = {
             {
               expired: {
                 [db.Sequelize.Op.gt]: moment("00:00:00", "hh:mm:ss").format(),
-                [db.Sequelize.Op.lte]: moment().add(1, "d").format(),
+                // [db.Sequelize.Op.lte]: moment().add(1, "d").format(),
               },
             },
             {
@@ -330,7 +335,7 @@ const userController = {
     try {
         const {filename} = req.file;
         // Check if the product_name already exists
-        await db.users.update({avatar_url: process.env.user_img + filename}, { where: {id: req.params.id}, transaction: t });
+        await db.users.update({avatar_url: process.env.user_img + filename}, { where: {uuid: req.params.uuid}, transaction: t });
         await t.commit();
         res.send({message: "Upload berhasil"});
     } catch (err) {
@@ -338,5 +343,80 @@ const userController = {
         return res.status(500).send({ message: err.message });
     }
 },
+
+resetPassword: async (req, res) => {
+  try {
+    const { email } = req.body;
+    const findEmail = await db.users.findOne({ where: { email } });
+
+    if (!findEmail) {
+      throw new Error("Username or email not found");
+    } else {
+      const generateToken = nanoid();
+      const token = await db.tokens.create({
+        expired: moment().add(1, "days").format(),
+        token: generateToken,
+        userId: JSON.stringify({ id: findEmail.dataValues.id }),
+        status: "FORGOT-PASSWORD",
+      });
+
+      const template = await fs.readFile("./src/template/resetPassword.html", "utf-8");
+
+      let compiledTemplate = handlebars.compile(template);
+      let resetPasswordTemplate = compiledTemplate({
+        registrationLink: `${process.env.URL_RESET_PASSWORD}/reset-password/${token.dataValues.token}`
+      });
+      console.log(token.dataValues.token)
+      
+      mailer({
+        subject: "Reset Password - Email Verification Link",
+        to: email,
+        text: resetPasswordTemplate,
+      });
+
+      return res.send({
+        message: "Reset password berhasil",
+      });
+    }
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send(err.message);
+  }
+},
+
+verifyV2: async (req, res) => {
+  try {
+    console.log('sdjfdsj')
+    const{id} = req.user;
+    const{token} = req.query;
+    const { password } = req.body;
+    const hashPassword = await bcrypt.hash(password, 10);
+
+    await db.users.update(
+      { password: hashPassword, verified: 1},
+      { where: { id } }
+    );
+    await db.tokens.update({
+      valid:false
+    },
+    {
+      where:{
+        token,
+      }
+    }
+    )
+    return res.send({
+      message: "password registered",
+    });
+  } catch (err) {
+    console.log(err.message);
+    return res.status(500).send(err.message);
+  }
+},
+
+assignWarehouse: async(req, res) => {
+  
+},
+
 };
 module.exports = userController;
