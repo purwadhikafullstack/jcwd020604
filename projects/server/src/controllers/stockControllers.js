@@ -139,8 +139,12 @@ const stockController = {
 		}
 
 		try {
-			await db.stocks.update({ qty }, { where: { id: id }, transaction: t });
+			const editStock = await db.stocks.update(
+				{ qty },
+				{ where: { id: id }, transaction: t }
+			);
 			await t.commit();
+			await stockHistory.addStockHistory(editStock, "IN", "MANUAL");
 			res.send({ message: "Stock updated successfully" });
 		} catch (err) {
 			await t.rollback();

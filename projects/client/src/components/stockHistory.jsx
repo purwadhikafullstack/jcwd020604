@@ -52,7 +52,7 @@ export default function StockHistory() {
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}
 				padding={"15px"}
-				w={"1400 px"}
+				w={"1322 px"}
 				justifyContent={"center"}
 				flexDir={"column"}
 			>
@@ -113,31 +113,37 @@ export default function StockHistory() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"210px"} ml={"55px"}>
+						<Flex w={"309px"} pl={"55px"}>
 							<Flex alignItems={"center"} cursor="pointer">
-								Stock
+								Product Name
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"210px"} alignItems={"center"}>
+						<Flex w={"194px"}>
+							<Flex alignItems={"center"} cursor="pointer">
+								Warehouse Name
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+						</Flex>
+						<Flex w={"115px"}>
 							<Flex alignItems={"center"} cursor="pointer">
 								Amount
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"210px"} alignItems={"center"}>
+						<Flex w={"100px"} alignItems={"center"}>
 							<Flex alignItems={"center"} cursor="pointer">
 								Status
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"210px"} alignItems={"center"}>
+						<Flex w={"179px"} alignItems={"center"}>
 							<Flex alignItems={"center"} cursor="pointer">
 								Reference
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"210px"} alignItems={"center"}>
+						<Flex w={"179px"} alignItems={"center"}>
 							<Flex alignItems={"center"} cursor="pointer">
 								Created At
 								<UpDownIcon ml={"10px"} />
