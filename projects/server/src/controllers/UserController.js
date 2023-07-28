@@ -334,7 +334,6 @@ const userController = {
     const t = await db.sequelize.transaction();
     try {
         const {filename} = req.file;
-        // Check if the product_name already exists
         await db.users.update({avatar_url: process.env.user_img + filename}, { where: {uuid: req.params.uuid}, transaction: t });
         await t.commit();
         res.send({message: "Upload berhasil"});

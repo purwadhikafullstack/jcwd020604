@@ -34,7 +34,7 @@ const ProtectedPages = ({
           return nav("/");
         }
         console.log(user);
-      }, [user]);
+      }, [children]);
 
     return (
         <>
