@@ -102,6 +102,7 @@ const stockController = {
 					message: "Stock for the given product and warehouse already exists.",
 				});
 			}
+
 			const newStock = await db.stocks.create(
 				{
 					qty,
@@ -112,7 +113,7 @@ const stockController = {
 			);
 
 			await t.commit();
-			await stockHistory.addStockHistory(newStock, "IN", "MANUAL");
+			await stockHistory.addStockHistory(newStock, "IN", "ADD FROM ADMIN");
 			res.status(200).send(newStock);
 		} catch (err) {
 			await t.rollback();
@@ -139,12 +140,25 @@ const stockController = {
 		}
 
 		try {
-			const editStock = await db.stocks.update(
-				{ qty },
-				{ where: { id: id }, transaction: t }
+			const existingStock = await db.stocks.findOne({
+				where: { id },
+			});
+
+			if (!existingStock) {
+				return res.status(404).send({ message: "Stock not found" });
+			}
+
+			const oldQty = existingStock.qty;
+			const status = qty < oldQty ? "OUT" : "IN";
+
+			await stockHistory.addStockHistory(
+				existingStock,
+				status,
+				"EDIT FROM ADMIN"
 			);
+			await db.stocks.update({ qty }, { where: { id }, transaction: t });
 			await t.commit();
-			await stockHistory.addStockHistory(editStock, "IN", "MANUAL");
+
 			res.send({ message: "Stock updated successfully" });
 		} catch (err) {
 			await t.rollback();

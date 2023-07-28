@@ -31,9 +31,9 @@ export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 				status: "success",
 				duration: 3000,
 			});
+			onClose();
 			getStock();
 			nav("/admin/managedata");
-			onClose();
 		} catch (error) {
 			toast({
 				title: error.response.data.message,

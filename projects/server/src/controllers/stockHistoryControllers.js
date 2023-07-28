@@ -21,7 +21,6 @@ const stockHistory = {
 					},
 				],
 			});
-			// distinct: true,
 
 			res.status(200).send(history);
 		} catch (err) {

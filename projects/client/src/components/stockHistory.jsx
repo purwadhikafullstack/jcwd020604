@@ -145,7 +145,7 @@ export default function StockHistory() {
 						</Flex>
 						<Flex w={"179px"} alignItems={"center"}>
 							<Flex alignItems={"center"} cursor="pointer">
-								Created At
+								Date
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>

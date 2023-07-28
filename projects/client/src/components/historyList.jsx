@@ -12,9 +12,9 @@ import {
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
+import { useState } from "react";
 
 export default function HistoryList({ val, getHistory }) {
-	console.log(val);
 	return (
 		<Flex
 			padding={"7px"}
@@ -37,19 +37,13 @@ export default function HistoryList({ val, getHistory }) {
 				<Flex w={"254px"}>{val?.stock?.product?.product_name}</Flex>
 			</Flex>
 			<Flex w={"194px"}>{val?.stock?.warehouse?.warehouse_name}</Flex>
-			<Flex w={"115px"}>{val?.qty}</Flex>
+			<Flex w={"115px"}>
+				{val?.stock?.qty} ({val?.stock?.qty - val?.qty})
+			</Flex>
 			<Flex w={"100px"}>{val?.status}</Flex>
 			<Flex w={"179px"}>{val?.reference}</Flex>
 			<Flex w={"179px"}>{val?.createdAt}</Flex>
-			<Menu>
-				<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
-					<Icon as={BiDotsHorizontalRounded} />
-				</MenuButton>
-				<MenuList>
-					<MenuItem>View / Edit Product</MenuItem>
-					<MenuItem color={"red"}>Remove</MenuItem>
-				</MenuList>
-			</Menu>
+			<Flex w={"25px"} h={"25px"}></Flex>
 		</Flex>
 	);
 }
