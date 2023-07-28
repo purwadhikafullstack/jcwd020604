@@ -30,13 +30,15 @@ const stockHistory = {
 		}
 	},
 
-	addStockHistory: async (dataStock, status, reference) => {
+	addStockHistory: async (dataStock, status, reference, qty) => {
 		try {
 			const newHistory = await db.stock_histories.create({
-				qty: dataStock.qty,
+				qty: qty - dataStock.qty,
 				status,
 				reference,
 				stock_id: dataStock.id,
+				stock_before: dataStock.qty,
+				stock_after: qty,
 			});
 			return newHistory;
 		} catch (err) {

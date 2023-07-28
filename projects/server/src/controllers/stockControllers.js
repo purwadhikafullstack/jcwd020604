@@ -79,7 +79,7 @@ const stockController = {
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
-			qty: Joi.number().required(),
+			qty: Joi.number().min(0).required(),
 			product_id: Joi.number().required(),
 			warehouse_id: Joi.number().required(),
 		});
@@ -113,7 +113,7 @@ const stockController = {
 			);
 
 			await t.commit();
-			await stockHistory.addStockHistory(newStock, "IN", "ADD FROM ADMIN");
+			await stockHistory.addStockHistory(newStock, "IN", "ADD FROM ADMIN", qty);
 			res.status(200).send(newStock);
 		} catch (err) {
 			await t.rollback();
@@ -128,7 +128,7 @@ const stockController = {
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
-			qty: Joi.number().required(),
+			qty: Joi.number().min(0).required(),
 		});
 
 		const validation = schema.validate({ qty });
@@ -154,7 +154,8 @@ const stockController = {
 			await stockHistory.addStockHistory(
 				existingStock,
 				status,
-				"EDIT FROM ADMIN"
+				"EDIT FROM ADMIN",
+				qty
 			);
 			await db.stocks.update({ qty }, { where: { id }, transaction: t });
 			await t.commit();

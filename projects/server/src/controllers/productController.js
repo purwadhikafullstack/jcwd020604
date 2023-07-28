@@ -180,8 +180,8 @@ const productController = {
 		const schema = Joi.object({
 			product_name: Joi.string().required(),
 			product_detail: Joi.string().required(),
-			price: Joi.number().required(),
-			weight: Joi.number().required(),
+			price: Joi.number().min(0).required(),
+			weight: Joi.number().min(0).required(),
 			category_id: Joi.number().required(),
 		});
 

@@ -127,7 +127,7 @@ export default function StockHistory() {
 						</Flex>
 						<Flex w={"115px"}>
 							<Flex alignItems={"center"} cursor="pointer">
-								Amount
+								Stock
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>

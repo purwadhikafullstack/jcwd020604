@@ -24,7 +24,6 @@ export default function StockList({ val, getStock }) {
 	const editStockModal = useDisclosure();
 	const toast = useToast();
 	const nav = useNavigate();
-	console.log(val);
 
 	async function deleteStock() {
 		try {
