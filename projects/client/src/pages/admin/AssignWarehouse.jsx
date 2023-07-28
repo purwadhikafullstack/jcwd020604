@@ -19,6 +19,9 @@ import {
 
 export default function EditUser (props) {
   const [warehouse, setWarehouse] = useState("");
+  const [wAdmin, setWAdmin] = useState('');
+  const [message, setMessage] = useState('');
+
 
     const handleInputChange = (e) => {
       const { name, value } = e.target;
@@ -29,8 +32,22 @@ export default function EditUser (props) {
     };
 
     async function getWarehouse() {
-        const res = await api.get("/warehouse");
+        const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/warehouse`);
         setWarehouse(res.data);
+    }
+
+    const assignUser = async () => {
+      try {
+        await api.post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign-admin-to-warehouse`,{
+          wAdmin, warehouse
+        })
+        .then((res) => {
+          setMessage(res.data.message);
+        })
+      } catch (error) {
+        setMessage('Error occurred while assigning admin to the warehouse');
+        console.error(error);
+      }
     }
 
     useEffect(() => {
@@ -54,7 +71,7 @@ export default function EditUser (props) {
                 </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' mr={3}>
+              <Button colorScheme='blue' mr={3} onClick={assignUser}>
                 Save
               </Button>
               <Button colorScheme='orange' onClick={props.onClose}>Cancel</Button>

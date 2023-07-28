@@ -24,7 +24,7 @@ const userController = {
   getUsersById: async(req, res) => {
     try {
         const response = await db.users.findOne({
-          include: [{model: db.addresses}],
+          // include: [{model: db.addresses}],
             where:{
                 uuid: req.params.uuid
             }
@@ -112,13 +112,10 @@ const userController = {
 
   editUserV2: async (req, res) => {
     try {
-      const { fullname, avatar_url, address } = req.body;
+      const { fullname } = req.body;
       await db.users.update(
         {
           fullname,
-          avatar_url,
-          verified: 1,
-          address
         },
         {
           where: {

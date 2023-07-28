@@ -225,5 +225,32 @@ const warehouseController = {
 			return res.status(500).send({ message: err.message });
 		}
 	},
+
+	 assignAdminToWarehouse: async(req, res) => {
+		const {user_id, warehouseAdmin = "W_ADMIN", warehouse_id } = req.body;
+		try {
+		  const w_admin = await db.users.findOne(warehouseAdmin);
+		  const warehouse = await db.users.findByPk(warehouse_id);
+
+		  if (!w_admin || !warehouse) {
+			return res.status(404).json({ message: 'User or Warehouse not found' });
+		  }
+
+		  if (w_admin.role === 'W_ADMIN' || warehouse.warehouseAdmin) {
+			return res.status(400).json({ message: 'User is already an admin or Warehouse already has an admin assigned' });
+		  }
+
+		  warehouse.warehouseAdmin = warehouseAdmin;
+		  await warehouse.save();
+		  w_admin.role = 'W_ADMIN';
+		  await w_admin.save();
+		  return res.status(200).json({ message: 'Admin user successfully assigned to the warehouse' });
+
+		} catch (error) {
+		  console.error(error);
+		  return res.status(500).json({ message: 'Server error' });
+		}
+	 }
+		
 };
 module.exports = warehouseController;

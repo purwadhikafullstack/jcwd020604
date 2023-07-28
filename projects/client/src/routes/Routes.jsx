@@ -14,7 +14,8 @@ import AddUser from "../pages/user/AddUser";
 import EditUser from "../pages/user/EditUser";
 import ResetPassword from "../pages/reset/ResetPassword";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
-import ProtectedPages from "./ProtectedPages";
+// import ProtectedPages from "./ProtectedPages";
+import EditUserProfile from "../pages/user/EditUserProfile";
 
 const routes = [
 	//Sandi
@@ -22,8 +23,10 @@ const routes = [
 	<Route path="/collection/:uuid" element={<DetailPage />}></Route>,
 
 	// Admin Page
-	<Route path="/admin/managedata" element={<ProtectedPages needLoginAdmin={true}><AdminManageDataPage /></ProtectedPages>}></Route>,
-	<Route path="/admin/product" element={<ProtectedPages needLoginAdmin={true}><AdminProductPage /></ProtectedPages>}></Route>,
+	// <Route path="/admin/managedata" element={<ProtectedPages needLoginAdmin={true}><AdminManageDataPage /></ProtectedPages>}></Route>,
+	// <Route path="/admin/product" element={<ProtectedPages needLoginAdmin={true}><AdminProductPage /></ProtectedPages>}></Route>,
+	<Route path="/admin/product" element={<AdminProductPage />}></Route>,
+	<Route path="/admin/managedata" element={<AdminManageDataPage />}></Route>,
 
 	// Martin
 	// <Route path="/" element={<HomePage />}></Route>,
@@ -45,6 +48,7 @@ const routes = [
 	<Route path="/add_user" element={<AddUser />}></Route>,
 	<Route path="/edit_user" element={<EditUser />}></Route>,
 	<Route path="/admin_profile" element={<AdminProfile />}></Route>,
+	<Route path="/edit_user_profile" element={<EditUserProfile />}></Route>,
 
 
 	// <Route path="/user_profile" element={<ProtectedPages needLogin={true}><UserProfile /></ProtectedPages>}></Route>,
