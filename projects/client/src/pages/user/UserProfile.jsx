@@ -21,26 +21,23 @@ import {
   Stack,
   Select,
   ButtonGroup,
-  useToast,
-  useDisclosure
+  useToast
 } from '@chakra-ui/react';
 import {
   MdFacebook,
   MdOutlineEmail,
 } from 'react-icons/md';
-import { BsGithub, BsDiscord, BsPerson, BsCamera } from 'react-icons/bs';
+import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { Formik, Form, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
 import { api } from '../../api/api';
 import Navbar from '../../components/Navbar';
-import EditUserProfile from './EditUserProfile';
 
 export default function UserProfile() {
   const user = useSelector((state) => state.auth);
-  const editUserProfile = useDisclosure();
   const navigate = useNavigate();
   const inputFileRef = useRef(null);
   const dispatch = useDispatch();
@@ -48,8 +45,9 @@ export default function UserProfile() {
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const toast = useToast();
-  const [userId, setUserId] = useState("");
-  const {uuid} = useParams();
+  console.log(city);
+  console.log(province);
+  console.log(user);
 
   const [selectedFile, setSelectedFile] = useState(null);
 
@@ -73,8 +71,6 @@ const initialValues = {
   city: ''
 };
 
-const [users, setUsers] = useState([]);
-
 useEffect(() => {
   if(selectedFile){
     uploadAvatar();
@@ -92,14 +88,14 @@ async function uploadAvatar() {
   formData.append("userImg", selectedFile);
   console.log(selectedFile);
   await api
-  .post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.uuid}`, formData)
+  .post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData)
   .then((res) => {
       navigate("/user_profile")
     });
 }
 
 const getAddressById = async () => {
-  const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`)
+  const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.id}`)
   console.log(res.data);
 }
 
@@ -117,30 +113,7 @@ useEffect(() => {
   getUserCity();
   getUserProvince();
   getAddressById();
-},[]);
-
-useEffect(() => {
-  fetchData();
- }, []);
-
-const fetchData = async() => {
-  try {
-      api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${uuid}`)
-      .then((response) => {
-          setUsers(response.data);
-      })
-      .catch((error) => {
-          console.error(error);
-      });
-  } catch (error) {
-      toast({
-          title:"There is something error while executing this command",
-          status:"error",
-          duration:3000,
-          isClosable:false
-      });
-  }
-}
+},[])
 
 const saveUser = async (values) => {
   try {
@@ -254,20 +227,6 @@ const saveUser = async (values) => {
                                         onClick={() => {inputFileRef.current.click(); navigate("/user_profile")}}>
                                         Change Image
                                     </Button>
-                                    <Button
-                                        w={'full'}
-                                        mt={8}
-                                        bg={'green.400'}
-                                        color={'white'}
-                                        rounded={'md'}
-                                        _hover={{
-                                        transform: 'translateY(-2px)',
-                                        boxShadow: 'lg',
-                                        }}
-                                        onClick={() => {editUserProfile.onOpen(); setUserId(user.uuid)}}
-                                        >
-                                        Edit Data
-                                    </Button>
                                     </Box>
                                 </VStack>
                                 </Box>
@@ -321,7 +280,7 @@ const saveUser = async (values) => {
                                       <FormLabel>Your Name</FormLabel>
                                       <InputGroup borderColor="#E0E1E7">
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
-                                        <Input {...field} type="text" size="md" readOnly={true}/>
+                                        <Input {...field} type="text" size="md" />
                                       </InputGroup>
                                       <ErrorMessage name="name" component={Text} color="red.500" />
                                     </FormControl>
@@ -397,7 +356,6 @@ const saveUser = async (values) => {
         )}
       </Formik>
       </Container>
-      <EditUserProfile uuid={userId} isOpen={editUserProfile.isOpen} onClose={editUserProfile.onClose} fetchData={fetchData}/>
     </>
   );
 }

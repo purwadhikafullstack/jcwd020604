@@ -332,7 +332,7 @@ const userController = {
     const t = await db.sequelize.transaction();
     try {
         const {filename} = req.file;
-        await db.users.update({avatar_url: process.env.user_img + filename}, { where: {uuid: req.params.uuid}, transaction: t });
+        await db.users.update({avatar_url: process.env.user_img + filename}, { where: {id: req.params.id}, transaction: t });
         await t.commit();
         res.send({message: "Upload berhasil"});
     } catch (err) {

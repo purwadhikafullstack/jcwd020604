@@ -89,7 +89,10 @@ const UserList = () => {
                     <Button onClick={() => navigate('/add_user')} colorScheme={'messenger'} size={'sm'}>Add Users</Button>
                 </Box>
                 <Box>
-                    <Text cursor={'pointer'} textDecoration={'underline'} _hover={{textColor:'blue.400'}} textColor={'blue'} onClick={() => navigate("/")}>Back to home</Text>
+                    <Button colorScheme={'messenger'} size={'sm'} cursor={'pointer'} onClick={() => navigate("/admin/manageData")}>Manage Data</Button>
+                </Box>
+                <Box>
+                    <Button colorScheme={'messenger'} size={'sm'} cursor={'pointer'} onClick={() => navigate("/")}>Back to home</Button>
                 </Box>
             </HStack>
         </Stack>
