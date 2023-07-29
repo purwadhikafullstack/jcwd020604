@@ -9,21 +9,16 @@ import {
   Button, 
   useToast, 
   FormHelperText,
-  InputGroup,
-  Select, 
   ModalHeader, 
   ModalContent, 
   ModalCloseButton, 
   ModalBody, 
   ModalFooter } from '@chakra-ui/react';
 
-export default function EditUser (props) {
+export default function EditUserProfile (props) {
   const [users, setUsers] = useState({
     name: "",
     email: "",
-    password: "",
-    verified: true,
-    role: "",
   });
     console.log(users);
     const navigate = useNavigate();
@@ -48,7 +43,7 @@ export default function EditUser (props) {
           position: "top",
           isClosable: false,
         });
-        navigate("/user_list");
+        navigate("/user_profile");
         props.fetchData();
         props.onClose();
       } catch (error) {
@@ -107,32 +102,6 @@ export default function EditUser (props) {
                     value={users.email}
                     onChange={handleInputChange}/>
                     <FormHelperText>We'll never share your email.</FormHelperText>
-                </FormControl>
-                <FormControl id="password" isRequired>
-                  <FormLabel>Password</FormLabel>
-                  <InputGroup>
-                    <Input  type="password"
-                    name="password"
-                    placeholder="Password"
-                    readOnly={true}
-                    id="password"
-                    onChange={handleInputChange}
-                    />
-                  </InputGroup>
-                </FormControl>
-              <FormControl isRequired>
-                    <FormLabel>Verified</FormLabel>
-                    <Select placeholder='Select Option' name="verified" defaultValue={users.verified} onChange={handleInputChange}>
-                        <option value={true}>Verified</option>
-                        <option value={false}>Unverified</option>
-                    </Select>
-                </FormControl>
-                <FormControl isRequired>
-                    <FormLabel>Role</FormLabel>
-                    <Select placeholder='Select Role' name='role' defaultValue={users.role} onChange={handleInputChange}>
-                        <option value={'W_ADMIN'}>Warehouse Admin</option>
-                        <option value={'USER'}>User</option>
-                    </Select>
                 </FormControl>
             </ModalBody>
             <ModalFooter>
