@@ -226,31 +226,47 @@ const warehouseController = {
 		}
 	},
 
-	 assignAdminToWarehouse: async(req, res) => {
-		const {user_id, warehouseAdmin = "W_ADMIN", warehouse_id } = req.body;
-		try {
-		  const w_admin = await db.users.findOne(warehouseAdmin);
-		  const warehouse = await db.users.findByPk(warehouse_id);
 
-		  if (!w_admin || !warehouse) {
-			return res.status(404).json({ message: 'User or Warehouse not found' });
-		  }
+assignAdminUserToWarehouse: async (req, res) => {
+	const t = await db.sequelize.transaction();
+	try {
+		const { warehouse_id, uuid } = req.body;
 
-		  if (w_admin.role === 'W_ADMIN' || warehouse.warehouseAdmin) {
-			return res.status(400).json({ message: 'User is already an admin or Warehouse already has an admin assigned' });
-		  }
-
-		  warehouse.warehouseAdmin = warehouseAdmin;
-		  await warehouse.save();
-		  w_admin.role = 'W_ADMIN';
-		  await w_admin.save();
-		  return res.status(200).json({ message: 'Admin user successfully assigned to the warehouse' });
-
-		} catch (error) {
-		  console.error(error);
-		  return res.status(500).json({ message: 'Server error' });
+		// Check jika warehouse yang dipilih ada
+		const warehouse = await db.warehouses.findByPk(warehouse_id);
+		if (!warehouse) {
+			return res.status(404).json({ error: 'Warehouse not found.' });
 		}
-	 }
+
+		// Check user ada dan role w_admin
+		const existingUser = await db.users.findOne({
+			where: { uuid },
+		});
+		if (!existingUser) {
+			return res.status(404).json({ error: 'User not found.' });
+		}
+
+		// Cek user ada dan terverifikasi
+		if (!existingUser.verified) {
+			return res.status(403).json({ error: 'The user is not an admin.' });
+		}
+
+		// Update the user's warehouse_id to assign them to the selected warehouse
+		await db.users.update(
+			{ warehouse_id },
+			{ where: { uuid }, transaction: t }
+		);
+
+		// Commit the transaction
+		await t.commit();
+		res.send({ message: 'Warehouse assignment successful.' });
+
+	} catch (err) {
+		await t.rollback();
+		return res.status(500).send({ message: err.message });
+	}
+}
+  
 		
 };
 module.exports = warehouseController;

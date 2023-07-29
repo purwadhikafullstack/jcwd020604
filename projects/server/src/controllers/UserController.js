@@ -24,7 +24,7 @@ const userController = {
   getUsersById: async(req, res) => {
     try {
         const response = await db.users.findOne({
-          // include: [{model: db.addresses}],
+          include: [{model: db.addresses}],
             where:{
                 uuid: req.params.uuid
             }
@@ -42,6 +42,7 @@ const userController = {
         where: {
           role: role,
         },
+        include: [{model: db.warehouses}],
       });
       res.status(200).json(response);
     } catch (error) {

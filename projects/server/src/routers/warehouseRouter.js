@@ -6,7 +6,7 @@ router.get("/", warehouseController.getWarehouse);
 router.get("/:id", warehouseController.getWarehouseById);
 router.get("/getAll/province/", warehouseController.getAllProvince);
 router.get("/getAll/city/", warehouseController.getAllCity);
-router.post("/assign-admin-to-warehouse", warehouseController.assignAdminToWarehouse);
+router.post("/assign", warehouseController.assignAdminUserToWarehouse);
 
 router.post("/", warehouseController.insertWarehouse);
 router.patch("/:id", warehouseController.editWarehouse);

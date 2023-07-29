@@ -18,6 +18,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import ProductList from "./productList";
 import AddProductModal from "./addProductModal";
+import Navbar from '../components/Navbar';
 
 export default function AdminProduct() {
 	const [product, setProduct] = useState([]);
@@ -64,6 +65,8 @@ export default function AdminProduct() {
 	};
 
 	return (
+		<>
+		<Navbar/>
 		<Center flexDir={"column"}>
 			<Flex
 				margin={"60px 20px 60px"}
@@ -184,5 +187,6 @@ export default function AdminProduct() {
 				</ButtonGroup>
 			</Flex>
 		</Center>
+		</>
 	);
 }

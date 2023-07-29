@@ -14,7 +14,8 @@ import {
     Stack,
     HStack,
     useToast,
-    useDisclosure
+    useDisclosure,
+    Spacer
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import { api } from '../../api/api';
@@ -22,6 +23,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import EditUser from './EditUser';
 import AssignWarehouse from "../admin/AssignWarehouse";
 import Navbar from '../../components/Navbar';
+import Footer from "../../components/Footer";
 
 const UserList = () => {
     const editUser = useDisclosure();
@@ -33,6 +35,7 @@ const UserList = () => {
     const [adminId, setAdminId] = useState();
     const [warehouseId, setWarehouseId] = useState();
     console.log(adminId);
+    console.log(users);
     
     useEffect(() => {
      fetchData();
@@ -98,6 +101,7 @@ const UserList = () => {
                         <Th>Name</Th>
                         <Th>Email</Th>
                         <Th>Role</Th>
+                        <Th>Warehouse</Th>
                         <Th display={'flex'} alignItems={'center'} justifyContent={'center'}>Action</Th>
                     </Tr>
                     </Thead>
@@ -108,10 +112,11 @@ const UserList = () => {
                             <Td>{user.fullname}</Td>
                             <Td>{user.email}</Td>
                             <Td>{user.role}</Td>
+                            <Td>{user?.warehouse?.warehouse_name}</Td>
                             <Td>
                                 <ButtonGroup display={'flex'} alignItems={'center'} justifyContent={'center'}>
                                     <Button colorScheme={'green'} size={'sm'} onClick={()=> {editUser.onOpen();setAdminId(user.uuid)} }>Edit</Button>
-                                    <Button colorScheme={'facebook'} size={'sm'} onClick={() => {assignUser.onOpen();}}>Assign</Button>
+                                    <Button colorScheme={'facebook'} size={'sm'} onClick={() => {assignUser.onOpen();setAdminId(user.uuid)}}>Assign</Button>
                                     <Button colorScheme={'red'} size={'sm'} onClick={() => {deleteUser(user.uuid); navigate("/user_list")}}>Delete</Button>
                                 </ButtonGroup>
                             </Td>
@@ -121,7 +126,9 @@ const UserList = () => {
                 </Table>
             </TableContainer>
             <EditUser uuid={adminId} isOpen={editUser.isOpen} onClose={editUser.onClose} fetchData={fetchData}/>
-            <AssignWarehouse uuid={warehouseId} isOpen={assignUser.isOpen} onClose={assignUser.onClose} fetchData={fetchData}/>
+            <AssignWarehouse uuid={adminId} isOpen={assignUser.isOpen} onClose={assignUser.onClose} fetchData={fetchData}/>
+            <Spacer/>
+            <Footer/>
         </>
     );
 }

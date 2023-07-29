@@ -4,32 +4,24 @@ import { useNavigate } from 'react-router-dom';
 import { 
   FormControl, 
   FormLabel, 
-  Input, 
   Modal, 
   Button, 
-  useToast, 
-  FormHelperText,
-  InputGroup,
   Select, 
   ModalHeader, 
   ModalContent, 
   ModalCloseButton, 
-  ModalBody, 
-  ModalFooter } from '@chakra-ui/react';
+  ModalBody,
+  useToast, 
+  ModalFooter, } from '@chakra-ui/react';
 
-export default function EditUser (props) {
-  const [warehouse, setWarehouse] = useState("");
-  const [wAdmin, setWAdmin] = useState('');
+export default function Assign (props) {
+  const [warehouse, setWarehouse] = useState([]);
+  const [wAdmin, setWAdmin] = useState({warehouse_id: "", uuid: props.uuid});
   const [message, setMessage] = useState('');
+  const toast = useToast();
+  console.log(wAdmin);
+  console.log(props);
 
-
-    const handleInputChange = (e) => {
-      const { name, value } = e.target;
-      setWarehouse((prevState) => ({
-        ...prevState,
-        [name]: value,
-      }));
-    };
 
     async function getWarehouse() {
         const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/warehouse`);
@@ -38,9 +30,9 @@ export default function EditUser (props) {
 
     const assignUser = async () => {
       try {
-        await api.post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign-admin-to-warehouse`,{
-          wAdmin, warehouse
-        })
+        await api.post(`/warehouse/assign`,
+          wAdmin
+        )
         .then((res) => {
           setMessage(res.data.message);
         })
@@ -51,8 +43,18 @@ export default function EditUser (props) {
     }
 
     useEffect(() => {
-        getWarehouse();
-    },[]);
+      getWarehouse();
+      if (props.uuid){
+        console.log(props.uuid);
+      }
+    },[props.uuid]);
+
+    function handleInputChange(e) {
+      const { id, value } = e.target;
+      const temp = { ...wAdmin };
+      temp[id] = value;
+      setWAdmin(temp);
+  }
   
     return (
       <>
@@ -63,9 +65,9 @@ export default function EditUser (props) {
             <ModalBody pb={6}>
                 <FormControl isRequired>
                     <FormLabel>Warehouse</FormLabel>
-                    <Select name='warehouse' placeholder='Select warehouse' onChange={handleInputChange}>
+                    <Select id='warehouse_id' name='warehouse' placeholder='Select warehouse' onChange={handleInputChange}>
                         {warehouse.length? warehouse.map((val) => (
-                            <option>{val.warehouse_name}</option>
+                            <option key={val.id} value={val.id}>{val.warehouse_name}</option>
                         )) : null}
                     </Select>
                 </FormControl>

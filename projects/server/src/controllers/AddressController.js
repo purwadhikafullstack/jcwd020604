@@ -54,7 +54,7 @@ const addressController = {
 	insertAddress: async (req, res) => {
 		const t = await db.sequelize.transaction();
 		try {
-			const { user_id, fullname, address, district, city, province } = req.body;
+			const { user_id, address, district, city, province } = req.body;
 			// Check if a warehouse with the same warehouse_name already exists
 			const existingAddress = await db.addresses.findOne({
 				where: { address },
@@ -88,7 +88,6 @@ const addressController = {
 			const addresses = await db.addresses.create(
 				{
 					user_id,
-					fullname,
 					address,
 					province,
 					city,
