@@ -10,7 +10,46 @@ const stockHistory = {
 			const page = req?.query?.page || 1;
 			let offset = (parseInt(page) - 1) * limit;
 
-			const history = await db.stock_histories.findAll({
+			const sortOptions = {
+				productAsc: [
+					[{ model: db.stocks }, { model: db.products }, "product_name", "ASC"],
+				],
+				productDesc: [
+					[
+						{ model: db.stocks },
+						{ model: db.products },
+						"product_name",
+						"DESC",
+					],
+				],
+				warehouseAsc: [
+					[
+						{ model: db.stocks },
+						{ model: db.warehouses },
+						"warehouse_name",
+						"ASC",
+					],
+				],
+				warehouseDesc: [
+					[
+						{ model: db.stocks },
+						{ model: db.warehouses },
+						"warehouse_name",
+						"DESC",
+					],
+				],
+				stockAfterAsc: [["stock_after", "ASC"]],
+				stockAfterDesc: [["stock_after", "DESC"]],
+				statusAsc: [["status", "ASC"]],
+				statusDesc: [["status", "DESC"]],
+				referenceAsc: [["reference", "ASC"]],
+				referenceDesc: [["reference", "DESC"]],
+				dateAsc: [["createdAt", "ASC"]],
+				dateDesc: [["createdAt", "DESC"]],
+			};
+			const sortOrder = sortOptions[sort] || null;
+
+			const history = await db.stock_histories.findAndCountAll({
 				include: [
 					{
 						model: db.stocks,
@@ -20,9 +59,14 @@ const stockHistory = {
 						],
 					},
 				],
+				distinct: true,
+				order: sortOrder,
 			});
 
-			res.status(200).send(history);
+			res.status(200).send({
+				count: history.count,
+				rows: history.rows.slice(offset, limit * page),
+			});
 		} catch (err) {
 			res.status(500).send({
 				message: err.message,

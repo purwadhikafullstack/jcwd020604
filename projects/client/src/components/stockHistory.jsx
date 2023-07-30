@@ -33,16 +33,66 @@ import { api } from "../api/api";
 import HistoryList from "./historyList";
 
 export default function StockHistory() {
+	const [warehouse, setWarehouse] = useState([]);
+	const [selectedWarehouse, setSelectedWarehouse] = useState("");
 	const [history, setHistory] = useState();
+	const [sort, setSort] = useState("");
+	const [search, setSearch] = useState("");
+	const [page, setPage] = useState(1);
+	const [totalPage, setTotalPage] = useState(0);
 
 	useEffect(() => {
 		getHistory();
+	}, [page, sort, search]);
+
+	useEffect(() => {
+		getWarehouse();
 	}, []);
 
 	async function getHistory() {
-		const res = await api.get("/stockhistory");
-		setHistory(res.data);
+		const res = await api.get("/stockhistory", {
+			params: {
+				search: search,
+				sort: sort,
+				page: page,
+			},
+		});
+		setHistory(res.data.rows);
+		setTotalPage(Math.ceil(res.data.count / 12));
 	}
+
+	async function getWarehouse() {
+		const res = await api.get("/warehouse");
+		setWarehouse(res.data);
+	}
+
+	const handleSortChange = (sortOrder) => {
+		if (sortOrder === sort) {
+			setSort(
+				sortOrder.includes("Asc")
+					? sortOrder.replace("Asc", "Desc")
+					: sortOrder.replace("Desc", "Asc")
+			);
+		} else {
+			setSort(sortOrder);
+		}
+		setPage(1);
+	};
+
+	const handlePageChange = (newPage) => {
+		if (newPage !== page) {
+			setPage(newPage);
+		}
+	};
+
+	const handleReset = () => {
+		getHistory();
+		getWarehouse();
+		setSort("");
+		setPage(1);
+		// setSelectedWarehouse("");
+		// setSearch("");
+	};
 
 	return (
 		<Center flexDir={"column"}>
@@ -66,7 +116,7 @@ export default function StockHistory() {
 								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
 							</Link>
 						</Flex>
-						<Button mr={"10px"}>
+						<Button onClick={handleReset} mr={"10px"}>
 							<RepeatIcon />
 						</Button>
 
@@ -74,13 +124,13 @@ export default function StockHistory() {
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
 						<Select placeholder="Select Warehouse">
-							{/* {warehouse.length
+							{warehouse.length
 								? warehouse.map((val) => (
-                                    <option key={val.id} value={val.id}>
+										<option key={val.id} value={val.id}>
 											{val.warehouse_name}
 										</option>
 								  ))
-								: null} */}
+								: null}
 						</Select>
 						<Select placeholder="Select Reference">
 							{/* {product.length
@@ -113,39 +163,93 @@ export default function StockHistory() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"309px"} pl={"55px"}>
-							<Flex alignItems={"center"} cursor="pointer">
+						<Flex w={"325px"} paddingLeft={"55px"}>
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"product" + (sort === "productAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
 								Product Name
 								<UpDownIcon ml={"10px"} />
+								{sort === "productAsc" ? sort === "productDesc" : null}
 							</Flex>
 						</Flex>
-						<Flex w={"194px"}>
-							<Flex alignItems={"center"} cursor="pointer">
-								Warehouse Name
+						<Flex w={"195px"} alignItems={"center"}>
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Warehouse
+								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
 						<Flex w={"115px"}>
-							<Flex alignItems={"center"} cursor="pointer">
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"stockAfter" + (sort === "stockAfterAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
 								Stock
+								{sort === "stockAfterAsc" ? sort === "stockAfterDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
 						<Flex w={"100px"} alignItems={"center"}>
-							<Flex alignItems={"center"} cursor="pointer">
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"status" + (sort === "statusAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
 								Status
+								{sort === "statusAsc" ? sort === "statusDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
 						<Flex w={"179px"} alignItems={"center"}>
-							<Flex alignItems={"center"} cursor="pointer">
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
 								Reference
+								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
 						<Flex w={"179px"} alignItems={"center"}>
-							<Flex alignItems={"center"} cursor="pointer">
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"date" + (sort === "dateDesc" ? "Asc" : "Desc")
+									)
+								}
+								cursor="pointer"
+							>
 								Date
+								{sort === "dateDesc" ? sort === "dateAsc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
@@ -157,6 +261,32 @@ export default function StockHistory() {
 						  })
 						: null}
 				</Flex>
+				<ButtonGroup
+					paddingTop={"15px"}
+					justifyContent={"end"}
+					alignItems={"center"}
+				>
+					{page === 1 ? null : (
+						<Button
+							onClick={() => {
+								handlePageChange(page - 1);
+								window.scrollTo({ top: 0, behavior: "smooth" });
+							}}
+						>
+							Previous
+						</Button>
+					)}
+					{page === totalPage ? null : (
+						<Button
+							onClick={() => {
+								handlePageChange(page + 1);
+								window.scrollTo({ top: 0, behavior: "smooth" });
+							}}
+						>
+							Next
+						</Button>
+					)}
+				</ButtonGroup>
 			</Flex>
 		</Center>
 	);
