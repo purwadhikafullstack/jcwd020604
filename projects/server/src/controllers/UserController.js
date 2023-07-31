@@ -150,57 +150,6 @@ const userController = {
 		}
 	},
 
-	editUser: async (req, res) => {
-		try {
-			const { fullname, email, password, verified, role } = req.body;
-			await db.users.update(
-				{
-					fullname,
-					email,
-					password,
-					verified,
-					role,
-				},
-				{
-					where: {
-						id: req.params.id,
-					},
-				}
-			);
-			res.status(200).json({ msg: "User has been updated" });
-		} catch (err) {
-			console.log(err.message);
-			res.status(500).send({
-				message: err.message,
-			});
-		}
-	},
-
-	editUserV2: async (req, res) => {
-		try {
-			const { fullname, avatar_url, address } = req.body;
-			await db.users.update(
-				{
-					fullname,
-					avatar_url,
-					verified: 1,
-					address,
-				},
-				{
-					where: {
-						id: req.params.id,
-					},
-				}
-			);
-			res.status(200).json({ msg: "User has been updated" });
-		} catch (err) {
-			console.log(err.message);
-			res.status(500).send({
-				message: err.message,
-			});
-		}
-	},
-
 	register: async (req, res) => {
 		try {
 			const { email } = req.body;
@@ -236,7 +185,7 @@ const userController = {
 				});
 
 				return res.send({
-					message: "email registered",
+					message: "register berhasil",
 				});
 			}
 		} catch (err) {
@@ -258,7 +207,6 @@ const userController = {
 				message: "email registered",
 			});
 		} catch (err) {
-			console.log(err.message);
 			return res.status(500).send(err.message);
 		}
 	},
@@ -272,6 +220,20 @@ const userController = {
 					email,
 				},
 			});
+
+			if (!user) {
+				throw new Error("Username or email not found");
+			}
+
+			if (!user.dataValues.verified) {
+				throw new Error("email not verified");
+			}
+
+			const match = await bcrypt.compare(password, user.dataValues.password);
+
+			if (!match) {
+				throw new Error("Wrong password");
+			}
 
 			const userId = { id: user.dataValues.id };
 			let token = await db.tokens.findOne({
@@ -352,6 +314,10 @@ const userController = {
 		} catch (err) {
 			return res.status(500).send({ message: err.message });
 		}
+	},
+
+	getUserByToken: async (req, res) => {
+		res.send(req.user);
 	},
 
 	insertImage: async (req, res) => {
