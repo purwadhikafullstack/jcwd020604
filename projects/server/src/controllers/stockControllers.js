@@ -29,9 +29,10 @@ const stockController = {
 					[Op.and]: [
 						{
 							product_id: {
-								[Op.like]: `%${req.query.product_id || ""}%`,
+								[Op.like]: `${req.query.product_id}` || `%${""}%`,
 							},
 						},
+
 						{
 							warehouse_id: {
 								[Op.like]: `%${req.query.warehouse_id || ""}%`,

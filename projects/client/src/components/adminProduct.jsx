@@ -23,6 +23,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import ProductList from "./productList";
 import AddProductModal from "./addProductModal";
+import { useSelector } from "react-redux";
 
 export default function AdminProduct() {
 	const [product, setProduct] = useState([]);
@@ -33,6 +34,7 @@ export default function AdminProduct() {
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
+	const user = useSelector((state) => state.auth);
 
 	const addProductModal = useDisclosure();
 
@@ -111,14 +113,16 @@ export default function AdminProduct() {
 						<Link to={`/admin/managedata`}>
 							<Button leftIcon={<ArrowBackIcon />}>Back</Button>
 						</Link>
-						<Button
-							as={Button}
-							paddingLeft={"9px"}
-							marginBottom={"15px"}
-							rightIcon={<AddIcon />}
-							colorScheme="green"
-							onClick={addProductModal.onOpen}
-						/>
+						{user.role === "ADMIN" ? (
+							<Button
+								as={Button}
+								paddingLeft={"9px"}
+								marginBottom={"15px"}
+								rightIcon={<AddIcon />}
+								colorScheme="green"
+								onClick={addProductModal.onOpen}
+							/>
+						) : null}
 						<AddProductModal
 							isOpen={addProductModal.isOpen}
 							onClose={addProductModal.onClose}
@@ -187,16 +191,7 @@ export default function AdminProduct() {
 					</Flex>
 
 					<Flex w={"300px"} alignItems={"center"}>
-						<Flex
-						// onClick={() =>
-						// 	handleSortChange("desc" + (sort === "descAsc" ? "Desc" : "Asc"))
-						// }
-						// cursor="pointer"
-						>
-							Description
-							{/* {sort === "descAsc" ? sort === "descDesc" : null} */}
-							{/* <UpDownIcon ml={"10px"} /> */}
-						</Flex>
+						<Flex>Description</Flex>
 					</Flex>
 					<Flex w={"160px"}>
 						<Flex

@@ -15,12 +15,14 @@ import { useNavigate } from "react-router-dom";
 
 import { api } from "../api/api";
 import EditProductModal from "./editProductModal";
+import { useSelector } from "react-redux";
 
 export default function ProductList({ val, getProduct }) {
 	const deleteProductModal = useDisclosure();
 	const editProductModal = useDisclosure();
 	const toast = useToast();
 	const nav = useNavigate();
+	const user = useSelector((state) => state.auth);
 
 	async function deleteProduct() {
 		try {
@@ -96,12 +98,18 @@ export default function ProductList({ val, getProduct }) {
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
 				<MenuList>
-					<MenuItem onClick={editProductModal.onOpen}>
-						View / Edit Product
-					</MenuItem>
-					<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
-						Remove
-					</MenuItem>
+					{user.role === "ADMIN" ? (
+						<MenuItem onClick={editProductModal.onOpen}>
+							View / Edit Product
+						</MenuItem>
+					) : (
+						<MenuItem onClick={editProductModal.onOpen}>View Detail</MenuItem>
+					)}
+					{user.role === "ADMIN" ? (
+						<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
+							Remove
+						</MenuItem>
+					) : null}
 				</MenuList>
 			</Menu>
 			<EditProductModal
