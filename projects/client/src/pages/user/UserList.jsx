@@ -33,6 +33,7 @@ const UserList = () => {
     const toast = useToast();
     const { role = "W_ADMIN" } = useParams();
     const [adminId, setAdminId] = useState();
+    const [warehouseId, setWarehouseId] = useState();
     
     useEffect(() => {
      fetchData();
@@ -121,7 +122,7 @@ const UserList = () => {
                                 </ButtonGroup>
                             </Td>
                         </Tr>
-                        ))};
+                        ))}
                     </Tbody>
                 </Table>
             </TableContainer>

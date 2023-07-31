@@ -11,7 +11,9 @@ const Joi = require('joi');
 const userController = {
   getAll: async (req, res) => {
 		try {
-			const user = await db.users.findAll();
+			const user = await db.users.findAll({
+        attributes: ['uuid', 'fullname', 'email', 'role'],
+      });
 			return res.send(user);
 		} catch (err) {
 			res.status(500).send({
@@ -23,6 +25,7 @@ const userController = {
   getUsersById: async(req, res) => {
     try {
         const response = await db.users.findOne({
+          attributes: ['uuid', 'fullname', 'email', 'warehouse_id', 'role'],
           include: [{model: db.addresses}],
             where:{
                 uuid: req.params.uuid
@@ -40,6 +43,7 @@ const userController = {
     try {
       const { role } = req.params;
       const response = await db.users.findAll({
+        attributes: ['uuid', 'fullname', 'email', 'warehouse_id', 'role'],
         where: {
           role: role,
         },
