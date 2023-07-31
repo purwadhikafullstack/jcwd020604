@@ -16,6 +16,7 @@ router.get(
 	warehouseController.getAllCity
 );
 
+router.post("/assign", warehouseController.assignAdminUserToWarehouse);
 router.post("/", checkRole.checkAdmin, warehouseController.insertWarehouse);
 router.patch("/:id", checkRole.checkAdmin, warehouseController.editWarehouse);
 router.delete(

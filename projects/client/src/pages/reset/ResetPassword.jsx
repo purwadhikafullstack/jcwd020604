@@ -37,13 +37,13 @@ import { useSelector } from 'react-redux';
       },
       validationSchema: validationSchema,
       onSubmit: async (values) => {
-        await register(values);
+        await resetPassword(values);
       },
     });
 
-    const register = async (values) => {
+    const resetPassword = async (values) => {
       try {
-        await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, values);
+        await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/reset-password`, values);
         toast({
           title: "Periksa email verifikasi anda",
           status: "success",

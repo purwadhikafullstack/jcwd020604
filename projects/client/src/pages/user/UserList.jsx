@@ -14,22 +14,26 @@ import {
     Stack,
     HStack,
     useToast,
-    useDisclosure
+    useDisclosure,
+    Spacer
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
 import { api } from '../../api/api';
 import { useNavigate, useParams } from 'react-router-dom';
 import EditUser from './EditUser';
+import AssignWarehouse from "../admin/AssignWarehouse";
 import Navbar from '../../components/Navbar';
+import Footer from "../../components/Footer";
 
 const UserList = () => {
     const editUser = useDisclosure();
+    const assignUser = useDisclosure();
     const [users, setUsers] = useState([]);
     const navigate = useNavigate();
     const toast = useToast();
     const { role = "W_ADMIN" } = useParams();
     const [adminId, setAdminId] = useState();
-    console.log(adminId);
+    const [warehouseId, setWarehouseId] = useState();
     
     useEffect(() => {
      fetchData();
@@ -83,7 +87,10 @@ const UserList = () => {
                     <Button onClick={() => navigate('/add_user')} colorScheme={'messenger'} size={'sm'}>Add Users</Button>
                 </Box>
                 <Box>
-                    <Text cursor={'pointer'} textDecoration={'underline'} _hover={{textColor:'blue.400'}} textColor={'blue'} onClick={() => navigate("/")}>Back to home</Text>
+                    <Button colorScheme={'messenger'} size={'sm'} cursor={'pointer'} onClick={() => navigate("/admin/manageData")}>Manage Data</Button>
+                </Box>
+                <Box>
+                    <Button colorScheme={'messenger'} size={'sm'} cursor={'pointer'} onClick={() => navigate("/")}>Back to home</Button>
                 </Box>
             </HStack>
         </Stack>
@@ -95,29 +102,34 @@ const UserList = () => {
                         <Th>Name</Th>
                         <Th>Email</Th>
                         <Th>Role</Th>
+                        <Th>Warehouse</Th>
                         <Th display={'flex'} alignItems={'center'} justifyContent={'center'}>Action</Th>
                     </Tr>
                     </Thead>
                     <Tbody>
                         {users.map((user, index) => (
-                        <Tr key={user.id}>
+                        <Tr key={user.uuid}>
                             <Td>{index + 1}</Td>
                             <Td>{user.fullname}</Td>
                             <Td>{user.email}</Td>
-                            <Td>{user.role}</Td>
+                            <Td><Text fontFamily={'sans-serif'} fontSize={'sm'}>{user.role}</Text></Td>
+                            <Td><Text fontFamily={'sans-serif'} fontSize={'sm'}>{user?.warehouse?.warehouse_name}</Text></Td>
                             <Td>
                                 <ButtonGroup display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                                    <Button colorScheme={'green'} size={'sm'} onClick={()=> {editUser.onOpen();setAdminId(user.id)} }>Edit</Button>
-                                    <Button colorScheme={'facebook'} size={'sm'}>Assign</Button>
-                                    <Button colorScheme={'red'} size={'sm'} onClick={() => {deleteUser(user.id); navigate("/user_list")}}>Delete</Button>
+                                    <Button colorScheme={'green'} size={'sm'} onClick={()=> {editUser.onOpen();setAdminId(user.uuid)} }>Edit</Button>
+                                    <Button colorScheme={'facebook'} size={'sm'} onClick={() => {assignUser.onOpen();setAdminId(user.uuid)}}>Assign</Button>
+                                    <Button colorScheme={'red'} size={'sm'} onClick={() => {deleteUser(user.uuid); navigate("/user_list")}}>Delete</Button>
                                 </ButtonGroup>
                             </Td>
                         </Tr>
-                        ))};
+                        ))}
                     </Tbody>
                 </Table>
             </TableContainer>
-            <EditUser id={adminId} isOpen={editUser.isOpen} onClose={editUser.onClose} fetchData={fetchData}/>
+            <EditUser uuid={adminId} isOpen={editUser.isOpen} onClose={editUser.onClose} fetchData={fetchData}/>
+            <AssignWarehouse uuid={adminId} isOpen={assignUser.isOpen} onClose={assignUser.onClose} fetchData={fetchData}/>
+            <Spacer/>
+            <Footer/>
         </>
     );
 }

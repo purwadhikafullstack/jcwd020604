@@ -78,7 +78,7 @@ export default function Navbar() {
               {user.role === "ADMIN" ? (
               <>
                 <Flex><Link to={'/'}>Dashboard</Link></Flex>
-                <Flex><Link to={'/#'}>Products</Link></Flex>
+                <Flex cursor={'pointer'} onClick={()=>navigate("/admin/product")}>Products</Flex>
                 <Flex cursor={'pointer'} onClick={()=>navigate("/user_list")}>Users</Flex>
               </>) : (
               <>
@@ -149,7 +149,7 @@ export default function Navbar() {
                   <Input type='tel' placeholder='Search . . .' />
                 </InputGroup>
                 <Flex><Link to={'/'}>Dashboard</Link></Flex>
-                <Flex><Link to={'/#'}>Products</Link></Flex>
+                <Flex cursor={'pointer'} onClick={()=>navigate("/admin/product")}>Products</Flex>
                 <Flex cursor={'pointer'} onClick={()=>navigate("/user_list")}>Users</Flex>
               </>) : (
               <>

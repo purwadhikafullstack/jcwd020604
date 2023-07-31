@@ -11,10 +11,11 @@ const Joi = require("joi");
 const userController = {
 	getAll: async (req, res) => {
 		try {
-			const user = await db.users.findAll();
+			const user = await db.users.findAll({
+				attributes: ["uuid", "fullname", "email", "role"],
+			});
 			return res.send(user);
 		} catch (err) {
-			console.log(err.message);
 			res.status(500).send({
 				message: err.message,
 			});
@@ -24,14 +25,17 @@ const userController = {
 	getUsersById: async (req, res) => {
 		try {
 			const response = await db.users.findOne({
+				attributes: ["uuid", "fullname", "email", "warehouse_id", "role"],
 				include: [{ model: db.addresses }],
 				where: {
-					id: req.params.id,
+					uuid: req.params.uuid,
 				},
 			});
 			res.status(200).json(response);
 		} catch (error) {
-			console.log(error.message);
+			res.status(500).send({
+				message: err.message,
+			});
 		}
 	},
 
@@ -39,9 +43,11 @@ const userController = {
 		try {
 			const { role } = req.params;
 			const response = await db.users.findAll({
+				attributes: ["uuid", "fullname", "email", "warehouse_id", "role"],
 				where: {
 					role: role,
 				},
+				include: [{ model: db.warehouses }],
 			});
 			res.status(200).json(response);
 		} catch (error) {
@@ -77,7 +83,67 @@ const userController = {
 
 			res.status(201).json({ msg: "User has been created" });
 		} catch (err) {
-			console.log(err.message);
+			res.status(500).send({
+				message: err.message,
+			});
+		}
+	},
+
+	editUser: async (req, res) => {
+		try {
+			const { fullname, email, password, verified, role } = req.body;
+			await db.users.update(
+				{
+					fullname,
+					email,
+					password,
+					verified,
+					role,
+				},
+				{
+					where: {
+						uuid: req.params.uuid,
+					},
+				}
+			);
+			res.status(200).json({ msg: "User has been updated" });
+		} catch (err) {
+			res.status(500).send({
+				message: err.message,
+			});
+		}
+	},
+
+	editUserV2: async (req, res) => {
+		try {
+			const { fullname } = req.body;
+			await db.users.update(
+				{
+					fullname,
+				},
+				{
+					where: {
+						uuid: req.params.uuid,
+					},
+				}
+			);
+			res.status(200).json({ msg: "User has been updated" });
+		} catch (err) {
+			res.status(500).send({
+				message: err.message,
+			});
+		}
+	},
+
+	deleteUser: async (req, res) => {
+		try {
+			await db.users.destroy({
+				where: {
+					uuid: req.params.uuid,
+				},
+			});
+			res.status(200).json({ msg: "User has been deleted" });
+		} catch (error) {
 			res.status(500).send({
 				message: err.message,
 			});
@@ -135,19 +201,6 @@ const userController = {
 		}
 	},
 
-	deleteUser: async (req, res) => {
-		try {
-			await db.users.destroy({
-				where: {
-					id: req.params.id,
-				},
-			});
-			res.status(200).json({ msg: "User has been deleted" });
-		} catch (error) {
-			console.log(error.message);
-		}
-	},
-
 	register: async (req, res) => {
 		try {
 			const { email } = req.body;
@@ -183,11 +236,10 @@ const userController = {
 				});
 
 				return res.send({
-					message: "register berhasil",
+					message: "email registered",
 				});
 			}
 		} catch (err) {
-			console.log(err.message);
 			return res.status(500).send(err.message);
 		}
 	},
@@ -221,24 +273,7 @@ const userController = {
 				},
 			});
 
-			if (!user) {
-				throw new Error("Username or email not found");
-			}
-
-			if (!user.dataValues.verified) {
-				throw new Error("email not verified");
-			}
-
-			const match = await bcrypt.compare(password, user.dataValues.password);
-
-			if (!match) {
-				throw new Error("Wrong password");
-			}
-
 			const userId = { id: user.dataValues.id };
-			console.log(userId);
-			console.log(user);
-
 			let token = await db.tokens.findOne({
 				where: {
 					userId: JSON.stringify(userId),
@@ -252,12 +287,6 @@ const userController = {
 
 			const generateToken = nanoid();
 			if (!token) {
-				// Check if the user is W_ADMIN and has no warehouse_id set
-				if (user.role === "W_ADMIN" && !user.warehouse_id) {
-					const defaultWarehouseId = "warehouse_id";
-					await user.update({ warehouse_id: defaultWarehouseId });
-				}
-
 				token = await db.tokens.create({
 					expired: moment().add(1, "d").format(),
 					token: generateToken,
@@ -278,23 +307,21 @@ const userController = {
 					}
 				);
 			}
-			console.log(token);
 			return res.status(200).send({
 				message: "Success login",
 				token: generateToken,
 				data: user.dataValues,
 			});
 		} catch (err) {
-			console.log(err.message);
 			return res.status(500).send(err.message);
 		}
 	},
 
 	getByTokenV2: async (req, res, next) => {
 		try {
+			const { password } = req.body;
 			let token = req.headers.authorization;
 			token = token.split(" ")[1];
-			console.log(token);
 			let p = await db.tokens.findOne({
 				where: {
 					[db.Sequelize.Op.and]: [
@@ -302,7 +329,7 @@ const userController = {
 						{
 							expired: {
 								[db.Sequelize.Op.gt]: moment("00:00:00", "hh:mm:ss").format(),
-								[db.Sequelize.Op.lte]: moment().add(1, "d").format(),
+								// [db.Sequelize.Op.lte]: moment().add(1, "d").format(),
 							},
 						},
 						{
@@ -311,7 +338,6 @@ const userController = {
 					],
 				},
 			});
-			console.log(p?.dataValues);
 			if (!p) {
 				throw new Error("token has expired");
 			}
@@ -324,20 +350,14 @@ const userController = {
 			req.user = user;
 			next();
 		} catch (err) {
-			console.log(err);
 			return res.status(500).send({ message: err.message });
 		}
-	},
-
-	getUserByToken: async (req, res) => {
-		res.send(req.user);
 	},
 
 	insertImage: async (req, res) => {
 		const t = await db.sequelize.transaction();
 		try {
 			const { filename } = req.file;
-			// Check if the product_name already exists
 			await db.users.update(
 				{ avatar_url: process.env.user_img + filename },
 				{ where: { id: req.params.id }, transaction: t }
@@ -347,6 +367,76 @@ const userController = {
 		} catch (err) {
 			await t.rollback();
 			return res.status(500).send({ message: err.message });
+		}
+	},
+
+	resetPassword: async (req, res) => {
+		try {
+			const { email } = req.body;
+			const findEmail = await db.users.findOne({ where: { email } });
+
+			if (!findEmail) {
+				throw new Error("Username or email not found");
+			} else {
+				const generateToken = nanoid();
+				const token = await db.tokens.create({
+					expired: moment().add(1, "days").format(),
+					token: generateToken,
+					userId: JSON.stringify({ id: findEmail.dataValues.id }),
+					status: "FORGOT-PASSWORD",
+				});
+
+				const template = await fs.readFile(
+					"./src/template/resetPassword.html",
+					"utf-8"
+				);
+
+				let compiledTemplate = handlebars.compile(template);
+				let resetPasswordTemplate = compiledTemplate({
+					registrationLink: `${process.env.URL_RESET_PASSWORD}/reset-password/${token.dataValues.token}`,
+				});
+
+				mailer({
+					subject: "Reset Password - Email Verification Link",
+					to: email,
+					text: resetPasswordTemplate,
+				});
+
+				return res.send({
+					message: "Reset password berhasil",
+				});
+			}
+		} catch (err) {
+			return res.status(500).send(err.message);
+		}
+	},
+
+	verifyV2: async (req, res) => {
+		try {
+			const { id } = req.user;
+			const { token } = req.query;
+			const { password } = req.body;
+			const hashPassword = await bcrypt.hash(password, 10);
+
+			await db.users.update(
+				{ password: hashPassword, verified: 1 },
+				{ where: { id } }
+			);
+			await db.tokens.update(
+				{
+					valid: false,
+				},
+				{
+					where: {
+						token,
+					},
+				}
+			);
+			return res.send({
+				message: "password registered",
+			});
+		} catch (err) {
+			return res.status(500).send(err.message);
 		}
 	},
 };

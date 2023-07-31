@@ -6,13 +6,16 @@ const { fileUploader, upload } = require("../middlewares/multer");
 // register new account
 router.post("/register", userController.register);
 
+router.post("/reset-password", userController.resetPassword);
+router.patch("/verify-password", userController.getByTokenV2,userController.verifyV2);
+
 router.get("/users", userController.getAll);
-router.get("/users/:id", userController.getUsersById);
+router.get("/users/:uuid", userController.getUsersById);
 router.get("/users/role/:role", userController.getUsersByRole);
 router.post("/users", userController.createUser);
-router.patch("/users/role/:id", userController.editUser);
-router.patch("/users/:id", userController.editUserV2);
-router.delete("/users/role/:role/:id", userController.deleteUser);
+router.patch("/users/role/:uuid", userController.editUser);
+router.patch("/users/:uuid", userController.editUserV2);
+router.delete("/users/role/:role/:uuid", userController.deleteUser);
 
 // Email verification
 router.patch("/verify", userController.verify);
@@ -24,5 +27,6 @@ router.post(
     fileUploader({ destinationFolder: "userImg" }).single("userImg"),
     userController.insertImage
 );
+
 
 module.exports = router;
