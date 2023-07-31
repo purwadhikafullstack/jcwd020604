@@ -52,7 +52,6 @@ export default function AdminManageData() {
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const [product, setProduct] = useState([]);
-	console.log(user);
 
 	const addStockModal = useDisclosure();
 	const addCategoryModal = useDisclosure();
@@ -69,15 +68,15 @@ export default function AdminManageData() {
 	}, []);
 
 	useEffect(() => {
+		getStock();
+	}, [selectedWarehouse, selectedProduct, sort, search, page]);
+
+	useEffect(() => {
 		if (user.role !== "ADMIN") {
 			setPage(1);
 			setSelectedWarehouse(user.warehouse_id);
 		}
 	}, []);
-
-	useEffect(() => {
-		getStock();
-	}, [selectedWarehouse, selectedProduct, sort, search, page]);
 
 	async function getStock() {
 		const res = await api.get("/stock", {

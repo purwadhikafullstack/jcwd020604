@@ -49,7 +49,7 @@ export default function HistoryList({ val, getHistory }) {
 					<Flex w={"100px"}>{val?.status}</Flex>
 					<Flex w={"179px"}>{val?.reference}</Flex>
 					<Flex w={"179px"}>{val?.createdAt}</Flex>
-					<Flex w={"25px"} h={"25px"}></Flex>
+					<Flex w={"10px"} h={"20px"}></Flex>
 				</Flex>
 			) : null}
 		</>

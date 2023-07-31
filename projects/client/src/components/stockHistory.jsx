@@ -253,7 +253,7 @@ export default function StockHistory() {
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"25px"}></Flex>
+						<Flex w={"10px"}></Flex>
 					</Flex>
 					{history?.length
 						? history?.map((val) => {

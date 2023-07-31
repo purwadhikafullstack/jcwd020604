@@ -17,8 +17,10 @@ import { api } from "../api/api";
 import { useState } from "react";
 import DeleteStockModal from "./deleteStockModal";
 import EditStockModal from "./editStockModal";
+import { useSelector } from "react-redux";
 
 export default function StockList({ val, getStock }) {
+	const user = useSelector((state) => state.auth);
 	const stock = val.qty;
 	const deleteStockModal = useDisclosure();
 	const editStockModal = useDisclosure();
@@ -106,9 +108,11 @@ export default function StockList({ val, getStock }) {
 					<MenuItem onClick={editStockModal.onOpen} getStock={getStock}>
 						Edit
 					</MenuItem>
-					<MenuItem onClick={deleteStockModal.onOpen} color={"red"}>
-						Remove
-					</MenuItem>
+					{user.role === "ADMIN" ? (
+						<MenuItem onClick={deleteStockModal.onOpen} color={"red"}>
+							Remove
+						</MenuItem>
+					) : null}
 				</MenuList>
 			</Menu>
 			<EditStockModal
