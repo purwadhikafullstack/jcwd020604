@@ -17,7 +17,6 @@ import {
 export default function Assign (props) {
   const [warehouse, setWarehouse] = useState([]);
   const [wAdmin, setWAdmin] = useState({warehouse_id: "", uuid: props.uuid});
-  const [message, setMessage] = useState('');
   const toast = useToast();
   console.log(wAdmin);
   console.log(props);
@@ -34,11 +33,22 @@ export default function Assign (props) {
           wAdmin
         )
         .then((res) => {
-          setMessage(res.data.message);
+          toast({
+            title:"Assign admin success",
+            status:"success",
+            duration:3000,
+            position:'top',
+            isClosable:false
+          });
         })
       } catch (error) {
-        setMessage('Error occurred while assigning admin to the warehouse');
-        console.error(error);
+        toast({
+          title:"The Warehouse has a active admin",
+          status:'warning',
+          duration:3000,
+          position:'top',
+          isClosable:false
+      });
       }
     }
 

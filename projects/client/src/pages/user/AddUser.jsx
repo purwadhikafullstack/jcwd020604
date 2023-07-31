@@ -20,6 +20,7 @@ import { Formik, Form, Field, ErrorMessage } from 'formik';
 import { ViewIcon, ViewOffIcon } from '@chakra-ui/icons';
 import * as Yup from 'yup';
 import { useState } from 'react';
+import Navbar from '../../components/Navbar';
 
 const validationSchema = Yup.object().shape({
     fullname: Yup.string().min(6, "Full name min 6 character").required('Name is required'),
@@ -63,6 +64,8 @@ const AddUser = () => {
     }
 
     return (
+        <>
+        <Navbar/>
         <Container mt={2}>
             <Formik
                 initialValues={{
@@ -155,6 +158,7 @@ const AddUser = () => {
                 )}
             </Formik>
         </Container>
+        </>
     );
 }
 

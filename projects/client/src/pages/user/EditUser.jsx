@@ -35,8 +35,6 @@ export default function EditUser (props) {
         console.log(props.uuid);
       }
     }, [props.uuid]);
-
-    console.log(props.id);
   
     const updateUser = async () => {
       try {
