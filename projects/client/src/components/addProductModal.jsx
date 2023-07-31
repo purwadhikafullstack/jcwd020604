@@ -22,7 +22,7 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddCategoryModal({ isOpen, onClose }) {
+export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 	const [category, setCategory] = useState([]);
 	const [selectedImages, setSelectedImages] = useState([]);
 	const [selectedFiles, setSelectedFiles] = useState([]);
@@ -73,8 +73,9 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 						status: "success",
 						duration: 3000,
 					});
+					getProduct();
 					onClose();
-					nav("/admin/managedata");
+					nav("/admin/product");
 				}
 			} catch (error) {
 				toast({

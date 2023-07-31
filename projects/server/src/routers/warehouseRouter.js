@@ -1,15 +1,28 @@
 const express = require("express");
 const router = express.Router();
 const warehouseController = require("../controllers").warehouseController;
+const checkRole = require("../middlewares/roleDecoder");
 
 router.get("/", warehouseController.getWarehouse);
-router.get("/:id", warehouseController.getWarehouseById);
-router.get("/getAll/province/", warehouseController.getAllProvince);
-router.get("/getAll/city/", warehouseController.getAllCity);
-router.post("/assign", warehouseController.assignAdminUserToWarehouse);
+router.get("/:id", checkRole.checkAdmin, warehouseController.getWarehouseById);
+router.get(
+	"/getAll/province/",
+	checkRole.checkAdmin,
+	warehouseController.getAllProvince
+);
+router.get(
+	"/getAll/city/",
+	checkRole.checkAdmin,
+	warehouseController.getAllCity
+);
 
-router.post("/", warehouseController.insertWarehouse);
-router.patch("/:id", warehouseController.editWarehouse);
-router.delete("/:id", warehouseController.deleteWarehouse);
+router.post("/assign", warehouseController.assignAdminUserToWarehouse);
+router.post("/", checkRole.checkAdmin, warehouseController.insertWarehouse);
+router.patch("/:id", checkRole.checkAdmin, warehouseController.editWarehouse);
+router.delete(
+	"/:id",
+	checkRole.checkAdmin,
+	warehouseController.deleteWarehouse
+);
 
 module.exports = router;

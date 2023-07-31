@@ -11,12 +11,14 @@ import {
 	FormLabel,
 	Input,
 	useToast,
+	HStack,
+	Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
 
-export default function EditStockModal({ isOpen, onClose, val }) {
+export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 	const [stock, setStock] = useState(val);
 	const toast = useToast();
 	const nav = useNavigate();
@@ -29,8 +31,9 @@ export default function EditStockModal({ isOpen, onClose, val }) {
 				status: "success",
 				duration: 3000,
 			});
-			nav("/admin/managedata");
 			onClose();
+			getStock();
+			nav("/admin/managedata");
 		} catch (error) {
 			toast({
 				title: error.response.data.message,
@@ -56,16 +59,21 @@ export default function EditStockModal({ isOpen, onClose, val }) {
 				<ModalBody pb={6}>
 					<FormControl>
 						<FormLabel>Warehouse</FormLabel>
-						<Input value={val.warehouse.warehouse_name} />
+						<Input value={val?.warehouse?.warehouse_name} />
 						<FormLabel>Product</FormLabel>
 						<Input value={val.product.product_name} />
-						<FormLabel>Stocks</FormLabel>
-						<Input
-							type="number"
-							id="qty"
-							defaultValue={val.qty}
-							onChange={inputHandler}
-						/>
+						<Center flexDir={"column"} pt={"15px"}>
+							<FormLabel pl={"18px"}>Stocks</FormLabel>
+							<HStack w="100px">
+								<Input
+									textAlign={"center"}
+									type="number"
+									id="qty"
+									defaultValue={val.qty}
+									onChange={inputHandler}
+								/>
+							</HStack>
+						</Center>
 					</FormControl>
 				</ModalBody>
 				<ModalFooter>

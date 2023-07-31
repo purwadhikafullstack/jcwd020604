@@ -117,4 +117,41 @@ db.stocks.belongsTo(db.warehouses, {
 	foreignKey: "warehouse_id",
 });
 
+// db.stock_histories
+db.stocks.hasMany(db.stock_histories, {
+	foreignKey: "stock_id",
+	targetKey: "id",
+});
+
+db.stock_histories.belongsTo(db.stocks, {
+	foreignKey: "stock_id",
+});
+
+// db.stock_mutations
+db.stocks.hasMany(db.stock_mutations, {
+	foreignKey: "stock_id",
+	targetKey: "id",
+});
+
+db.stock_mutations.belongsTo(db.stocks, {
+	foreignKey: "stock_id",
+});
+
+db.warehouses.hasMany(db.stock_mutations, {
+	foreignKey: "from_warehouse_id",
+	targetKey: "id",
+});
+
+db.warehouses.hasMany(db.stock_mutations, {
+	foreignKey: "to_warehouse_id",
+	targetKey: "id",
+});
+
+db.stock_mutations.belongsTo(db.warehouses, {
+	foreignKey: "from_warehouse_id",
+});
+db.stock_mutations.belongsTo(db.warehouses, {
+	foreignKey: "to_warehouse_id",
+});
+
 module.exports = db;

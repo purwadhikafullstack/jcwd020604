@@ -7,7 +7,11 @@ const { fileUploader, upload } = require("../middlewares/multer");
 router.post("/register", userController.register);
 
 router.post("/reset-password", userController.resetPassword);
-router.patch("/verify-password", userController.getByTokenV2,userController.verifyV2);
+router.patch(
+	"/verify-password",
+	userController.getByTokenV2,
+	userController.verifyV2
+);
 
 router.get("/users", userController.getAll);
 router.get("/users/:uuid", userController.getUsersById);
@@ -23,10 +27,9 @@ router.post("/login", userController.login);
 router.get("/v2", userController.getByTokenV2, userController.getUserByToken);
 
 router.post(
-    "/:id",
-    fileUploader({ destinationFolder: "userImg" }).single("userImg"),
-    userController.insertImage
+	"/:id",
+	fileUploader({ destinationFolder: "userImg" }).single("userImg"),
+	userController.insertImage
 );
-
 
 module.exports = router;

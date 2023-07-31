@@ -17,8 +17,10 @@ import { api } from "../api/api";
 import { useState } from "react";
 import DeleteStockModal from "./deleteStockModal";
 import EditStockModal from "./editStockModal";
+import { useSelector } from "react-redux";
 
-export default function StockList({ val }) {
+export default function StockList({ val, getStock }) {
+	const user = useSelector((state) => state.auth);
 	const stock = val.qty;
 	const deleteStockModal = useDisclosure();
 	const editStockModal = useDisclosure();
@@ -35,6 +37,7 @@ export default function StockList({ val }) {
 				status: "success",
 				duration: 3000,
 			});
+			getStock();
 			deleteStockModal.onClose();
 			nav("/admin/managedata");
 		} catch (error) {
@@ -67,8 +70,20 @@ export default function StockList({ val }) {
 				/>
 				<Flex w={"270px"}>{val.product.product_name}</Flex>
 			</Flex>
-			<Flex w={"195px"}>{val.warehouse.warehouse_name}</Flex>
-			<Flex w={"195px"}>{val.product.category.category_name}</Flex>
+			<Flex w={"195px"}>
+				{!val?.warehouse ? (
+					<Flex>Warehouse not found</Flex>
+				) : (
+					val?.warehouse?.warehouse_name
+				)}
+			</Flex>
+			<Flex w={"195px"}>
+				{val.product.category == null ? (
+					<Flex>Category not found</Flex>
+				) : (
+					val.product.category.category_name
+				)}
+			</Flex>
 			<Flex w={"195px"}>{val.qty}</Flex>
 			<Flex w={"195px"}>
 				{stock > 10 ? (
@@ -90,10 +105,14 @@ export default function StockList({ val }) {
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
 				<MenuList>
-					<MenuItem onClick={editStockModal.onOpen}>Edit</MenuItem>
-					<MenuItem onClick={deleteStockModal.onOpen} color={"red"}>
-						Remove
+					<MenuItem onClick={editStockModal.onOpen} getStock={getStock}>
+						Edit
 					</MenuItem>
+					{user.role === "ADMIN" ? (
+						<MenuItem onClick={deleteStockModal.onOpen} color={"red"}>
+							Remove
+						</MenuItem>
+					) : null}
 				</MenuList>
 			</Menu>
 			<EditStockModal

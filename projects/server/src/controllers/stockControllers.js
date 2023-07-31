@@ -1,23 +1,60 @@
 const { Op } = require("sequelize");
 const db = require("../models");
 const Joi = require("joi");
+const stockHistory = require("./stockHistoryControllers");
 
 const stockController = {
 	getStock: async (req, res) => {
 		try {
-			const stock = await db.stocks.findAll({
+			const { sort, search } = req.query;
+			const limit = 12;
+
+			const page = req?.query?.page || 1;
+			let offset = (parseInt(page) - 1) * limit;
+
+			const sortOptions = {
+				qtyAsc: [["qty", "ASC"]],
+				qtyDesc: [["qty", "DESC"]],
+				productAsc: [[{ model: db.products }, "product_name", "ASC"]],
+				productDesc: [[{ model: db.products }, "product_name", "DESC"]],
+				warehouseAsc: [[{ model: db.warehouses }, "warehouse_name", "ASC"]],
+				warehouseDesc: [[{ model: db.warehouses }, "warehouse_name", "DESC"]],
+				categoryAsc: [[{ model: db.products }, "category_id", "ASC"]],
+				categoryDesc: [[{ model: db.products }, "category_id", "DESC"]],
+			};
+			const sortOrder = sortOptions[sort] || null;
+
+			const stock = await db.stocks.findAndCountAll({
 				where: {
 					[Op.and]: [
+						{
+							product_id: {
+								[Op.like]: `${req.query.product_id}` || `%${""}%`,
+							},
+						},
+
 						{
 							warehouse_id: {
 								[Op.like]: `%${req.query.warehouse_id || ""}%`,
 							},
 						},
+
 						{
 							"$product.product_name$": {
-								[Op.like]: `%${req.query.product_name || ""}%`,
+								[Op.like]: `%${search || ""}%`,
 							},
 						},
+						// {
+						// 	"$product.category.category_name$": {
+						// 		[Op.like]: `%${req.query.selectedCategory || ""}%`,
+						// 	},
+						// },
+
+						// {
+						// 	"$warehouse.warehouse_name$": {
+						// 		[Op.like]: `%${!null}%`,
+						// 	},
+						// },
 					],
 				},
 				include: [
@@ -27,8 +64,13 @@ const stockController = {
 					},
 					{ model: db.warehouses },
 				],
+				distinct: true,
+				order: sortOrder,
 			});
-			res.status(200).send(stock);
+			res.status(200).send({
+				count: stock.count,
+				rows: stock.rows.slice(offset, limit * page),
+			});
 		} catch (err) {
 			res.status(500).send({ message: err.message });
 		}
@@ -38,7 +80,7 @@ const stockController = {
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
-			qty: Joi.number().required(),
+			qty: Joi.number().min(0).required(),
 			product_id: Joi.number().required(),
 			warehouse_id: Joi.number().required(),
 		});
@@ -70,7 +112,9 @@ const stockController = {
 				},
 				{ transaction: t }
 			);
+
 			await t.commit();
+			await stockHistory.addStockHistory(newStock, "IN", "ADD FROM ADMIN", qty);
 			res.status(200).send(newStock);
 		} catch (err) {
 			await t.rollback();
@@ -85,7 +129,7 @@ const stockController = {
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
-			qty: Joi.number().required(),
+			qty: Joi.number().min(0).required(),
 		});
 
 		const validation = schema.validate({ qty });
@@ -97,8 +141,26 @@ const stockController = {
 		}
 
 		try {
-			await db.stocks.update({ qty }, { where: { id: id }, transaction: t });
+			const existingStock = await db.stocks.findOne({
+				where: { id },
+			});
+
+			if (!existingStock) {
+				return res.status(404).send({ message: "Stock not found" });
+			}
+
+			const oldQty = existingStock.qty;
+			const status = qty < oldQty ? "OUT" : "IN";
+
+			await stockHistory.addStockHistory(
+				existingStock,
+				status,
+				"EDIT FROM ADMIN",
+				qty
+			);
+			await db.stocks.update({ qty }, { where: { id }, transaction: t });
 			await t.commit();
+
 			res.send({ message: "Stock updated successfully" });
 		} catch (err) {
 			await t.rollback();

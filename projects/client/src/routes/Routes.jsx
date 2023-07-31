@@ -13,6 +13,7 @@ import AdminProfile from "../pages/user/UserProfile";
 import AddUser from "../pages/user/AddUser";
 import EditUser from "../pages/user/EditUser";
 import ResetPassword from "../pages/reset/ResetPassword";
+import StockHistoryPage from "../pages/admin/StockHistoryPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 // import ProtectedPages from "./ProtectedPages";
 import EditUserProfile from "../pages/user/EditUserProfile";
@@ -26,6 +27,7 @@ const routes = [
 	// <Route path="/admin/managedata" element={<ProtectedPages needLoginAdmin={true}><AdminManageDataPage /></ProtectedPages>}></Route>,
 	// <Route path="/admin/product" element={<ProtectedPages needLoginAdmin={true}><AdminProductPage /></ProtectedPages>}></Route>,
 	<Route path="/admin/product" element={<AdminProductPage />}></Route>,
+	<Route path="/admin/stockhistory" element={<StockHistoryPage />}></Route>,
 	<Route path="/admin/managedata" element={<AdminManageDataPage />}></Route>,
 
 	// Martin
@@ -41,7 +43,10 @@ const routes = [
 	<Route path="/login" element={<Login />}></Route>,
 	<Route path="/verify" element={<Verify />}></Route>,
 	<Route path="/reset_password" element={<ResetPassword />}></Route>,
-	<Route path="/reset-password/:token" element={<ConfirmResetPassword />}></Route>,
+	<Route
+		path="/reset-password/:token"
+		element={<ConfirmResetPassword />}
+	></Route>,
 
 	<Route path="/user_profile" element={<UserProfile />}></Route>,
 	<Route path="/user_list" element={<UserList />}></Route>,
@@ -49,7 +54,6 @@ const routes = [
 	<Route path="/edit_user" element={<EditUser />}></Route>,
 	<Route path="/admin_profile" element={<AdminProfile />}></Route>,
 	<Route path="/edit_user_profile" element={<EditUserProfile />}></Route>,
-
 
 	// <Route path="/user_profile" element={<ProtectedPages needLogin={true}><UserProfile /></ProtectedPages>}></Route>,
 	// <Route path="/user_list" element={<ProtectedPages needLoginAdmin={true} needLogin={true}><UserList /></ProtectedPages>}></Route>,
