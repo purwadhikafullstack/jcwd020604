@@ -25,7 +25,7 @@ export default function Assign (props) {
     async function getWarehouse() {
         const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/warehouse`);
         setWarehouse(res.data);
-    }
+    };
 
     const assignUser = async () => {
       try {
@@ -40,7 +40,7 @@ export default function Assign (props) {
             position:'top',
             isClosable:false
           });
-        })
+        });
       } catch (error) {
         toast({
           title:"The Warehouse has a active admin",
