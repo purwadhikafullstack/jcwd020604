@@ -34,8 +34,6 @@ const UserList = () => {
     const { role = "W_ADMIN" } = useParams();
     const [adminId, setAdminId] = useState();
     const [warehouseId, setWarehouseId] = useState();
-    console.log(adminId);
-    console.log(users);
     
     useEffect(() => {
      fetchData();
@@ -89,7 +87,10 @@ const UserList = () => {
                     <Button onClick={() => navigate('/add_user')} colorScheme={'messenger'} size={'sm'}>Add Users</Button>
                 </Box>
                 <Box>
-                    <Text cursor={'pointer'} textDecoration={'underline'} _hover={{textColor:'blue.400'}} textColor={'blue'} onClick={() => navigate("/")}>Back to home</Text>
+                    <Button colorScheme={'messenger'} size={'sm'} cursor={'pointer'} onClick={() => navigate("/admin/manageData")}>Manage Data</Button>
+                </Box>
+                <Box>
+                    <Button colorScheme={'messenger'} size={'sm'} cursor={'pointer'} onClick={() => navigate("/")}>Back to home</Button>
                 </Box>
             </HStack>
         </Stack>
@@ -111,8 +112,8 @@ const UserList = () => {
                             <Td>{index + 1}</Td>
                             <Td>{user.fullname}</Td>
                             <Td>{user.email}</Td>
-                            <Td>{user.role}</Td>
-                            <Td>{user?.warehouse?.warehouse_name}</Td>
+                            <Td><Text fontFamily={'sans-serif'} fontSize={'sm'}>{user.role}</Text></Td>
+                            <Td><Text fontFamily={'sans-serif'} fontSize={'sm'}>{user?.warehouse?.warehouse_name}</Text></Td>
                             <Td>
                                 <ButtonGroup display={'flex'} alignItems={'center'} justifyContent={'center'}>
                                     <Button colorScheme={'green'} size={'sm'} onClick={()=> {editUser.onOpen();setAdminId(user.uuid)} }>Edit</Button>
@@ -121,7 +122,7 @@ const UserList = () => {
                                 </ButtonGroup>
                             </Td>
                         </Tr>
-                        ))};
+                        ))}
                     </Tbody>
                 </Table>
             </TableContainer>

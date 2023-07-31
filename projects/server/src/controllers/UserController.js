@@ -11,10 +11,11 @@ const Joi = require('joi');
 const userController = {
   getAll: async (req, res) => {
 		try {
-			const user = await db.users.findAll();
+			const user = await db.users.findAll({
+        attributes: ['uuid', 'fullname', 'email', 'role'],
+      });
 			return res.send(user);
 		} catch (err) {
-			console.log(err.message);
 			res.status(500).send({
 				message: err.message,
 			});
@@ -24,6 +25,7 @@ const userController = {
   getUsersById: async(req, res) => {
     try {
         const response = await db.users.findOne({
+          attributes: ['uuid', 'fullname', 'email', 'warehouse_id', 'role'],
           include: [{model: db.addresses}],
             where:{
                 uuid: req.params.uuid
@@ -31,7 +33,9 @@ const userController = {
         });
         res.status(200).json(response);
     } catch (error) {
-        console.log(error.message);
+      res.status(500).send({
+				message: err.message,
+			});
     }
   },
 
@@ -39,6 +43,7 @@ const userController = {
     try {
       const { role } = req.params;
       const response = await db.users.findAll({
+        attributes: ['uuid', 'fullname', 'email', 'warehouse_id', 'role'],
         where: {
           role: role,
         },
@@ -78,7 +83,6 @@ const userController = {
   
       res.status(201).json({ msg: "User has been created" });
     } catch (err) {
-      console.log(err.message);
       res.status(500).send({
         message: err.message,
       });
@@ -104,7 +108,6 @@ const userController = {
       );
       res.status(200).json({msg:"User has been updated"});
     } catch (err) {
-      console.log(err.message);
       res.status(500).send({
         message: err.message,
       });
@@ -126,7 +129,6 @@ const userController = {
       );
       res.status(200).json({msg:"User has been updated"});
     } catch (err) {
-      console.log(err.message);
       res.status(500).send({
         message: err.message,
       });
@@ -142,7 +144,9 @@ const userController = {
         });
         res.status(200).json({msg:"User has been deleted"});
     } catch (error) {
-        console.log(error.message);
+      res.status(500).send({
+				message: err.message,
+			});
     }
   },
 
@@ -185,7 +189,6 @@ const userController = {
         });
       }
     } catch (err) {
-      console.log(err.message);
       return res.status(500).send(err.message);
     }
   },
@@ -204,7 +207,6 @@ const userController = {
         message: "email registered",
       });
     } catch (err) {
-      console.log(err.message);
       return res.status(500).send(err.message);
     }
   },
@@ -234,9 +236,6 @@ const userController = {
       }
 
       const userId = { id: user.dataValues.id };
-      console.log(userId);
-      console.log(user);
-      
       let token = await db.tokens.findOne({
         where: {
           userId: JSON.stringify(userId),
@@ -268,14 +267,12 @@ const userController = {
         }
        });
       }
-      console.log(token);
       return res.status(200).send({
         message: "Success login",
         token: generateToken,
         data: user.dataValues,
       });
     } catch (err) {
-      console.log(err.message);
       return res.status(500).send(err.message);
     }
   },
@@ -284,12 +281,7 @@ const userController = {
     try {
       const {password} = req.body
       let token= req.headers.authorization;
-      console.log(req.headers)
-      console.log(password)
-      console.log(token)
       token = token.split(" ")[1];
-      console.log('hbhv');
-      console.log(token);
       let p = await db.tokens.findOne({
         where: {
           [db.Sequelize.Op.and]: [
@@ -306,7 +298,6 @@ const userController = {
           ], 
         },
       });
-      console.log(p?.dataValues);
       if (!p) {
         throw new Error("token has expired");
       }
@@ -319,7 +310,6 @@ const userController = {
       req.user = user;
       next();
     } catch (err) {
-      console.log(err);
       return res.status(500).send({ message: err.message });
     }
   },
@@ -332,7 +322,7 @@ const userController = {
     const t = await db.sequelize.transaction();
     try {
         const {filename} = req.file;
-        await db.users.update({avatar_url: process.env.user_img + filename}, { where: {uuid: req.params.uuid}, transaction: t });
+        await db.users.update({avatar_url: process.env.user_img + filename}, { where: {id: req.params.id}, transaction: t });
         await t.commit();
         res.send({message: "Upload berhasil"});
     } catch (err) {
@@ -363,7 +353,6 @@ resetPassword: async (req, res) => {
       let resetPasswordTemplate = compiledTemplate({
         registrationLink: `${process.env.URL_RESET_PASSWORD}/reset-password/${token.dataValues.token}`
       });
-      console.log(token.dataValues.token)
       
       mailer({
         subject: "Reset Password - Email Verification Link",
@@ -376,14 +365,12 @@ resetPassword: async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err.message);
     return res.status(500).send(err.message);
   }
 },
 
 verifyV2: async (req, res) => {
   try {
-    console.log('sdjfdsj')
     const{id} = req.user;
     const{token} = req.query;
     const { password } = req.body;
@@ -406,14 +393,8 @@ verifyV2: async (req, res) => {
       message: "password registered",
     });
   } catch (err) {
-    console.log(err.message);
     return res.status(500).send(err.message);
   }
 },
-
-assignWarehouse: async(req, res) => {
-  
-},
-
 };
 module.exports = userController;

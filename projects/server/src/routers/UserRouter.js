@@ -23,7 +23,7 @@ router.post("/login", userController.login);
 router.get("/v2", userController.getByTokenV2, userController.getUserByToken);
 
 router.post(
-    "/:uuid",
+    "/:id",
     fileUploader({ destinationFolder: "userImg" }).single("userImg"),
     userController.insertImage
 );

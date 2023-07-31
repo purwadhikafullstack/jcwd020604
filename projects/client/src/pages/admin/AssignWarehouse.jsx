@@ -1,6 +1,5 @@
 import React,{useState, useEffect} from 'react';
 import { api } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
 import { 
   FormControl, 
   FormLabel, 
@@ -19,26 +18,43 @@ export default function Assign (props) {
   const [wAdmin, setWAdmin] = useState({warehouse_id: "", uuid: props.uuid});
   const [message, setMessage] = useState('');
   const toast = useToast();
-  console.log(wAdmin);
+  // console.log(message);
+  // console.log(wAdmin);
   console.log(props);
 
-
     async function getWarehouse() {
+      try {
         const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/warehouse`);
-        setWarehouse(res.data);
-    }
+        if (res && res.data) {
+          setWarehouse(res.data);
+        } else {
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
 
     const assignUser = async () => {
       try {
-        await api.post(`/warehouse/assign`,
-          wAdmin
-        )
-        .then((res) => {
-          setMessage(res.data.message);
-        })
+        const res = await api.post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign`, wAdmin);
+        setMessage(res.data.message);
+        toast({
+          title: "Assign admin success",
+          status: "success",
+          duration: 3000,
+          position: 'top',
+          isClosable: false
+        });
       } catch (error) {
         setMessage('Error occurred while assigning admin to the warehouse');
         console.error(error);
+        toast({
+          title: "The Warehouse has an active admin",
+          status: 'warning',
+          duration: 3000,
+          position: 'top',
+          isClosable: false
+        });
       }
     }
 
@@ -65,7 +81,7 @@ export default function Assign (props) {
             <ModalBody pb={6}>
                 <FormControl isRequired>
                     <FormLabel>Warehouse</FormLabel>
-                    <Select id='warehouse_id' name='warehouse' placeholder='Select warehouse' onChange={handleInputChange}>
+                    <Select id='warehouse_id' name='warehouse' placeholder='Select warehouse' onClick={handleInputChange}>
                         {warehouse.length? warehouse.map((val) => (
                             <option key={val.id} value={val.id}>{val.warehouse_name}</option>
                         )) : null}

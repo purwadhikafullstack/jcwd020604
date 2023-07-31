@@ -35,6 +35,7 @@ import EditWarehouseModal from "./editWarehouseModal";
 import EditCategoryModal from "./editCategoryModal";
 import AddStockModal from "./addStockModal";
 import StockList from "./stockList";
+import Navbar from "./Navbar";
 
 export default function AdminManageData() {
 	// const [selectedCategory, setSelectedCategory] = useState("");
@@ -93,6 +94,8 @@ export default function AdminManageData() {
 	// };
 
 	return (
+		<>
+		<Navbar/>
 		<Center flexDir={"column"}>
 			<Flex
 				margin={"60px 20px 60px"}
@@ -291,5 +294,6 @@ export default function AdminManageData() {
 				/>
 			</Flex>
 		</Center>
+		</>
 	);
 }
