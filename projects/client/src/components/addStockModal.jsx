@@ -56,6 +56,7 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 						title: `Add Stock Success`,
 						description: "The stock has been added successfully.",
 						status: "success",
+						position: "top",
 						duration: 3000,
 					});
 					getStock();
@@ -66,6 +67,7 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 				toast({
 					title: error.response.data.message,
 					status: "error",
+					position: "top",
 					duration: 3000,
 				});
 			}

@@ -55,6 +55,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 			toast({
 				title: "Product updated successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
 			getProduct();
@@ -64,6 +65,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

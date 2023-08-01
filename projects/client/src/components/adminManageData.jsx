@@ -312,14 +312,14 @@ export default function AdminManageData() {
 									alignItems={"center"}
 									onClick={() =>
 										handleSortChange(
-											"product" + (sort === "productAsc" ? "Desc" : "Asc")
+											"product" + (sort === "productDesc" ? "Asc" : "Desc")
 										)
 									}
 									cursor="pointer"
 								>
 									Product Name
 									<UpDownIcon ml={"10px"} />
-									{sort === "productAsc" ? sort === "productDesc" : null}
+									{sort === "productDesc" ? sort === "productAsc" : null}
 								</Flex>
 							</Flex>
 

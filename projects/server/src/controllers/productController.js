@@ -31,7 +31,7 @@ const productController = {
 				weightDesc: [["weight", "DESC"]],
 				newest: [["createdAt", "DESC"]],
 			};
-			const sortOrder = sortOptions[sort] || null;
+			const sortOrder = sortOptions[sort] || sortOptions.productAsc;
 
 			const searchOptions = {
 				product_name: {

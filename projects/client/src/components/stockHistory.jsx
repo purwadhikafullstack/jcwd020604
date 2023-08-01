@@ -275,13 +275,13 @@ export default function StockHistory() {
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
-										"date" + (sort === "dateDesc" ? "Asc" : "Desc")
+										"date" + (sort === "dateAsc" ? "Desc" : "Asc")
 									)
 								}
 								cursor="pointer"
 							>
 								Date
-								{sort === "dateDesc" ? sort === "dateAsc" : null}
+								{sort === "dateAsc" ? sort === "dateDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>

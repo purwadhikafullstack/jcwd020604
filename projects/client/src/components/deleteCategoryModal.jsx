@@ -49,6 +49,7 @@ export default function DeleteCategoryModal({ isOpen, onClose }) {
 				title: "Category Deleted",
 				description: "The category has been deleted successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
 			getCategory();
@@ -58,6 +59,7 @@ export default function DeleteCategoryModal({ isOpen, onClose }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

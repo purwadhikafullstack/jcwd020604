@@ -180,7 +180,7 @@ export default function AdminProduct() {
 							<Flex
 								onClick={() =>
 									handleSortChange(
-										"product" + (sort === "productAsc" ? "Desc" : "Asc")
+										"product" + (sort === "productDesc" ? "Asc" : "Desc")
 									)
 								}
 								cursor="pointer"
@@ -188,7 +188,7 @@ export default function AdminProduct() {
 							>
 								Product Name
 								<UpDownIcon ml={"10px"} />
-								{sort === "productAsc" ? sort === "productDesc" : null}
+								{sort === "productDesc" ? sort === "productAsc" : null}
 							</Flex>
 						</Flex>
 

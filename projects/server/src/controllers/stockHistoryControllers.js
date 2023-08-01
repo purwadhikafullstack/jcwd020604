@@ -49,7 +49,7 @@ const stockHistory = {
 				dateAsc: [["createdAt", "ASC"]],
 				dateDesc: [["createdAt", "DESC"]],
 			};
-			const sortOrder = sortOptions[sort] || null;
+			const sortOrder = sortOptions[sort] || sortOptions.dateDesc;
 
 			let whereClause = {};
 

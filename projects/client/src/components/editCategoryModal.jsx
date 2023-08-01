@@ -40,6 +40,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 			toast({
 				title: "Category updated successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 				isClosable: true,
 			});
@@ -51,6 +52,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

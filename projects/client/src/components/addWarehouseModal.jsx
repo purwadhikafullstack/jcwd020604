@@ -58,6 +58,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 						title: `Add Warehouse Success`,
 						description: "The warehouse has been added successfully.",
 						status: "success",
+						position: "top",
 						duration: 3000,
 					});
 					getWarehouse();
@@ -68,6 +69,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 				toast({
 					title: error.response.data.message,
 					status: "error",
+					position: "top",
 					duration: 3000,
 				});
 			}

@@ -4,10 +4,14 @@ const productController = require("../controllers").productController;
 const { fileUploader, upload } = require("../middlewares/multer");
 const checkRole = require("../middlewares/roleDecoder");
 
-router.get("/", productController.getAll);
-router.get("/getAllProduct/getAll", productController.getAllProduct);
+router.get("/", checkRole.checkUser, productController.getAll);
+router.get(
+	"/getAllProduct/getAll",
+	checkRole.checkWAdmin,
+	productController.getAllProduct
+);
 // router.get("/id/:id", productController.getProductById);
-router.get("/:uuid", productController.getProductByUuid);
+router.get("/:uuid", checkRole.checkUser, productController.getProductByUuid);
 router.post(
 	"/",
 	checkRole.checkAdmin,

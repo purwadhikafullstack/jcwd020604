@@ -34,6 +34,7 @@ export default function StockList({ val, getStock }) {
 				title: "Stock Deleted",
 				description: "The stock has been deleted successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
 			getStock();
@@ -43,6 +44,7 @@ export default function StockList({ val, getStock }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

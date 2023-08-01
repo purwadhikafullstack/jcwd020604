@@ -71,6 +71,7 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 						title: `Add Product Success`,
 						description: "The product has been added successfully.",
 						status: "success",
+						position: "top",
 						duration: 3000,
 					});
 					getProduct();
@@ -81,6 +82,7 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 				toast({
 					title: error.response.data.message,
 					status: "error",
+					position: "top",
 					duration: 3000,
 				});
 			}
