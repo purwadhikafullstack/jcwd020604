@@ -1,11 +1,8 @@
 import React from 'react';
 import {
-  Box,
-  Text,
   Button,
   ButtonGroup,
   VStack,
-  WrapItem,
   FormControl,
   FormLabel,
   Input,
@@ -23,14 +20,12 @@ import {
 import {
   MdOutlineEmail,
 } from 'react-icons/md';
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
-import {BsPerson } from 'react-icons/bs';
-import { useSelector, useDispatch } from 'react-redux';
+import { BsPerson } from 'react-icons/bs';
 
 export default function EditUserProfile (props) {
-  const user = useSelector((state) => state.auth);
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
   const navigate = useNavigate();
@@ -40,7 +35,7 @@ export default function EditUserProfile (props) {
     email: ""
   });
 
-  console.log(props.user);
+  console.log(users);
 
   const getUserCity = async () => {
     const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/address/getAll/city`)
@@ -54,7 +49,7 @@ export default function EditUserProfile (props) {
 
   const getUserById = async () => {
     try {
-      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.uuid}`);
+      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.uuid}`, users);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -123,7 +118,7 @@ export default function EditUserProfile (props) {
                                 <InputGroup borderColor="#E0E1E7">
                                   <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
                                     <Input type="text" size="md" 
-                                    value={user.fullname}
+                                    value={users.fullname}
                                     onChange={handleInputChange}/>
                                 </InputGroup>
                           </FormControl>
@@ -135,7 +130,7 @@ export default function EditUserProfile (props) {
                                 children={<MdOutlineEmail color="gray.800" />}
                                 />
                               <Input type="email" size="md" placeholder={''}
-                                   value={user.email}
+                                   value={users.email}
                                    onChange={handleInputChange}/>
                               </InputGroup>
                           </FormControl>

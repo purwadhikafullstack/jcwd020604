@@ -20,7 +20,7 @@ const userController = {
 				message: err.message,
 			});
 		}
-	},
+	}, 
 
 	getUsersById: async (req, res) => {
 		try {

@@ -15,12 +15,9 @@ import {
 
 export default function Assign (props) {
   const [warehouse, setWarehouse] = useState([]);
-  const [wAdmin, setWAdmin] = useState({warehouse_id: "", uuid: props.uuid});
+  const [wAdmin, setWAdmin] = useState({warehouse_id: ""});
   const [message, setMessage] = useState('');
   const toast = useToast();
-  // console.log(message);
-  // console.log(wAdmin);
-  console.log(props);
 
     async function getWarehouse() {
       try {
@@ -36,7 +33,7 @@ export default function Assign (props) {
 
     const assignUser = async () => {
       try {
-        const res = await api.post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign`, wAdmin);
+        const res = await api.post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign`, {...wAdmin, uuid: props.uuid});
         setMessage(res.data.message);
         toast({
           title: "Assign admin success",

@@ -30,8 +30,6 @@ import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
 import { api } from '../../api/api';
 import Navbar from '../../components/Navbar';
 import Loading from '../../components/Loading';
@@ -41,138 +39,144 @@ export default function UserProfile() {
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const inputFileRef = useRef(null);
-  // const dispatch = useDispatch();
   const [selectedFile, setSelectedFile] = useState(null);
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const editUserProfile = useDisclosure();
   const [users, setUsers] = useState('');
   const { id } = useParams();
-  // const [userId, setUserId] = useState();
+
+  const [isFormSubmitted, setIsFormSubmitted] = useState(false);
+  const [name, setName] = useState(user.fullname);
+  const [email, setEmail] = useState(user.email);
+  const [address, setAddress] = useState(user?.address?.address);
+
+  useEffect(() => {
+    if (selectedFile) {
+      uploadAvatar();
+    }
+  }, [selectedFile]);
+
+  useEffect(() => {
+    getAddressByUser();
+    fetchData();
+  }, []);
 
   const handleFile = (e) => {
     setSelectedFile(e.target.files[0]);
     console.log(e.target.files[0]);
   };
 
-const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-
-const validationSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required'),
-  address: Yup.string().required('Address is required'),
-});
-
-const initialValues = {
-  name: user.fullname,
-  email: user.email,
-  address: user?.address?.address,
-};
-
-const handleSubmit = (values, { setSubmitting }) => {
-  setIsFormSubmitted(true);
-  setSubmitting(false);
-};
-
-useEffect(() => {
-  if(selectedFile){
-    uploadAvatar();
-  }
-},[selectedFile]);
-
-useEffect(() => {
-  fetchData();
-  getAddressByUser();
- }, []);
-
- const fetchData = async() => {
-     try {
-         api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${id}`)
-         .then((response) => {
-             setUsers(response.data);
-         })
-         .catch((error) => {
-             console.error(error);
-         });
-     } catch (error) {
-         toast({
-             title:"There is something error while executing this command",
-             status:"error",
-             duration:3000,
-             isClosable:false
-         });
-     }
- }
-
-async function uploadAvatar() {
-  const formData = new FormData();
-  formData.append("userImg", selectedFile);
-  await api
-  .post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData)
-  .then((res) => {
-    toast({
-      title:"Photo has been updated",
-      status:"success",
-      duration:3000,
-      position:'top',
-      isClosable:false
-    });
-  });
+  const fetchData = async() => {
+    try {
+        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${users.id}`)
+        .then((response) => {
+            setUsers(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    } catch (error) {
+        toast({
+            title:"There is something error while executing this command",
+            status:"error",
+            duration:3000,
+            isClosable:false
+        });
+    }
 }
 
-useEffect(() => {
-  setTimeout(() => {
-    setIsLoading(false);
-  }, 1000);
-}, [isLoading]);
-
-const getAddressByUser = async () => {
-  try {
-    const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/address/users/${id}`);
-    setUsers(response.data);
-  } catch (error) {
-    console.log(error);
-    toast({
-      title: "Error fetching user details",
-      status: "error",
-      duration: 3000,
-      position: "top",
-      isClosable: false,
+  async function uploadAvatar() {
+    const formData = new FormData();
+    formData.append("userImg", selectedFile);
+    await api
+    .post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData)
+    .then((res) => {
+      toast({
+        title:"Photo has been updated",
+        status:"success",
+        duration:3000,
+        position:'top',
+        isClosable:false
+      });
+      window.location.reload();
     });
-    console.log(error);
   }
-};
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 1000);
+  }, [isLoading]);
+
+  const getAddressByUser = async () => {
+    try {
+      const response = await api.get(
+        `${process.env.REACT_APP_API_BASE_URL}/address/users/${id}`
+      );
+      setUsers(response.data);
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error fetching user details",
+        status: "error",
+        duration: 3000,
+        position: "top",
+        isClosable: false,
+      });
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsFormSubmitted(true);
+    try {
+      await api.patch(`/auth/users/${users.id}`);
+      setUsers();
+      toast({
+        title: "Profile has been updated",
+        status: "success",
+        duration: 3000,
+        position: "top",
+        isClosable: false,
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <>
-    <Navbar/>
-    {isLoading ? (
-        	<Loading />
-     		) : (
-          <Container maxW="full" centerContent overflow="hidden">
-             <Formik
-             initialValues={initialValues}
-             validationSchema={validationSchema}
-             onSubmit={handleSubmit}
-           >
-               <Form>
-                 <Flex>
-                   <Box
-                     color="white"
-                     borderRadius="lg"
-                     m={{ sm: 4, md: 16, lg: 10 }}
-                     p={{ sm: 5, md: 5, lg: 2}}
-                     >
-                         <Flex justifyContent={'center'} alignItems={'center'}>
-                             <Heading color={'facebook.600'}>Profile</Heading>
-                         </Flex>
-                         <Text display={'flex'} justifyContent={'center'} alignItems={'center'} mt={{ sm: 3, md: 3, lg: 5 }} color="gray.500">
-                             Fill up the form below to update
-                         </Text>
-                     <Box p={4}>
-                       <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }}>
-                         <WrapItem>
-                           <Box h={'100%'} >
-                               <VStack pl={0} spacing={2} alignItems={"flex-start"}>
+      <Navbar />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Container maxW="full" centerContent overflow="hidden">
+          <form onSubmit={handleSubmit}>
+            <Flex>
+              <Box
+                color="white"
+                borderRadius="lg"
+                m={{ sm: 4, md: 16, lg: 10 }}
+                p={{ sm: 5, md: 5, lg: 2 }}
+              >
+                <Flex justifyContent={"center"} alignItems={"center"}>
+                  <Heading color={"facebook.600"}>Profile</Heading>
+                </Flex>
+                <Text
+                  display={"flex"}
+                  justifyContent={"center"}
+                  alignItems={"center"}
+                  mt={{ sm: 3, md: 3, lg: 5 }}
+                  color="gray.500"
+                >
+                  Fill up the form below to update
+                </Text>
+                <Box p={4}>
+                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }}>
+                    <WrapItem>
+                      <Box h={"100%"}>
+                      <VStack pl={0} spacing={2} alignItems={"flex-start"}>
                                  <Box bg="white" w={'300px'} borderRadius="lg" alignItems={{base:"flex-start", md: "center", sm: "center"}}>
                                      <Box m={0} color="#0B0E3F">
                                      <VStack spacing={2} maxW={'300px'}
@@ -274,67 +278,56 @@ const getAddressByUser = async () => {
                                      </VStack>
                                      </Box>
                                  </Box>
-                               </VStack>
-                           </Box>
-                         </WrapItem>
-                         <WrapItem>
-                           <Box bg="white" h={'100%'} borderRadius="lg" boxShadow={'2xl'} overflow={'hidden'}>
-                             <Box m={8} color="#0B0E3F">
-                               <> 
-                               <VStack spacing={5}>
-                                 <Field name="name">
-                                       {({ field }) => (
-                                         <FormControl id="name" isInvalid={isFormSubmitted && !!field.error}>
-                                           <FormLabel>Your Name</FormLabel>
-                                           <InputGroup borderColor="#E0E1E7">
-                                             <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
-                                             <Input {...field} type="text" size="md" />
-                                           </InputGroup>
-                                           <ErrorMessage name="name" component={Text} color="red.500" />
-                                         </FormControl>
-                                       )}
-                                   </Field>
-                                   <FormControl id="email">
+                          </VStack>
+                      </Box>
+                    </WrapItem>
+                    <WrapItem>
+                      <Box bg="white" h={"100%"} borderRadius="lg" boxShadow={"2xl"} overflow={"hidden"}>
+                        <Box m={8} color="#0B0E3F">
+                            <VStack spacing={5}>
+                            <FormControl id="name">
+                                  <FormLabel>Your Name</FormLabel>
+                                    <InputGroup borderColor="#E0E1E7">
+                                        <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
+                                            <Input  type="text" size="md" readOnly={true} value={name}/>
+                                        </InputGroup>
+                            </FormControl>
+                            <FormControl id="email">
                                      <FormLabel>Email</FormLabel>
                                      <InputGroup borderColor="#E0E1E7">
                                        <InputLeftElement
                                          pointerEvents="none"
                                          children={<MdOutlineEmail color="gray.800" />}
                                        />
-                                       <Input type="email" readOnly={true} size="md" placeholder={user.email}/>
+                                       <Input type="email" readOnly={true} size="md" value={email}/>
                                      </InputGroup>
-                                   </FormControl>
+                            </FormControl>
                                    <FormControl id="address">
                                        <FormLabel>Address</FormLabel>
-                                       <Field name="address">
-                                         {({ field }) => (
                                            <Textarea
-                                             {...field}
                                              borderColor="gray.300"
                                              _hover={{
                                                borderRadius: 'gray.300',
                                              }}
+                                             value={address}
                                              placeholder={user.address}
                                            />
-                                         )}
-                                       </Field>
-                                       <ErrorMessage name="address" component={Text} color="red.500" />
                                      </FormControl>
                                  </VStack>
-                                <Button mt={4} colorScheme={'green'} size={'sm'} onClick={() => {editUserProfile.onOpen()}}>Edit</Button>
-                                 </>
-                             </Box>
-                           </Box>
-                         </WrapItem>
-                       </Wrap>
-                     </Box>
-                   </Box>
-                 </Flex>
-               </Form>
-           </Formik>
+                              <Button mt={4} colorScheme={"green"} size={"sm"} type="submit" onClick={() => {editUserProfile.onOpen()}}>
+                                Edit
+                              </Button>
+                          </Box>
+                        </Box>
+                      </WrapItem>
+                    </Wrap>
+                  </Box>
+                </Box>
+              </Flex>
+            </form>
           </Container>
         )};
-        <EditUserProfile user={user} isOpen={editUserProfile.isOpen} onClose={editUserProfile.onClose}/>
-    </>
-  );
-}
+        <EditUserProfile uuid={users} isOpen={editUserProfile.isOpen} onClose={editUserProfile.onClose} fetchData={fetchData} />
+      </>
+    );
+  }

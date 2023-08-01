@@ -236,6 +236,7 @@ assignAdminUserToWarehouse: async (req, res) => {
 		const existingUser = await db.users.findOne({
 			where: { uuid },
 		});
+		
 		if (!existingUser) {
 			return res.status(404).json({ error: 'User not found.' });
 		}
