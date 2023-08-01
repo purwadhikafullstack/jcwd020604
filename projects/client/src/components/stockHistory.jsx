@@ -7,54 +7,54 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
 	ButtonGroup,
-	useDisclosure,
 } from "@chakra-ui/react";
-import {
-	DeleteIcon,
-	AddIcon,
-	EditIcon,
-	HamburgerIcon,
-	PlusSquareIcon,
-	UpDownIcon,
-	RepeatIcon,
-	TimeIcon,
-	ArrowBackIcon,
-} from "@chakra-ui/icons";
+import { UpDownIcon, RepeatIcon, ArrowBackIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api } from "../api/api";
 import HistoryList from "./historyList";
+import { useSelector } from "react-redux";
 
 export default function StockHistory() {
+	const user = useSelector((state) => state.auth);
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
+	const [selectedReference, setSelectedReference] = useState("");
+	const [time, setTime] = useState("");
 	const [history, setHistory] = useState();
 	const [sort, setSort] = useState("");
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
-
-	useEffect(() => {
-		getHistory();
-	}, [page, sort, search]);
+	const inputFileRef = useRef(null);
 
 	useEffect(() => {
 		getWarehouse();
 	}, []);
 
+	useEffect(() => {
+		getHistory();
+	}, [page, sort, search, selectedWarehouse, selectedReference, time]);
+
+	useEffect(() => {
+		if (user.role !== "ADMIN") {
+			setPage(1);
+			setSelectedWarehouse(user.warehouse_id);
+		}
+	}, []);
+
 	async function getHistory() {
 		const res = await api.get("/stockhistory", {
 			params: {
+				warehouse_id: selectedWarehouse,
+				reference: selectedReference,
 				search: search,
 				sort: sort,
 				page: page,
+				time: time,
 			},
 		});
 		setHistory(res.data.rows);
@@ -90,9 +90,12 @@ export default function StockHistory() {
 		getWarehouse();
 		setSort("");
 		setPage(1);
-		// setSelectedWarehouse("");
-		// setSearch("");
+		setSelectedWarehouse(user.role === "ADMIN" ? "" : user.warehouse_id);
+		setSelectedReference("");
+		setSearch("");
+		setTime("");
 	};
+	console.log(time);
 
 	return (
 		<Center flexDir={"column"}>
@@ -120,36 +123,65 @@ export default function StockHistory() {
 							<RepeatIcon />
 						</Button>
 
-						<Input type={"month"} w={"525px"} />
+						<Input
+							type={"month"}
+							w={"525px"}
+							value={time}
+							onChange={(e) => {
+								setPage(1);
+								setTime(e.target.value);
+							}}
+						/>
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
-						<Select placeholder="Select Warehouse">
-							{warehouse.length
-								? warehouse.map((val) => (
-										<option key={val.id} value={val.id}>
-											{val.warehouse_name}
-										</option>
-								  ))
-								: null}
-						</Select>
-						<Select placeholder="Select Reference">
-							{/* {product.length
-                                ? product.map((val) => (
-                                    <option key={val.id} value={val.id}>   
-                                            {val.warehouse_name}                                     {val.product_name}
-                                      </option>
-                                  ))
-                                : null} */}
+						{user.role === "ADMIN" ? (
+							<Select
+								placeholder="All Warehouses"
+								value={selectedWarehouse}
+								onChange={(event) => {
+									setPage(1);
+									setSelectedWarehouse(event.target.value);
+								}}
+							>
+								{warehouse.length
+									? warehouse.map((val) => (
+											<option key={val.id} value={val.id}>
+												{val.warehouse_name}
+											</option>
+									  ))
+									: null}
+							</Select>
+						) : (
+							<Select value={user.warehouse_id} isDisabled>
+								{warehouse.length
+									? warehouse.map((val) => (
+											<option key={val.id} value={val.id}>
+												{val.warehouse_name}
+											</option>
+									  ))
+									: null}
+							</Select>
+						)}
+						<Select
+							placeholder="Select Reference"
+							value={selectedReference}
+							onChange={(event) => {
+								setPage(1);
+								setSelectedReference(event.target.value);
+							}}
+						>
+							<option>ADD FROM ADMIN</option>
+							<option>EDIT FROM ADMIN</option>
 						</Select>
 						<InputGroup>
-							<Input
-								placeholder="Search..."
-								// ref={inputFileRef}
-							/>
+							<Input placeholder="Search..." ref={inputFileRef} />
 							<InputRightElement cursor={"pointer"}>
 								<Button
-								// border="none"
-								// onClick={() => setSearch(inputFileRef.current.value)}
+									border="none"
+									onClick={() => {
+										setPage(1);
+										setSearch(inputFileRef.current.value);
+									}}
 								>
 									<Icon as={FaSearch} color="gray.400" />
 								</Button>

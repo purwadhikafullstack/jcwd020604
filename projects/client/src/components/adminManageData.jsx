@@ -39,6 +39,7 @@ import EditCategoryModal from "./editCategoryModal";
 import AddStockModal from "./addStockModal";
 import StockList from "./stockList";
 import Navbar from "./Navbar";
+import { BsFillCircleFill } from "react-icons/bs";
 
 export default function AdminManageData() {
 	const user = useSelector((state) => state.auth);
@@ -141,298 +142,315 @@ export default function AdminManageData() {
 
 	return (
 		<>
-		<Navbar/>
-		<Center flexDir={"column"}>
-			<Flex
-				margin={"60px 20px 60px"}
-				border={"1px"}
-				borderRadius={"15px"}
-				borderColor={"#E6EBF2"}
-				padding={"15px"}
-				w={"1400 px"}
-				justifyContent={"center"}
-				flexDir={"column"}
-			>
-				<Flex flexDir={"column"}>
-					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
-						Manage Data
-					</Flex>
-					<Flex>
-						<Flex gap={"10px"} w={"100%"}>
-							<Button
-								colorScheme="green"
-								onClick={addStockModal.onOpen}
-								marginBottom={"15px"}
-							>
-								Add Stock
-							</Button>
-							{user.role === "ADMIN" ? (
-								<Flex gap={"10px"}>
-									<Menu>
-										<MenuButton
-											as={Button}
-											paddingLeft={"9px"}
-											marginBottom={"15px"}
-											rightIcon={<AddIcon />}
-										></MenuButton>
-										<MenuList>
-											<MenuItem onClick={addCategoryModal.onOpen}>
-												Add Category
-											</MenuItem>
-											<MenuItem onClick={addWarehouseModal.onOpen}>
-												Add Warehouse
-											</MenuItem>
-										</MenuList>
-									</Menu>
-									<Menu>
-										<MenuButton
-											as={Button}
-											paddingLeft={"9px"}
-											marginBottom={"15px"}
-											rightIcon={<EditIcon />}
-										></MenuButton>
-										<MenuList>
-											<MenuItem onClick={editCategoryModal.onOpen}>
-												View / Edit Category
-											</MenuItem>
-											<MenuItem onClick={editWarehouseModal.onOpen}>
-												View / Edit Warehouse
-											</MenuItem>
-										</MenuList>
-									</Menu>
-									<Menu>
-										<MenuButton
-											as={Button}
-											colorScheme="red"
-											color={"white"}
-											paddingLeft={"9px"}
-											marginBottom={"15px"}
-											rightIcon={<DeleteIcon />}
-										></MenuButton>
-										<MenuList>
-											<MenuItem
-												color={"red"}
-												onClick={deleteCategoryModal.onOpen}
-											>
-												Delete Category
-											</MenuItem>
-											<MenuItem
-												color={"red"}
-												onClick={deleteWarehouseModal.onOpen}
-											>
-												Delete Warehouse
-											</MenuItem>
-										</MenuList>
-									</Menu>
-								</Flex>
-							) : null}
+			<Navbar />
+			<Center flexDir={"column"}>
+				<Flex
+					margin={"60px 20px 60px"}
+					border={"1px"}
+					borderRadius={"15px"}
+					borderColor={"#E6EBF2"}
+					padding={"15px"}
+					w={"1400 px"}
+					justifyContent={"center"}
+					flexDir={"column"}
+				>
+					<Flex flexDir={"column"}>
+						<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
+							Manage Data
 						</Flex>
-						<Button onClick={handleReset} mr={"10px"}>
-							<RepeatIcon />
-						</Button>
-						<Link to={`/admin/stockhistory`}>
-							<Button mr={"10px"} leftIcon={<TimeIcon />} px={"10px"}>
-								Stock History
+						<Flex>
+							<Flex gap={"10px"} w={"100%"}>
+								<Button
+									colorScheme="green"
+									onClick={addStockModal.onOpen}
+									marginBottom={"15px"}
+								>
+									Add Stock
+								</Button>
+								{user.role === "ADMIN" ? (
+									<Flex gap={"10px"}>
+										<Menu>
+											<MenuButton
+												as={Button}
+												paddingLeft={"9px"}
+												marginBottom={"15px"}
+												rightIcon={<AddIcon />}
+											></MenuButton>
+											<MenuList>
+												<MenuItem onClick={addCategoryModal.onOpen}>
+													Add Category
+												</MenuItem>
+												<MenuItem onClick={addWarehouseModal.onOpen}>
+													Add Warehouse
+												</MenuItem>
+											</MenuList>
+										</Menu>
+										<Menu>
+											<MenuButton
+												as={Button}
+												paddingLeft={"9px"}
+												marginBottom={"15px"}
+												rightIcon={<EditIcon />}
+											></MenuButton>
+											<MenuList>
+												<MenuItem onClick={editCategoryModal.onOpen}>
+													View / Edit Category
+												</MenuItem>
+												<MenuItem onClick={editWarehouseModal.onOpen}>
+													View / Edit Warehouse
+												</MenuItem>
+											</MenuList>
+										</Menu>
+										<Menu>
+											<MenuButton
+												as={Button}
+												colorScheme="red"
+												color={"white"}
+												paddingLeft={"9px"}
+												marginBottom={"15px"}
+												rightIcon={<DeleteIcon />}
+											></MenuButton>
+											<MenuList>
+												<MenuItem
+													color={"red"}
+													onClick={deleteCategoryModal.onOpen}
+												>
+													Delete Category
+												</MenuItem>
+												<MenuItem
+													color={"red"}
+													onClick={deleteWarehouseModal.onOpen}
+												>
+													Delete Warehouse
+												</MenuItem>
+											</MenuList>
+										</Menu>
+									</Flex>
+								) : null}
+							</Flex>
+							<Button onClick={handleReset} mr={"10px"}>
+								<RepeatIcon />
 							</Button>
-						</Link>
-						<Link to={`/admin/product`}>
-							<Button leftIcon={<HamburgerIcon />}>Product Data</Button>
-						</Link>
-					</Flex>
-					<Center gap={"15px"} paddingBottom={"15px"}>
-						<Select
-							placeholder="All Type of Products"
-							value={selectedProduct}
-							onChange={(event) => {
-								setPage(1);
-								setSelectedProduct(event.target.value);
-							}}
-						>
-							{product.length
-								? product.map((val) => (
-										<option key={val.id} value={val.id}>
-											{val.product_name}
-										</option>
-								  ))
-								: null}
-						</Select>
-						{user.role === "ADMIN" ? (
+							<Link to={`/admin/stockhistory`}>
+								<Button mr={"10px"} leftIcon={<TimeIcon />} px={"10px"}>
+									Stock History
+								</Button>
+							</Link>
+							<Link to={`/admin/product`}>
+								<Button leftIcon={<HamburgerIcon />}>Product Data</Button>
+							</Link>
+						</Flex>
+						<Center gap={"15px"} paddingBottom={"15px"}>
 							<Select
-								placeholder="All Warehouses"
-								value={selectedWarehouse}
+								placeholder="All Type of Products"
+								value={selectedProduct}
 								onChange={(event) => {
 									setPage(1);
-									setSelectedWarehouse(event.target.value);
+									setSelectedProduct(event.target.value);
 								}}
 							>
-								{warehouse.length
-									? warehouse.map((val) => (
+								{product.length
+									? product.map((val) => (
 											<option key={val.id} value={val.id}>
-												{val.warehouse_name}
+												{val.product_name}
 											</option>
 									  ))
 									: null}
 							</Select>
-						) : (
-							<Select value={user.warehouse_id} isDisabled>
-								{warehouse.length
-									? warehouse.map((val) => (
-											<option key={val.id} value={val.id}>
-												{val.warehouse_name}
-											</option>
-									  ))
-									: null}
-							</Select>
-						)}
-						<InputGroup>
-							<Input placeholder="Search..." ref={inputFileRef} />
-							<InputRightElement cursor={"pointer"}>
-								<Button
-									border="none"
-									onClick={() => setSearch(inputFileRef.current.value)}
+							{user.role === "ADMIN" ? (
+								<Select
+									placeholder="All Warehouses"
+									value={selectedWarehouse}
+									onChange={(event) => {
+										setPage(1);
+										setSelectedWarehouse(event.target.value);
+									}}
 								>
-									<Icon as={FaSearch} color="gray.400" />
-								</Button>
-							</InputRightElement>
-						</InputGroup>
-					</Center>
-					<Flex
-						padding={"7px"}
-						borderBottom={"1px"}
-						fontWeight={600}
-						borderColor={"#E6EBF2"}
-						gap={"7"}
-					>
-						<Flex w={"325px"} paddingLeft={"55px"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productAsc" ? sort === "productDesc" : null}
+									{warehouse.length
+										? warehouse.map((val) => (
+												<option key={val.id} value={val.id}>
+													{val.warehouse_name}
+												</option>
+										  ))
+										: null}
+								</Select>
+							) : (
+								<Select value={user.warehouse_id} isDisabled>
+									{warehouse.length
+										? warehouse.map((val) => (
+												<option key={val.id} value={val.id}>
+													{val.warehouse_name}
+												</option>
+										  ))
+										: null}
+								</Select>
+							)}
+							<InputGroup>
+								<Input placeholder="Search..." ref={inputFileRef} />
+								<InputRightElement cursor={"pointer"}>
+									<Button
+										border="none"
+										onClick={() => {
+											setPage(1);
+											setSearch(inputFileRef.current.value);
+										}}
+									>
+										<Icon as={FaSearch} color="gray.400" />
+									</Button>
+								</InputRightElement>
+							</InputGroup>
+						</Center>
+						<Flex
+							padding={"7px"}
+							borderBottom={"1px"}
+							fontWeight={600}
+							borderColor={"#E6EBF2"}
+							gap={"7"}
+						>
+							<Flex w={"325px"} paddingLeft={"55px"}>
+								<Flex
+									alignItems={"center"}
+									onClick={() =>
+										handleSortChange(
+											"product" + (sort === "productAsc" ? "Desc" : "Asc")
+										)
+									}
+									cursor="pointer"
+								>
+									Product Name
+									<UpDownIcon ml={"10px"} />
+									{sort === "productAsc" ? sort === "productDesc" : null}
+								</Flex>
 							</Flex>
-						</Flex>
 
-						<Flex w={"195px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Warehouse
-								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
-								<UpDownIcon ml={"10px"} />
+							<Flex w={"195px"} alignItems={"center"}>
+								<Flex
+									alignItems={"center"}
+									onClick={() =>
+										handleSortChange(
+											"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
+										)
+									}
+									cursor="pointer"
+								>
+									Warehouse
+									{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
+									<UpDownIcon ml={"10px"} />
+								</Flex>
 							</Flex>
-						</Flex>
-						<Flex w={"195px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Category
-								{sort === "categoryAsc" ? sort === "categoryDesc" : null}
-								<UpDownIcon ml={"10px"} />
+							<Flex w={"195px"} alignItems={"center"}>
+								<Flex
+									alignItems={"center"}
+									onClick={() =>
+										handleSortChange(
+											"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
+										)
+									}
+									cursor="pointer"
+								>
+									Category
+									{sort === "categoryAsc" ? sort === "categoryDesc" : null}
+									<UpDownIcon ml={"10px"} />
+								</Flex>
 							</Flex>
-						</Flex>
-						<Flex w={"195px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
-								}
-								cursor="pointer"
-							>
-								Stock
-								<UpDownIcon ml={"10px"} />
-								{sort === "qtyAsc" ? sort === "qtyDesc" : null}
+							<Flex w={"195px"} alignItems={"center"}>
+								<Flex
+									alignItems={"center"}
+									onClick={() =>
+										handleSortChange(
+											"qty" + (sort === "qtyAsc" ? "Desc" : "Asc")
+										)
+									}
+									cursor="pointer"
+								>
+									Stock
+									<UpDownIcon ml={"10px"} />
+									{sort === "qtyAsc" ? sort === "qtyDesc" : null}
+								</Flex>
 							</Flex>
+							<Flex w={"195px"} alignItems={"center"}>
+								<Flex alignItems={"center"}>Status</Flex>
+							</Flex>
+							<Flex w={"25px"}></Flex>
 						</Flex>
-						<Flex w={"195px"} alignItems={"center"}>
-							<Flex alignItems={"center"}>Status</Flex>
-						</Flex>
-						<Flex w={"25px"}></Flex>
+						{stock.length
+							? stock.map((val) => {
+									return <StockList val={val} getStock={getStock} />;
+							  })
+							: null}
 					</Flex>
-					{stock.length
-						? stock.map((val) => {
-								return <StockList val={val} getStock={getStock} />;
-						  })
-						: null}
-				</Flex>
-				<ButtonGroup
-					paddingTop={"15px"}
-					justifyContent={"end"}
-					alignItems={"center"}
-				>
-					{page === 1 ? null : (
-						<Button
-							onClick={() => {
-								handlePageChange(page - 1);
-								window.scrollTo({ top: 0, behavior: "smooth" });
-							}}
-						>
-							Previous
-						</Button>
-					)}
-					{page === totalPage ? null : (
-						<Button
-							onClick={() => {
-								handlePageChange(page + 1);
-								window.scrollTo({ top: 0, behavior: "smooth" });
-							}}
-						>
-							Next
-						</Button>
-					)}
-				</ButtonGroup>
-				<AddStockModal
-					isOpen={addStockModal.isOpen}
-					onClose={addStockModal.onClose}
-					getStock={getStock}
-				/>
+					<Flex justifyContent={"end"} alignItems={"center"} gap={"30px"}>
+						<Flex alignItems={"center"} gap={"5px"} mt={"15px"}>
+							<Icon as={BsFillCircleFill} color={"red"} />
+							<Flex>Stock = 0</Flex>
+						</Flex>
+						<Flex alignItems={"center"} gap={"5px"} mt={"15px"}>
+							<Icon as={BsFillCircleFill} color={"orange"} />
+							<Flex>{`Stock > 0`}</Flex>
+						</Flex>
+						<Flex alignItems={"center"} gap={"5px"} mt={"15px"}>
+							<Icon as={BsFillCircleFill} color={"green"} />
 
-				<AddCategoryModal
-					isOpen={addCategoryModal.isOpen}
-					onClose={addCategoryModal.onClose}
-					getCategory={getCategory}
-				/>
-				<EditCategoryModal
-					isOpen={editCategoryModal.isOpen}
-					onClose={editCategoryModal.onClose}
-				/>
-				<DeleteCategoryModal
-					isOpen={deleteCategoryModal.isOpen}
-					onClose={deleteCategoryModal.onClose}
-				/>
-				<AddWarehouseModal
-					isOpen={addWarehouseModal.isOpen}
-					onClose={addWarehouseModal.onClose}
-					getWarehouse={getWarehouse}
-				/>
-				<EditWarehouseModal
-					isOpen={editWarehouseModal.isOpen}
-					onClose={editWarehouseModal.onClose}
-				/>
-				<DeleteWarehouseModal
-					isOpen={deleteWarehouseModal.isOpen}
-					onClose={deleteWarehouseModal.onClose}
-				/>
-			</Flex>
-		</Center>
+							<Flex>{`Stock > 10`}</Flex>
+						</Flex>
+
+						<ButtonGroup paddingTop={"15px"} alignItems={"center"}>
+							{page === 1 ? null : (
+								<Button
+									onClick={() => {
+										handlePageChange(page - 1);
+										window.scrollTo({ top: 0, behavior: "smooth" });
+									}}
+								>
+									Previous
+								</Button>
+							)}
+							{page === totalPage ? null : (
+								<Button
+									onClick={() => {
+										handlePageChange(page + 1);
+										window.scrollTo({ top: 0, behavior: "smooth" });
+									}}
+								>
+									Next
+								</Button>
+							)}
+						</ButtonGroup>
+					</Flex>
+					<AddStockModal
+						isOpen={addStockModal.isOpen}
+						onClose={addStockModal.onClose}
+						getStock={getStock}
+					/>
+
+					<AddCategoryModal
+						isOpen={addCategoryModal.isOpen}
+						onClose={addCategoryModal.onClose}
+						getCategory={getCategory}
+					/>
+					<EditCategoryModal
+						isOpen={editCategoryModal.isOpen}
+						onClose={editCategoryModal.onClose}
+					/>
+					<DeleteCategoryModal
+						isOpen={deleteCategoryModal.isOpen}
+						onClose={deleteCategoryModal.onClose}
+					/>
+					<AddWarehouseModal
+						isOpen={addWarehouseModal.isOpen}
+						onClose={addWarehouseModal.onClose}
+						getWarehouse={getWarehouse}
+					/>
+					<EditWarehouseModal
+						isOpen={editWarehouseModal.isOpen}
+						onClose={editWarehouseModal.onClose}
+					/>
+					<DeleteWarehouseModal
+						isOpen={deleteWarehouseModal.isOpen}
+						onClose={deleteWarehouseModal.onClose}
+					/>
+				</Flex>
+			</Center>
 		</>
 	);
 }

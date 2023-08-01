@@ -137,20 +137,6 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 							id="product_detail"
 							onChange={inputHandler}
 						/>
-						<FormLabel>Price:</FormLabel>
-						<Input
-							type="number"
-							placeholder="e.g. 500000"
-							id="price"
-							onChange={inputHandler}
-						/>
-						<FormLabel>Weight:</FormLabel>
-						<Input
-							type="number"
-							placeholder="e.g. 100 "
-							id="weight"
-							onChange={inputHandler}
-						/>
 						<FormLabel> Product Category:</FormLabel>
 						<Select
 							placeholder="Choose category"
@@ -165,6 +151,20 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 								  ))
 								: null}
 						</Select>
+						<FormLabel>Price (Rp):</FormLabel>
+						<Input
+							type="number"
+							placeholder="e.g. 500000"
+							id="price"
+							onChange={inputHandler}
+						/>
+						<FormLabel>Weight (g):</FormLabel>
+						<Input
+							type="number"
+							placeholder="e.g. 100 "
+							id="weight"
+							onChange={inputHandler}
+						/>
 						<FormLabel>Product Images:</FormLabel>
 						<Input
 							accept="image/png, image/jpeg"

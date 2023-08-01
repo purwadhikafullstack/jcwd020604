@@ -14,7 +14,6 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillCircleFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
-import { useState } from "react";
 import DeleteStockModal from "./deleteStockModal";
 import EditStockModal from "./editStockModal";
 import { useSelector } from "react-redux";
