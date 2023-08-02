@@ -119,6 +119,7 @@ export default function UserProfile() {
 
   const saveUser = async () => {
     try {
+      console.log(user.uuid);
         await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, changes);
         toast({
             title:"User has been updated",
@@ -234,7 +235,7 @@ const handleInputChange = (e) => {
                                              onClick={() => {inputFileRef.current.click(); navigate("/user_profile")}}>
                                              Change Image
                                          </Button>
-                                         <Flex onClick={() => console.log(address)}>Cek Log</Flex>
+                                         <Flex onClick={() => console.log(changes)}>Cek Log</Flex>
                                             <HStack
                                                 mt={{ lg: 10, md: 10 }}
                                                 spacing={5}
@@ -285,7 +286,7 @@ const handleInputChange = (e) => {
                                   <FormLabel>Your Name</FormLabel>
                                     <InputGroup borderColor="#E0E1E7">
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
-                                            <Input type="text" size="md" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
+                                            <Input type="text" size="md" id="fullname" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
                                         </InputGroup>
                             </FormControl>
                             <FormControl id="email">
