@@ -15,18 +15,19 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Textarea,
+  Icon,
   Avatar,
   Image,
   Stack,
   useDisclosure,
   useToast,
+  Spacer,
 } from '@chakra-ui/react';
 import {
   MdFacebook,
   MdOutlineEmail,
 } from 'react-icons/md';
-import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
+import { BsGithub, BsDiscord, BsPerson, BsCheckCircle } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
@@ -34,6 +35,7 @@ import { api } from '../../api/api';
 import Navbar from '../../components/Navbar';
 import Loading from '../../components/Loading';
 import EditUserProfile from './EditUserProfile';
+import AddressUser from './AddressUser';
 
 export default function UserProfile() {
   const user = useSelector((state) => state.auth);
@@ -43,13 +45,15 @@ export default function UserProfile() {
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
   const editUserProfile = useDisclosure();
-  const [users, setUsers] = useState('');
-  const { id } = useParams();
-
+  const addressUser = useDisclosure();
+  const { uuid } = useParams();
+  
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
-  const [name, setName] = useState(user.fullname);
+  const [fullname, setFullName] = useState(user.fullname);
   const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState(user?.address?.address);
+  const [users, setUsers] = useState('');
+  const [changes, setChanges] = useState('');
 
   useEffect(() => {
     if (selectedFile) {
@@ -59,32 +63,12 @@ export default function UserProfile() {
 
   useEffect(() => {
     getAddressByUser();
-    fetchData();
   }, []);
 
   const handleFile = (e) => {
     setSelectedFile(e.target.files[0]);
     console.log(e.target.files[0]);
   };
-
-  const fetchData = async() => {
-    try {
-        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${users.id}`)
-        .then((response) => {
-            setUsers(response.data);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
-    } catch (error) {
-        toast({
-            title:"There is something error while executing this command",
-            status:"error",
-            duration:3000,
-            isClosable:false
-        });
-    }
-}
 
   async function uploadAvatar() {
     const formData = new FormData();
@@ -112,9 +96,10 @@ export default function UserProfile() {
   const getAddressByUser = async () => {
     try {
       const response = await api.get(
-        `${process.env.REACT_APP_API_BASE_URL}/address/users/${id}`
+        `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
       );
-      setUsers(response.data);
+      console.log(response.data);
+      setAddress(response.data);
     } catch (error) {
       console.error(error);
       toast({
@@ -130,20 +115,30 @@ export default function UserProfile() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsFormSubmitted(true);
-    try {
-      await api.patch(`/auth/users/${users.id}`);
-      setUsers();
-      toast({
-        title: "Profile has been updated",
-        status: "success",
-        duration: 3000,
-        position: "top",
-        isClosable: false,
-      });
-    } catch (error) {
-      console.error(error);
-    }
   };
+
+  const saveUser = async () => {
+    try {
+        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, changes);
+        toast({
+            title:"User has been updated",
+            status:"success",
+            duration:3000,
+            isClosable:false
+        });
+        navigate("/user_profile");
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+const handleInputChange = (e) => {
+  const { id, value } = e.target;
+  const tempUser = { ...user };
+  tempUser[id] = value;
+  setChanges(tempUser);
+  console.log(changes);
+};
 
   return (
     <>
@@ -239,6 +234,7 @@ export default function UserProfile() {
                                              onClick={() => {inputFileRef.current.click(); navigate("/user_profile")}}>
                                              Change Image
                                          </Button>
+                                         <Flex onClick={() => console.log(address)}>Cek Log</Flex>
                                             <HStack
                                                 mt={{ lg: 10, md: 10 }}
                                                 spacing={5}
@@ -289,7 +285,7 @@ export default function UserProfile() {
                                   <FormLabel>Your Name</FormLabel>
                                     <InputGroup borderColor="#E0E1E7">
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
-                                            <Input  type="text" size="md" readOnly={true} value={name}/>
+                                            <Input type="text" size="md" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
                                         </InputGroup>
                             </FormControl>
                             <FormControl id="email">
@@ -299,24 +295,37 @@ export default function UserProfile() {
                                          pointerEvents="none"
                                          children={<MdOutlineEmail color="gray.800" />}
                                        />
-                                       <Input type="email" readOnly={true} size="md" value={email}/>
+                                       <Input type="email" size="md" readOnly={true} value={email}/>
                                      </InputGroup>
                             </FormControl>
-                                   <FormControl id="address">
-                                       <FormLabel>Address</FormLabel>
-                                           <Textarea
-                                             borderColor="gray.300"
-                                             _hover={{
-                                               borderRadius: 'gray.300',
-                                             }}
-                                             value={address}
-                                             placeholder={user.address}
-                                           />
-                                     </FormControl>
-                                 </VStack>
-                              <Button mt={4} colorScheme={"green"} size={"sm"} type="submit" onClick={() => {editUserProfile.onOpen()}}>
-                                Edit
+                            <FormControl display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
+                              <Button colorScheme={"green"} size={"sm"} onClick={() => saveUser()}>
+                                Save
                               </Button>
+                            </FormControl>
+                            <FormControl id="address">
+                            <FormControl display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
+                              <Button colorScheme={"green"} size={'sm'} onClick={() => addressUser.onOpen()}>
+                                + Address
+                              </Button>
+                            </FormControl>
+                            <FormLabel>Address</FormLabel>
+                            <Flex flexDirection={'column'} gap={2}>
+                              {address.map((val) => {
+                                return (
+                                  <>
+                                    <Box border={'1px solid gray'}
+                                      borderRadius={'lg'} p={2} bgColor={'whatsapp.100'}>
+                                      <Text fontSize={'sm'} fontWeight={'semibold'}>{val.address}</Text>
+                                      <Text fontSize={'sm'} fontWeight={'semibold'}>{val.district}, {val.city}</Text>
+                                      <Text fontSize={'sm'} fontWeight={'semibold'}>{val.province}</Text>    
+                                    </Box>
+                                  </>
+                                )
+                              })}
+                            </Flex>
+                            </FormControl>
+                            </VStack>
                           </Box>
                         </Box>
                       </WrapItem>
@@ -327,7 +336,8 @@ export default function UserProfile() {
             </form>
           </Container>
         )};
-        <EditUserProfile uuid={users} isOpen={editUserProfile.isOpen} onClose={editUserProfile.onClose} fetchData={fetchData} />
+        <EditUserProfile uuid={users} isOpen={editUserProfile.isOpen} onClose={editUserProfile.onClose} />
+        <AddressUser isOpen={addressUser.isOpen} onClose={addressUser.onClose}/>
       </>
     );
   }

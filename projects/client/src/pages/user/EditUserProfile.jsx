@@ -35,7 +35,6 @@ export default function EditUserProfile (props) {
     email: ""
   });
 
-  console.log(users);
 
   const getUserCity = async () => {
     const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/address/getAll/city`)
