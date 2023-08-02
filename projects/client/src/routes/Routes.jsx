@@ -13,7 +13,8 @@ import AdminProfile from "../pages/user/UserProfile";
 import AddUser from "../pages/user/AddUser";
 import EditUser from "../pages/user/EditUser";
 import ResetPassword from "../pages/reset/ResetPassword";
-import StockHistoryPage from "../pages/admin/StockHistoryPage";
+import AdminHistoryPage from "../pages/admin/AdminHistoryPage";
+import AdminMutationPage from "../pages/admin/AdminMutationPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 // import ProtectedPages from "./ProtectedPages";
 import EditUserProfile from "../pages/user/EditUserProfile";
@@ -27,8 +28,9 @@ const routes = [
 	// <Route path="/admin/managedata" element={<ProtectedPages needLoginAdmin={true}><AdminManageDataPage /></ProtectedPages>}></Route>,
 	// <Route path="/admin/product" element={<ProtectedPages needLoginAdmin={true}><AdminProductPage /></ProtectedPages>}></Route>,
 	<Route path="/admin/product" element={<AdminProductPage />}></Route>,
-	<Route path="/admin/stockhistory" element={<StockHistoryPage />}></Route>,
+	<Route path="/admin/stockhistory" element={<AdminHistoryPage />}></Route>,
 	<Route path="/admin/managedata" element={<AdminManageDataPage />}></Route>,
+	<Route path="/admin/mutation" element={<AdminMutationPage />}></Route>,
 
 	// Martin
 	// <Route path="/" element={<HomePage />}></Route>,

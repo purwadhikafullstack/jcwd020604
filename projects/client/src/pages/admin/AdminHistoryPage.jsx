@@ -1,12 +1,12 @@
-import AdminProduct from "../../components/adminProduct";
+import AdminHistory from "../../components/adminHistory";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 
-export default function AdminProductPage() {
+export default function AdminHistoryPage() {
 	return (
 		<>
 			<Navbar />
-			<AdminProduct />
+			<AdminHistory />
 			<Footer />
 		</>
 	);

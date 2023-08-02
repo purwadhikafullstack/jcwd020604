@@ -94,7 +94,6 @@ export default function AdminProduct() {
 
 	return (
 		<>
-			<Navbar />
 			<Center flexDir={"column"}>
 				<Flex
 					margin={"60px 20px 60px"}

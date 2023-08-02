@@ -40,6 +40,7 @@ import AddStockModal from "./addStockModal";
 import StockList from "./stockList";
 import Navbar from "./Navbar";
 import { BsFillCircleFill } from "react-icons/bs";
+import { FaBoxes } from "react-icons/fa";
 
 export default function AdminManageData() {
 	const user = useSelector((state) => state.auth);
@@ -142,7 +143,6 @@ export default function AdminManageData() {
 
 	return (
 		<>
-			<Navbar />
 			<Center flexDir={"column"}>
 				<Flex
 					margin={"60px 20px 60px"}
@@ -228,16 +228,27 @@ export default function AdminManageData() {
 									</Flex>
 								) : null}
 							</Flex>
-							<Button onClick={handleReset} mr={"10px"}>
+							<Button onClick={handleReset} mr={"15px"}>
 								<RepeatIcon />
 							</Button>
-							<Link to={`/admin/stockhistory`}>
-								<Button mr={"10px"} leftIcon={<TimeIcon />} px={"10px"}>
-									Stock History
+							<Link to={`/admin/mutation`}>
+								<Button
+									mr={"15px"}
+									leftIcon={<Icon as={FaBoxes} />}
+									px={"10px"}
+								>
+									Stock Mutation
 								</Button>
 							</Link>
 							<Link to={`/admin/product`}>
-								<Button leftIcon={<HamburgerIcon />}>Product Data</Button>
+								<Button mr={"15px"} leftIcon={<HamburgerIcon />}>
+									Product Data
+								</Button>
+							</Link>
+							<Link to={`/admin/stockhistory`}>
+								<Button leftIcon={<TimeIcon />} px={"10px"}>
+									Stock History
+								</Button>
 							</Link>
 						</Flex>
 						<Center gap={"15px"} paddingBottom={"15px"}>
