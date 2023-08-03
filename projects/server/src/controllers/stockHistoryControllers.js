@@ -1,10 +1,12 @@
 const db = require("../models");
 const { Op } = require("sequelize");
+const warehouse = require("../models/warehouse");
+const moment = require("moment");
 
 const stockHistory = {
 	getHistory: async (req, res) => {
 		try {
-			const { sort, search } = req.query;
+			const { sort, search, warehouse_id, reference, time } = req.query;
 			const limit = 12;
 
 			const page = req?.query?.page || 1;
@@ -47,9 +49,47 @@ const stockHistory = {
 				dateAsc: [["createdAt", "ASC"]],
 				dateDesc: [["createdAt", "DESC"]],
 			};
-			const sortOrder = sortOptions[sort] || null;
+			const sortOrder = sortOptions[sort] || sortOptions.dateDesc;
+
+			let whereClause = {};
+
+			if (search) {
+				whereClause["$stock.product.product_name$"] = {
+					[Op.like]: `%${search || ""}%`,
+				};
+			}
+
+			if (warehouse_id) {
+				whereClause["$stock.warehouse_id$"] = {
+					[Op.like]: `%${warehouse_id}%`,
+				};
+			}
+
+			if (reference) {
+				whereClause["$reference$"] = {
+					[Op.like]: `%${reference}%`,
+				};
+			}
+
+			if (time) {
+				// Apply time filter if 'time' is selected
+				whereClause[Op.and] = [
+					{
+						createdAt: { [Op.gte]: moment(time).format() },
+					},
+					{
+						createdAt: {
+							[Op.lte]: moment(time).endOf("month").format(),
+						},
+					},
+				];
+			}
 
 			const history = await db.stock_histories.findAndCountAll({
+				where: {
+					...whereClause,
+				},
+
 				include: [
 					{
 						model: db.stocks,

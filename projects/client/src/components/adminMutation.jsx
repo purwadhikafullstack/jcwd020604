@@ -7,54 +7,57 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
 	ButtonGroup,
-	useDisclosure,
 } from "@chakra-ui/react";
 import {
-	DeleteIcon,
-	AddIcon,
-	EditIcon,
-	HamburgerIcon,
-	PlusSquareIcon,
 	UpDownIcon,
 	RepeatIcon,
-	TimeIcon,
 	ArrowBackIcon,
+	AddIcon,
 } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api } from "../api/api";
 import HistoryList from "./historyList";
+import { useSelector } from "react-redux";
 
-export default function StockHistory() {
+export default function AdminMutation() {
+	const user = useSelector((state) => state.auth);
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
+	const [time, setTime] = useState("");
 	const [history, setHistory] = useState();
 	const [sort, setSort] = useState("");
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
-
-	useEffect(() => {
-		getHistory();
-	}, [page, sort, search]);
+	const inputFileRef = useRef(null);
 
 	useEffect(() => {
 		getWarehouse();
 	}, []);
 
+	useEffect(() => {
+		// getHistory();
+	}, [page, sort, search, selectedWarehouse, time]);
+
+	useEffect(() => {
+		if (user.role !== "ADMIN") {
+			setPage(1);
+			setSelectedWarehouse(user.warehouse_id);
+		}
+	}, []);
+
 	async function getHistory() {
 		const res = await api.get("/stockhistory", {
 			params: {
+				warehouse_id: selectedWarehouse,
 				search: search,
 				sort: sort,
 				page: page,
+				time: time,
 			},
 		});
 		setHistory(res.data.rows);
@@ -90,8 +93,9 @@ export default function StockHistory() {
 		getWarehouse();
 		setSort("");
 		setPage(1);
-		// setSelectedWarehouse("");
-		// setSearch("");
+		setSelectedWarehouse(user.role === "ADMIN" ? "" : user.warehouse_id);
+		setSearch("");
+		setTime("");
 	};
 
 	return (
@@ -108,22 +112,67 @@ export default function StockHistory() {
 			>
 				<Flex flexDir={"column"}>
 					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
-						Stock History
+						Stock Mutation
 					</Flex>
 					<Flex>
 						<Flex gap={"10px"} w={"100%"} marginBottom={"15px"}>
 							<Link to={`/admin/managedata`}>
 								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
 							</Link>
+							{user.role === "ADMIN" ? (
+								<Button
+									as={Button}
+									paddingLeft={"9px"}
+									marginBottom={"15px"}
+									rightIcon={<AddIcon />}
+									colorScheme="green"
+								/>
+							) : null}
 						</Flex>
-						<Button onClick={handleReset} mr={"10px"}>
+						<Button onClick={handleReset} mr={"15px"}>
 							<RepeatIcon />
 						</Button>
 
-						<Input type={"month"} w={"525px"} />
+						<Input
+							type={"month"}
+							w={"420px"}
+							value={time}
+							onChange={(e) => {
+								setPage(1);
+								setTime(e.target.value);
+							}}
+						/>
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
-						<Select placeholder="Select Warehouse">
+						{user.role === "ADMIN" ? (
+							<Select
+								placeholder="From Warehouse"
+								value={selectedWarehouse}
+								onChange={(event) => {
+									setPage(1);
+									setSelectedWarehouse(event.target.value);
+								}}
+							>
+								{warehouse.length
+									? warehouse.map((val) => (
+											<option key={val.id} value={val.id}>
+												{val.warehouse_name}
+											</option>
+									  ))
+									: null}
+							</Select>
+						) : (
+							<Select value={user.warehouse_id} isDisabled>
+								{warehouse.length
+									? warehouse.map((val) => (
+											<option key={val.id} value={val.id}>
+												{val.warehouse_name}
+											</option>
+									  ))
+									: null}
+							</Select>
+						)}
+						<Select placeholder="To Warehouse">
 							{warehouse.length
 								? warehouse.map((val) => (
 										<option key={val.id} value={val.id}>
@@ -132,24 +181,20 @@ export default function StockHistory() {
 								  ))
 								: null}
 						</Select>
-						<Select placeholder="Select Reference">
-							{/* {product.length
-                                ? product.map((val) => (
-                                    <option key={val.id} value={val.id}>   
-                                            {val.warehouse_name}                                     {val.product_name}
-                                      </option>
-                                  ))
-                                : null} */}
+						<Select placeholder="Select Status">
+							<option>APPROVED</option>
+							<option>PENDING</option>
+							<option>REJECT</option>
 						</Select>
 						<InputGroup>
-							<Input
-								placeholder="Search..."
-								// ref={inputFileRef}
-							/>
+							<Input placeholder="Search..." ref={inputFileRef} />
 							<InputRightElement cursor={"pointer"}>
 								<Button
-								// border="none"
-								// onClick={() => setSearch(inputFileRef.current.value)}
+									border="none"
+									onClick={() => {
+										setPage(1);
+										setSearch(inputFileRef.current.value);
+									}}
 								>
 									<Icon as={FaSearch} color="gray.400" />
 								</Button>
@@ -188,12 +233,27 @@ export default function StockHistory() {
 								}
 								cursor="pointer"
 							>
-								Warehouse
+								Warehouse (From-To)
 								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"115px"}>
+						<Flex w={"195px"} alignItems={"center"}>
+							<Flex
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Mutation Code
+								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+						</Flex>
+						<Flex w={"100px"}>
 							<Flex
 								alignItems={"center"}
 								onClick={() =>
@@ -223,43 +283,29 @@ export default function StockHistory() {
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"179px"} alignItems={"center"}>
+
+						<Flex w={"170px"} alignItems={"center"}>
 							<Flex
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
-										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Reference
-								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-						</Flex>
-						<Flex w={"179px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"date" + (sort === "dateDesc" ? "Asc" : "Desc")
+										"date" + (sort === "dateAsc" ? "Desc" : "Asc")
 									)
 								}
 								cursor="pointer"
 							>
 								Date
-								{sort === "dateDesc" ? sort === "dateAsc" : null}
+								{sort === "dateAsc" ? sort === "dateDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
 						<Flex w={"10px"}></Flex>
 					</Flex>
-					{history?.length
+					{/* {history?.length
 						? history?.map((val) => {
 								return <HistoryList val={val} getHistory={getHistory} />;
 						  })
-						: null}
+						: null} */}
 				</Flex>
 				<ButtonGroup
 					paddingTop={"15px"}

@@ -38,6 +38,7 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 						title: `Add Category Success`,
 						description: "The category has been added successfully.",
 						status: "success",
+						position: "top",
 						duration: 3000,
 					});
 					getCategory();
@@ -48,6 +49,7 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 				toast({
 					title: error.response.data.message,
 					status: "error",
+					position: "top",
 					duration: 3000,
 				});
 			}

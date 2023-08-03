@@ -29,6 +29,7 @@ export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 			toast({
 				title: "Stock updated successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
 			onClose();
@@ -38,6 +39,7 @@ export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

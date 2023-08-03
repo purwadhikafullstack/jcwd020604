@@ -94,7 +94,6 @@ export default function AdminProduct() {
 
 	return (
 		<>
-			<Navbar />
 			<Center flexDir={"column"}>
 				<Flex
 					margin={"60px 20px 60px"}
@@ -159,9 +158,8 @@ export default function AdminProduct() {
 									<Button
 										border="none"
 										onClick={() => {
-											const searchValue = inputFileRef.current.value;
-											setSearch(searchValue);
 											setPage(1);
+											setSearch(inputFileRef.current.value);
 										}}
 									>
 										<Icon as={FaSearch} color="gray.400" />
@@ -181,7 +179,7 @@ export default function AdminProduct() {
 							<Flex
 								onClick={() =>
 									handleSortChange(
-										"product" + (sort === "productAsc" ? "Desc" : "Asc")
+										"product" + (sort === "productDesc" ? "Asc" : "Desc")
 									)
 								}
 								cursor="pointer"
@@ -189,7 +187,7 @@ export default function AdminProduct() {
 							>
 								Product Name
 								<UpDownIcon ml={"10px"} />
-								{sort === "productAsc" ? sort === "productDesc" : null}
+								{sort === "productDesc" ? sort === "productAsc" : null}
 							</Flex>
 						</Flex>
 

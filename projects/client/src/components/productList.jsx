@@ -32,6 +32,7 @@ export default function ProductList({ val, getProduct }) {
 				title: "Product Deleted",
 				description: "The product has been deleted successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
 			getProduct();
@@ -41,6 +42,7 @@ export default function ProductList({ val, getProduct }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

@@ -55,6 +55,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 			toast({
 				title: "Product updated successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
 			getProduct();
@@ -64,6 +65,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}
@@ -131,22 +133,6 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 							defaultValue={val.product_detail}
 							onChange={inputHandler}
 						/>
-						<FormLabel>Price:</FormLabel>
-						<Input
-							type="number"
-							placeholder="e.g. 500000"
-							id="price"
-							defaultValue={val.price}
-							onChange={inputHandler}
-						/>
-						<FormLabel>Weight:</FormLabel>
-						<Input
-							type="number"
-							placeholder="e.g. 100 "
-							id="weight"
-							defaultValue={val.weight}
-							onChange={inputHandler}
-						/>
 						<FormLabel> Product Category:</FormLabel>
 						<Select
 							placeholder="Choose category"
@@ -162,6 +148,22 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 								  ))
 								: null}
 						</Select>
+						<FormLabel>Price (Rp):</FormLabel>
+						<Input
+							type="number"
+							placeholder="e.g. 500000"
+							id="price"
+							defaultValue={val.price}
+							onChange={inputHandler}
+						/>
+						<FormLabel>Weight (g):</FormLabel>
+						<Input
+							type="number"
+							placeholder="e.g. 100 "
+							id="weight"
+							defaultValue={val.weight}
+							onChange={inputHandler}
+						/>
 						<FormLabel>Product Images:</FormLabel>
 						{imagesProduct.length ? (
 							<Flex

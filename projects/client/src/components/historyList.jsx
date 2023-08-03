@@ -1,21 +1,7 @@
-import {
-	Flex,
-	Icon,
-	Image,
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
-	useToast,
-	useDisclosure,
-} from "@chakra-ui/react";
-import { BiDotsHorizontalRounded } from "react-icons/bi";
-import { useNavigate } from "react-router-dom";
-import { api } from "../api/api";
-import { useState } from "react";
+import { Flex, Image } from "@chakra-ui/react";
+import moment from "moment";
 
-export default function HistoryList({ val, getHistory }) {
-	console.log(val);
+export default function HistoryList({ val }) {
 	return (
 		<>
 			{val?.stock?.id ? (
@@ -37,9 +23,9 @@ export default function HistoryList({ val, getHistory }) {
 									: null
 							}
 						/>
-						<Flex w={"254px"}>{val?.stock?.product?.product_name}</Flex>
+						<Flex w={"270px"}>{val?.stock?.product?.product_name}</Flex>
 					</Flex>
-					<Flex w={"194px"}>{val?.stock?.warehouse?.warehouse_name}</Flex>
+					<Flex w={"195px"}>{val?.stock?.warehouse?.warehouse_name}</Flex>
 					<Flex w={"115px"} gap={"5px"}>
 						<Flex>{val?.stock_after}</Flex>
 						<Flex style={{ color: val?.qty < 0 ? "red" : "green" }}>
@@ -48,7 +34,9 @@ export default function HistoryList({ val, getHistory }) {
 					</Flex>
 					<Flex w={"100px"}>{val?.status}</Flex>
 					<Flex w={"179px"}>{val?.reference}</Flex>
-					<Flex w={"179px"}>{val?.createdAt}</Flex>
+					<Flex w={"179px"}>
+						{moment(val?.createdAt).format("DD/MM/YYYY HH:mm:ss")}
+					</Flex>
 					<Flex w={"10px"} h={"20px"}></Flex>
 				</Flex>
 			) : null}

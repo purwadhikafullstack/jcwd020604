@@ -14,7 +14,6 @@ import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillCircleFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
-import { useState } from "react";
 import DeleteStockModal from "./deleteStockModal";
 import EditStockModal from "./editStockModal";
 import { useSelector } from "react-redux";
@@ -35,6 +34,7 @@ export default function StockList({ val, getStock }) {
 				title: "Stock Deleted",
 				description: "The stock has been deleted successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
 			getStock();
@@ -44,6 +44,7 @@ export default function StockList({ val, getStock }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

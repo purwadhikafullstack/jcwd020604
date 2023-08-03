@@ -1,4 +1,4 @@
-const { Op, where } = require("sequelize");
+const { Op } = require("sequelize");
 const db = require("../models");
 const Joi = require("joi");
 
@@ -31,7 +31,7 @@ const productController = {
 				weightDesc: [["weight", "DESC"]],
 				newest: [["createdAt", "DESC"]],
 			};
-			const sortOrder = sortOptions[sort] || null;
+			const sortOrder = sortOptions[sort] || sortOptions.productAsc;
 
 			const searchOptions = {
 				product_name: {

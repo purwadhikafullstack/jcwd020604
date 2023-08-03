@@ -1,12 +1,12 @@
-import AdminProduct from "../../components/adminProduct";
+import AdminMutation from "../../components/adminMutation";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 
-export default function AdminProductPage() {
+export default function AdminMutationPage() {
 	return (
 		<>
 			<Navbar />
-			<AdminProduct />
+			<AdminMutation />
 			<Footer />
 		</>
 	);

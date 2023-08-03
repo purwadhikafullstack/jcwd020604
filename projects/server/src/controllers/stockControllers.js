@@ -22,7 +22,7 @@ const stockController = {
 				categoryAsc: [[{ model: db.products }, "category_id", "ASC"]],
 				categoryDesc: [[{ model: db.products }, "category_id", "DESC"]],
 			};
-			const sortOrder = sortOptions[sort] || null;
+			const sortOrder = sortOptions[sort] || sortOptions.productAsc;
 
 			const stock = await db.stocks.findAndCountAll({
 				where: {
@@ -44,17 +44,6 @@ const stockController = {
 								[Op.like]: `%${search || ""}%`,
 							},
 						},
-						// {
-						// 	"$product.category.category_name$": {
-						// 		[Op.like]: `%${req.query.selectedCategory || ""}%`,
-						// 	},
-						// },
-
-						// {
-						// 	"$warehouse.warehouse_name$": {
-						// 		[Op.like]: `%${!null}%`,
-						// 	},
-						// },
 					],
 				},
 				include: [
@@ -67,6 +56,7 @@ const stockController = {
 				distinct: true,
 				order: sortOrder,
 			});
+
 			res.status(200).send({
 				count: stock.count,
 				rows: stock.rows.slice(offset, limit * page),
