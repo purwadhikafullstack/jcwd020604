@@ -38,14 +38,53 @@ const addressController = {
 		}
 	},
 
+	getCityfromProvince: async (req, res) => {
+		try {
+			const provinceId = req.params.province_id;
+			const result = await axios.get(
+			  `https://api.rajaongkir.com/starter/city`,
+			  {
+				headers: {
+				  key: process.env.RAJA_ONGKIR_API,
+				},
+				params: {
+				  province: provinceId,
+				},
+			  }
+			);
+			res.send(result.data.rajaongkir.results);
+		  } catch (err) {
+			res.status(500).send({
+			  message: err.message,
+			});
+		  }
+	},
+
+	getAddressById: async (req, res) => {
+		try {
+			const addressId = req.params.id;
+			const address = await db.addresses.findByPk(addressId);
+		
+			if (!address) {
+			  return res.status(404).json({ error: 'Address not found' });
+			}
+		
+			return res.status(200).json(address);
+		  } catch (error) {
+			console.error('Error while fetching address by ID:', error);
+			return res.status(500).json({ error: 'Internal server error' });
+		  }
+	},
+
+
 	getAddressByUserId: async (req, res) => {
 		try {
-			const response = await db.addresses.findOne({
+			const response = await db.addresses.findAll({
 				where:{
 					user_id: req.params.id
 				}
 			});
-			res.status(200).json(response);
+			res.status(200).send(response);
 		} catch (error) {
 			console.log(error.message);
 		}
@@ -101,6 +140,68 @@ const addressController = {
 			res.send({message: "Address added"});
 		} catch (err) {
 			await t.rollback();
+			console.log(err.message);
+			return res.status(500).send({ message: err.message });
+		}
+	},
+	insertUsersAddress: async (req, res) => {
+		const t = await db.sequelize.transaction();
+		try {
+			const { user_id, address, district, city, province } = req.body;
+			const existingAddress = await db.addresses.findOne({
+				where: { address },
+			});
+
+			if (existingAddress) {
+				throw new Error("Address with this name already exists.");
+			}
+			// Check jika user exist
+			const user = await db.users.findByPk(user_id);
+				if (!user) {
+				return res.status(404).json({ error: 'User not found.' });
+			}
+
+			// Check jika user sudah punya 2 address
+			const userAddressesCount = await db.addresses.count({
+				where: { user_id },
+			  });
+		  
+			  if (userAddressesCount >= 2) {
+				return res.status(400).json({ message: 'User already has 2 addresses. Cannot add more.' });
+			  }
+
+			const response = await axios.get(
+				"https://api.opencagedata.com/geocode/v1/json",
+				{
+					params: {
+						q: `${address}, ${district}, ${province}, ${city}`,
+						countrycode: "id",
+						limit: 1,
+						key: process.env.GEOCODE_API_KEY,
+					},
+				}
+			);
+
+			const { lat, lng } = response.data.results[0].geometry;
+
+			// Create a new warehouse record with the retrieved latitude and longitude
+			const addresses = await db.addresses.create(
+				{
+					user_id,
+					address,
+					province,
+					city,
+					district,
+					latitude: lat,
+					longitude: lng,
+				},
+				{ transaction: t }
+			);
+			await t.commit();
+			res.send({message: "Address added"});
+		} catch (err) {
+			await t.rollback();
+			console.log(err.message);
 			return res.status(500).send({ message: err.message });
 		}
 	},

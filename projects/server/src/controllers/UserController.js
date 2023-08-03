@@ -20,7 +20,7 @@ const userController = {
 				message: err.message,
 			});
 		}
-	},
+	}, 
 
 	getUsersById: async (req, res) => {
 		try {
@@ -92,6 +92,7 @@ const userController = {
 	editUser: async (req, res) => {
 		try {
 			const { fullname, email, password, verified, role } = req.body;
+			
 			await db.users.update(
 				{
 					fullname,
@@ -116,6 +117,8 @@ const userController = {
 
 	editUserV2: async (req, res) => {
 		try {
+			console.log(req.body);
+			console.log(req.params.uuid);
 			const { fullname } = req.body;
 			await db.users.update(
 				{

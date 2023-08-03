@@ -17,7 +17,8 @@ import AdminHistoryPage from "../pages/admin/AdminHistoryPage";
 import AdminMutationPage from "../pages/admin/AdminMutationPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 // import ProtectedPages from "./ProtectedPages";
-import EditUserProfile from "../pages/user/EditUserProfile";
+import EditAddressUser from "../pages/user/EditAddressUser";
+import AddressUser from "../pages/user/AddressUser";
 
 const routes = [
 	//Sandi
@@ -55,7 +56,8 @@ const routes = [
 	<Route path="/add_user" element={<AddUser />}></Route>,
 	<Route path="/edit_user" element={<EditUser />}></Route>,
 	<Route path="/admin_profile" element={<AdminProfile />}></Route>,
-	<Route path="/edit_user_profile" element={<EditUserProfile />}></Route>,
+	<Route path="/edit_user_profile" element={<EditAddressUser />}></Route>,
+	<Route path="/edit_user_address" element={<AddressUser />}></Route>,
 
 	// <Route path="/user_profile" element={<ProtectedPages needLogin={true}><UserProfile /></ProtectedPages>}></Route>,
 	// <Route path="/user_list" element={<ProtectedPages needLoginAdmin={true} needLogin={true}><UserList /></ProtectedPages>}></Route>,

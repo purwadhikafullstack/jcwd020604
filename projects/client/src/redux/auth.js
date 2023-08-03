@@ -9,11 +9,13 @@ function userReducer(state = init, action) {
 		return {
 			...state,
 			id: action.payload.id,
+			uuid: action.payload.uuid,
 			fullname: action.payload.fullname,
 			email: action.payload.email,
 			role: action.payload.role,
 			avatar_url: action.payload.avatar_url,
 			warehouse_id: action.payload.warehouse_id,
+			address: action.payload.address
 			// password: action.payload.password,
 		};
 	} else if (action.type === "logout") {
