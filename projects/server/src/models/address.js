@@ -10,9 +10,6 @@ module.exports = (sequelize, Sequelize) => {
 			latitude: Sequelize.STRING,
 			longitude: Sequelize.STRING,
 		},
-		{
-			paranoid: true,
-		}
 	);
 	return addresses;
 };

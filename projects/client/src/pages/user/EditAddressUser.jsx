@@ -1,6 +1,8 @@
 import React,{useState, useEffect} from 'react';
 import { api } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+
 import { 
   FormControl, 
   FormLabel, 
@@ -8,19 +10,16 @@ import {
   Modal, 
   Button, 
   useToast, 
-  FormHelperText,
-  InputGroup,
   Select, 
   ModalHeader, 
   ModalContent, 
   ModalCloseButton, 
   ModalBody, 
   ModalFooter } from '@chakra-ui/react';
-import { useSelector } from 'react-redux';
 
 export default function AddressUser (props) {
   const user = useSelector((state) => state.auth);
-  const [changes, setChanges] = useState('');
+  const {id} = useParams();
   const [address, setAddress] = useState({
     address: "",
     province: "",
@@ -32,14 +31,19 @@ export default function AddressUser (props) {
     
     const navigate = useNavigate();
     const toast = useToast();
-    useEffect(() => {
-      getAddressByUser();
-    }, []);
 
     useEffect(() => {
-      getUserCity();
-      getUserProvince();
-    }, []);
+      if(props.addressId){
+        getUserCity();
+        getUserProvince();
+        getAddressByUser();
+      }
+    }, [props.addressId]);
+
+    const Close = () => {
+      props.setAddressId(null);
+      props.onClose();
+    }
 
     const getUserCity = async () => {
       const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/address/getAll/city`)
@@ -51,34 +55,34 @@ export default function AddressUser (props) {
       setProvince(res.data);
     }
   
-    const saveAddress = async () => {
+    const editAddress = async () => {
       try {
-        await api.post(`${process.env.REACT_APP_API_BASE_URL}/address/users`,{...address, user_id: user.id});
+        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/address/${props.addressId}`, address);
         toast({
-          title: "Address addedd",
+          title: "Address updated",
           status: "success",
           duration: 3000,
           position: "top",
           isClosable: false,
         });
         navigate("/user_profile");
-        props.onClose();
+        props.getAddressByUser();
+        Close();
       } catch (error) {
         toast({
-          title: error.response.data.message,
+          title: "Address cannot more than 2, must delete 1 address",
           status: "error",
           duration: 3000,
           position: "top",
           isClosable: false,
         });
-        console.log(error);
       }
     };
   
     const getAddressByUser = async () => {
       try {
         const response = await api.get(
-          `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
+          `${process.env.REACT_APP_API_BASE_URL}/address/${props.addressId}`
         );
         setAddress(response.data);
       } catch (error) {
@@ -92,55 +96,58 @@ export default function AddressUser (props) {
         });
       }
     };
-
+    
     const handleInputChange = (e) => {
-      const { name, value } = e.target;
+      const { id, value } = e.target;
       setAddress((prevState) => ({
         ...prevState,
-        [name]: value,
+        [id]: value,
       }));
-      console.log(address);
     };
   
     return (
       <>
-      <Modal isOpen={props.isOpen} onClose={props.onClose}>
+      <Modal isOpen={props.isOpen} onClose={Close}>
         <ModalContent>
             <ModalHeader>Add Address</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
             <FormControl isRequired>
                     <FormLabel>Address</FormLabel>
-                    <Input type='text' name="address"
-                    onChange={(val) => handleInputChange(val)}/>
+                    <Input type='text' id="address" value={address.address}
+                    onChange={handleInputChange}/>
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>District</FormLabel>
-                    <Input type='text' name="district"
-                    onChange={(val) => handleInputChange(val)}/>
+                    <Input type='text' id="district" value={address.district}
+                    onChange={handleInputChange}/>
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>Province</FormLabel>
-                    <Select name='province' onChange={(val) => handleInputChange(val)}>
+                    <Select id='province' onChange={handleInputChange}>
                         {province.length? province.map((val) => (
-                          <option value={val.province}>{val.province}</option>
+                          val.province == address.province ? (<option selected value={val.province}>{val.province}</option>)
+                           : (<option value={val.province}>{val.province}</option>)
                         )) : null}
                     </Select>
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>City</FormLabel>
-                    <Select name='city' onChange={(val) => handleInputChange(val)}>
-                        {city.length? city.map((val) => (
-                            <option value={val.city_name}>{val.city_name}</option>
-                        )) : null}
+                    <Select id='city' onChange={handleInputChange}>
+                       {city.length? city.map((val) => (
+                         val.province == address.province ? 
+                         val.city_name == address.city ? 
+                         (<option selected value={val.city_name}>{val.city_name}</option>)
+                         : (<option value={val.city_name}>{val.city_name}</option>) : null
+                         )) : null}
                     </Select>
                 </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={() => saveAddress()}>
-                Save
+              <Button colorScheme='blue' mr={3} onClick={() => editAddress()}>
+                Edit
               </Button>
-              <Button colorScheme='orange' onClick={props.onClose}>Cancel</Button>
+              <Button colorScheme='orange' onClick={Close}>Cancel</Button>
             </ModalFooter>
         </ModalContent>
         </Modal>

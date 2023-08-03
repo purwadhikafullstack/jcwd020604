@@ -60,6 +60,22 @@ const addressController = {
 		  }
 	},
 
+	getAddressById: async (req, res) => {
+		try {
+			const addressId = req.params.id;
+			const address = await db.addresses.findByPk(addressId);
+		
+			if (!address) {
+			  return res.status(404).json({ error: 'Address not found' });
+			}
+		
+			return res.status(200).json(address);
+		  } catch (error) {
+			console.error('Error while fetching address by ID:', error);
+			return res.status(500).json({ error: 'Internal server error' });
+		  }
+	},
+
 
 	getAddressByUserId: async (req, res) => {
 		try {
@@ -136,19 +152,22 @@ const addressController = {
 				where: { address },
 			});
 
-			// Check if the user exists
+			if (existingAddress) {
+				throw new Error("Address with this name already exists.");
+			}
+			// Check jika user exist
 			const user = await db.users.findByPk(user_id);
 				if (!user) {
 				return res.status(404).json({ error: 'User not found.' });
 			}
 
-			// Check if the user already has 2 addresses
+			// Check jika user sudah punya 2 address
 			const userAddressesCount = await db.addresses.count({
 				where: { user_id },
 			  });
 		  
 			  if (userAddressesCount >= 2) {
-				return res.status(400).json({ error: 'User already has 2 addresses. Cannot add more.' });
+				return res.status(400).json({ message: 'User already has 2 addresses. Cannot add more.' });
 			  }
 
 			const response = await axios.get(

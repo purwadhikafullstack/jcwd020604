@@ -15,27 +15,26 @@ import {
   Input,
   InputGroup,
   InputLeftElement,
-  Icon,
   Avatar,
   Image,
   Stack,
   useDisclosure,
-  useToast,
-  Spacer,
+  useToast
 } from '@chakra-ui/react';
 import {
   MdFacebook,
   MdOutlineEmail,
 } from 'react-icons/md';
-import { BsGithub, BsDiscord, BsPerson, BsCheckCircle } from 'react-icons/bs';
+import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { api } from '../../api/api';
 import Navbar from '../../components/Navbar';
 import Loading from '../../components/Loading';
-import EditUserProfile from './EditUserProfile';
+import EditAddressUser from './EditAddressUser';
 import AddressUser from './AddressUser';
+import DeleteAddress from './DeleteAddress';
 
 export default function UserProfile() {
   const user = useSelector((state) => state.auth);
@@ -44,16 +43,16 @@ export default function UserProfile() {
   const [selectedFile, setSelectedFile] = useState(null);
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
-  const editUserProfile = useDisclosure();
+  const editAddressUser = useDisclosure();
+  const deleteAddress = useDisclosure();
   const addressUser = useDisclosure();
-  const { uuid } = useParams();
-  
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [fullname, setFullName] = useState(user.fullname);
   const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState(user?.address?.address);
-  const [users, setUsers] = useState('');
   const [changes, setChanges] = useState('');
+  const [addressId, setAddressId] = useState('');
+  const [users, setUsers] = useState('');
 
   useEffect(() => {
     if (selectedFile) {
@@ -63,6 +62,7 @@ export default function UserProfile() {
 
   useEffect(() => {
     getAddressByUser();
+    fetchData();
   }, []);
 
   const handleFile = (e) => {
@@ -92,6 +92,25 @@ export default function UserProfile() {
       setIsLoading(false);
     }, 1000);
   }, [isLoading]);
+
+  const fetchData = async() => {
+    try {
+        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${users.id}`)
+        .then((response) => {
+            setUsers(response.data);
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+    } catch (error) {
+        toast({
+            title:"There is something error while executing this command",
+            status:"error",
+            duration:3000,
+            isClosable:false
+        });
+    }
+}
 
   const getAddressByUser = async () => {
     try {
@@ -127,6 +146,7 @@ export default function UserProfile() {
             duration:3000,
             isClosable:false
         });
+        window.location.reload();
         navigate("/user_profile");
     } catch (error) {
         console.log(error);
@@ -235,7 +255,6 @@ const handleInputChange = (e) => {
                                              onClick={() => {inputFileRef.current.click(); navigate("/user_profile")}}>
                                              Change Image
                                          </Button>
-                                         <Flex onClick={() => console.log(changes)}>Cek Log</Flex>
                                             <HStack
                                                 mt={{ lg: 10, md: 10 }}
                                                 spacing={5}
@@ -299,28 +318,42 @@ const handleInputChange = (e) => {
                                        <Input type="email" size="md" readOnly={true} value={email}/>
                                      </InputGroup>
                             </FormControl>
-                            <FormControl display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
-                              <Button colorScheme={"green"} size={"sm"} onClick={() => saveUser()}>
-                                Save
-                              </Button>
-                            </FormControl>
+                            <HStack>
+                              <FormControl display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
+                                <Button colorScheme={"green"} w={'70px'} size={"sm"} onClick={() => saveUser()}>
+                                  Save
+                                </Button>
+                              </FormControl>
+                              <FormControl display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
+                                <Button colorScheme={"green"} w={'70px'} size={'sm'} onClick={() => addressUser.onOpen()}>
+                                  +Address
+                                </Button>
+                              </FormControl>
+                            </HStack>
                             <FormControl id="address">
-                            <FormControl display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
-                              <Button colorScheme={"green"} size={'sm'} onClick={() => addressUser.onOpen()}>
-                                + Address
-                              </Button>
-                            </FormControl>
                             <FormLabel>Address</FormLabel>
                             <Flex flexDirection={'column'} gap={2}>
                               {address.map((val) => {
                                 return (
                                   <>
-                                    <Box border={'1px solid gray'}
-                                      borderRadius={'lg'} p={2} bgColor={'whatsapp.100'}>
-                                      <Text fontSize={'sm'} fontWeight={'semibold'}>{val.address}</Text>
-                                      <Text fontSize={'sm'} fontWeight={'semibold'}>{val.district}, {val.city}</Text>
-                                      <Text fontSize={'sm'} fontWeight={'semibold'}>{val.province}</Text>    
+                                    <Box overflow={"hidden"} boxShadow={'md'}
+                                      borderRadius={'lg'} p={2} bgColor={'whatsapp.100'}
+                                      cursor={'pointer'}
+                                      onClick={() => {setAddressId(val.id); editAddressUser.onOpen(); console.log(address);}}>
+                                      <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Alamat: {val.address}</Text>
+                                      <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Kec/Kota: {val.district}, {val.city}</Text>
+                                      <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Provinsi: {val.province}</Text>
                                     </Box>
+                                      <Flex pl={2}>
+                                        <Button
+                                         variant={'link'} 
+                                         size={'xs'}
+                                         colorScheme='red'
+                                         onClick={() => {deleteAddress.onOpen(); setAddressId(val.id)}}
+                                         >
+                                           Delete
+                                        </Button>
+                                      </Flex>
                                   </>
                                 )
                               })}
@@ -337,8 +370,9 @@ const handleInputChange = (e) => {
             </form>
           </Container>
         )};
-        <EditUserProfile uuid={users} isOpen={editUserProfile.isOpen} onClose={editUserProfile.onClose} />
+        <EditAddressUser addressId={addressId} setAddressId={setAddressId} isOpen={editAddressUser.isOpen} onClose={editAddressUser.onClose} getAddressByUser={getAddressByUser} />
         <AddressUser isOpen={addressUser.isOpen} onClose={addressUser.onClose}/>
+        <DeleteAddress addressId={addressId} setAddressId={setAddressId} isOpen={deleteAddress.isOpen} onClose={deleteAddress.onClose}/>
       </>
     );
   }

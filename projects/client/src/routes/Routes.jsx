@@ -16,7 +16,7 @@ import ResetPassword from "../pages/reset/ResetPassword";
 import StockHistoryPage from "../pages/admin/StockHistoryPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 // import ProtectedPages from "./ProtectedPages";
-import EditUserProfile from "../pages/user/EditUserProfile";
+import EditAddressUser from "../pages/user/EditAddressUser";
 import AddressUser from "../pages/user/AddressUser";
 
 const routes = [
@@ -54,7 +54,7 @@ const routes = [
 	<Route path="/add_user" element={<AddUser />}></Route>,
 	<Route path="/edit_user" element={<EditUser />}></Route>,
 	<Route path="/admin_profile" element={<AdminProfile />}></Route>,
-	<Route path="/edit_user_profile" element={<EditUserProfile />}></Route>,
+	<Route path="/edit_user_profile" element={<EditAddressUser />}></Route>,
 	<Route path="/edit_user_address" element={<AddressUser />}></Route>,
 
 	// <Route path="/user_profile" element={<ProtectedPages needLogin={true}><UserProfile /></ProtectedPages>}></Route>,
