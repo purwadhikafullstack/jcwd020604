@@ -83,7 +83,7 @@ export default function UserProfile() {
         position:'top',
         isClosable:false
       });
-      window.location.reload();
+      fetchData();
     });
   }
 
@@ -95,20 +95,16 @@ export default function UserProfile() {
 
   const fetchData = async() => {
     try {
-        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${users.id}`)
-        .then((response) => {
-            setUsers(response.data);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${users.id}`);
+      setUsers(response.data);
     } catch (error) {
-        toast({
-            title:"There is something error while executing this command",
-            status:"error",
-            duration:3000,
-            isClosable:false
-        });
+      console.log(error);
+        // toast({
+        //     title:"There is something error while executing this command",
+        //     status:"error",
+        //     duration:3000,
+        //     isClosable:false
+        // });
     }
 }
 
@@ -146,7 +142,7 @@ export default function UserProfile() {
             duration:3000,
             isClosable:false
         });
-        window.location.reload();
+        fetchData();
         navigate("/user_profile");
     } catch (error) {
         console.log(error);
@@ -173,7 +169,7 @@ const handleInputChange = (e) => {
               <Box
                 color="white"
                 borderRadius="lg"
-                m={{ sm: 4, md: 16, lg: 10 }}
+                // m={{ sm: 4, md: 16, lg: 10 }}
                 p={{ sm: 5, md: 5, lg: 2 }}
               >
                 <Flex justifyContent={"center"} alignItems={"center"}>
@@ -189,9 +185,9 @@ const handleInputChange = (e) => {
                   Fill up the form below to update
                 </Text>
                 <Box p={4}>
-                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }}>
-                    <WrapItem>
-                      <Box h={"100%"}>
+                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }} justify={{base: 'center'}}>
+                    <Flex display={'flex'} justifyContent={{base: 'center', md: 'center', sm: 'center'}}> 
+                      <Box h={"100%"} display={'flex'} justifyContent={{base: 'center', md: 'center', sm: 'center'}}>
                       <VStack pl={0} spacing={2} alignItems={"flex-start"}>
                                  <Box bg="white" w={'300px'} borderRadius="lg" alignItems={{base:"flex-start", md: "center", sm: "center"}}>
                                      <Box m={0} color="#0B0E3F">
@@ -296,7 +292,7 @@ const handleInputChange = (e) => {
                                  </Box>
                           </VStack>
                       </Box>
-                    </WrapItem>
+                    </Flex>
                     <WrapItem>
                       <Box bg="white" h={"100%"} borderRadius="lg" boxShadow={"2xl"} overflow={"hidden"}>
                         <Box m={8} color="#0B0E3F">
@@ -333,17 +329,28 @@ const handleInputChange = (e) => {
                             <FormControl id="address">
                             <FormLabel>Address</FormLabel>
                             <Flex flexDirection={'column'} gap={2}>
-                              {address.map((val) => {
+                              {address.map((val, idx) => {
                                 return (
                                   <>
                                     <Box overflow={"hidden"} boxShadow={'md'}
                                       borderRadius={'lg'} p={2} bgColor={'whatsapp.100'}
-                                      cursor={'pointer'}
-                                      onClick={() => {setAddressId(val.id); editAddressUser.onOpen(); console.log(address);}}>
+                                      key={idx}
+                                      >
                                       <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Alamat: {val.address}</Text>
                                       <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Kec/Kota: {val.district}, {val.city}</Text>
                                       <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Provinsi: {val.province}</Text>
                                     </Box>
+                                    <HStack>
+                                    <Flex pl={2}>
+                                        <Button
+                                         variant={'link'} 
+                                         size={'xs'}
+                                         colorScheme='green'
+                                         onClick={() => {setAddressId(val.id); editAddressUser.onOpen();}}
+                                         >
+                                           Edit
+                                        </Button>
+                                      </Flex>
                                       <Flex pl={2}>
                                         <Button
                                          variant={'link'} 
@@ -354,6 +361,7 @@ const handleInputChange = (e) => {
                                            Delete
                                         </Button>
                                       </Flex>
+                                    </HStack>
                                   </>
                                 )
                               })}
@@ -363,7 +371,7 @@ const handleInputChange = (e) => {
                           </Box>
                         </Box>
                       </WrapItem>
-                    </Wrap>
+                  </Wrap>
                   </Box>
                 </Box>
               </Flex>

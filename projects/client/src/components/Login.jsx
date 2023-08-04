@@ -32,7 +32,7 @@ export default function Login() {
         payload: userDetails,
       });
       toast({
-        title: "Selamat datang",
+        title: "Welcome",
         status: "success",
         position: "top",
         duration: 3000,
@@ -42,7 +42,7 @@ export default function Login() {
     } catch (err) {
       console.log(err.message);
       toast({
-        title: "Email atau Password Salah",
+        title: "Wrong Email or Password",
         status: "error",
         position: "top",
         duration: 3000,

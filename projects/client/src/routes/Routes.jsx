@@ -19,6 +19,7 @@ import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 // import ProtectedPages from "./ProtectedPages";
 import EditAddressUser from "../pages/user/EditAddressUser";
 import AddressUser from "../pages/user/AddressUser";
+import Carousel from "../pages/carousel/Carousel";
 
 const routes = [
 	//Sandi
@@ -42,6 +43,7 @@ const routes = [
 	// <Route path="/reset-password/:token" element={<ProtectedPages guestOnly={true}><ConfirmResetPassword /></ProtectedPages>}></Route>,
 
 	<Route path="/" element={<HomePage />}></Route>,
+	<Route path="/carousel" element={<Carousel />}></Route>,
 	<Route path="/register" element={<Register />}></Route>,
 	<Route path="/login" element={<Login />}></Route>,
 	<Route path="/verify" element={<Verify />}></Route>,

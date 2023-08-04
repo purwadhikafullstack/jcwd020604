@@ -62,6 +62,7 @@ export default function AddressUser (props) {
           isClosable: false,
         });
         navigate("/user_profile");
+        getAddressByUser();
         props.onClose();
       } catch (error) {
         toast({
@@ -137,10 +138,10 @@ export default function AddressUser (props) {
                 </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={() => saveAddress()}>
+              <Button colorScheme='blue' mr={3} size={'sm'} onClick={() => { saveAddress(); props.onClose(); }}>
                 Save
               </Button>
-              <Button colorScheme='orange' onClick={props.onClose}>Cancel</Button>
+              <Button colorScheme='orange' size={'sm'} onClick={props.onClose}>Cancel</Button>
             </ModalFooter>
         </ModalContent>
         </Modal>
