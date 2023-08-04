@@ -3,7 +3,12 @@ const router = express.Router();
 const stockMutation = require("../controllers").stockMutationControllers;
 const checkRole = require("../middlewares/roleDecoder");
 
-router.get("/", stockMutation.getStockMutation);
-router.post("/", stockMutation.requestStockMutation);
+router.get("/", stockMutation.getMutation);
+
+router.post("/", stockMutation.requestMutation);
+
+router.patch("/:id", stockMutation.confirmMutation);
+
+router.delete("/:id", stockMutation.cancelMutation);
 
 module.exports = router;

@@ -231,6 +231,11 @@ export default function AdminManageData() {
 							<Button onClick={handleReset} mr={"15px"}>
 								<RepeatIcon />
 							</Button>
+							<Link to={`/admin/product`}>
+								<Button mr={"15px"} leftIcon={<HamburgerIcon />}>
+									Product Data
+								</Button>
+							</Link>
 							<Link to={`/admin/mutation`}>
 								<Button
 									mr={"15px"}
@@ -238,11 +243,6 @@ export default function AdminManageData() {
 									px={"10px"}
 								>
 									Stock Mutation
-								</Button>
-							</Link>
-							<Link to={`/admin/product`}>
-								<Button mr={"15px"} leftIcon={<HamburgerIcon />}>
-									Product Data
 								</Button>
 							</Link>
 							<Link to={`/admin/stockhistory`}>
