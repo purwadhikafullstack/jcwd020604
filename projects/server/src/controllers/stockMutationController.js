@@ -70,13 +70,8 @@ const stockMutation = {
 				},
 
 				include: [
-					{
-						model: db.stocks,
-						include: [
-							{ model: db.products, include: [{ model: db.product_images }] },
-							{ model: db.warehouses },
-						],
-					},
+					{ model: db.products, include: [{ model: db.product_images }] },
+					{ model: db.warehouses },
 				],
 				distinct: true,
 				order: sortOrder,
@@ -91,19 +86,19 @@ const stockMutation = {
 		}
 	},
 	requestMutation: async (req, res) => {
-		const { qty, stock_id, from_warehouse_id, to_warehouse_id } = req.body;
+		const { qty, product_id, from_warehouse_id, to_warehouse_id } = req.body;
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
 			qty: Joi.number().min(0).required(),
-			stock_id: Joi.number().required(),
+			product_id: Joi.number().required(),
 			from_warehouse_id: Joi.number().required(),
 			to_warehouse_id: Joi.number().required(),
 		});
 
 		const validation = schema.validate({
 			qty,
-			stock_id,
+			product_id,
 			from_warehouse_id,
 			to_warehouse_id,
 		});
@@ -125,7 +120,7 @@ const stockMutation = {
 			// Check if there is enough stock from selected warehouse
 			const existingStock = await db.stocks.findOne({
 				where: {
-					product_id: stock_id,
+					product_id,
 					warehouse_id: from_warehouse_id,
 				},
 			});
@@ -139,7 +134,7 @@ const stockMutation = {
 			// Check if stock mutation is pending
 			const pendingMutation = await db.stock_mutations.findOne({
 				where: {
-					stock_id,
+					product_id,
 					from_warehouse_id,
 					to_warehouse_id,
 					status: "PENDING",
@@ -155,7 +150,7 @@ const stockMutation = {
 			await db.stock_mutations.create(
 				{
 					qty,
-					stock_id,
+					product_id,
 					to_warehouse_id,
 					from_warehouse_id,
 					status: "PENDING",

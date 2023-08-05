@@ -8,6 +8,7 @@ import {
 	Icon,
 	Button,
 	ButtonGroup,
+	useDisclosure,
 } from "@chakra-ui/react";
 import {
 	UpDownIcon,
@@ -23,6 +24,7 @@ import { api } from "../api/api";
 import HistoryList from "./historyList";
 import { useSelector } from "react-redux";
 import MutationList from "./mutationList";
+import AddMutationModal from "./addMutationModal";
 
 export default function AdminMutation() {
 	const user = useSelector((state) => state.auth);
@@ -36,6 +38,8 @@ export default function AdminMutation() {
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
+
+	const addMutationModal = useDisclosure();
 
 	console.log(mutation);
 
@@ -124,15 +128,14 @@ export default function AdminMutation() {
 							<Link to={`/admin/managedata`}>
 								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
 							</Link>
-							{user.role === "ADMIN" ? (
-								<Button
-									as={Button}
-									paddingLeft={"9px"}
-									marginBottom={"15px"}
-									rightIcon={<AddIcon />}
-									colorScheme="green"
-								/>
-							) : null}
+							<Button
+								as={Button}
+								paddingLeft={"9px"}
+								marginBottom={"15px"}
+								rightIcon={<AddIcon />}
+								colorScheme="green"
+								onClick={addMutationModal.onOpen}
+							/>
 						</Flex>
 						<Button onClick={handleReset} mr={"15px"}>
 							<RepeatIcon />
@@ -347,6 +350,11 @@ export default function AdminMutation() {
 					)}
 				</ButtonGroup>
 			</Flex>
+			<AddMutationModal
+				isOpen={addMutationModal.isOpen}
+				onClose={addMutationModal.onClose}
+				getMutation={getMutation}
+			/>
 		</Center>
 	);
 }

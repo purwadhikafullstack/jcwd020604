@@ -6,11 +6,51 @@ import {
 	MenuButton,
 	MenuItem,
 	MenuList,
+	useToast,
+	useDisclosure,
 } from "@chakra-ui/react";
 import moment from "moment";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
+import { api } from "../api/api";
+import { useSelector } from "react-redux";
 
-export default function MutationList({ val }) {
+import DeleteMutationModal from "./deleteMutationModal";
+import EditMutationModal from "./editMutationModal";
+
+export default function MutationList({ val, getMutation }) {
+	const deleteMutationModal = useDisclosure();
+	const editMutationModal = useDisclosure();
+	const toast = useToast();
+	const nav = useNavigate();
+	const user = useSelector((state) => state.auth);
+
+	console.log(val);
+
+	async function deleteMutation() {
+		try {
+			await api.delete(`/stockmutation/${val.id}`);
+
+			toast({
+				title: "Mutation Deleted",
+				description: "The mutation has been deleted successfully.",
+				status: "success",
+				position: "top",
+				duration: 3000,
+			});
+			getMutation();
+			deleteMutationModal.onClose();
+			nav("/admin/mutation");
+		} catch (error) {
+			toast({
+				title: error.response.data.message,
+				status: "error",
+				position: "top",
+				duration: 3000,
+			});
+		}
+	}
+
 	return (
 		<>
 			<Flex
@@ -26,14 +66,16 @@ export default function MutationList({ val }) {
 						h={"50px"}
 						borderRadius={"4px"}
 						src={
-							val?.stock?.product?.product_images[0]
-								? val?.stock?.product?.product_images[0].product_image
+							val?.product?.product_images[0]
+								? val?.product?.product_images[0].product_image
 								: null
 						}
 					/>
-					<Flex w={"270px"}>{val?.stock?.product?.product_name}</Flex>
+					<Flex w={"270px"}>{val?.product?.product_name}</Flex>
 				</Flex>
-				<Flex w={"195px"}></Flex>
+				<Flex w={"195px"}>
+					{`${val?.from_warehouse_id} - ${val?.warehouse?.warehouse_name}`}
+				</Flex>
 				<Flex w={"195px"}>{val?.mutation_code}</Flex>
 				<Flex w={"100px"}>{val?.qty}</Flex>
 				<Flex w={"100px"}>{val?.status}</Flex>
@@ -45,11 +87,22 @@ export default function MutationList({ val }) {
 						<Icon as={BiDotsHorizontalRounded} />
 					</MenuButton>
 					<MenuList>
-						<MenuItem>View / Edit Mutation</MenuItem>
-
-						<MenuItem>Remove</MenuItem>
+						<MenuItem onClick={deleteMutationModal.onOpen} color={"red"}>
+							Cancel
+						</MenuItem>
 					</MenuList>
 				</Menu>
+				<EditMutationModal
+					isOpen={editMutationModal.isOpen}
+					onClose={editMutationModal.onClose}
+					val={val}
+					getMutation={getMutation}
+				/>
+				<DeleteMutationModal
+					isOpen={deleteMutationModal.isOpen}
+					onClose={deleteMutationModal.onClose}
+					deleteMutation={deleteMutation}
+				/>
 			</Flex>
 		</>
 	);

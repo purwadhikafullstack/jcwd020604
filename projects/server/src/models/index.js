@@ -128,13 +128,13 @@ db.stock_histories.belongsTo(db.stocks, {
 });
 
 // db.stock_mutations
-db.stocks.hasMany(db.stock_mutations, {
-	foreignKey: "stock_id",
+db.products.hasMany(db.stock_mutations, {
+	foreignKey: "product_id",
 	targetKey: "id",
 });
 
-db.stock_mutations.belongsTo(db.stocks, {
-	foreignKey: "stock_id",
+db.stock_mutations.belongsTo(db.products, {
+	foreignKey: "product_id",
 });
 
 db.warehouses.hasMany(db.stock_mutations, {
