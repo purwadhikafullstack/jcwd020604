@@ -22,26 +22,30 @@ import { Link } from "react-router-dom";
 import { api } from "../api/api";
 import HistoryList from "./historyList";
 import { useSelector } from "react-redux";
+import MutationList from "./mutationList";
 
 export default function AdminMutation() {
 	const user = useSelector((state) => state.auth);
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
+	const [selectedStatus, setSelectedStatus] = useState("");
 	const [time, setTime] = useState("");
-	const [history, setHistory] = useState();
+	const [mutation, setMutation] = useState();
 	const [sort, setSort] = useState("");
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const inputFileRef = useRef(null);
 
+	console.log(mutation);
+
 	useEffect(() => {
 		getWarehouse();
 	}, []);
 
 	useEffect(() => {
-		// getHistory();
-	}, [page, sort, search, selectedWarehouse, time]);
+		getMutation();
+	}, [page, sort, search, time, selectedStatus]);
 
 	useEffect(() => {
 		if (user.role !== "ADMIN") {
@@ -50,17 +54,17 @@ export default function AdminMutation() {
 		}
 	}, []);
 
-	async function getHistory() {
-		const res = await api.get("/stockhistory", {
+	async function getMutation() {
+		const res = await api.get("/stockmutation", {
 			params: {
-				warehouse_id: selectedWarehouse,
+				status: selectedStatus,
 				search: search,
 				sort: sort,
 				page: page,
 				time: time,
 			},
 		});
-		setHistory(res.data.rows);
+		setMutation(res.data.rows);
 		setTotalPage(Math.ceil(res.data.count / 12));
 	}
 
@@ -89,11 +93,12 @@ export default function AdminMutation() {
 	};
 
 	const handleReset = () => {
-		getHistory();
+		getMutation();
 		getWarehouse();
 		setSort("");
 		setPage(1);
 		setSelectedWarehouse(user.role === "ADMIN" ? "" : user.warehouse_id);
+		setSelectedStatus("");
 		setSearch("");
 		setTime("");
 	};
@@ -181,7 +186,14 @@ export default function AdminMutation() {
 								  ))
 								: null}
 						</Select>
-						<Select placeholder="Select Status">
+						<Select
+							placeholder="Select Status"
+							value={selectedStatus}
+							onChange={(event) => {
+								setPage(1);
+								setSelectedStatus(event.target.value);
+							}}
+						>
 							<option>APPROVED</option>
 							<option>PENDING</option>
 							<option>REJECT</option>
@@ -243,13 +255,16 @@ export default function AdminMutation() {
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
-										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
+										"mutation_code" +
+											(sort === "mutation_codeAsc" ? "Desc" : "Asc")
 									)
 								}
 								cursor="pointer"
 							>
 								Mutation Code
-								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
+								{sort === "mutation_codeAsc"
+									? sort === "mutation_codeDesc"
+									: null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
@@ -257,14 +272,12 @@ export default function AdminMutation() {
 							<Flex
 								alignItems={"center"}
 								onClick={() =>
-									handleSortChange(
-										"stockAfter" + (sort === "stockAfterAsc" ? "Desc" : "Asc")
-									)
+									handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
 								}
 								cursor="pointer"
 							>
-								Stock
-								{sort === "stockAfterAsc" ? sort === "stockAfterDesc" : null}
+								Amount
+								{sort === "qtyAsc" ? sort === "qtyDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
@@ -299,13 +312,13 @@ export default function AdminMutation() {
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
-						<Flex w={"10px"}></Flex>
+						<Flex w={"25px"}></Flex>
 					</Flex>
-					{/* {history?.length
-						? history?.map((val) => {
-								return <HistoryList val={val} getHistory={getHistory} />;
+					{mutation?.length
+						? mutation?.map((val) => {
+								return <MutationList val={val} getMutation={getMutation} />;
 						  })
-						: null} */}
+						: null}
 				</Flex>
 				<ButtonGroup
 					paddingTop={"15px"}

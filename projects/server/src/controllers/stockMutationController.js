@@ -7,9 +7,85 @@ const stockHistory = require("./stockHistoryControllers");
 const stockMutation = {
 	getMutation: async (req, res) => {
 		try {
-			const mutation = await db.stock_mutations.findAll();
+			const { sort, search, time, status } = req.query;
+			const limit = 12;
 
-			return res.status(200).send(mutation);
+			const page = req?.query?.page || 1;
+			let offset = (parseInt(page) - 1) * limit;
+
+			const sortOptions = {
+				productAsc: [
+					[{ model: db.stocks }, { model: db.products }, "product_name", "ASC"],
+				],
+				productDesc: [
+					[
+						{ model: db.stocks },
+						{ model: db.products },
+						"product_name",
+						"DESC",
+					],
+				],
+				mutation_codeAsc: [["mutation_code", "ASC"]],
+				mutation_codeDesc: [["mutation_code", "DESC"]],
+				qtyAsc: [["qty", "ASC"]],
+				qtyDesc: [["qty", "DESC"]],
+				statusAsc: [["status", "ASC"]],
+				statusDesc: [["status", "DESC"]],
+				dateAsc: [["createdAt", "ASC"]],
+				dateDesc: [["createdAt", "DESC"]],
+			};
+			const sortOrder = sortOptions[sort] || sortOptions.dateDesc;
+
+			let whereClause = {};
+
+			if (search) {
+				whereClause["$stock.product.product_name$"] = {
+					[Op.like]: `%${search || ""}%`,
+				};
+			}
+
+			if (status) {
+				whereClause["$status$"] = {
+					[Op.like]: `%${status}%`,
+				};
+			}
+
+			if (time) {
+				// Apply time filter if 'time' is selected
+				whereClause[Op.and] = [
+					{
+						createdAt: { [Op.gte]: moment(time).format() },
+					},
+					{
+						createdAt: {
+							[Op.lte]: moment(time).endOf("month").format(),
+						},
+					},
+				];
+			}
+
+			const mutation = await db.stock_mutations.findAndCountAll({
+				where: {
+					...whereClause,
+				},
+
+				include: [
+					{
+						model: db.stocks,
+						include: [
+							{ model: db.products, include: [{ model: db.product_images }] },
+							{ model: db.warehouses },
+						],
+					},
+				],
+				distinct: true,
+				order: sortOrder,
+			});
+
+			return res.status(200).send({
+				count: mutation.count,
+				rows: mutation.rows.slice(offset, limit * page),
+			});
 		} catch (err) {
 			res.status(500).send({ message: err.message });
 		}
