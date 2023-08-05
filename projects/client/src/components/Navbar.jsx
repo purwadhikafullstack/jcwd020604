@@ -77,6 +77,7 @@ export default function Navbar() {
 								minW={"50px"}
 								w={"20px"}
 								cursor={"pointer"}
+								onClick={() => navigate('/')}
 							></Image>
 						</Box>
 						<HStack
@@ -105,16 +106,16 @@ export default function Navbar() {
 							) : (
 								<>
 									<Flex>
-										<Link to={"/#"}>Tops</Link>
+										<Link to={"/collection"}>Tops</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Bottoms</Link>
+										<Link to={"/collection"}>Bottoms</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Outerwares</Link>
+										<Link to={"/collection"}>Outerwares</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Accerories</Link>
+										<Link to={"/collection"}>Accerories</Link>
 									</Flex>
 								</>
 							)}
@@ -242,16 +243,16 @@ export default function Navbar() {
 										<Input type="tel" placeholder="Search . . ." />
 									</InputGroup>
 									<Flex>
-										<Link to={"/#"}>Tops</Link>
+										<Link to={"/collection"}>Tops</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Bottoms</Link>
+										<Link to={"/collection"}>Bottoms</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Outerwares</Link>
+										<Link to={"/collection"}>Outerwares</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Accerories</Link>
+										<Link to={"/collection"}>Accerories</Link>
 									</Flex>
 									<Box></Box>
 								</>

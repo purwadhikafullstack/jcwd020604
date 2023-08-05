@@ -83,8 +83,8 @@ export default function UserProfile() {
         position:'top',
         isClosable:false
       });
-      fetchData();
     });
+    fetchData();
   }
 
   useEffect(() => {
@@ -95,16 +95,16 @@ export default function UserProfile() {
 
   const fetchData = async() => {
     try {
-      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${users.id}`);
+      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.id}`, users);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
-        // toast({
-        //     title:"There is something error while executing this command",
-        //     status:"error",
-        //     duration:3000,
-        //     isClosable:false
-        // });
+        toast({
+            title:"There is something error while executing this command",
+            status:"error",
+            duration:3000,
+            isClosable:false
+        });
     }
 }
 
@@ -113,7 +113,6 @@ export default function UserProfile() {
       const response = await api.get(
         `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
       );
-      console.log(response.data);
       setAddress(response.data);
     } catch (error) {
       console.error(error);
