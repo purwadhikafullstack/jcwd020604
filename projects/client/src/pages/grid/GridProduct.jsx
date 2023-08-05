@@ -1,11 +1,7 @@
 import { Box, Flex, Image } from "@chakra-ui/react";
 import { useState } from "react";
-import Product1 from "../../assets/product photos/ACCESORIES/chingco1.jpg";
-import Product2 from "../../assets/product photos/BOTTOMS/Pants1.jpg";
-import Product3 from "../../assets/product photos/HEADWEARS/BermudaFurHat1.jpg";
-import Product4 from "../../assets/product photos/TOPS/BouncingRabbitLongsleeveT-shirt1.jpg";
 
-export default function ProductCard({ val }) {
+export default function GridProduct({ val }) {
 	const [stock, setStock] = useState(val.stocks[0]?.qty || 0);
 	const isSoldOut = stock === 0;
 

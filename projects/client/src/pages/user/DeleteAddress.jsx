@@ -41,6 +41,7 @@ const DeleteAddress = (props) => {
         position: 'top'
       });
       navigate("/user_profile");
+      props.getAddressByUser();
       Close();
     } catch (error) {
       console.error('Error while deleting address:', error);

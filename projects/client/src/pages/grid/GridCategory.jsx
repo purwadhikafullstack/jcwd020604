@@ -9,7 +9,7 @@ const GridCategory = () => {
     return (
         <>
             <Grid templateColumns='repeat(4, 1fr)' gap={0}>
-                <GridItem w='100%' h='120' bg='white' border={'1px solid gray'}>
+                <GridItem w='100%' h='120' border={'1px solid gray'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} p={4} cursor={'pointer'}>
                         <VStack>
                             <RiTShirt2Line size={'50px'}/>
@@ -19,7 +19,7 @@ const GridCategory = () => {
                         </VStack>
                     </Box>
                 </GridItem>
-                <GridItem w='100%' h='120' bg='white' border={'1px solid gray'}>
+                <GridItem w='100%' h='120' border={'1px solid gray'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} p={4} cursor={'pointer'}>
                         <VStack>
                             <PiPants size={'50px'}/>
@@ -29,7 +29,7 @@ const GridCategory = () => {
                         </VStack>
                     </Box>
                 </GridItem>
-                <GridItem w='100%' h='120' bg='white' border={'1px solid gray'}>
+                <GridItem w='100%' h='120' border={'1px solid gray'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} p={4} cursor={'pointer'}>
                         <VStack>
                             <FaRedhat size={'50px'}/>
@@ -39,7 +39,7 @@ const GridCategory = () => {
                         </VStack>
                     </Box>
                 </GridItem>
-                <GridItem w='100%' h='120' bg='white' border={'1px solid gray'}>
+                <GridItem w='100%' h='120' border={'1px solid gray'}>
                     <Box display={'flex'} alignItems={'center'} justifyContent={'center'} p={4} cursor={'pointer'}>
                         <VStack>
                             <BsHandbag size={'50px'}/>

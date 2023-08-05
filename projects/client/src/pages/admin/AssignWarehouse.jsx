@@ -12,12 +12,14 @@ import {
   ModalBody,
   useToast, 
   ModalFooter, } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Assign (props) {
   const [warehouse, setWarehouse] = useState([]);
   const [wAdmin, setWAdmin] = useState({warehouse_id: ""});
   const [message, setMessage] = useState('');
   const toast = useToast();
+  const nav = useNavigate();
 
     async function getWarehouse() {
       try {
@@ -42,6 +44,9 @@ export default function Assign (props) {
           position: 'top',
           isClosable: false
         });
+        nav('/user_list');
+        props.fetchData();
+        props.onClose();
       } catch (error) {
         setMessage('Error occurred while assigning admin to the warehouse');
         console.error(error);

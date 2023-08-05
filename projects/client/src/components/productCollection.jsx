@@ -217,7 +217,9 @@ export default function ProductCollection() {
 										{loading ? (
 											<Loader />
 										) : (
+										<>
 											<ProductCard val={val} borderRadius={"15px"} />
+										</>	
 										)}
 									</Suspense>
 								</Link>
