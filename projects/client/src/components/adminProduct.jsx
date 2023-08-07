@@ -96,7 +96,7 @@ export default function AdminProduct() {
 		<>
 			<Center flexDir={"column"}>
 				<Flex
-					margin={"60px 20px 60px"}
+					margin={"20px 20px 50px"}
 					border={"1px"}
 					borderRadius={"15px"}
 					borderColor={"#E6EBF2"}

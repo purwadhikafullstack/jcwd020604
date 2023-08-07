@@ -51,6 +51,8 @@ export default function AdminMutation() {
 		getRequest();
 	}, [selectedFromWarehouse]);
 
+	console.log();
+
 	useEffect(() => {
 		getMutation();
 	}, [
@@ -75,7 +77,7 @@ export default function AdminMutation() {
 		const res = await api.get("/stockmutation", {
 			params: {
 				from_warehouse_id: selectedWarehouse,
-				to_warehouse_id: selectedToWarehouse,
+				to_warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
 				status: selectedStatus,
 				search: search,
 				sort: sort,
@@ -90,7 +92,7 @@ export default function AdminMutation() {
 	async function getRequest() {
 		const res = await api.get("/stockmutation/mutation/request", {
 			params: {
-				from_warehouse_id: selectedFromWarehouse,
+				from_warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
 			},
 		});
 		setRequest(res.data);
@@ -135,7 +137,7 @@ export default function AdminMutation() {
 	return (
 		<Center flexDir={"column"}>
 			<Flex
-				margin={"60px 20px 60px"}
+				margin={"20px 20px 50px"}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}

@@ -49,7 +49,8 @@ export default function AdminHistory() {
 	async function getHistory() {
 		const res = await api.get("/stockhistory", {
 			params: {
-				warehouse_id: selectedWarehouse,
+				warehouse_id:
+					user.role === "ADMIN" ? selectedWarehouse : user.warehouse_id,
 				reference: selectedReference,
 				search: search,
 				sort: sort,
@@ -99,7 +100,7 @@ export default function AdminHistory() {
 	return (
 		<Center flexDir={"column"}>
 			<Flex
-				margin={"60px 20px 60px"}
+				margin={"20px 20px 50px"}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}
