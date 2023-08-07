@@ -37,43 +37,33 @@ export default function EditMutationModal({
 	const toast = useToast();
 	const nav = useNavigate();
 	const user = useSelector((state) => state.auth);
+	console.log(mutation);
 
 	useEffect(() => {
 		getWarehouse();
 	}, []);
 
-	// const editProduct = async () => {
-	// 	const formData = new FormData();
-	// 	formData.append("product_name", product.product_name);
-	// 	formData.append("product_detail", product.product_detail);
-	// 	formData.append("price", product.price);
-	// 	formData.append("weight", product.weight);
-	// 	formData.append("category_id", product.category_id);
-	// 	if (selectedFiles) {
-	// 		for (const files of selectedFiles) {
-	// 			formData.append("productImg", files);
-	// 		}
-	// 	}
-	// 	try {
-	// 		await api.patch(`/product/${val.id}`, formData);
-	// 		toast({
-	// 			title: "Product updated successfully.",
-	// 			status: "success",
-	// 			position: "top",
-	// 			duration: 3000,
-	// 		});
-	// 		getProduct();
-	// 		nav("/admin/product");
-	// 		onClose();
-	// 	} catch (error) {
-	// 		toast({
-	// 			title: error.response.data.message,
-	// 			status: "error",
-	// 			position: "top",
-	// 			duration: 3000,
-	// 		});
-	// 	}
-	// };
+	const editMutation = async () => {
+		try {
+			await api.patch(`/stockmutation/${val.id}`, { qty: mutation.qty });
+			toast({
+				title: "Mutation updated successfully.",
+				status: "success",
+				position: "top",
+				duration: 3000,
+			});
+			getMutation();
+			nav("/admin/mutation");
+			onClose();
+		} catch (error) {
+			toast({
+				title: error.response.data.message,
+				status: "error",
+				position: "top",
+				duration: 3000,
+			});
+		}
+	};
 
 	async function getWarehouse() {
 		const res = await api.get("/warehouse");
@@ -96,13 +86,21 @@ export default function EditMutationModal({
 				<ModalBody pb={6}>
 					<FormControl>
 						<FormLabel>Product Name:</FormLabel>
-						<Input placeholder="e.g. MMS T-shirt" id="product_id" />
+						<Input
+							placeholder="e.g. MMS T-shirt"
+							id="stock_id"
+							onChange={inputHandler}
+							value={val.stock.product.product_name}
+							isDisabled
+						/>
 
 						<FormLabel> From Warehouse:</FormLabel>
 						<Select
 							placeholder="Choose warehouse"
 							id="from_warehouse_id"
+							value={val.from_warehouse_id}
 							onChange={inputHandler}
+							isDisabled
 						>
 							{warehouse.length
 								? warehouse.map((val) => (
@@ -116,7 +114,9 @@ export default function EditMutationModal({
 						<Select
 							placeholder="Choose warehouse"
 							id="to_warehouse_id"
+							value={val.to_warehouse_id}
 							onChange={inputHandler}
+							isDisabled
 						>
 							{warehouse.length
 								? warehouse.map((val) => (
@@ -134,6 +134,7 @@ export default function EditMutationModal({
 									placeholder="0"
 									type="number"
 									id="qty"
+									defaultValue={val.qty}
 									onChange={inputHandler}
 								/>
 							</HStack>
@@ -142,7 +143,7 @@ export default function EditMutationModal({
 				</ModalBody>
 				<ModalFooter>
 					{user.role === "ADMIN" || "ADMIN" ? (
-						<Button colorScheme="blue" mr={3}>
+						<Button colorScheme="blue" mr={3} onClick={editMutation}>
 							Save
 						</Button>
 					) : null}

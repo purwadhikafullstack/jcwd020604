@@ -9,7 +9,9 @@ router.get("/mutation/request", stockMutation.getMutationRequest);
 
 router.post("/", stockMutation.requestMutation);
 
-router.patch("/:id", stockMutation.confirmMutation);
+router.patch("/confirm/:id", stockMutation.confirmMutation);
+
+router.patch("/:id", stockMutation.editMutation);
 
 router.delete("/:id", stockMutation.cancelMutation);
 

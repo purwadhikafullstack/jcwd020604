@@ -248,6 +248,51 @@ const stockMutation = {
 			res.status(500).send({ message: err.message });
 		}
 	},
+	editMutation: async (req, res) => {
+		const { qty, stock_id, from_warehouse_id, to_warehouse_id } = req.body;
+		const { id } = req.params;
+		const t = await db.sequelize.transaction();
+
+		const schema = Joi.object({
+			qty: Joi.number().min(0).required(),
+			// stock_id: Joi.number().required(),
+			// from_warehouse_id: Joi.number().required(),
+			// to_warehouse_id: Joi.number().required(),
+		});
+
+		const validation = schema.validate({
+			qty,
+			// stock_id,
+			// from_warehouse_id,
+			// to_warehouse_id,
+		});
+
+		if (validation.error) {
+			return res
+				.status(400)
+				.send({ message: validation.error.details[0].message });
+		}
+
+		try {
+			await db.stock_mutations.update(
+				{
+					qty,
+					// stock_id,
+					// from_warehouse_id,
+					// to_warehouse_id,
+				},
+				{
+					where: { id: id },
+					transaction: t,
+				}
+			);
+			await t.commit();
+			res.status(200).send({ message: "Mutation updated successfully." });
+		} catch (err) {
+			await t.rollback();
+			res.status(500).send({ message: err.message });
+		}
+	},
 	cancelMutation: async (req, res) => {
 		const { id } = req.params;
 		const t = await db.sequelize.transaction();
