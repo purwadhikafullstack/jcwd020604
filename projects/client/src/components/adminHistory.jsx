@@ -297,7 +297,7 @@ export default function AdminHistory() {
 					justifyContent={"end"}
 					alignItems={"center"}
 				>
-					{page === 1 ? null : (
+					{page === 1 || history?.length === 0 ? null : (
 						<Button
 							onClick={() => {
 								handlePageChange(page - 1);
@@ -307,7 +307,7 @@ export default function AdminHistory() {
 							Previous
 						</Button>
 					)}
-					{page === totalPage ? null : (
+					{page === totalPage || history?.length === 0 ? null : (
 						<Button
 							onClick={() => {
 								handlePageChange(page + 1);

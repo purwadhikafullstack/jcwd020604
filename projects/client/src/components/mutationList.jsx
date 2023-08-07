@@ -87,6 +87,7 @@ export default function MutationList({ val, getMutation }) {
 						<Icon as={BiDotsHorizontalRounded} />
 					</MenuButton>
 					<MenuList>
+						<MenuItem onClick={editMutationModal.onOpen}>Edit</MenuItem>
 						<MenuItem onClick={deleteMutationModal.onOpen} color={"red"}>
 							Cancel
 						</MenuItem>

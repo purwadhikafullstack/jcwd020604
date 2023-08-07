@@ -30,6 +30,8 @@ import MutationRequestModal from "./mutationRequestModal";
 export default function AdminMutation() {
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
+	const [selectedToWarehouse, setSelectedToWarehouse] = useState("");
+	const [selectedFromWarehouse, setSelectedFromWarehouse] = useState("");
 	const [selectedStatus, setSelectedStatus] = useState("");
 	const [time, setTime] = useState("");
 	const [mutation, setMutation] = useState();
@@ -47,22 +49,33 @@ export default function AdminMutation() {
 	useEffect(() => {
 		getWarehouse();
 		getRequest();
-	}, []);
+	}, [selectedFromWarehouse]);
 
 	useEffect(() => {
 		getMutation();
-	}, [page, sort, search, time, selectedStatus]);
+	}, [
+		page,
+		sort,
+		search,
+		time,
+		selectedStatus,
+		selectedWarehouse,
+		selectedToWarehouse,
+	]);
 
 	useEffect(() => {
 		if (user.role !== "ADMIN") {
 			setPage(1);
-			setSelectedWarehouse(user.warehouse_id);
+			setSelectedToWarehouse(user.warehouse_id);
+			setSelectedFromWarehouse(user.warehouse_id);
 		}
 	}, []);
 
 	async function getMutation() {
 		const res = await api.get("/stockmutation", {
 			params: {
+				from_warehouse_id: selectedWarehouse,
+				to_warehouse_id: selectedToWarehouse,
 				status: selectedStatus,
 				search: search,
 				sort: sort,
@@ -75,7 +88,11 @@ export default function AdminMutation() {
 	}
 
 	async function getRequest() {
-		const res = await api.get("/stockmutation/mutation/request");
+		const res = await api.get("/stockmutation/mutation/request", {
+			params: {
+				from_warehouse_id: selectedFromWarehouse,
+			},
+		});
 		setRequest(res.data);
 	}
 
@@ -188,7 +205,14 @@ export default function AdminMutation() {
 						/>
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
-						<Select placeholder="From Warehouse">
+						<Select
+							placeholder="From Warehouse"
+							value={selectedWarehouse}
+							onChange={(event) => {
+								setPage(1);
+								setSelectedWarehouse(event.target.value);
+							}}
+						>
 							{warehouse.length
 								? warehouse.map((val) => (
 										<option key={val.id} value={val.id}>
@@ -251,13 +275,16 @@ export default function AdminMutation() {
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
-										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
+										"from_Warehouse" +
+											(sort === "from_WarehouseDesc" ? "Asc" : "Desc")
 									)
 								}
 								cursor="pointer"
 							>
 								Warehouse (From-To)
-								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
+								{sort === "from_WarehouseDesc"
+									? sort === "from_WarehouseAsc"
+									: null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
 						</Flex>
@@ -331,12 +358,13 @@ export default function AdminMutation() {
 						  })
 						: null}
 				</Flex>
+				{/* {mutation.length ? ( */}
 				<ButtonGroup
 					paddingTop={"15px"}
 					justifyContent={"end"}
 					alignItems={"center"}
 				>
-					{page === 1 ? null : (
+					{page === 1 || mutation?.length === 0 ? null : (
 						<Button
 							onClick={() => {
 								handlePageChange(page - 1);
@@ -346,7 +374,7 @@ export default function AdminMutation() {
 							Previous
 						</Button>
 					)}
-					{page === totalPage ? null : (
+					{page === totalPage || mutation?.length === 0 ? null : (
 						<Button
 							onClick={() => {
 								handlePageChange(page + 1);
@@ -357,6 +385,7 @@ export default function AdminMutation() {
 						</Button>
 					)}
 				</ButtonGroup>
+				{/* ) : null} */}
 			</Flex>
 			<AddMutationModal
 				isOpen={addMutationModal.isOpen}

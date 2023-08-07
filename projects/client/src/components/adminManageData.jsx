@@ -404,29 +404,30 @@ export default function AdminManageData() {
 
 							<Flex>{`Stock > 10`}</Flex>
 						</Flex>
-
-						<ButtonGroup paddingTop={"15px"} alignItems={"center"}>
-							{page === 1 ? null : (
-								<Button
-									onClick={() => {
-										handlePageChange(page - 1);
-										window.scrollTo({ top: 0, behavior: "smooth" });
-									}}
-								>
-									Previous
-								</Button>
-							)}
-							{page === totalPage ? null : (
-								<Button
-									onClick={() => {
-										handlePageChange(page + 1);
-										window.scrollTo({ top: 0, behavior: "smooth" });
-									}}
-								>
-									Next
-								</Button>
-							)}
-						</ButtonGroup>
+						{stock?.length ? (
+							<ButtonGroup paddingTop={"15px"} alignItems={"center"}>
+								{page === 1 ? null : (
+									<Button
+										onClick={() => {
+											handlePageChange(page - 1);
+											window.scrollTo({ top: 0, behavior: "smooth" });
+										}}
+									>
+										Previous
+									</Button>
+								)}
+								{page === totalPage ? null : (
+									<Button
+										onClick={() => {
+											handlePageChange(page + 1);
+											window.scrollTo({ top: 0, behavior: "smooth" });
+										}}
+									>
+										Next
+									</Button>
+								)}
+							</ButtonGroup>
+						) : null}
 					</Flex>
 					<AddStockModal
 						isOpen={addStockModal.isOpen}

@@ -41,6 +41,7 @@ export default function MutationRequestModal({ isOpen, onClose, request }) {
 									p={"15px"}
 									mb={"15px"}
 									borderRadius={"10px"}
+									borderColor={"#E6EBF2"}
 								>
 									<Flex></Flex>
 									<Flex gap={"15px"}>

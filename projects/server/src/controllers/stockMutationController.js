@@ -7,7 +7,8 @@ const stockHistory = require("./stockHistoryControllers");
 const stockMutation = {
 	getMutation: async (req, res) => {
 		try {
-			const { sort, search, time, status } = req.query;
+			const { sort, search, time, status, from_warehouse_id, to_warehouse_id } =
+				req.query;
 			const limit = 12;
 
 			const page = req?.query?.page || 1;
@@ -25,6 +26,8 @@ const stockMutation = {
 						"DESC",
 					],
 				],
+				from_WarehouseAsc: [["from_Warehouse_id", "ASC"]],
+				from_WarehouseDesc: [["from_Warehouse_id", "DESC"]],
 				mutation_codeAsc: [["mutation_code", "ASC"]],
 				mutation_codeDesc: [["mutation_code", "DESC"]],
 				qtyAsc: [["qty", "ASC"]],
@@ -64,6 +67,18 @@ const stockMutation = {
 				];
 			}
 
+			if (from_warehouse_id) {
+				whereClause["$from_warehouse_id$"] = {
+					[Op.like]: `%${from_warehouse_id}%`,
+				};
+			}
+
+			if (to_warehouse_id) {
+				whereClause["$to_warehouse_id$"] = {
+					[Op.like]: `%${to_warehouse_id}%`,
+				};
+			}
+
 			const mutation = await db.stock_mutations.findAndCountAll({
 				where: {
 					...whereClause,
@@ -99,8 +114,18 @@ const stockMutation = {
 	},
 	getMutationRequest: async (req, res) => {
 		try {
+			const { from_warehouse_id } = req.query;
+
+			let whereClause = {};
+
+			if (from_warehouse_id) {
+				whereClause["$from_warehouse_id$"] = {
+					[Op.like]: `%${from_warehouse_id}%`,
+				};
+			}
+
 			const request = await db.stock_mutations.findAll({
-				where: { status: "PENDING" },
+				where: { status: "PENDING", ...whereClause },
 				include: [
 					{
 						model: db.stocks,
