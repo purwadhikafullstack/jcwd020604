@@ -2,7 +2,6 @@ import React,{ useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
-import { Text } from "@chakra-ui/react";
 
 const ProtectedPages = ({
     children,
@@ -31,7 +30,7 @@ const ProtectedPages = ({
         } else if (needLogin && !user?.email) {
           return nav("/");
         } else if (needLoginAdmin && user?.role !== "ADMIN") {
-          return nav("/");
+          return nav("/restricted");
         }
         console.log(user);
       }, [children]);

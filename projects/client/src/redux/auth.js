@@ -14,6 +14,7 @@ function userReducer(state = init, action) {
 			email: action.payload.email,
 			role: action.payload.role,
 			avatar_url: action.payload.avatar_url,
+			verified: action.payload.verified,
 			warehouse_id: action.payload.warehouse_id,
 			address: action.payload.address
 			// password: action.payload.password,

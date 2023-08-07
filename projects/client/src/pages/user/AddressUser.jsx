@@ -43,7 +43,6 @@ export default function AddressUser (props) {
 
     const Close = () => {
       props.setAddressId(null);
-      props.onClose();
     }
 
     const getUserCity = async () => {
@@ -66,8 +65,9 @@ export default function AddressUser (props) {
           position: "top",
           isClosable: false,
         });
-        navigate("/user_profile");
         props.getAddressByUser();
+        props.onClose();
+        navigate("/user_profile");
         Close();
       } catch (error) {
         toast({
@@ -143,7 +143,7 @@ export default function AddressUser (props) {
                 </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} size={'sm'} onClick={() => { saveAddress(); Close(); }}>
+              <Button colorScheme='blue' mr={3} size={'sm'} onClick={() => { saveAddress(); props.onClose(); }}>
                 Save
               </Button>
               <Button colorScheme='orange' size={'sm'} onClick={props.onClose}>Cancel</Button>

@@ -16,10 +16,12 @@ import ResetPassword from "../pages/reset/ResetPassword";
 import AdminHistoryPage from "../pages/admin/AdminHistoryPage";
 import AdminMutationPage from "../pages/admin/AdminMutationPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
-// import ProtectedPages from "./ProtectedPages";
+import ProtectedPages from "./ProtectedPages";
 import EditAddressUser from "../pages/user/EditAddressUser";
 import AddressUser from "../pages/user/AddressUser";
 import Carousel from "../pages/carousel/Carousel";
+import NotFound from "../pages/redirect/NotFound";
+import Restricted from "../pages/redirect/RestrictedPage";
 
 const routes = [
 	//Sandi
@@ -60,6 +62,9 @@ const routes = [
 	<Route path="/admin_profile" element={<AdminProfile />}></Route>,
 	<Route path="/edit_user_profile" element={<EditAddressUser />}></Route>,
 	<Route path="/edit_user_address" element={<AddressUser />}></Route>,
+
+	<Route path="/not-found" element={<NotFound />}></Route>,
+	<Route path="/restricted" element={<Restricted />}></Route>,
 
 	// <Route path="/user_profile" element={<ProtectedPages needLogin={true}><UserProfile /></ProtectedPages>}></Route>,
 	// <Route path="/user_list" element={<ProtectedPages needLoginAdmin={true} needLogin={true}><UserList /></ProtectedPages>}></Route>,

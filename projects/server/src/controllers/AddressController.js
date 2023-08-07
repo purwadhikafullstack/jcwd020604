@@ -162,13 +162,13 @@ const addressController = {
 			}
 
 			// Check jika user sudah punya 2 address
-			const userAddressesCount = await db.addresses.count({
-				where: { user_id },
-			  });
+			// const userAddressesCount = await db.addresses.count({
+			// 	where: { user_id },
+			//   });
 		  
-			  if (userAddressesCount >= 2) {
-				return res.status(400).json({ message: 'User already has 2 addresses. Cannot add more.' });
-			  }
+			//   if (userAddressesCount >= 2) {
+			// 	return res.status(400).json({ message: 'User already has 2 addresses. Cannot add more.' });
+			//   }
 
 			const response = await axios.get(
 				"https://api.opencagedata.com/geocode/v1/json",
