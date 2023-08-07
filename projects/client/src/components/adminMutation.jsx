@@ -196,7 +196,7 @@ export default function AdminMutation() {
 						</Button>
 						<Input
 							type={"month"}
-							w={"420px"}
+							w={"520px"}
 							value={time}
 							onChange={(e) => {
 								setPage(1);
