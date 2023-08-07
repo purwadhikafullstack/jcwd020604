@@ -20,7 +20,6 @@ function userReducer(state = init, action) {
 			// password: action.payload.password,
 		};
 	} else if (action.type === "logout") {
-		console.log("tess");
 		return init;
 	}
 
