@@ -5,6 +5,12 @@ module.exports = (sequelize, Sequelize) => {
 			mutation_code: Sequelize.STRING,
 			qty: Sequelize.INTEGER,
 			status: Sequelize.ENUM("APPROVED", "REJECT", "PENDING"),
+			from_warehouse_id: {
+				type: Sequelize.INTEGER,
+			},
+			to_warehouse_id: {
+				type: Sequelize.INTEGER,
+			},
 		},
 		{
 			paranoid: true,

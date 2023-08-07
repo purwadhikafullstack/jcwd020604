@@ -15,19 +15,19 @@ import {
 	RepeatIcon,
 	ArrowBackIcon,
 	AddIcon,
+	BellIcon,
 } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api/api";
-import HistoryList from "./historyList";
 import { useSelector } from "react-redux";
 import MutationList from "./mutationList";
 import AddMutationModal from "./addMutationModal";
+import MutationRequestModal from "./mutationRequestModal";
 
 export default function AdminMutation() {
-	const user = useSelector((state) => state.auth);
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
 	const [selectedStatus, setSelectedStatus] = useState("");
@@ -37,14 +37,16 @@ export default function AdminMutation() {
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
+	const [request, setRequest] = useState([]);
+	const user = useSelector((state) => state.auth);
 	const inputFileRef = useRef(null);
 
 	const addMutationModal = useDisclosure();
-
-	console.log(mutation);
+	const mutationRequestModal = useDisclosure();
 
 	useEffect(() => {
 		getWarehouse();
+		getRequest();
 	}, []);
 
 	useEffect(() => {
@@ -70,6 +72,11 @@ export default function AdminMutation() {
 		});
 		setMutation(res.data.rows);
 		setTotalPage(Math.ceil(res.data.count / 12));
+	}
+
+	async function getRequest() {
+		const res = await api.get("/stockmutation/mutation/request");
+		setRequest(res.data);
 	}
 
 	async function getWarehouse() {
@@ -99,9 +106,10 @@ export default function AdminMutation() {
 	const handleReset = () => {
 		getMutation();
 		getWarehouse();
+		getRequest();
 		setSort("");
 		setPage(1);
-		setSelectedWarehouse(user.role === "ADMIN" ? "" : user.warehouse_id);
+		setSelectedWarehouse("");
 		setSelectedStatus("");
 		setSearch("");
 		setTime("");
@@ -136,11 +144,39 @@ export default function AdminMutation() {
 								colorScheme="green"
 								onClick={addMutationModal.onOpen}
 							/>
+							<Flex style={{ position: "relative", display: "inline-block" }}>
+								<Button
+									as={Button}
+									paddingLeft={"9px"}
+									marginBottom={"15px"}
+									rightIcon={<BellIcon />}
+									onClick={mutationRequestModal.onOpen}
+								/>
+								{request.length ? (
+									<Flex
+										style={{
+											position: "absolute",
+											top: "0",
+											right: "0",
+											borderRadius: "50%",
+											backgroundColor: "red",
+											color: "white",
+											width: "20px",
+											height: "20px",
+											display: "flex",
+											justifyContent: "center",
+											alignItems: "center",
+											fontSize: "12px",
+										}}
+									>
+										{request.length}
+									</Flex>
+								) : null}
+							</Flex>
 						</Flex>
 						<Button onClick={handleReset} mr={"15px"}>
 							<RepeatIcon />
 						</Button>
-
 						<Input
 							type={"month"}
 							w={"420px"}
@@ -152,35 +188,7 @@ export default function AdminMutation() {
 						/>
 					</Flex>
 					<Center gap={"15px"} paddingBottom={"15px"}>
-						{user.role === "ADMIN" ? (
-							<Select
-								placeholder="From Warehouse"
-								value={selectedWarehouse}
-								onChange={(event) => {
-									setPage(1);
-									setSelectedWarehouse(event.target.value);
-								}}
-							>
-								{warehouse.length
-									? warehouse.map((val) => (
-											<option key={val.id} value={val.id}>
-												{val.warehouse_name}
-											</option>
-									  ))
-									: null}
-							</Select>
-						) : (
-							<Select value={user.warehouse_id} isDisabled>
-								{warehouse.length
-									? warehouse.map((val) => (
-											<option key={val.id} value={val.id}>
-												{val.warehouse_name}
-											</option>
-									  ))
-									: null}
-							</Select>
-						)}
-						<Select placeholder="To Warehouse">
+						<Select placeholder="From Warehouse">
 							{warehouse.length
 								? warehouse.map((val) => (
 										<option key={val.id} value={val.id}>
@@ -354,6 +362,12 @@ export default function AdminMutation() {
 				isOpen={addMutationModal.isOpen}
 				onClose={addMutationModal.onClose}
 				getMutation={getMutation}
+				getRequest={getRequest}
+			/>
+			<MutationRequestModal
+				isOpen={mutationRequestModal.isOpen}
+				onClose={mutationRequestModal.onClose}
+				request={request}
 			/>
 		</Center>
 	);

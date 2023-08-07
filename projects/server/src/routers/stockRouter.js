@@ -5,6 +5,8 @@ const checkRole = require("../middlewares/roleDecoder");
 
 router.get("/", checkRole.checkUser, stockController.getStock);
 
+router.get("/getAll/stock", stockController.getAllStock);
+
 router.post("/", checkRole.checkWAdmin, stockController.addStock);
 
 router.patch("/:id", checkRole.checkWAdmin, stockController.editStock);

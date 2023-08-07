@@ -66,15 +66,15 @@ export default function MutationList({ val, getMutation }) {
 						h={"50px"}
 						borderRadius={"4px"}
 						src={
-							val?.product?.product_images[0]
-								? val?.product?.product_images[0].product_image
+							val?.stock?.product?.product_images[0]
+								? val?.stock?.product?.product_images[0].product_image
 								: null
 						}
 					/>
-					<Flex w={"270px"}>{val?.product?.product_name}</Flex>
+					<Flex w={"270px"}>{val?.stock?.product?.product_name}</Flex>
 				</Flex>
 				<Flex w={"195px"}>
-					{`${val?.from_warehouse_id} - ${val?.warehouse?.warehouse_name}`}
+					{`${val?.from_warehouse?.warehouse_name} - ${val?.to_warehouse?.warehouse_name}`}
 				</Flex>
 				<Flex w={"195px"}>{val?.mutation_code}</Flex>
 				<Flex w={"100px"}>{val?.qty}</Flex>

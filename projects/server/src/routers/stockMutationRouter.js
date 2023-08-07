@@ -5,6 +5,8 @@ const checkRole = require("../middlewares/roleDecoder");
 
 router.get("/", stockMutation.getMutation);
 
+router.get("/mutation/request", stockMutation.getMutationRequest);
+
 router.post("/", stockMutation.requestMutation);
 
 router.patch("/:id", stockMutation.confirmMutation);

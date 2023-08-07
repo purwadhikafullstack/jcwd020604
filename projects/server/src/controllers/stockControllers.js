@@ -65,6 +65,34 @@ const stockController = {
 			res.status(500).send({ message: err.message });
 		}
 	},
+	getAllStock: async (req, res) => {
+		try {
+			const stocks = await db.stocks.findAll({
+				where: {
+					[Op.and]: [
+						{
+							warehouse_id: {
+								[Op.like]: `%${req.query.warehouse_id || ""}%`,
+							},
+						},
+					],
+				},
+				include: [
+					{
+						model: db.products,
+						order: [["product_name", "ASC"]],
+					},
+					{ model: db.warehouses },
+				],
+			});
+
+			res.status(200).send(stocks);
+		} catch (err) {
+			res.status(500).send({
+				message: err.message,
+			});
+		}
+	},
 	addStock: async (req, res) => {
 		const { qty, product_id, warehouse_id } = req.body;
 		const t = await db.sequelize.transaction();

@@ -23,30 +23,39 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useSelector } from "react-redux";
 
-export default function AddMutationModal({ isOpen, onClose, getMutation }) {
+export default function AddMutationModal({
+	isOpen,
+	onClose,
+	getMutation,
+	getRequest,
+}) {
 	const user = useSelector((state) => state.auth);
 	const toast = useToast();
 	const nav = useNavigate();
-	const [product, setProduct] = useState([]);
+	const [stock, setStock] = useState([]);
 	const [warehouse, setWarehouse] = useState([]);
+	const [selectedWarehouse, setSelectedWarehouse] = useState("");
 
 	useEffect(() => {
 		getWarehouse();
-		getAllProduct();
 	}, []);
+
+	useEffect(() => {
+		getAllStock();
+	}, [selectedWarehouse]);
 
 	const formik = useFormik({
 		initialValues: {
 			qty: "",
 			from_warehouse_id: "",
-			to_warehouse_id: "",
-			product_id: "",
+			to_warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
+			stock_id: "",
 		},
 		validationSchema: Yup.object().shape({
 			qty: Yup.number().min(0).required(),
 			from_warehouse_id: Yup.number().required(),
 			to_warehouse_id: Yup.number().required(),
-			product_id: Yup.number().required(),
+			stock_id: Yup.number().required(),
 		}),
 		onSubmit: async () => {
 			try {
@@ -61,8 +70,11 @@ export default function AddMutationModal({ isOpen, onClose, getMutation }) {
 						position: "top",
 						duration: 3000,
 					});
+
 					getMutation();
+					getRequest();
 					onClose();
+					setSelectedWarehouse("");
 					nav("/admin/mutation");
 				}
 			} catch (error) {
@@ -76,9 +88,13 @@ export default function AddMutationModal({ isOpen, onClose, getMutation }) {
 		},
 	});
 
-	async function getAllProduct() {
-		const res = await api.get("/product/getAllProduct/getAll");
-		setProduct(res.data);
+	async function getAllStock() {
+		const res = await api.get("/stock/getAll/stock", {
+			params: {
+				warehouse_id: selectedWarehouse,
+			},
+		});
+		setStock(res.data);
 	}
 
 	async function getWarehouse() {
@@ -106,25 +122,15 @@ export default function AddMutationModal({ isOpen, onClose, getMutation }) {
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl w={"100%"}>
-						<FormLabel>Select Product:</FormLabel>
-						<Select
-							placeholder="All Product"
-							id="product_id"
-							onChange={inputHandler}
-						>
-							{product.length
-								? product.map((val) => (
-										<option key={val.id} value={val.id}>
-											{val.product_name}
-										</option>
-								  ))
-								: null}
-						</Select>
 						<FormLabel>From Warehouse:</FormLabel>
 						<Select
 							placeholder="Select Source Warehouse"
 							id="from_warehouse_id"
-							onChange={inputHandler}
+							value={selectedWarehouse}
+							onChange={(event) => {
+								setSelectedWarehouse(event.target.value);
+								inputHandler(event);
+							}}
 						>
 							{warehouse.length
 								? warehouse.map((val) => (
@@ -135,20 +141,50 @@ export default function AddMutationModal({ isOpen, onClose, getMutation }) {
 								: null}
 						</Select>
 						<FormLabel>To Warehouse:</FormLabel>
+						{user.role === "ADMIN" ? (
+							<Select
+								placeholder="All Warehouses"
+								id="to_warehouse_id"
+								onChange={inputHandler}
+							>
+								{warehouse.length
+									? warehouse.map((val) => (
+											<option key={val.id} value={val.id}>
+												{val.warehouse_name}
+											</option>
+									  ))
+									: null}
+							</Select>
+						) : (
+							<Select
+								placeholder="Select Destination Warehouse"
+								id="to_warehouse_id"
+								defaultValue={user.warehouse_id}
+								isDisabled
+							>
+								{warehouse.length
+									? warehouse.map((val) => (
+											<option key={val.id} value={val.id}>
+												{val.warehouse_name}
+											</option>
+									  ))
+									: null}
+							</Select>
+						)}
+						<FormLabel>Select Product:</FormLabel>
 						<Select
-							placeholder="Select Destination Warehouse"
-							id="to_warehouse_id"
+							placeholder="All Product"
+							id="stock_id"
 							onChange={inputHandler}
 						>
-							{warehouse.length
-								? warehouse.map((val) => (
+							{stock.length
+								? stock.map((val) => (
 										<option key={val.id} value={val.id}>
-											{val.warehouse_name}
+											{val.product?.product_name}
 										</option>
 								  ))
 								: null}
 						</Select>
-
 						<Center flexDir={"column"} pt={"15px"}>
 							<FormLabel pl={"18px"}>Mutation Amount:</FormLabel>
 							<HStack w="100px">
