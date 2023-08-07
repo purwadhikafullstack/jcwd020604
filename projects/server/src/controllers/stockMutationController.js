@@ -249,22 +249,16 @@ const stockMutation = {
 		}
 	},
 	editMutation: async (req, res) => {
-		const { qty, stock_id, from_warehouse_id, to_warehouse_id } = req.body;
+		const { qty } = req.body;
 		const { id } = req.params;
 		const t = await db.sequelize.transaction();
 
 		const schema = Joi.object({
 			qty: Joi.number().min(0).required(),
-			// stock_id: Joi.number().required(),
-			// from_warehouse_id: Joi.number().required(),
-			// to_warehouse_id: Joi.number().required(),
 		});
 
 		const validation = schema.validate({
 			qty,
-			// stock_id,
-			// from_warehouse_id,
-			// to_warehouse_id,
 		});
 
 		if (validation.error) {
@@ -274,12 +268,30 @@ const stockMutation = {
 		}
 
 		try {
+			const existingMutation = await db.stock_mutations.findOne({
+				where: { id },
+			});
+
+			if (!existingMutation) {
+				return res.status(404).send({ message: "Stock mutation not found." });
+			}
+
+			const existingStock = await db.stocks.findOne({
+				where: {
+					id: existingMutation.stock_id,
+					warehouse_id: existingMutation.from_warehouse_id,
+				},
+			});
+
+			if (!existingStock || existingStock.qty < qty) {
+				return res
+					.status(404)
+					.send({ message: "Insufficient stock from selected warehouse." });
+			}
+
 			await db.stock_mutations.update(
 				{
 					qty,
-					// stock_id,
-					// from_warehouse_id,
-					// to_warehouse_id,
 				},
 				{
 					where: { id: id },
