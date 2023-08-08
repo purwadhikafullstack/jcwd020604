@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Box,
 	Flex,
@@ -33,6 +33,7 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
+
 import Logo2 from "../assets/logo2.png";
 
 export default function Navbar(props) {
@@ -43,6 +44,31 @@ export default function Navbar(props) {
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.auth);
 	const toast = useToast();
+
+	const [product, setProduct] = useState([]);
+
+	console.log(props.cart);
+
+	async function getcart() {
+		console.log(user.id);
+		const res = await api.get(`/cart/` + user.id);
+		setProduct(res.data);
+	}
+	console.log(product);
+
+	const totalCart = () => {
+		let total = 0;
+		product.forEach((val) => {
+			total += val.qty;
+		});
+		return total;
+	};
+
+	useEffect(() => {
+		getcart();
+	}, []);
+
+	const totalQty = totalCart();
 
 	function logout() {
 		localStorage.removeItem("auth");
@@ -73,11 +99,11 @@ export default function Navbar(props) {
 					<HStack spacing={8} alignItems={"center"}>
 						<Box>
 							<Image
-								src={colorMode === "light" ? (Logo) : (Logo2)}
+								src={colorMode === "light" ? Logo : Logo2}
 								minW={"50px"}
 								w={"20px"}
 								cursor={"pointer"}
-								onClick={() => navigate('/')}
+								onClick={() => navigate("/")}
 							></Image>
 						</Box>
 						<HStack
@@ -137,8 +163,21 @@ export default function Navbar(props) {
 							alignSelf={"flex-end"}
 							onClick={toggleColorMode}
 						></IconButton>
-						<Box m={2} pr={4} cursor={"pointer"}>
-							<FiShoppingCart />
+						<Link to={"/cart"}>
+							<Box m={2} pr={4} cursor={"pointer"}>
+								<FiShoppingCart />
+							</Box>
+						</Link>
+						<Box
+							ml={"-5"}
+							mr={"20px"}
+							border={"solid yellow 1px"}
+							borderRadius={"50px"}
+							fontWeight={"bold"}
+							bgColor={"yellow"}
+							display={totalQty == 0 ? "none" : "box"}
+						>
+							{totalQty}
 						</Box>
 						<Menu>
 							{props?.users?.fullname ? (

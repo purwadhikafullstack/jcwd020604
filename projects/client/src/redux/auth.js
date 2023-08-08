@@ -16,7 +16,8 @@ function userReducer(state = init, action) {
 			avatar_url: action.payload.avatar_url,
 			verified: action.payload.verified,
 			warehouse_id: action.payload.warehouse_id,
-			address: action.payload.address
+			address: action.payload.address,
+			cart: action.payload.cart,
 			// password: action.payload.password,
 		};
 	} else if (action.type === "logout") {

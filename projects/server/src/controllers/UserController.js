@@ -20,7 +20,7 @@ const userController = {
 				message: err.message,
 			});
 		}
-	}, 
+	},
 
 	getUsersById: async (req, res) => {
 		try {
@@ -92,7 +92,7 @@ const userController = {
 	editUser: async (req, res) => {
 		try {
 			const { fullname, email, password, verified, role } = req.body;
-			
+
 			await db.users.update(
 				{
 					fullname,
