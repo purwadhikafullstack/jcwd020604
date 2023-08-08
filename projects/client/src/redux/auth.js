@@ -14,9 +14,10 @@ function userReducer(state = init, action) {
       role: action.payload.role,
       avatar_url: action.payload.avatar_url,
       // password: action.payload.password,
+      cart: action.payload.cart,
     };
   } else if (action.type === "logout") {
-    console.log('tess');
+    console.log("tess");
     return init;
   }
 

@@ -6,32 +6,32 @@ const mailer = require("../lib/mailer");
 const fs = require("fs").promises;
 const handlebars = require("handlebars");
 const { where } = require("sequelize");
-const Joi = require('joi');
+const Joi = require("joi");
 
 const userController = {
   getAll: async (req, res) => {
-		try {
-			const user = await db.users.findAll();
-			return res.send(user);
-		} catch (err) {
-			console.log(err.message);
-			res.status(500).send({
-				message: err.message,
-			});
-		}
-	},
-
-  getUsersById: async(req, res) => {
     try {
-        const response = await db.users.findOne({
-          include: [{model: db.addresses}],
-            where:{
-                id: req.params.id
-            }
-        });
-        res.status(200).json(response);
+      const user = await db.users.findAll();
+      return res.send(user);
+    } catch (err) {
+      console.log(err.message);
+      res.status(500).send({
+        message: err.message,
+      });
+    }
+  },
+
+  getUsersById: async (req, res) => {
+    try {
+      const response = await db.users.findOne({
+        include: [{ model: db.addresses }],
+        where: {
+          id: req.params.id,
+        },
+      });
+      res.status(200).json(response);
     } catch (error) {
-        console.log(error.message);
+      console.log(error.message);
     }
   },
 
@@ -50,23 +50,23 @@ const userController = {
       });
     }
   },
-  
+
   createUser: async (req, res) => {
     const userSchema = Joi.object({
       fullname: Joi.string().required(),
       email: Joi.string().email().required(),
       password: Joi.string().min(6).required(),
       verified: Joi.boolean().required(),
-      role: Joi.string().valid('W_ADMIN', 'USER').required(),
+      role: Joi.string().valid("W_ADMIN", "USER").required(),
     });
     const { error, value } = userSchema.validate(req.body);
     if (error) {
-        return res.status(400).send({ message: error.details[0].message });
+      return res.status(400).send({ message: error.details[0].message });
     }
     try {
       const { fullname, email, password, role } = value;
       const hashPassword = await bcrypt.hash(password, 10);
-  
+
       await db.users.create({
         fullname,
         email,
@@ -74,7 +74,7 @@ const userController = {
         verified: 1,
         role,
       });
-  
+
       res.status(201).json({ msg: "User has been created" });
     } catch (err) {
       console.log(err.message);
@@ -101,7 +101,7 @@ const userController = {
           },
         }
       );
-      res.status(200).json({msg:"User has been updated"});
+      res.status(200).json({ msg: "User has been updated" });
     } catch (err) {
       console.log(err.message);
       res.status(500).send({
@@ -118,7 +118,7 @@ const userController = {
           fullname,
           avatar_url,
           verified: 1,
-          address
+          address,
         },
         {
           where: {
@@ -126,7 +126,7 @@ const userController = {
           },
         }
       );
-      res.status(200).json({msg:"User has been updated"});
+      res.status(200).json({ msg: "User has been updated" });
     } catch (err) {
       console.log(err.message);
       res.status(500).send({
@@ -135,16 +135,16 @@ const userController = {
     }
   },
 
-  deleteUser: async(req, res) => {
+  deleteUser: async (req, res) => {
     try {
-        await db.users.destroy({
-            where:{
-                id: req.params.id
-            }
-        });
-        res.status(200).json({msg:"User has been deleted"});
+      await db.users.destroy({
+        where: {
+          id: req.params.id,
+        },
+      });
+      res.status(200).json({ msg: "User has been deleted" });
     } catch (error) {
-        console.log(error.message);
+      console.log(error.message);
     }
   },
 
@@ -161,11 +161,11 @@ const userController = {
         });
         const generateToken = nanoid();
         const token = await db.tokens.create({
-         expired: moment().add(1, "days").format(),
-         token: generateToken,
-         userId: JSON.stringify({ id: createAccount.dataValues.id }),
-         status: "VERIFY",
-       });
+          expired: moment().add(1, "days").format(),
+          token: generateToken,
+          userId: JSON.stringify({ id: createAccount.dataValues.id }),
+          status: "VERIFY",
+        });
         const template = await fs.readFile(
           "./src/template/register.html",
           "utf-8"
@@ -230,7 +230,7 @@ const userController = {
       }
 
       const match = await bcrypt.compare(password, user.dataValues.password);
-      
+
       if (!match) {
         throw new Error("Wrong password");
       }
@@ -238,7 +238,7 @@ const userController = {
       const userId = { id: user.dataValues.id };
       console.log(userId);
       console.log(user);
-      
+
       let token = await db.tokens.findOne({
         where: {
           userId: JSON.stringify(userId),
@@ -258,17 +258,19 @@ const userController = {
           userId: JSON.stringify(userId),
           status: "LOGIN",
         });
-      }else{
-        
-        const token = await db.tokens.update({
-        expired: moment().add(1, "days").format(),
-        token: generateToken,
-       }, {
-        where: {
-          userId: JSON.stringify(userId),
-          status: "LOGIN",
-        }
-       });
+      } else {
+        const token = await db.tokens.update(
+          {
+            expired: moment().add(1, "days").format(),
+            token: generateToken,
+          },
+          {
+            where: {
+              userId: JSON.stringify(userId),
+              status: "LOGIN",
+            },
+          }
+        );
       }
       console.log(token);
       return res.status(200).send({
@@ -290,7 +292,7 @@ const userController = {
       let p = await db.tokens.findOne({
         where: {
           [db.Sequelize.Op.and]: [
-            {token},
+            { token },
             {
               expired: {
                 [db.Sequelize.Op.gt]: moment("00:00:00", "hh:mm:ss").format(),
@@ -300,7 +302,7 @@ const userController = {
             {
               valid: true,
             },
-          ], 
+          ],
         },
       });
       console.log(p?.dataValues);
@@ -328,15 +330,18 @@ const userController = {
   insertImage: async (req, res) => {
     const t = await db.sequelize.transaction();
     try {
-        const {filename} = req.file;
-        // Check if the product_name already exists
-        await db.users.update({avatar_url: process.env.user_img + filename}, { where: {id: req.params.id}, transaction: t });
-        await t.commit();
-        res.send({message: "Upload berhasil"});
+      const { filename } = req.file;
+      // Check if the product_name already exists
+      await db.users.update(
+        { avatar_url: process.env.user_img + filename },
+        { where: { id: req.params.id }, transaction: t }
+      );
+      await t.commit();
+      res.send({ message: "Upload berhasil" });
     } catch (err) {
-        await t.rollback();
-        return res.status(500).send({ message: err.message });
+      await t.rollback();
+      return res.status(500).send({ message: err.message });
     }
-},
+  },
 };
 module.exports = userController;

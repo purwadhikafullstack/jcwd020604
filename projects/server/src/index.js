@@ -30,6 +30,7 @@ app.use(express.json());
 
 app.use("/api/product", router.productRouter);
 app.use("/api/category", router.categoryRouter);
+app.use("/api/cart", router.cartRouter);
 app.use("/api/stock", router.stockRouter);
 app.use("/api/warehouse", router.warehouseRouter);
 app.use("/api/productImg", express.static(`${__dirname}/public/productImg`));
@@ -38,34 +39,34 @@ app.use("/api/address", router.addressRouter);
 app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
 
 app.get("/api", (req, res) => {
-	res.send(`Hello, this is my API`);
+  res.send(`Hello, this is my API`);
 });
 
 app.get("/api/greetings", (req, res, next) => {
-	res.status(200).json({
-		message: "Hello, Student !",
-	});
+  res.status(200).json({
+    message: "Hello, Student !",
+  });
 });
 
 // ===========================
 
 // not found
 app.use((req, res, next) => {
-	if (req.path.includes("/api/")) {
-		res.status(404).send("Not found !");
-	} else {
-		next();
-	}
+  if (req.path.includes("/api/")) {
+    res.status(404).send("Not found !");
+  } else {
+    next();
+  }
 });
 
 // error
 app.use((err, req, res, next) => {
-	if (req.path.includes("/api/")) {
-		console.error("Error : ", err.stack);
-		res.status(500).send("Error !");
-	} else {
-		next();
-	}
+  if (req.path.includes("/api/")) {
+    console.error("Error : ", err.stack);
+    res.status(500).send("Error !");
+  } else {
+    next();
+  }
 });
 
 //#endregion
@@ -76,15 +77,15 @@ app.use(express.static(join(__dirname, clientPath)));
 
 // Serve the HTML page
 app.get("*", (req, res) => {
-	res.sendFile(join(__dirname, clientPath, "index.html"));
+  res.sendFile(join(__dirname, clientPath, "index.html"));
 });
 
 //#endregion
 
 app.listen(PORT, (err) => {
-	if (err) {
-		console.log(`ERROR: ${err}`);
-	} else {
-		console.log(`APP RUNNING at ${PORT} ✅`);
-	}
+  if (err) {
+    console.log(`ERROR: ${err}`);
+  } else {
+    console.log(`APP RUNNING at ${PORT} ✅`);
+  }
 });

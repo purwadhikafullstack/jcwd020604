@@ -11,37 +11,37 @@ const db = {};
 
 let sequelize;
 if (config.use_env_variable) {
-	sequelize = new Sequelize(process.env[config.use_env_variable], config);
+  sequelize = new Sequelize(process.env[config.use_env_variable], config);
 } else {
-	sequelize = new Sequelize(
-		config.database,
-		config.username,
-		config.password,
-		config
-	);
+  sequelize = new Sequelize(
+    config.database,
+    config.username,
+    config.password,
+    config
+  );
 }
 
 fs.readdirSync(__dirname)
-	.filter((file) => {
-		return (
-			file.indexOf(".") !== 0 &&
-			file !== basename &&
-			file.slice(-3) === ".js" &&
-			file.indexOf(".test.js") === -1
-		);
-	})
-	.forEach((file) => {
-		const model = require(path.join(__dirname, file))(
-			sequelize,
-			Sequelize.DataTypes
-		);
-		db[model.name] = model;
-	});
+  .filter((file) => {
+    return (
+      file.indexOf(".") !== 0 &&
+      file !== basename &&
+      file.slice(-3) === ".js" &&
+      file.indexOf(".test.js") === -1
+    );
+  })
+  .forEach((file) => {
+    const model = require(path.join(__dirname, file))(
+      sequelize,
+      Sequelize.DataTypes
+    );
+    db[model.name] = model;
+  });
 
 Object.keys(db).forEach((modelName) => {
-	if (db[modelName].associate) {
-		db[modelName].associate(db);
-	}
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
 });
 
 db.sequelize = sequelize;
@@ -65,6 +65,12 @@ db.warehouses = require("./warehouse")(sequelize, Sequelize); // id: product
 db.users.hasMany(db.addresses, { foreignKey: "user_id", targetKey: "id" });
 db.addresses.belongsTo(db.users, { foreignKey: "user_id" });
 
+db.products.hasMany(db.carts, { foreignKey: "product_id" });
+db.carts.belongsTo(db.products, { foreignKey: "product_id" });
+
+db.users.hasMany(db.carts, { foreignKey: "user_id" });
+db.carts.belongsTo(db.users, { foreignKey: "user_id" });
+
 // // db.carts foreignKey
 // db.stocks.hasMany(db.carts, { foreignKey: "stock_id", targetKey: "id" });
 
@@ -78,40 +84,40 @@ db.addresses.belongsTo(db.users, { foreignKey: "user_id" });
 
 // db.products foreignKey
 db.categories.hasMany(db.products, {
-	foreignKey: "category_id",
-	targetKey: "id",
+  foreignKey: "category_id",
+  targetKey: "id",
 });
 
 db.products.belongsTo(db.categories, {
-	foreignKey: "category_id",
+  foreignKey: "category_id",
 });
 
 // db.product_images foreignKey
 db.products.hasMany(db.product_images, {
-	foreignKey: "product_id",
-	targetKey: "id",
+  foreignKey: "product_id",
+  targetKey: "id",
 });
 
 db.product_images.belongsTo(db.products, {
-	foreignKey: "product_id",
+  foreignKey: "product_id",
 });
 
 // db.stocks foreignKey
 db.products.hasMany(db.stocks, {
-	foreignKey: "product_id",
-	targetKey: "id",
+  foreignKey: "product_id",
+  targetKey: "id",
 });
 db.warehouses.hasMany(db.stocks, {
-	foreignKey: "warehouse_id",
-	targetKey: "id",
+  foreignKey: "warehouse_id",
+  targetKey: "id",
 });
 
 db.stocks.belongsTo(db.products, {
-	foreignKey: "product_id",
+  foreignKey: "product_id",
 });
 
 db.stocks.belongsTo(db.warehouses, {
-	foreignKey: "warehouse_id",
+  foreignKey: "warehouse_id",
 });
 
 module.exports = db;

@@ -8,15 +8,15 @@ router.get("/getAllProduct/getAll", productController.getAllProduct);
 // router.get("/id/:id", productController.getProductById);
 router.get("/:uuid", productController.getProductByUuid);
 router.post(
-	"/",
-	fileUploader({ destinationFolder: "productImg" }).array("productImg", 5),
-	productController.insert
+  "/",
+  fileUploader({ destinationFolder: "productImg" }).array("productImg", 5),
+  productController.insert
 );
 router.delete("/:id", productController.deleteProduct);
 router.patch(
-	"/:id",
-	fileUploader({ destinationFolder: "productImg" }).array("productImg", 5),
-	productController.editProduct
+  "/:id",
+  fileUploader({ destinationFolder: "productImg" }).array("productImg", 5),
+  productController.editProduct
 );
 
 module.exports = router;
