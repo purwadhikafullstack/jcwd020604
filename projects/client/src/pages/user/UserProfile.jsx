@@ -20,15 +20,8 @@ import {
   Stack,
   useDisclosure,
   useToast,
-  Tabs,
-  TabList,
-  Tab,
-  TabPanels,
-  TabPanel,
   Grid,
   GridItem,
-  Spacer,
-  Badge
 } from '@chakra-ui/react';
 import {
   MdFacebook,
@@ -36,7 +29,7 @@ import {
 } from 'react-icons/md';
 import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { api } from '../../api/api';
 import Navbar from '../../components/Navbar';
@@ -44,6 +37,7 @@ import Loading from '../../components/Loading';
 import EditAddressUser from './EditAddressUser';
 import AddressUser from './AddressUser';
 import DeleteAddress from './DeleteAddress';
+import Footer from '../../components/Footer';
 
 export default function UserProfile() {
   const user = useSelector((state) => state.auth);
@@ -104,7 +98,7 @@ export default function UserProfile() {
 
   const fetchData = async() => {
     try {
-      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, users);
+      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -116,7 +110,6 @@ export default function UserProfile() {
           });
       }
   }
-console.log(users);
       
   const getAddressByUser = async () => {
     try {
@@ -201,7 +194,7 @@ const handleInputChange = (e) => {
                   <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }} justify={{base: 'center'}}>
                     <Flex display={'flex'} justifyContent={{base: 'center', md: 'center', sm: 'center'}}> 
                       <Box h={"100%"} display={'flex'} justifyContent={{base: 'center', md: 'center', sm: 'center'}}>
-                      <VStack pl={0} spacing={2} alignItems={"flex-start"}>
+                          <VStack pl={0} spacing={2} alignItems={"flex-start"}>
                                  <Box bg="white" w={'300px'} borderRadius="lg" alignItems={{base:"flex-start", md: "center", sm: "center"}}>
                                      <Box m={0} color="#0B0E3F">
                                      <VStack spacing={2} maxW={'300px'}
@@ -392,6 +385,7 @@ const handleInputChange = (e) => {
         <EditAddressUser addressId={addressId} setAddressId={setAddressId} isOpen={editAddressUser.isOpen} onClose={editAddressUser.onClose} getAddressByUser={getAddressByUser} />
         <AddressUser isOpen={addressUser.isOpen} onClose={addressUser.onClose} getAddressByUser={getAddressByUser}/>
         <DeleteAddress addressId={addressId} setAddressId={setAddressId} isOpen={deleteAddress.isOpen} onClose={deleteAddress.onClose} getAddressByUser={getAddressByUser}/>
+        <Footer/>
       </>
     );
   }
