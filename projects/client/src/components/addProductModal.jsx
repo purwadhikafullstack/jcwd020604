@@ -22,7 +22,7 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function AddCategoryModal({ isOpen, onClose }) {
+export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 	const [category, setCategory] = useState([]);
 	const [selectedImages, setSelectedImages] = useState([]);
 	const [selectedFiles, setSelectedFiles] = useState([]);
@@ -71,15 +71,18 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 						title: `Add Product Success`,
 						description: "The product has been added successfully.",
 						status: "success",
+						position: "top",
 						duration: 3000,
 					});
+					getProduct();
 					onClose();
-					nav("/admin/managedata");
+					nav("/admin/product");
 				}
 			} catch (error) {
 				toast({
 					title: error.response.data.message,
 					status: "error",
+					position: "top",
 					duration: 3000,
 				});
 			}
@@ -136,20 +139,6 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 							id="product_detail"
 							onChange={inputHandler}
 						/>
-						<FormLabel>Price:</FormLabel>
-						<Input
-							type="number"
-							placeholder="e.g. 500000"
-							id="price"
-							onChange={inputHandler}
-						/>
-						<FormLabel>Weight:</FormLabel>
-						<Input
-							type="number"
-							placeholder="e.g. 100 "
-							id="weight"
-							onChange={inputHandler}
-						/>
 						<FormLabel> Product Category:</FormLabel>
 						<Select
 							placeholder="Choose category"
@@ -164,6 +153,20 @@ export default function AddCategoryModal({ isOpen, onClose }) {
 								  ))
 								: null}
 						</Select>
+						<FormLabel>Price (Rp):</FormLabel>
+						<Input
+							type="number"
+							placeholder="e.g. 500000"
+							id="price"
+							onChange={inputHandler}
+						/>
+						<FormLabel>Weight (g):</FormLabel>
+						<Input
+							type="number"
+							placeholder="e.g. 100 "
+							id="weight"
+							onChange={inputHandler}
+						/>
 						<FormLabel>Product Images:</FormLabel>
 						<Input
 							accept="image/png, image/jpeg"

@@ -49,6 +49,7 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 				title: "Warehouse Deleted",
 				description: "The warehouse has been deleted successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
 			getWarehouse();
@@ -58,6 +59,7 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

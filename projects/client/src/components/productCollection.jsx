@@ -132,8 +132,9 @@ export default function ProductCollection() {
 						fontWeight={"bold"}
 						cursor={"pointer"}
 						style={{
-							backgroundColor: selectedCategory === "" ? "yellow" : "white",
+							backgroundColor: selectedCategory === "" ? "yellow" : "",
 							border: selectedCategory === "" ? "1px solid white" : "1px solid",
+							color: selectedCategory === "" ? "black" : ""
 						}}
 						borderRadius={"5px"}
 						onClick={() => handleCategoryChange("")}
@@ -152,11 +153,12 @@ export default function ProductCollection() {
 										cursor={"pointer"}
 										style={{
 											backgroundColor:
-												selectedCategory === val.id ? "yellow" : "white",
+												selectedCategory === val.id ? "yellow" : "",
 											border:
 												selectedCategory === val.id
 													? "1px solid white"
 													: "1px solid",
+											color: selectedCategory === val.id ? "black" : ""
 										}}
 										borderRadius={"5px"}
 										onClick={() => {
@@ -217,7 +219,9 @@ export default function ProductCollection() {
 										{loading ? (
 											<Loader />
 										) : (
+										<>
 											<ProductCard val={val} borderRadius={"15px"} />
+										</>	
 										)}
 									</Suspense>
 								</Link>
@@ -239,7 +243,7 @@ export default function ProductCollection() {
 						{page === 1 ? (
 							<Button
 								isDisabled
-								bgColor={"white"}
+								// bgColor={"white"}
 								w={"117px"}
 								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
 							>
@@ -247,7 +251,7 @@ export default function ProductCollection() {
 							</Button>
 						) : (
 							<Button
-								bgColor={"white"}
+								// bgColor={"white"}
 								w={"117px"}
 								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
 								onClick={() => {
@@ -261,7 +265,7 @@ export default function ProductCollection() {
 						{page === totalPage ? (
 							<Button
 								isDisabled
-								bgColor={"white"}
+								// bgColor={"white"}
 								w={"117px"}
 								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
 							>
@@ -269,7 +273,7 @@ export default function ProductCollection() {
 							</Button>
 						) : (
 							<Button
-								bgColor={"white"}
+								// bgColor={"white"}
 								w={"117px"}
 								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
 								onClick={() => {

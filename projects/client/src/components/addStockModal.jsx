@@ -21,13 +21,14 @@ import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
 
-export default function AddStockModal({ isOpen, onClose }) {
+export default function AddStockModal({ isOpen, onClose, getStock }) {
+	const user = useSelector((state) => state.auth);
 	const toast = useToast();
 	const nav = useNavigate();
 	const [product, setProduct] = useState([]);
 	const [warehouse, setWarehouse] = useState([]);
-	console.log(product);
 
 	useEffect(() => {
 		getWarehouse();
@@ -37,7 +38,8 @@ export default function AddStockModal({ isOpen, onClose }) {
 	const formik = useFormik({
 		initialValues: {
 			qty: "",
-			warehouse_id: "",
+			warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
+
 			product_id: "",
 		},
 		validationSchema: Yup.object().shape({
@@ -54,8 +56,10 @@ export default function AddStockModal({ isOpen, onClose }) {
 						title: `Add Stock Success`,
 						description: "The stock has been added successfully.",
 						status: "success",
+						position: "top",
 						duration: 3000,
 					});
+					getStock();
 					onClose();
 					nav("/admin/managedata");
 				}
@@ -63,6 +67,7 @@ export default function AddStockModal({ isOpen, onClose }) {
 				toast({
 					title: error.response.data.message,
 					status: "error",
+					position: "top",
 					duration: 3000,
 				});
 			}
@@ -100,19 +105,36 @@ export default function AddStockModal({ isOpen, onClose }) {
 				<ModalBody pb={6}>
 					<FormControl w={"100%"}>
 						<FormLabel>Select Warehouse:</FormLabel>
-						<Select
-							placeholder="All Warehouses"
-							id="warehouse_id"
-							onChange={inputHandler}
-						>
-							{warehouse.length
-								? warehouse.map((val) => (
-										<option key={val.id} value={val.id}>
-											{val.warehouse_name}
-										</option>
-								  ))
-								: null}
-						</Select>
+						{user.role === "ADMIN" ? (
+							<Select
+								placeholder="All Warehouses"
+								id="warehouse_id"
+								onChange={inputHandler}
+							>
+								{warehouse.length
+									? warehouse.map((val) => (
+											<option key={val.id} value={val.id}>
+												{val.warehouse_name}
+											</option>
+									  ))
+									: null}
+							</Select>
+						) : (
+							<Select
+								placeholder="All Warehouses"
+								id="warehouse_id"
+								defaultValue={user.warehouse_id}
+								isDisabled
+							>
+								{warehouse.length
+									? warehouse.map((val) => (
+											<option key={val.id} value={val.id}>
+												{val.warehouse_name}
+											</option>
+									  ))
+									: null}
+							</Select>
+						)}
 						<FormLabel>Select Product:</FormLabel>
 						<Select
 							placeholder="All Product"

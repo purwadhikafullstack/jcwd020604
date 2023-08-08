@@ -12,7 +12,6 @@ export default function AuthProvider({ children }) {
   async function fetch() {
     try {
       const token = JSON.parse(localStorage.getItem("auth"));
-      console.log(token);
       const user = await axios
         .get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
           headers: {

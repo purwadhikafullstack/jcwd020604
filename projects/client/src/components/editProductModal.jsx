@@ -22,8 +22,9 @@ import { useState, useEffect } from "react";
 import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import { useSelector } from "react-redux";
 
-export default function EditProductModal({ isOpen, onClose, val }) {
+export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 	const [selectedImages, setSelectedImages] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [selectedFiles, setSelectedFiles] = useState([]);
@@ -31,6 +32,7 @@ export default function EditProductModal({ isOpen, onClose, val }) {
 	const imagesProduct = val.product_images;
 	const toast = useToast();
 	const nav = useNavigate();
+	const user = useSelector((state) => state.auth);
 
 	useEffect(() => {
 		getCategory();
@@ -53,14 +55,17 @@ export default function EditProductModal({ isOpen, onClose, val }) {
 			toast({
 				title: "Product updated successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
+			getProduct();
 			nav("/admin/product");
 			onClose();
 		} catch (error) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}
@@ -106,7 +111,11 @@ export default function EditProductModal({ isOpen, onClose, val }) {
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Edit Product</ModalHeader>
+				{user.role === "ADMIN" ? (
+					<ModalHeader>Edit Product</ModalHeader>
+				) : (
+					<ModalHeader>Detail Product</ModalHeader>
+				)}
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
@@ -124,22 +133,6 @@ export default function EditProductModal({ isOpen, onClose, val }) {
 							defaultValue={val.product_detail}
 							onChange={inputHandler}
 						/>
-						<FormLabel>Price:</FormLabel>
-						<Input
-							type="number"
-							placeholder="e.g. 500000"
-							id="price"
-							defaultValue={val.price}
-							onChange={inputHandler}
-						/>
-						<FormLabel>Weight:</FormLabel>
-						<Input
-							type="number"
-							placeholder="e.g. 100 "
-							id="weight"
-							defaultValue={val.weight}
-							onChange={inputHandler}
-						/>
 						<FormLabel> Product Category:</FormLabel>
 						<Select
 							placeholder="Choose category"
@@ -155,6 +148,22 @@ export default function EditProductModal({ isOpen, onClose, val }) {
 								  ))
 								: null}
 						</Select>
+						<FormLabel>Price (Rp):</FormLabel>
+						<Input
+							type="number"
+							placeholder="e.g. 500000"
+							id="price"
+							defaultValue={val.price}
+							onChange={inputHandler}
+						/>
+						<FormLabel>Weight (g):</FormLabel>
+						<Input
+							type="number"
+							placeholder="e.g. 100 "
+							id="weight"
+							defaultValue={val.weight}
+							onChange={inputHandler}
+						/>
 						<FormLabel>Product Images:</FormLabel>
 						{imagesProduct.length ? (
 							<Flex
@@ -174,15 +183,19 @@ export default function EditProductModal({ isOpen, onClose, val }) {
 								))}
 							</Flex>
 						) : null}
-						<FormLabel>Change Product Images:</FormLabel>
-						<Input
-							accept="image/png, image/jpeg"
-							type="file"
-							id="product_images"
-							paddingTop={"4px"}
-							multiple
-							onChange={handleImageChange}
-						/>
+						{user.role === "ADMIN" ? (
+							<FormLabel>Change Product Images:</FormLabel>
+						) : null}
+						{user.role === "ADMIN" ? (
+							<Input
+								accept="image/png, image/jpeg"
+								type="file"
+								id="product_images"
+								paddingTop={"4px"}
+								multiple
+								onChange={handleImageChange}
+							/>
+						) : null}
 						{/* Preview the selected images */}
 						{selectedImages.length ? (
 							<Flex
@@ -207,9 +220,11 @@ export default function EditProductModal({ isOpen, onClose, val }) {
 					</FormControl>
 				</ModalBody>
 				<ModalFooter>
-					<Button colorScheme="blue" mr={3} onClick={editProduct}>
-						Save
-					</Button>
+					{user.role === "ADMIN" ? (
+						<Button colorScheme="blue" mr={3} onClick={editProduct}>
+							Save
+						</Button>
+					) : null}
 				</ModalFooter>
 			</ModalContent>
 		</Modal>

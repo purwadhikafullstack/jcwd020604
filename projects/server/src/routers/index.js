@@ -5,13 +5,17 @@ const warehouseRouter = require("./warehouseRouter");
 const userRouter = require("./UserRouter");
 const addressRouter = require("./AddressRouter");
 const cartRouter = require("./cartRouter");
+const stockHistoryRouter = require("./stockHistoryRouter");
+const stockMutationRouter = require("./stockMutationRouter");
 
 module.exports = {
-  productRouter,
-  categoryRouter,
-  stockRouter,
-  warehouseRouter,
-  userRouter,
-  addressRouter,
-  cartRouter,
+	productRouter,
+	categoryRouter,
+	stockRouter,
+	warehouseRouter,
+	userRouter,
+	addressRouter,
+	stockHistoryRouter,
+	stockMutationRouter,
+	cartRouter,
 };

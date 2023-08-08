@@ -16,14 +16,18 @@ import {
     FaLock,
   } from "react-icons/fa";
   import { AiOutlineEyeInvisible, AiOutlineEye } from "react-icons/ai";
-  import { api } from '../api/api';
+  import { api } from '../../api/api';
   import * as Yup from "yup";
-  import { useNavigate } from "react-router-dom";
+  import { useLocation, useNavigate } from "react-router-dom";
   import { useFormik } from "formik";
-  import React from "react";
+  import React, { useEffect, useState } from "react";
   
-  export default function Verify() {
+  export default function ConfirmResetPassword() {
+    const [user,setUser]=useState();
+    const [token,setToken]=useState();
+
     const queryParams = new URLSearchParams(window.location.search);
+    const location = useLocation();
     const email = queryParams.get("email");
     const toast = useToast({ position: "top" });
     const nav = useNavigate();
@@ -48,7 +52,18 @@ import {
         "Passwords must match"
       ),
     });
-  
+
+  async function fetchUser(data){
+    console.log(data)
+   const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
+    headers:{
+      Authorization:'Bearer '+ data,
+    }
+   });
+   await setUser(res.data);
+   console.log(res.data)
+  }
+
     const formik = useFormik({
       initialValues: {
         password: "",
@@ -56,6 +71,7 @@ import {
       },
       validationSchema: validationSchema,
       onSubmit: (values) => {
+        console.log(values)
         verif(values);
       },
     });
@@ -63,10 +79,16 @@ import {
     async function verif(values) {
       const { password } = values;
       try {
-        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify`, {
-          email,
-          password
-        });
+        console.log('asfkas')
+        console.log(token)
+
+        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify-password?token=`+token, {
+          password,
+        },
+          {headers:{
+            Authorization:'Bearer '+ token,
+          } }, 
+        );
         toast({
           title: "Verifikasi berhasil, sekarang anda bisa login",
           status: "success",
@@ -83,6 +105,12 @@ import {
         });
       }
     }
+
+    useEffect(() => {
+        const token2 = (location.pathname.split('/')[2]);
+        setToken(location.pathname.split('/')[2]);
+        fetchUser(token2);
+    },[]);
   
     return (
       <Box
@@ -132,6 +160,7 @@ import {
                   </Button>
                 </InputRightElement>
               </InputGroup>
+              <Box fontSize={'14px'} color={'red'}>{formik.errors.password}</Box>
               <Box h={"20px"}>
                 <FormErrorMessage fontSize={"2xs"}>
                   {formik.errors.password}
@@ -166,22 +195,24 @@ import {
                   >
                     {show1 ? (
                       <Icon as={AiOutlineEye} w={"100%"} h={"100%"}></Icon>
-                    ) : (
-                      <Icon
+                      ) : (
+                        <Icon
                         as={AiOutlineEyeInvisible}
                         w={"100%"}
                         h={"100%"}
-                      ></Icon>
-                    )}
+                        ></Icon>
+                        )}
                   </Button>
                 </InputRightElement>
               </InputGroup>
+              <Box fontSize={'14px'} color={'red'}>{formik.errors.confirmPassword9}</Box>
               <Box h={"20px"}>
                 <FormErrorMessage fontSize={"2xs"}>
                   {formik.errors.confirmPassword}
                 </FormErrorMessage>
               </Box>
             </FormControl>
+            
             <Button
               mt={"10px"}
               w={"100%"}

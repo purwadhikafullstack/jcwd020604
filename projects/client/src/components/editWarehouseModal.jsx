@@ -44,6 +44,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 			toast({
 				title: "Warehouse updated successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 				isClosable: true,
 			});
@@ -55,6 +56,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}

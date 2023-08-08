@@ -15,12 +15,14 @@ import { useNavigate } from "react-router-dom";
 
 import { api } from "../api/api";
 import EditProductModal from "./editProductModal";
+import { useSelector } from "react-redux";
 
-export default function ProductList({ val }) {
+export default function ProductList({ val, getProduct }) {
 	const deleteProductModal = useDisclosure();
 	const editProductModal = useDisclosure();
 	const toast = useToast();
 	const nav = useNavigate();
+	const user = useSelector((state) => state.auth);
 
 	async function deleteProduct() {
 		try {
@@ -30,14 +32,17 @@ export default function ProductList({ val }) {
 				title: "Product Deleted",
 				description: "The product has been deleted successfully.",
 				status: "success",
+				position: "top",
 				duration: 3000,
 			});
+			getProduct();
 			deleteProductModal.onClose();
 			nav("/admin/product");
 		} catch (error) {
 			toast({
 				title: error.response.data.message,
 				status: "error",
+				position: "top",
 				duration: 3000,
 			});
 		}
@@ -75,7 +80,13 @@ export default function ProductList({ val }) {
 					: val.product_detail}
 				{/* {val.product_detail} */}
 			</Flex>
-			<Flex w={"160px"}>{val.category.category_name}</Flex>
+			<Flex w={"160px"}>
+				{val.category == null ? (
+					<Flex>Category not found</Flex>
+				) : (
+					val.category.category_name
+				)}
+			</Flex>
 			<Flex w={"160px"}>
 				<Flex>
 					{val.price
@@ -89,18 +100,25 @@ export default function ProductList({ val }) {
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
 				<MenuList>
-					<MenuItem onClick={editProductModal.onOpen}>
-						View / Edit Product
-					</MenuItem>
-					<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
-						Remove
-					</MenuItem>
+					{user.role === "ADMIN" ? (
+						<MenuItem onClick={editProductModal.onOpen}>
+							View / Edit Product
+						</MenuItem>
+					) : (
+						<MenuItem onClick={editProductModal.onOpen}>View Detail</MenuItem>
+					)}
+					{user.role === "ADMIN" ? (
+						<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
+							Remove
+						</MenuItem>
+					) : null}
 				</MenuList>
 			</Menu>
 			<EditProductModal
 				isOpen={editProductModal.isOpen}
 				onClose={editProductModal.onClose}
 				val={val}
+				getProduct={getProduct}
 			/>
 			<DeleteProductModal
 				isOpen={deleteProductModal.isOpen}

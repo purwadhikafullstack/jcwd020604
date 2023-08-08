@@ -9,13 +9,17 @@ import {
     Tag,
     useColorModeValue,
     Image,
+    useColorMode,
   } from '@chakra-ui/react';
   import logo from "../assets/Logo.png";
+  import logo2 from "../assets/logo2.png";
   
   const Logo = () => {
+	const { colorMode, toggleColorMode } = useColorMode();
+
     return (
             <Image 
-                src={logo} 
+                src={colorMode === "light" ? (logo) : (logo2)} 
                 minW={'50px'}
                 w={'20px'}
                 cursor={'pointer'}>
