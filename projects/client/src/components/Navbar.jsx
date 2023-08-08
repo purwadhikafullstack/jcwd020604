@@ -141,10 +141,10 @@ export default function Navbar(props) {
 							<FiShoppingCart />
 						</Box>
 						<Menu>
-							{props.users.fullname ? (
+							{props?.users?.fullname ? (
 								<>
 									<Text fontSize={"12px"} mr={2}>
-										Welcome <Text as={"b"}>{props.users.fullname}</Text>
+										Welcome <Text as={"b"}>{props?.users?.fullname}</Text>
 									</Text>
 									<MenuButton
 										as={Button}
@@ -153,7 +153,7 @@ export default function Navbar(props) {
 										cursor={"pointer"}
 										minW={0}
 									>
-										<Avatar size={"sm"} src={props.users.avatar_url} />
+										<Avatar size={"sm"} src={props?.users?.avatar_url} />
 									</MenuButton>
 									<MenuList>
 										{user.role === "ADMIN" ? (
