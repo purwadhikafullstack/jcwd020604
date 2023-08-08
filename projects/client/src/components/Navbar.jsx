@@ -33,9 +33,8 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
-import { api } from "../api/api";
-
 import Logo2 from "../assets/logo2.png";
+import { api } from "../api/api";
 
 export default function Navbar(props) {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -100,7 +99,7 @@ export default function Navbar(props) {
 					<HStack spacing={8} alignItems={"center"}>
 						<Box>
 							<Image
-								src={colorMode === "light" ? Logo : Logo2}
+								src={colorMode === "light" ? (Logo) : (Logo2)}
 								minW={"50px"}
 								w={"20px"}
 								cursor={"pointer"}

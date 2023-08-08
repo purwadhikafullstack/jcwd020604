@@ -130,8 +130,8 @@ const routes = [
 	></Route>,
 
 	// Maulana
-	<Route path="/cart" element={<Cart />}></Route>,
-	<Route path="/checkout" element={<Checkout />}></Route>,
+	<Route path="/cart" element={<ProtectedPages needLogin={true}><Cart /></ProtectedPages>}></Route>,
+	<Route path="/checkout" element={<ProtectedPages needLogin={true}><Checkout /></ProtectedPages>}></Route>,
 ];
 
 export default routes;

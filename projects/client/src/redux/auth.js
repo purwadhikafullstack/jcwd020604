@@ -12,6 +12,7 @@ function userReducer(state = init, action) {
 			uuid: action.payload.uuid,
 			fullname: action.payload.fullname,
 			email: action.payload.email,
+			phone_number: action.payload.phone_number,
 			role: action.payload.role,
 			avatar_url: action.payload.avatar_url,
 			verified: action.payload.verified,

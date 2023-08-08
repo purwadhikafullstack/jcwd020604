@@ -25,7 +25,7 @@ const userController = {
 	getUsersById: async (req, res) => {
 		try {
 			const response = await db.users.findOne({
-				attributes: ["uuid", "fullname", "avatar_url", "warehouse_id", "role"],
+				attributes: ["uuid", "fullname", "email", "phone_number", "avatar_url", "warehouse_id", "role"],
 				include: [{ model: db.addresses }],
 				where: {
 					uuid: req.params.uuid,
@@ -43,7 +43,7 @@ const userController = {
 		try {
 			const { role } = req.params;
 			const response = await db.users.findAll({
-				attributes: ["uuid", "fullname", "email", "warehouse_id", "role"],
+				attributes: ["uuid", "fullname", "email", "phone_number", "warehouse_id", "role"],
 				where: {
 					role: role,
 				},
@@ -61,6 +61,7 @@ const userController = {
 		const userSchema = Joi.object({
 			fullname: Joi.string().required(),
 			email: Joi.string().email().required(),
+			phone_number: Joi.number().min(12).required(),
 			password: Joi.string().min(6).required(),
 			verified: Joi.boolean().required(),
 			role: Joi.string().valid("W_ADMIN", "USER").required(),
@@ -70,12 +71,13 @@ const userController = {
 			return res.status(400).send({ message: error.details[0].message });
 		}
 		try {
-			const { fullname, email, password, role } = value;
+			const { fullname, email, phone_number, password, role } = value;
 			const hashPassword = await bcrypt.hash(password, 10);
 
 			await db.users.create({
 				fullname,
 				email,
+				phone_number,
 				password: hashPassword,
 				verified: 1,
 				role,
@@ -91,12 +93,13 @@ const userController = {
 
 	editUser: async (req, res) => {
 		try {
-			const { fullname, email, password, verified, role } = req.body;
+			const { fullname, email, phone_number, password, verified, role } = req.body;
 
 			await db.users.update(
 				{
 					fullname,
 					email,
+					phone_number,
 					password,
 					verified,
 					role,
@@ -117,12 +120,11 @@ const userController = {
 
 	editUserV2: async (req, res) => {
 		try {
-			console.log(req.body);
-			console.log(req.params.uuid);
-			const { fullname } = req.body;
+			const { fullname, phone_number } = req.body;
 			await db.users.update(
 				{
 					fullname,
+					phone_number
 				},
 				{
 					where: {

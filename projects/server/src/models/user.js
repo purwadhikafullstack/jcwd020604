@@ -14,6 +14,12 @@ module.exports = (sequelize, Sequelize) => {
 				type: Sequelize.STRING,
 				unique: true,
 			},
+			phone_number: {
+				type: Sequelize.STRING,
+				validate: {
+					isNumeric: true,
+				}
+			},
 			password: Sequelize.STRING,
 			fullname: Sequelize.STRING,
 			avatar_url: Sequelize.STRING,

@@ -27,7 +27,7 @@ import {
   MdFacebook,
   MdOutlineEmail,
 } from 'react-icons/md';
-import { BsGithub, BsDiscord, BsPerson } from 'react-icons/bs';
+import { BsGithub, BsDiscord, BsPerson, BsPhone } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
@@ -51,6 +51,7 @@ export default function UserProfile() {
   const addressUser = useDisclosure();
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [fullname, setFullName] = useState(user.fullname);
+  const [phone_number, setPhone_Number] = useState(user.phone_number);
   const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState(user?.address?.address);
   const [changes, setChanges] = useState('');
@@ -191,12 +192,12 @@ const handleInputChange = (e) => {
                   Fill up the form below to update
                 </Text>
                 <Box p={4}>
-                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }} justify={{base: 'center'}}>
+                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 1 }} justify={{base: 'center'}}>
                     <Flex display={'flex'} justifyContent={{base: 'center', md: 'center', sm: 'center'}}> 
                       <Box h={"100%"} display={'flex'} justifyContent={{base: 'center', md: 'center', sm: 'center'}}>
                           <VStack pl={0} spacing={2} alignItems={"flex-start"}>
                                  <Box bg="white" w={'300px'} borderRadius="lg" alignItems={{base:"flex-start", md: "center", sm: "center"}}>
-                                     <Box m={0} color="#0B0E3F">
+                                     <Box m={0} color="#0B0E3F" >
                                      <VStack spacing={2} maxW={'300px'}
                                          w={'full'}
                                          bg={'whiteAlpha.200'}
@@ -301,15 +302,24 @@ const handleInputChange = (e) => {
                     </Flex>
                     <WrapItem>
                       <Box bg="white" h={"100%"} borderRadius="lg" boxShadow={"2xl"} overflow={"hidden"}>
-                        <Box m={8} color="#0B0E3F">
+                        <Box m={6} color="#0B0E3F">
                             <VStack spacing={5}>
-                            <FormControl id="name">
+                            <HStack>
+                              <FormControl id="name">
                                   <FormLabel>Your Name</FormLabel>
                                     <InputGroup borderColor="#E0E1E7">
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
-                                            <Input type="text" size="md" id="fullname" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
-                                        </InputGroup>
-                            </FormControl>
+                                        <Input type="text" size="md" id="fullname" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
+                                    </InputGroup>
+                              </FormControl>
+                              <FormControl id="phone_number">
+                                    <FormLabel>Phone</FormLabel>
+                                      <InputGroup borderColor="#E0E1E7">
+                                          <InputLeftElement pointerEvents="none" children={<BsPhone color="gray.800" />} />
+                                          <Input type="number" size="md" id="phone_number" value={phone_number} onChange={(val) => {handleInputChange(val); setPhone_Number(val.target.value)}}/>
+                                      </InputGroup>
+                              </FormControl>
+                         
                             <FormControl id="email">
                                      <FormLabel>Email</FormLabel>
                                      <InputGroup borderColor="#E0E1E7">
@@ -320,6 +330,7 @@ const handleInputChange = (e) => {
                                        <Input type="email" size="md" readOnly={true} value={email}/>
                                      </InputGroup>
                             </FormControl>
+                            </HStack>
                               <Box display={'flex'} alignSelf={'flex-start'}>
                                 <Button mr={4} colorScheme={"blue"} w={'70px'} size={"sm"} onClick={() => saveUser()}>
                                   Save
