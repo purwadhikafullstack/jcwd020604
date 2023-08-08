@@ -33,6 +33,7 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
+import { api } from "../api/api";
 
 import Logo2 from "../assets/logo2.png";
 
@@ -180,10 +181,10 @@ export default function Navbar(props) {
 							{totalQty}
 						</Box>
 						<Menu>
-							{props?.users?.fullname ? (
+							{user.fullname ? (
 								<>
 									<Text fontSize={"12px"} mr={2}>
-										Welcome <Text as={"b"}>{props?.users?.fullname}</Text>
+										Welcome <Text as={"b"}>{user.fullname}</Text>
 									</Text>
 									<MenuButton
 										as={Button}
@@ -192,7 +193,7 @@ export default function Navbar(props) {
 										cursor={"pointer"}
 										minW={0}
 									>
-										<Avatar size={"sm"} src={props?.users?.avatar_url} />
+										<Avatar size={"sm"} src={user.avatar_url} />
 									</MenuButton>
 									<MenuList>
 										{user.role === "ADMIN" ? (

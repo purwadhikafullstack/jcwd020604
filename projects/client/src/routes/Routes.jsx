@@ -24,8 +24,22 @@ import Restricted from "../pages/redirect/RestrictedPage";
 
 const routes = [
 	//Sandi
-	<Route path="/collection" element={<CollectionPage />}></Route>,
-	<Route path="/collection/:uuid" element={<DetailPage />}></Route>,
+	<Route
+		path="/collection"
+		element={
+			<ProtectedPages needLogin={true}>
+				<CollectionPage />
+			</ProtectedPages>
+		}
+	></Route>,
+	<Route
+		path="/collection/:uuid"
+		element={
+			<ProtectedPages needLogin={true}>
+				<DetailPage />
+			</ProtectedPages>
+		}
+	></Route>,
 
 	// Admin Page
 	<Route
