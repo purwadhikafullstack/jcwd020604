@@ -40,19 +40,12 @@ const DeleteAddress = (props) => {
         isClosable: false,
         position: 'top'
       });
+      props.getAddressByUser();
       Close();
       navigate("/user_profile");
-      props.getAddressByUser();
     } catch (error) {
       console.error('Error while deleting address:', error);
       setDeleteMessage('Error deleting address.');
-      // toast({
-      //   title: "Error while execute this command",
-      //   status: "error",
-      //   duration: 3000,
-      //   isClosable: false,
-      //   position: 'top'
-      // })
     }
   };
 

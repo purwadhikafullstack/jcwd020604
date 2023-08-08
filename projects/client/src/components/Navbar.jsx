@@ -35,7 +35,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 import Logo2 from "../assets/logo2.png";
 
-export default function Navbar() {
+export default function Navbar(props) {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { colorMode, toggleColorMode } = useColorMode();
 
@@ -141,10 +141,10 @@ export default function Navbar() {
 							<FiShoppingCart />
 						</Box>
 						<Menu>
-							{user.fullname ? (
+							{props.users.fullname ? (
 								<>
 									<Text fontSize={"12px"} mr={2}>
-										Welcome <Text as={"b"}>{user.fullname}</Text>
+										Welcome <Text as={"b"}>{props.users.fullname}</Text>
 									</Text>
 									<MenuButton
 										as={Button}
@@ -153,7 +153,7 @@ export default function Navbar() {
 										cursor={"pointer"}
 										minW={0}
 									>
-										<Avatar size={"sm"} src={user.avatar_url} />
+										<Avatar size={"sm"} src={props.users.avatar_url} />
 									</MenuButton>
 									<MenuList>
 										{user.role === "ADMIN" ? (

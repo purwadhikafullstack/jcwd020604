@@ -25,7 +25,7 @@ const userController = {
 	getUsersById: async (req, res) => {
 		try {
 			const response = await db.users.findOne({
-				attributes: ["uuid", "fullname", "email", "warehouse_id", "role"],
+				attributes: ["uuid", "fullname", "avatar_url", "warehouse_id", "role"],
 				include: [{ model: db.addresses }],
 				where: {
 					uuid: req.params.uuid,
