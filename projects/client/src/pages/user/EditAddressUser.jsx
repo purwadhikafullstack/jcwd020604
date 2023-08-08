@@ -144,10 +144,10 @@ export default function AddressUser (props) {
                 </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={() => editAddress()}>
+              <Button colorScheme='blue' mr={3} size={'sm'} onClick={() => editAddress()}>
                 Edit
               </Button>
-              <Button colorScheme='orange' onClick={Close}>Cancel</Button>
+              <Button colorScheme='orange' size={'sm'} onClick={Close}>Cancel</Button>
             </ModalFooter>
         </ModalContent>
         </Modal>

@@ -2,21 +2,32 @@ import {
     Modal, 
     ModalContent, 
     ModalHeader,
-    ModalCloseButton,
     ModalBody,
     Button,
-    useToast
+    useToast,
+    HStack
 } from '@chakra-ui/react';
 import React,{useState, useEffect} from 'react';
 import { api } from '../../api/api';
-import { useParams } from 'react-router-dom';
-
-
+import { useNavigate, useParams } from 'react-router-dom';
 
 const DeleteAddress = (props) => {
     const toast = useToast();
     const {addressId} = useParams();
     const [deleteMessage, setDeleteMessage] = useState('');
+    const [address, setAddress] = useState({
+      address: "",
+      province: "",
+      city: "",
+      district: ""
+    });
+
+    const navigate = useNavigate();
+
+    const Close = () => {
+      props.setAddressId(null);
+      props.onClose();
+    }
 
     const handleDelete = async () => {
     try {
@@ -29,28 +40,25 @@ const DeleteAddress = (props) => {
         isClosable: false,
         position: 'top'
       });
-      props.onClose();
+      props.getAddressByUser();
+      Close();
+      navigate("/user_profile");
     } catch (error) {
       console.error('Error while deleting address:', error);
       setDeleteMessage('Error deleting address.');
-      toast({
-        title: "Error while execute this command",
-        status: "error",
-        duration: 3000,
-        isClosable: false,
-        position: 'top'
-      })
     }
   };
 
     return (
         <>
-        <Modal isOpen={props.isOpen} onClose={props.onClose}>
+        <Modal isOpen={props.isOpen}>
         <ModalContent>
-        <ModalCloseButton />
             <ModalHeader>Delete Address</ModalHeader>
             <ModalBody pb={6}>
-                <Button colorScheme='red' onClick={handleDelete}>Delete</Button>
+              <HStack>
+                <Button colorScheme='red' size={'xs'} onClick={handleDelete}>Delete</Button>
+                <Button colorScheme='yellow' size={'xs'} onClick={Close}>Cancel</Button>
+              </HStack>
             </ModalBody>
         </ModalContent>'
         </Modal>

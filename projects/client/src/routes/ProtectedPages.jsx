@@ -1,18 +1,16 @@
 import React,{ useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Loading from "../components/Loading";
-import { Text } from "@chakra-ui/react";
 
 const ProtectedPages = ({
     children,
-    redirect = false,
-    guestOnly = false,
-    needLogin = false,
-    needLoginAdmin = false
+    redirect,
+    guestOnly,
+    needLogin,
+    needLoginAdmin
 }) => {
-    const location = useLocation();
-    const user = useSelector((state) => state.login.auth);
+    const user = useSelector((state) => state.auth);
     const nav = useNavigate();
 
     const [isLoading, setIsLoading] = useState(true);
@@ -25,16 +23,15 @@ const ProtectedPages = ({
     
       useEffect(() => {
         if (redirect) {
+          return nav("/restricted");
+        } else if (guestOnly && user.role) {
           return nav("/");
-        } else if (guestOnly && user?.email) {
-          return nav("/");
-        } else if (needLogin && !user?.email) {
-          return nav("/");
-        } else if (needLoginAdmin && user?.role !== "ADMIN") {
-          return nav("/");
+        } else if (needLogin && !user.role) {
+          return nav("/login");
+        } else if (needLogin && needLoginAdmin && user.role !== "ADMIN") {
+          return nav("/restricted");
         }
-        console.log(user);
-      }, [children]);
+      }, []);
 
     return (
         <>

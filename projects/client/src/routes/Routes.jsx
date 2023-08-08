@@ -16,9 +16,9 @@ import ResetPassword from "../pages/reset/ResetPassword";
 import AdminHistoryPage from "../pages/admin/AdminHistoryPage";
 import AdminMutationPage from "../pages/admin/AdminMutationPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
-// import ProtectedPages from "./ProtectedPages";
-import EditAddressUser from "../pages/user/EditAddressUser";
-import AddressUser from "../pages/user/AddressUser";
+import ProtectedPages from "./ProtectedPages";
+import NotFound from "../pages/redirect/NotFound";
+import Restricted from "../pages/redirect/RestrictedPage";
 
 const routes = [
 	//Sandi
@@ -26,20 +26,10 @@ const routes = [
 	<Route path="/collection/:uuid" element={<DetailPage />}></Route>,
 
 	// Admin Page
-	// <Route path="/admin/managedata" element={<ProtectedPages needLoginAdmin={true}><AdminManageDataPage /></ProtectedPages>}></Route>,
-	// <Route path="/admin/product" element={<ProtectedPages needLoginAdmin={true}><AdminProductPage /></ProtectedPages>}></Route>,
-	<Route path="/admin/product" element={<AdminProductPage />}></Route>,
-	<Route path="/admin/stockhistory" element={<AdminHistoryPage />}></Route>,
-	<Route path="/admin/managedata" element={<AdminManageDataPage />}></Route>,
-	<Route path="/admin/mutation" element={<AdminMutationPage />}></Route>,
-
-	// Martin
-	// <Route path="/" element={<HomePage />}></Route>,
-	// <Route path="/register" element={<ProtectedPages guestOnly={true}><Register /></ProtectedPages>}></Route>,
-	// <Route path="/login" element={<ProtectedPages guestOnly={true}><Login /></ProtectedPages>}></Route>,
-	// <Route path="/verify" element={<ProtectedPages guestOnly={true}><Verify /></ProtectedPages>}></Route>,
-	// <Route path="/reset_password" element={<ProtectedPages guestOnly={true}><ResetPassword /></ProtectedPages>}></Route>,
-	// <Route path="/reset-password/:token" element={<ProtectedPages guestOnly={true}><ConfirmResetPassword /></ProtectedPages>}></Route>,
+	<Route path="/admin/managedata" element={<ProtectedPages needLogin={true} needLoginAdmin={true}><AdminManageDataPage /></ProtectedPages>}></Route>,
+	<Route path="/admin/product" element={<ProtectedPages needLogin={true} needLoginAdmin={true}><AdminProductPage /></ProtectedPages>}></Route>,
+	<Route path="/admin/stockhistory" element={<ProtectedPages needLogin={true} needLoginAdmin={true}><AdminHistoryPage /></ProtectedPages>}></Route>,
+	<Route path="/admin/mutation" element={<ProtectedPages needLogin={true} needLoginAdmin={true}><AdminMutationPage /></ProtectedPages>}></Route>,
 
 	<Route path="/" element={<HomePage />}></Route>,
 	<Route path="/register" element={<Register />}></Route>,
@@ -50,20 +40,15 @@ const routes = [
 		path="/reset-password/:token"
 		element={<ConfirmResetPassword />}
 	></Route>,
-
-	<Route path="/user_profile" element={<UserProfile />}></Route>,
-	<Route path="/user_list" element={<UserList />}></Route>,
-	<Route path="/add_user" element={<AddUser />}></Route>,
-	<Route path="/edit_user" element={<EditUser />}></Route>,
-	<Route path="/admin_profile" element={<AdminProfile />}></Route>,
-	<Route path="/edit_user_profile" element={<EditAddressUser />}></Route>,
-	<Route path="/edit_user_address" element={<AddressUser />}></Route>,
-
-	// <Route path="/user_profile" element={<ProtectedPages needLogin={true}><UserProfile /></ProtectedPages>}></Route>,
-	// <Route path="/user_list" element={<ProtectedPages needLoginAdmin={true} needLogin={true}><UserList /></ProtectedPages>}></Route>,
-	// <Route path="/add_user" element={<ProtectedPages needLoginAdmin={true} needLogin={true}><AddUser /></ProtectedPages>}></Route>,
-	// <Route path="/edit_user" element={<ProtectedPages needLoginAdmin={true} needLogin={true}><EditUser /></ProtectedPages>}></Route>,
-	// <Route path="/admin_profile" element={<ProtectedPages needLoginAdmin={true}><AdminProfile /></ProtectedPages>}></Route>,
+	
+	<Route path="/not-found" element={<NotFound />}></Route>,
+	<Route path="/restricted" element={<Restricted />}></Route>,
+	
+	<Route path="/user_profile" element={<ProtectedPages needLogin={true}><UserProfile /></ProtectedPages>}></Route>,
+	<Route path="/user_list" element={<ProtectedPages needLogin={true} needLoginAdmin={true}><UserList /></ProtectedPages>}></Route>,
+	<Route path="/add_user" element={<ProtectedPages needLogin={true} needLoginAdmin={true}><AddUser /></ProtectedPages>}></Route>,
+	<Route path="/edit_user" element={<ProtectedPages needLogin={true} needLoginAdmin={true}><EditUser /></ProtectedPages>}></Route>,
+	<Route path="/admin_profile" element={<ProtectedPages needLogin={true} needLoginAdmin={true}><AdminProfile /></ProtectedPages>}></Route>,
 ];
 
 export default routes;

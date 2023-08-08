@@ -19,7 +19,16 @@ import {
   Image,
   Stack,
   useDisclosure,
-  useToast
+  useToast,
+  Tabs,
+  TabList,
+  Tab,
+  TabPanels,
+  TabPanel,
+  Grid,
+  GridItem,
+  Spacer,
+  Badge
 } from '@chakra-ui/react';
 import {
   MdFacebook,
@@ -83,7 +92,7 @@ export default function UserProfile() {
         position:'top',
         isClosable:false
       });
-      window.location.reload();
+      fetchData();
     });
   }
 
@@ -95,29 +104,25 @@ export default function UserProfile() {
 
   const fetchData = async() => {
     try {
-        api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${users.id}`)
-        .then((response) => {
-            setUsers(response.data);
-        })
-        .catch((error) => {
-            console.error(error);
-        });
+      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, users);
+      setUsers(response.data);
     } catch (error) {
-        toast({
+      console.log(error);
+      toast({
             title:"There is something error while executing this command",
             status:"error",
             duration:3000,
             isClosable:false
-        });
-    }
-}
-
+          });
+      }
+  }
+console.log(users);
+      
   const getAddressByUser = async () => {
     try {
       const response = await api.get(
         `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
       );
-      console.log(response.data);
       setAddress(response.data);
     } catch (error) {
       console.error(error);
@@ -138,7 +143,6 @@ export default function UserProfile() {
 
   const saveUser = async () => {
     try {
-      console.log(user.uuid);
         await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, changes);
         toast({
             title:"User has been updated",
@@ -146,16 +150,21 @@ export default function UserProfile() {
             duration:3000,
             isClosable:false
         });
-        window.location.reload();
+        fetchData();
         navigate("/user_profile");
     } catch (error) {
-        console.log(error);
+      toast({
+        title:"Failed to update data",
+        status:"error",
+        duration:3000,
+        isClosable:false
+    });
     }
 }
 
 const handleInputChange = (e) => {
   const { id, value } = e.target;
-  const tempUser = { ...user };
+  const tempUser = { ...users };
   tempUser[id] = value;
   setChanges(tempUser);
   console.log(changes);
@@ -163,7 +172,7 @@ const handleInputChange = (e) => {
 
   return (
     <>
-      <Navbar />
+      <Navbar users={users}/>
       {isLoading ? (
         <Loading />
       ) : (
@@ -173,7 +182,7 @@ const handleInputChange = (e) => {
               <Box
                 color="white"
                 borderRadius="lg"
-                m={{ sm: 4, md: 16, lg: 10 }}
+                // m={{ sm: 4, md: 16, lg: 10 }}
                 p={{ sm: 5, md: 5, lg: 2 }}
               >
                 <Flex justifyContent={"center"} alignItems={"center"}>
@@ -189,9 +198,9 @@ const handleInputChange = (e) => {
                   Fill up the form below to update
                 </Text>
                 <Box p={4}>
-                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }}>
-                    <WrapItem>
-                      <Box h={"100%"}>
+                  <Wrap spacing={{ base: 20, sm: 3, md: 5, lg: 20 }} justify={{base: 'center'}}>
+                    <Flex display={'flex'} justifyContent={{base: 'center', md: 'center', sm: 'center'}}> 
+                      <Box h={"100%"} display={'flex'} justifyContent={{base: 'center', md: 'center', sm: 'center'}}>
                       <VStack pl={0} spacing={2} alignItems={"flex-start"}>
                                  <Box bg="white" w={'300px'} borderRadius="lg" alignItems={{base:"flex-start", md: "center", sm: "center"}}>
                                      <Box m={0} color="#0B0E3F">
@@ -211,7 +220,7 @@ const handleInputChange = (e) => {
                                          <Avatar
                                              size={'xl'}
                                              src={
-                                               user.avatar_url
+                                               users.avatar_url
                                              }
                                              alt={'Author'}
                                              css={{
@@ -223,7 +232,7 @@ const handleInputChange = (e) => {
                                          <Box p={6}>
                                          <Stack spacing={0} align={'center'} mb={5}>
                                              <Heading fontSize={'2xl'} fontWeight={500} fontFamily={'body'}>
-                                             {user.fullname}
+                                             {users.fullname}
                                              </Heading>
                                              <Text color={'gray.500'}>{user.email}</Text>
                                          </Stack>
@@ -252,7 +261,7 @@ const handleInputChange = (e) => {
                                              transform: 'translateY(-2px)',
                                              boxShadow: 'lg',
                                              }}
-                                             onClick={() => {inputFileRef.current.click(); navigate("/user_profile")}}>
+                                             onClick={() => {inputFileRef.current.click(); navigate("/user_profile");}}>
                                              Change Image
                                          </Button>
                                             <HStack
@@ -296,7 +305,7 @@ const handleInputChange = (e) => {
                                  </Box>
                           </VStack>
                       </Box>
-                    </WrapItem>
+                    </Flex>
                     <WrapItem>
                       <Box bg="white" h={"100%"} borderRadius="lg" boxShadow={"2xl"} overflow={"hidden"}>
                         <Box m={8} color="#0B0E3F">
@@ -318,32 +327,40 @@ const handleInputChange = (e) => {
                                        <Input type="email" size="md" readOnly={true} value={email}/>
                                      </InputGroup>
                             </FormControl>
-                            <HStack>
-                              <FormControl display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
-                                <Button colorScheme={"green"} w={'70px'} size={"sm"} onClick={() => saveUser()}>
+                              <Box display={'flex'} alignSelf={'flex-start'}>
+                                <Button mr={4} colorScheme={"blue"} w={'70px'} size={"sm"} onClick={() => saveUser()}>
                                   Save
                                 </Button>
-                              </FormControl>
-                              <FormControl display={'flex'} alignItems={'flex-start'} justifyContent={'flex-start'}>
-                                <Button colorScheme={"green"} w={'70px'} size={'sm'} onClick={() => addressUser.onOpen()}>
-                                  +Address
-                                </Button>
-                              </FormControl>
-                            </HStack>
+                              </Box>
                             <FormControl id="address">
-                            <FormLabel>Address</FormLabel>
-                            <Flex flexDirection={'column'} gap={2}>
-                              {address.map((val) => {
+                            <FormLabel>
+                                <Button variant={'link'} colorScheme={"green"} w={'70px'} size={'sm'} onClick={() => addressUser.onOpen()}>
+                                  + Address
+                                </Button>
+                            </FormLabel>
+                            <Grid templateColumns='repeat(2, 1fr)' gap={2}>
+                              {address.map((val, idx) => {
                                 return (
                                   <>
-                                    <Box overflow={"hidden"} boxShadow={'md'}
-                                      borderRadius={'lg'} p={2} bgColor={'whatsapp.100'}
-                                      cursor={'pointer'}
-                                      onClick={() => {setAddressId(val.id); editAddressUser.onOpen(); console.log(address);}}>
+                                    <GridItem overflow={"hidden"} boxShadow={'md'}
+                                      borderRadius={'lg'} p={2} bgColor={'aliceblue'}
+                                      key={idx}
+                                      >
                                       <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Alamat: {val.address}</Text>
                                       <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Kec/Kota: {val.district}, {val.city}</Text>
                                       <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Provinsi: {val.province}</Text>
-                                    </Box>
+                                   
+                                    <HStack>
+                                    <Flex pl={1}>
+                                        <Button
+                                         variant={'link'} 
+                                         size={'xs'}
+                                         colorScheme={'green'}
+                                         onClick={() => {setAddressId(val.id); editAddressUser.onOpen();}}
+                                         >
+                                           Edit
+                                        </Button>
+                                      </Flex>
                                       <Flex pl={2}>
                                         <Button
                                          variant={'link'} 
@@ -354,16 +371,18 @@ const handleInputChange = (e) => {
                                            Delete
                                         </Button>
                                       </Flex>
+                                    </HStack>
+                                    </GridItem>
                                   </>
                                 )
                               })}
-                            </Flex>
+                            </Grid>
                             </FormControl>
                             </VStack>
                           </Box>
                         </Box>
                       </WrapItem>
-                    </Wrap>
+                  </Wrap>
                   </Box>
                 </Box>
               </Flex>
@@ -371,8 +390,8 @@ const handleInputChange = (e) => {
           </Container>
         )};
         <EditAddressUser addressId={addressId} setAddressId={setAddressId} isOpen={editAddressUser.isOpen} onClose={editAddressUser.onClose} getAddressByUser={getAddressByUser} />
-        <AddressUser isOpen={addressUser.isOpen} onClose={addressUser.onClose}/>
-        <DeleteAddress addressId={addressId} setAddressId={setAddressId} isOpen={deleteAddress.isOpen} onClose={deleteAddress.onClose}/>
+        <AddressUser isOpen={addressUser.isOpen} onClose={addressUser.onClose} getAddressByUser={getAddressByUser}/>
+        <DeleteAddress addressId={addressId} setAddressId={setAddressId} isOpen={deleteAddress.isOpen} onClose={deleteAddress.onClose} getAddressByUser={getAddressByUser}/>
       </>
     );
   }

@@ -33,8 +33,9 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
+import Logo2 from "../assets/logo2.png";
 
-export default function Navbar() {
+export default function Navbar(props) {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { colorMode, toggleColorMode } = useColorMode();
 
@@ -72,10 +73,11 @@ export default function Navbar() {
 					<HStack spacing={8} alignItems={"center"}>
 						<Box>
 							<Image
-								src={Logo}
+								src={colorMode === "light" ? (Logo) : (Logo2)}
 								minW={"50px"}
 								w={"20px"}
 								cursor={"pointer"}
+								onClick={() => navigate('/')}
 							></Image>
 						</Box>
 						<HStack
@@ -104,16 +106,16 @@ export default function Navbar() {
 							) : (
 								<>
 									<Flex>
-										<Link to={"/#"}>Tops</Link>
+										<Link to={"/collection"}>Tops</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Bottoms</Link>
+										<Link to={"/collection"}>Bottoms</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Outerwares</Link>
+										<Link to={"/collection"}>Outerwares</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Accerories</Link>
+										<Link to={"/collection"}>Accerories</Link>
 									</Flex>
 								</>
 							)}
@@ -139,10 +141,10 @@ export default function Navbar() {
 							<FiShoppingCart />
 						</Box>
 						<Menu>
-							{user.fullname ? (
+							{props.users.fullname ? (
 								<>
 									<Text fontSize={"12px"} mr={2}>
-										Welcome <Text as={"b"}>{user.fullname}</Text>
+										Welcome <Text as={"b"}>{props.users.fullname}</Text>
 									</Text>
 									<MenuButton
 										as={Button}
@@ -151,7 +153,7 @@ export default function Navbar() {
 										cursor={"pointer"}
 										minW={0}
 									>
-										<Avatar size={"sm"} src={user.avatar_url} />
+										<Avatar size={"sm"} src={props.users.avatar_url} />
 									</MenuButton>
 									<MenuList>
 										{user.role === "ADMIN" ? (
@@ -241,16 +243,16 @@ export default function Navbar() {
 										<Input type="tel" placeholder="Search . . ." />
 									</InputGroup>
 									<Flex>
-										<Link to={"/#"}>Tops</Link>
+										<Link to={"/collection"}>Tops</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Bottoms</Link>
+										<Link to={"/collection"}>Bottoms</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Outerwares</Link>
+										<Link to={"/collection"}>Outerwares</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Accerories</Link>
+										<Link to={"/collection"}>Accerories</Link>
 									</Flex>
 									<Box></Box>
 								</>
@@ -259,8 +261,6 @@ export default function Navbar() {
 					</Box>
 				) : null}
 			</Box>
-
-			<Box p={4}></Box>
 		</>
 	);
 }
