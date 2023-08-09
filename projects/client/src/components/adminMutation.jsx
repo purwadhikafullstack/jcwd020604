@@ -399,6 +399,8 @@ export default function AdminMutation() {
 				isOpen={mutationRequestModal.isOpen}
 				onClose={mutationRequestModal.onClose}
 				request={request}
+				getMutation={getMutation}
+				getRequest={getRequest}
 			/>
 		</Center>
 	);

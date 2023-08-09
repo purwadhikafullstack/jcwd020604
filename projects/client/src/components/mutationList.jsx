@@ -8,9 +8,11 @@ import {
 	MenuList,
 	useToast,
 	useDisclosure,
+	CheckboxIcon,
 } from "@chakra-ui/react";
 import moment from "moment";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
+import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
 import { useSelector } from "react-redux";
@@ -82,17 +84,28 @@ export default function MutationList({ val, getMutation }) {
 				<Flex w={"170px"}>
 					{moment(val?.createdAt).format("DD/MM/YYYY HH:mm:ss")}
 				</Flex>
-				<Menu>
-					<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
-						<Icon as={BiDotsHorizontalRounded} />
-					</MenuButton>
-					<MenuList>
-						<MenuItem onClick={editMutationModal.onOpen}>Edit</MenuItem>
-						<MenuItem onClick={deleteMutationModal.onOpen} color={"red"}>
-							Cancel
-						</MenuItem>
-					</MenuList>
-				</Menu>
+				{val?.status === "PENDING" ? (
+					<Menu>
+						<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
+							<Icon as={BiDotsHorizontalRounded} />
+						</MenuButton>
+						<MenuList>
+							<MenuItem onClick={editMutationModal.onOpen}>Edit</MenuItem>
+							<MenuItem onClick={deleteMutationModal.onOpen} color={"red"}>
+								Cancel
+							</MenuItem>
+						</MenuList>
+					</Menu>
+				) : val?.status === "APPROVED" ? (
+					<Icon
+						w={"20px"}
+						h={"20px"}
+						color={"green"}
+						as={AiOutlineCheckCircle}
+					/>
+				) : (
+					<Icon w={"20px"} h={"20px"} color={"red"} as={AiOutlineCloseCircle} />
+				)}
 				<EditMutationModal
 					isOpen={editMutationModal.isOpen}
 					onClose={editMutationModal.onClose}

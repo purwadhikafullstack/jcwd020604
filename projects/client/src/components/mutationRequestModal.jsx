@@ -20,10 +20,63 @@ import { api } from "../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-export default function MutationRequestModal({ isOpen, onClose, request }) {
+export default function MutationRequestModal({
+	isOpen,
+	onClose,
+	request,
+	getMutation,
+	getRequest,
+}) {
 	const toast = useToast();
 	const nav = useNavigate();
 	console.log(request);
+
+	const handleApprove = async (requestId) => {
+		try {
+			await api.patch(`/stockmutation/mutation/handle/${requestId}`, {
+				status: "APPROVED",
+			});
+			toast({
+				title: "Mutation request approved.",
+				status: "success",
+				position: "top",
+				duration: 3000,
+			});
+			getMutation();
+			getRequest();
+			onClose();
+		} catch (error) {
+			toast({
+				title: error.response.data.message,
+				status: "error",
+				position: "top",
+				duration: 3000,
+			});
+		}
+	};
+	const handleReject = async (requestId) => {
+		try {
+			await api.patch(`/stockmutation/mutation/handle/${requestId}`, {
+				status: "REJECTED",
+			});
+			toast({
+				title: "Mutation request rejected.",
+				status: "success",
+				position: "top",
+				duration: 3000,
+			});
+			getMutation();
+			getRequest();
+			onClose();
+		} catch (error) {
+			toast({
+				title: error.response.data.message,
+				status: "error",
+				position: "top",
+				duration: 3000,
+			});
+		}
+	};
 
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
@@ -42,6 +95,7 @@ export default function MutationRequestModal({ isOpen, onClose, request }) {
 									mb={"15px"}
 									borderRadius={"10px"}
 									borderColor={"#E6EBF2"}
+									id="id"
 								>
 									<Flex></Flex>
 									<Flex gap={"15px"}>
@@ -68,10 +122,20 @@ export default function MutationRequestModal({ isOpen, onClose, request }) {
 										</Flex>
 									</Flex>
 									<Flex justifyContent={"end"} gap={"10px"} pt={"15px"}>
-										<Button colorScheme="red" size={"sm"}>
+										<Button
+											colorScheme="red"
+											size={"sm"}
+											id="id"
+											onClick={() => handleReject(request.id)}
+										>
 											Decline
 										</Button>
-										<Button colorScheme="green" size={"sm"}>
+										<Button
+											colorScheme="green"
+											size={"sm"}
+											id="id"
+											onClick={() => handleApprove(request.id)}
+										>
 											Approve
 										</Button>
 									</Flex>
