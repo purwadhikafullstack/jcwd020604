@@ -304,7 +304,7 @@ const handleInputChange = (e) => {
                       <Box bg="white" h={"100%"} borderRadius="lg" boxShadow={"2xl"} overflow={"hidden"}>
                         <Box m={6} color="#0B0E3F">
                             <VStack spacing={5}>
-                            <HStack>
+                            <HStack display={{base: 'flex', sm: 'block', md:'flex'}}>
                               <FormControl id="name">
                                   <FormLabel>Your Name</FormLabel>
                                     <InputGroup borderColor="#E0E1E7">
@@ -318,8 +318,7 @@ const handleInputChange = (e) => {
                                           <InputLeftElement pointerEvents="none" children={<BsPhone color="gray.800" />} />
                                           <Input type="number" size="md" id="phone_number" value={phone_number} onChange={(val) => {handleInputChange(val); setPhone_Number(val.target.value)}}/>
                                       </InputGroup>
-                              </FormControl>
-                         
+                              </FormControl>                        
                             <FormControl id="email">
                                      <FormLabel>Email</FormLabel>
                                      <InputGroup borderColor="#E0E1E7">
@@ -331,7 +330,7 @@ const handleInputChange = (e) => {
                                      </InputGroup>
                             </FormControl>
                             </HStack>
-                              <Box display={'flex'} alignSelf={'flex-start'}>
+                              <Box display={'flex'} alignSelf={{base: 'flex', md: 'flex-start', sm: 'block'}}>
                                 <Button mr={4} colorScheme={"blue"} w={'70px'} size={"sm"} onClick={() => saveUser()}>
                                   Save
                                 </Button>
@@ -392,7 +391,7 @@ const handleInputChange = (e) => {
               </Flex>
             </form>
           </Container>
-        )};
+        )}
         <EditAddressUser addressId={addressId} setAddressId={setAddressId} isOpen={editAddressUser.isOpen} onClose={editAddressUser.onClose} getAddressByUser={getAddressByUser} />
         <AddressUser isOpen={addressUser.isOpen} onClose={addressUser.onClose} getAddressByUser={getAddressByUser}/>
         <DeleteAddress addressId={addressId} setAddressId={setAddressId} isOpen={deleteAddress.isOpen} onClose={deleteAddress.onClose} getAddressByUser={getAddressByUser}/>
