@@ -103,16 +103,16 @@ const handleStockMutation = {
 				console.log(existingStock.dataValues.qty);
 
 				// Log stock history for the mutation
-				// await stockHistory.addStockHistory(
-				// 	existingStock.dataValues,
-				// 	"OUT",
-				// 	"MUTATION",
-				// 	pendingMutation.qty
-				// );
+				await stockHistory.addStockHistory(
+					existingStock.dataValues,
+					"OUT",
+					pendingMutation.mutation_code,
+					pendingMutation.qty
+				);
 				// await stockHistory.addStockHistory(
 				// 	existingStock.dataValues,
 				// 	"IN",
-				// 	"MUTATION",
+				// 	pendingMutation.mutation_code,
 				// 	destinationStock.qty
 				// );
 

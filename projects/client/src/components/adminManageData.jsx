@@ -38,7 +38,6 @@ import EditWarehouseModal from "./editWarehouseModal";
 import EditCategoryModal from "./editCategoryModal";
 import AddStockModal from "./addStockModal";
 import StockList from "./stockList";
-import Navbar from "./Navbar";
 import { BsFillCircleFill } from "react-icons/bs";
 import { FaBoxes } from "react-icons/fa";
 
@@ -236,15 +235,19 @@ export default function AdminManageData() {
 								flexWrap={["wrap", null, "nowrap"]}
 							>
 								<Link to={`/admin/product`}>
-									<Button leftIcon={<HamburgerIcon />}>Product Data</Button>
+									<Button gap={"5px"} w={"133px"}>
+										<HamburgerIcon /> Product Data
+									</Button>
 								</Link>
 								<Link to={`/admin/mutation`}>
-									<Button leftIcon={<Icon as={FaBoxes} />}>
-										Stock Mutation
+									<Button gap={"5px"} w={"150px"}>
+										<Icon as={FaBoxes} /> Stock Mutation
 									</Button>
 								</Link>
 								<Link to={`/admin/stockhistory`}>
-									<Button leftIcon={<TimeIcon />}>Stock History</Button>
+									<Button gap={"5px"} w={"140px"}>
+										<TimeIcon /> Stock History
+									</Button>
 								</Link>
 							</Flex>
 						</Flex>
