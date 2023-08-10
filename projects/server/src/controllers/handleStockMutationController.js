@@ -3,7 +3,7 @@ const Joi = require("joi");
 const stockHistory = require("./stockHistoryController");
 
 const handleStockMutation = {
-	confirmMutation: async (req, res) => {
+	handleMutation: async (req, res) => {
 		const { status } = req.body;
 		const { id } = req.params;
 		const t = await db.sequelize.transaction();
@@ -135,6 +135,12 @@ const handleStockMutation = {
 			console.log(err);
 			await t.rollback();
 			res.status(500).send({ message: err.message });
+		}
+	},
+	autoMutation: async () => {
+		try {
+		} catch (err) {
+			throw err;
 		}
 	},
 };

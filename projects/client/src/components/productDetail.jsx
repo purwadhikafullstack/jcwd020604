@@ -53,9 +53,9 @@ export default function ProductDetail() {
 
 	return (
 		<Center>
-			<Flex w={"1600px"} minW={"390px"} flexDir={"column"}>
+			<Flex w={"1300px"} minW={"390px"} flexDir={"column"}>
 				<Center
-					margin={"60px 20px 60px"}
+					margin={"0px 20px 50px"}
 					justifyContent={"space-evenly"}
 					alignItems={"start"}
 					flexWrap={"wrap"}

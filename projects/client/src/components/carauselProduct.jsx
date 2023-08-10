@@ -56,7 +56,7 @@ export default function CarouselProduct() {
 		<Box
 			position={"relative"}
 			minH={"400px"}
-			w={["100%", "100%", "100%", "900px"]} // Adjust width based on screen size
+			w={["100%", "100%", "100%", "700px"]} // Adjust width based on screen size
 			h={"auto"} // Adjust width based on screen size
 			overflow={"hidden"}
 			minW={"390px"}

@@ -100,12 +100,13 @@ export default function AdminHistory() {
 	return (
 		<Center flexDir={"column"}>
 			<Flex
-				margin={"20px 20px 50px"}
+				margin={"0px 20px 50px"}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}
 				padding={"15px"}
-				w={"1322 px"}
+				maxW={"1300px"}
+				w={"100%"}
 				justifyContent={"center"}
 				flexDir={"column"}
 			>
@@ -113,13 +114,13 @@ export default function AdminHistory() {
 					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
 						Stock History
 					</Flex>
-					<Flex>
-						<Flex gap={"10px"} w={"100%"} marginBottom={"15px"}>
+					<Flex gap={"15px"}>
+						<Flex w={"100%"} marginBottom={"15px"}>
 							<Link to={`/admin/managedata`}>
 								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
 							</Link>
 						</Flex>
-						<Button onClick={handleReset} mr={"15px"}>
+						<Button onClick={handleReset}>
 							<RepeatIcon />
 						</Button>
 
@@ -133,7 +134,12 @@ export default function AdminHistory() {
 							}}
 						/>
 					</Flex>
-					<Center gap={"15px"} paddingBottom={"15px"}>
+					<Center
+						gap={"15px"}
+						paddingBottom={"15px"}
+						w={["100%", null, "auto"]} // Adjust width based on breakpoints
+						flexWrap={["wrap", null, "nowrap"]}
+					>
 						{user.role === "ADMIN" ? (
 							<Select
 								placeholder="All Warehouses"
@@ -195,95 +201,88 @@ export default function AdminHistory() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"325px"} paddingLeft={"55px"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productAsc" ? sort === "productDesc" : null}
-							</Flex>
+						<Flex
+							w={"325px"}
+							paddingLeft={"55px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"product" + (sort === "productAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+						>
+							Product Name
+							<UpDownIcon ml={"10px"} />
+							{sort === "productAsc" ? sort === "productDesc" : null}
 						</Flex>
-						<Flex w={"195px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Warehouse
-								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"195px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+						>
+							Warehouse
+							{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-						<Flex w={"115px"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"stockAfter" + (sort === "stockAfterAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Stock
-								{sort === "stockAfterAsc" ? sort === "stockAfterDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"115px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"stockAfter" + (sort === "stockAfterAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+						>
+							Stock
+							{sort === "stockAfterAsc" ? sort === "stockAfterDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-						<Flex w={"100px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"status" + (sort === "statusAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Status
-								{sort === "statusAsc" ? sort === "statusDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"100px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"status" + (sort === "statusAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+						>
+							Status
+							{sort === "statusAsc" ? sort === "statusDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-						<Flex w={"179px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Reference
-								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"179px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+						>
+							Reference
+							{sort === "referenceAsc" ? sort === "referenceDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-						<Flex w={"179px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"date" + (sort === "dateAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Date
-								{sort === "dateAsc" ? sort === "dateDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"179px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange("date" + (sort === "dateAsc" ? "Desc" : "Asc"))
+							}
+							cursor="pointer"
+						>
+							Date
+							{sort === "dateAsc" ? sort === "dateDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
 						<Flex w={"10px"}></Flex>
 					</Flex>

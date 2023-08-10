@@ -114,12 +114,12 @@ export default function ProductCollection() {
 	return (
 		<Center>
 			<Flex
-				w={"1600px"}
+				w={"1300px"}
 				minW={"390px"}
 				flexDir={"column"}
 				justifyContent={"center"}
 			>
-				<Center margin={"60px 20px 60px"} fontSize={"32px"} fontWeight={"bold"}>
+				<Center margin={"0px 20px 30px"} fontSize={"32px"} fontWeight={"bold"}>
 					{selectedCategory
 						? category.find((val) => val.id === selectedCategory).category_name
 						: "ALL ITEMS"}

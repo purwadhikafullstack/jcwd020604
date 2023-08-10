@@ -96,12 +96,13 @@ export default function AdminProduct() {
 		<>
 			<Center flexDir={"column"}>
 				<Flex
-					margin={"20px 20px 50px"}
+					margin={"0px 20px 50px"}
 					border={"1px"}
 					borderRadius={"15px"}
 					borderColor={"#E6EBF2"}
 					padding={"15px"}
-					w={"1400 px"}
+					maxW={"1300px"}
+					w={"100%"}
 					justifyContent={"center"}
 					flexDir={"column"}
 				>
@@ -110,33 +111,40 @@ export default function AdminProduct() {
 							Product Data
 						</Flex>
 					</Flex>
-					<Flex pb={"15px"} w={"100%"} justifyContent={"space-between"}>
-						<Flex gap={"10px"}>
-							<Link to={`/admin/managedata`}>
-								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
-							</Link>
-							{user.role === "ADMIN" ? (
-								<Button
-									as={Button}
-									paddingLeft={"9px"}
-									marginBottom={"15px"}
-									rightIcon={<AddIcon />}
-									colorScheme="green"
-									onClick={addProductModal.onOpen}
+					<Flex
+						pb={"15px"}
+						gap={"15px"}
+						justifyContent={"space-between"}
+						w={["100%", null, "auto"]} // Adjust width based on breakpoints
+						flexWrap={["wrap", null, "nowrap"]}
+					>
+						<Flex justifyContent={"space-between"} w={"100%"}>
+							<Flex gap={"15px"}>
+								<Link to={`/admin/managedata`}>
+									<Button leftIcon={<ArrowBackIcon />}>Back</Button>
+								</Link>
+								{user.role === "ADMIN" ? (
+									<Button
+										as={Button}
+										colorScheme="green"
+										onClick={addProductModal.onOpen}
+									>
+										<AddIcon />
+									</Button>
+								) : null}
+								<AddProductModal
+									isOpen={addProductModal.isOpen}
+									onClose={addProductModal.onClose}
+									getProduct={getProduct}
 								/>
-							) : null}
-							<AddProductModal
-								isOpen={addProductModal.isOpen}
-								onClose={addProductModal.onClose}
-								getProduct={getProduct}
-							/>
-						</Flex>
-						<Flex gap={"15px"} paddingBottom={"15px"}>
-							<Button onClick={handleReset}>
+							</Flex>
+							<Button onClick={handleReset} ml={"15px"}>
 								<RepeatIcon />
 							</Button>
+						</Flex>
+						<Flex gap={"15px"} w={"1500px"} flexWrap={["wrap", null, "nowrap"]}>
 							<Select
-								w={"418px"}
+								w={"100%"}
 								placeholder="All Type of Category"
 								value={selectedCategory}
 								onChange={(event) => {
@@ -152,7 +160,7 @@ export default function AdminProduct() {
 									  ))
 									: null}
 							</Select>
-							<InputGroup w={"418px"}>
+							<InputGroup w={"100%"}>
 								<Input placeholder="Search..." ref={inputFileRef} />
 								<InputRightElement cursor={"pointer"}>
 									<Button
@@ -175,69 +183,66 @@ export default function AdminProduct() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"325px"} paddingLeft={"55px"}>
-							<Flex
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productDesc" ? "Asc" : "Desc")
-									)
-								}
-								cursor="pointer"
-								alignItems={"center"}
-							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productDesc" ? sort === "productAsc" : null}
-							</Flex>
+						<Flex
+							w={"325px"}
+							paddingLeft={"55px"}
+							onClick={() =>
+								handleSortChange(
+									"product" + (sort === "productDesc" ? "Asc" : "Desc")
+								)
+							}
+							cursor="pointer"
+							alignItems={"center"}
+						>
+							Product Name
+							<UpDownIcon ml={"10px"} />
+							{sort === "productDesc" ? sort === "productAsc" : null}
+						</Flex>
+						<Flex w={"300px"} alignItems={"center"}>
+							Description
+						</Flex>
+						<Flex
+							w={"160px"}
+							onClick={() =>
+								handleSortChange(
+									"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+							alignItems={"center"}
+						>
+							Category
+							{sort === "categoryAsc" ? sort === "categoryDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
 
-						<Flex w={"300px"} alignItems={"center"}>
-							<Flex>Description</Flex>
+						<Flex
+							w={"160px"}
+							onClick={() =>
+								handleSortChange(
+									"price" + (sort === "priceAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+							alignItems={"center"}
+						>
+							Price (Rp)
+							{sort === "priceAsc" ? sort === "priceDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-						<Flex w={"160px"}>
-							<Flex
-								onClick={() =>
-									handleSortChange(
-										"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-								alignItems={"center"}
-							>
-								Category
-								{sort === "categoryAsc" ? sort === "categoryDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-						</Flex>
-						<Flex w={"160px"}>
-							<Flex
-								onClick={() =>
-									handleSortChange(
-										"price" + (sort === "priceAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-								alignItems={"center"}
-							>
-								Price (Rp)
-								{sort === "priceAsc" ? sort === "priceDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-						</Flex>
-						<Flex w={"160px"}>
-							<Flex
-								onClick={() =>
-									handleSortChange(
-										"weight" + (sort === "weightAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-								alignItems={"center"}
-							>
-								Weight (g)
-								{sort === "weightAsc" ? sort === "weightDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"160px"}
+							onClick={() =>
+								handleSortChange(
+									"weight" + (sort === "weightAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+							alignItems={"center"}
+						>
+							Weight (g)
+							{sort === "weightAsc" ? sort === "weightDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
 						<Flex w={"25px"}></Flex>
 					</Flex>

@@ -57,6 +57,7 @@ export default function StockList({ val, getStock }) {
 			borderColor={"#E6EBF2"}
 			gap={"7"}
 			alignItems={"center"}
+			flexWrap={"wrap"}
 		>
 			<Flex gap={"5px"} alignItems={"center"}>
 				<Image
@@ -71,22 +72,22 @@ export default function StockList({ val, getStock }) {
 				/>
 				<Flex w={"270px"}>{val.product.product_name}</Flex>
 			</Flex>
-			<Flex w={"195px"}>
+			<Flex w={"190px"}>
 				{!val?.warehouse ? (
 					<Flex>Warehouse not found</Flex>
 				) : (
 					val?.warehouse?.warehouse_name
 				)}
 			</Flex>
-			<Flex w={"195px"}>
+			<Flex w={"190px"}>
 				{val.product.category == null ? (
 					<Flex>Category not found</Flex>
 				) : (
 					val.product.category.category_name
 				)}
 			</Flex>
-			<Flex w={"195px"}>{val.qty}</Flex>
-			<Flex w={"195px"}>
+			<Flex w={"190px"}>{val.qty}</Flex>
+			<Flex w={"190px"}>
 				{stock > 10 ? (
 					<Flex>
 						<Icon as={BsFillCircleFill} color={"green"} />

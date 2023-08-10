@@ -146,113 +146,114 @@ export default function AdminManageData() {
 		<>
 			<Center flexDir={"column"}>
 				<Flex
-					margin={"20px 20px 50px"}
+					margin={"0px 20px 50px"}
 					border={"1px"}
 					borderRadius={"15px"}
 					borderColor={"#E6EBF2"}
 					padding={"15px"}
-					w={"1400 px"}
+					maxW={"1300px"}
+					w={"100%"}
 					justifyContent={"center"}
 					flexDir={"column"}
 				>
-					<Flex flexDir={"column"}>
+					<Flex flexDir={"column"} paddingBottom={"15px"}>
 						<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
 							Manage Data
 						</Flex>
-						<Flex>
-							<Flex gap={"10px"} w={"100%"}>
-								<Button
-									colorScheme="green"
-									onClick={addStockModal.onOpen}
-									marginBottom={"15px"}
-								>
-									Add Stock
+						<Flex
+							justifyContent={"space-between"}
+							gap={"15px"}
+							paddingBottom={"15px"}
+							w={["100%", null, "auto"]} // Adjust width based on breakpoints
+							flexWrap={["wrap", null, "nowrap"]}
+						>
+							<Flex gap={"15px"} justifyContent={"space-between"} w={"100%"}>
+								<Flex gap={"15px"} w={"100%"}>
+									<Button colorScheme="green" onClick={addStockModal.onOpen}>
+										Add Stock
+									</Button>
+									{user.role === "ADMIN" ? (
+										<Flex gap={"15px"}>
+											<Menu>
+												<MenuButton as={Button}>
+													<AddIcon />
+												</MenuButton>
+												<MenuList>
+													<MenuItem onClick={addCategoryModal.onOpen}>
+														Add Category
+													</MenuItem>
+													<MenuItem onClick={addWarehouseModal.onOpen}>
+														Add Warehouse
+													</MenuItem>
+												</MenuList>
+											</Menu>
+											<Menu>
+												<MenuButton as={Button}>
+													<EditIcon />
+												</MenuButton>
+												<MenuList>
+													<MenuItem onClick={editCategoryModal.onOpen}>
+														View / Edit Category
+													</MenuItem>
+													<MenuItem onClick={editWarehouseModal.onOpen}>
+														View / Edit Warehouse
+													</MenuItem>
+												</MenuList>
+											</Menu>
+											<Menu>
+												<MenuButton
+													as={Button}
+													colorScheme="red"
+													color={"white"}
+												>
+													<DeleteIcon />
+												</MenuButton>
+												<MenuList>
+													<MenuItem
+														color={"red"}
+														onClick={deleteCategoryModal.onOpen}
+													>
+														Delete Category
+													</MenuItem>
+													<MenuItem
+														color={"red"}
+														onClick={deleteWarehouseModal.onOpen}
+													>
+														Delete Warehouse
+													</MenuItem>
+												</MenuList>
+											</Menu>
+										</Flex>
+									) : null}
+								</Flex>
+								<Button onClick={handleReset}>
+									<RepeatIcon />
 								</Button>
-								{user.role === "ADMIN" ? (
-									<Flex gap={"10px"}>
-										<Menu>
-											<MenuButton
-												as={Button}
-												paddingLeft={"9px"}
-												marginBottom={"15px"}
-												rightIcon={<AddIcon />}
-											></MenuButton>
-											<MenuList>
-												<MenuItem onClick={addCategoryModal.onOpen}>
-													Add Category
-												</MenuItem>
-												<MenuItem onClick={addWarehouseModal.onOpen}>
-													Add Warehouse
-												</MenuItem>
-											</MenuList>
-										</Menu>
-										<Menu>
-											<MenuButton
-												as={Button}
-												paddingLeft={"9px"}
-												marginBottom={"15px"}
-												rightIcon={<EditIcon />}
-											></MenuButton>
-											<MenuList>
-												<MenuItem onClick={editCategoryModal.onOpen}>
-													View / Edit Category
-												</MenuItem>
-												<MenuItem onClick={editWarehouseModal.onOpen}>
-													View / Edit Warehouse
-												</MenuItem>
-											</MenuList>
-										</Menu>
-										<Menu>
-											<MenuButton
-												as={Button}
-												colorScheme="red"
-												color={"white"}
-												paddingLeft={"9px"}
-												marginBottom={"15px"}
-												rightIcon={<DeleteIcon />}
-											></MenuButton>
-											<MenuList>
-												<MenuItem
-													color={"red"}
-													onClick={deleteCategoryModal.onOpen}
-												>
-													Delete Category
-												</MenuItem>
-												<MenuItem
-													color={"red"}
-													onClick={deleteWarehouseModal.onOpen}
-												>
-													Delete Warehouse
-												</MenuItem>
-											</MenuList>
-										</Menu>
-									</Flex>
-								) : null}
 							</Flex>
-							<Button onClick={handleReset} mr={"15px"}>
-								<RepeatIcon />
-							</Button>
-							<Link to={`/admin/product`}>
-								<Button mr={"15px"} leftIcon={<HamburgerIcon />}>
-									Product Data
-								</Button>
-							</Link>
-							<Link to={`/admin/mutation`}>
-								<Button
-									mr={"15px"}
-									leftIcon={<Icon as={FaBoxes} />}
-									px={"10px"}
-								>
-									Stock Mutation
-								</Button>
-							</Link>
-							<Link to={`/admin/stockhistory`}>
-								<Button leftIcon={<TimeIcon />} px={"10px"}>
-									Stock History
-								</Button>
-							</Link>
+							<Flex
+								gap={"15px"}
+								w={["100%", null, "auto"]} // Adjust width based on breakpoints
+								flexWrap={["wrap", null, "nowrap"]}
+							>
+								<Link to={`/admin/product`}>
+									<Button leftIcon={<HamburgerIcon />}>Product Data</Button>
+								</Link>
+								<Link to={`/admin/mutation`}>
+									<Button leftIcon={<Icon as={FaBoxes} />}>
+										Stock Mutation
+									</Button>
+								</Link>
+								<Link to={`/admin/stockhistory`}>
+									<Button leftIcon={<TimeIcon />}>Stock History</Button>
+								</Link>
+							</Flex>
 						</Flex>
-						<Center gap={"15px"} paddingBottom={"15px"}>
+						<Center
+							gap={"15px"}
+							paddingBottom={"15px"}
+							w={["100%", null, "auto"]} // Adjust width based on breakpoints
+							flexWrap={["wrap", null, "nowrap"]}
+						>
 							<Select
 								placeholder="All Type of Products"
 								value={selectedProduct}
@@ -318,70 +319,69 @@ export default function AdminManageData() {
 							fontWeight={600}
 							borderColor={"#E6EBF2"}
 							gap={"7"}
+							flexWrap={"wrap"}
 						>
-							<Flex w={"325px"} paddingLeft={"55px"}>
-								<Flex
-									alignItems={"center"}
-									onClick={() =>
-										handleSortChange(
-											"product" + (sort === "productDesc" ? "Asc" : "Desc")
-										)
-									}
-									cursor="pointer"
-								>
-									Product Name
-									<UpDownIcon ml={"10px"} />
-									{sort === "productDesc" ? sort === "productAsc" : null}
-								</Flex>
+							<Flex
+								maxW={"325px"}
+								w={"100%"}
+								paddingLeft={"55px"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"product" + (sort === "productDesc" ? "Asc" : "Desc")
+									)
+								}
+								cursor="pointer"
+							>
+								Product Name
+								<UpDownIcon ml={"10px"} />
+								{sort === "productDesc" ? sort === "productAsc" : null}
 							</Flex>
-
-							<Flex w={"195px"} alignItems={"center"}>
-								<Flex
-									alignItems={"center"}
-									onClick={() =>
-										handleSortChange(
-											"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
-										)
-									}
-									cursor="pointer"
-								>
-									Warehouse
-									{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
-									<UpDownIcon ml={"10px"} />
-								</Flex>
+							<Flex
+								maxW={"190px"}
+								w={"100%"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Warehouse
+								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
+								<UpDownIcon ml={"10px"} />
 							</Flex>
-							<Flex w={"195px"} alignItems={"center"}>
-								<Flex
-									alignItems={"center"}
-									onClick={() =>
-										handleSortChange(
-											"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
-										)
-									}
-									cursor="pointer"
-								>
-									Category
-									{sort === "categoryAsc" ? sort === "categoryDesc" : null}
-									<UpDownIcon ml={"10px"} />
-								</Flex>
+							<Flex
+								maxW={"190px"}
+								w={"100%"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Category
+								{sort === "categoryAsc" ? sort === "categoryDesc" : null}
+								<UpDownIcon ml={"10px"} />
 							</Flex>
-							<Flex w={"195px"} alignItems={"center"}>
-								<Flex
-									alignItems={"center"}
-									onClick={() =>
-										handleSortChange(
-											"qty" + (sort === "qtyAsc" ? "Desc" : "Asc")
-										)
-									}
-									cursor="pointer"
-								>
-									Stock
-									<UpDownIcon ml={"10px"} />
-									{sort === "qtyAsc" ? sort === "qtyDesc" : null}
-								</Flex>
+							<Flex
+								maxW={"190px"}
+								w={"100%"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
+								}
+								cursor="pointer"
+							>
+								Stock
+								<UpDownIcon ml={"10px"} />
+								{sort === "qtyAsc" ? sort === "qtyDesc" : null}
 							</Flex>
-							<Flex w={"195px"} alignItems={"center"}>
-								<Flex alignItems={"center"}>Status</Flex>
+							<Flex w={"190px"} alignItems={"center"}>
+								Status
 							</Flex>
 							<Flex w={"25px"}></Flex>
 						</Flex>

@@ -19,7 +19,7 @@ router.post("/", checkRole.checkWAdmin, stockMutation.requestMutation);
 router.patch(
 	"/mutation/handle/:id",
 	checkRole.checkWAdmin,
-	handleStockMutation.confirmMutation
+	handleStockMutation.handleMutation
 );
 
 router.patch("/:id", checkRole.checkWAdmin, stockMutation.editMutation);

@@ -137,12 +137,13 @@ export default function AdminMutation() {
 	return (
 		<Center flexDir={"column"}>
 			<Flex
-				margin={"20px 20px 50px"}
+				margin={"0px 20px 50px"}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}
 				padding={"15px"}
-				w={"1322 px"}
+				maxW={"1300px"}
+				w={"100%"}
 				justifyContent={"center"}
 				flexDir={"column"}
 			>
@@ -150,27 +151,26 @@ export default function AdminMutation() {
 					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
 						Stock Mutation
 					</Flex>
-					<Flex>
-						<Flex gap={"10px"} w={"100%"} marginBottom={"15px"}>
+					<Flex
+						justifyContent={"space-between"}
+						gap={"15px"}
+						paddingBottom={"15px"}
+					>
+						<Flex gap={"15px"} w={"100%"}>
 							<Link to={`/admin/managedata`}>
 								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
 							</Link>
 							<Button
 								as={Button}
-								paddingLeft={"9px"}
-								marginBottom={"15px"}
-								rightIcon={<AddIcon />}
 								colorScheme="green"
 								onClick={addMutationModal.onOpen}
-							/>
+							>
+								<AddIcon />
+							</Button>
 							<Flex style={{ position: "relative", display: "inline-block" }}>
-								<Button
-									as={Button}
-									paddingLeft={"9px"}
-									marginBottom={"15px"}
-									rightIcon={<BellIcon />}
-									onClick={mutationRequestModal.onOpen}
-								/>
+								<Button as={Button} onClick={mutationRequestModal.onOpen}>
+									<BellIcon />
+								</Button>
 								{request.length ? (
 									<Flex
 										style={{
@@ -193,7 +193,7 @@ export default function AdminMutation() {
 								) : null}
 							</Flex>
 						</Flex>
-						<Button onClick={handleReset} mr={"15px"}>
+						<Button onClick={handleReset}>
 							<RepeatIcon />
 						</Button>
 						<Input
@@ -206,7 +206,12 @@ export default function AdminMutation() {
 							}}
 						/>
 					</Flex>
-					<Center gap={"15px"} paddingBottom={"15px"}>
+					<Center
+						gap={"15px"}
+						paddingBottom={"15px"}
+						w={["100%", null, "auto"]} // Adjust width based on breakpoints
+						flexWrap={["wrap", null, "nowrap"]}
+					>
 						<Select
 							placeholder="From Warehouse"
 							value={selectedWarehouse}
@@ -257,100 +262,92 @@ export default function AdminMutation() {
 						borderColor={"#E6EBF2"}
 						gap={"7"}
 					>
-						<Flex w={"325px"} paddingLeft={"55px"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productAsc" ? sort === "productDesc" : null}
-							</Flex>
+						<Flex
+							w={"325px"}
+							paddingLeft={"55px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"product" + (sort === "productAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+						>
+							Product Name
+							<UpDownIcon ml={"10px"} />
+							{sort === "productAsc" ? sort === "productDesc" : null}
 						</Flex>
-						<Flex w={"195px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"from_Warehouse" +
-											(sort === "from_WarehouseDesc" ? "Asc" : "Desc")
-									)
-								}
-								cursor="pointer"
-							>
-								Warehouse (From-To)
-								{sort === "from_WarehouseDesc"
-									? sort === "from_WarehouseAsc"
-									: null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"195px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"from_Warehouse" +
+										(sort === "from_WarehouseDesc" ? "Asc" : "Desc")
+								)
+							}
+							cursor="pointer"
+						>
+							Warehouse (From-To)
+							{sort === "from_WarehouseDesc"
+								? sort === "from_WarehouseAsc"
+								: null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-						<Flex w={"195px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"mutation_code" +
-											(sort === "mutation_codeAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Mutation Code
-								{sort === "mutation_codeAsc"
-									? sort === "mutation_codeDesc"
-									: null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"195px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"mutation_code" +
+										(sort === "mutation_codeAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+						>
+							Mutation Code
+							{sort === "mutation_codeAsc"
+								? sort === "mutation_codeDesc"
+								: null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-						<Flex w={"100px"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
-								}
-								cursor="pointer"
-							>
-								Amount
-								{sort === "qtyAsc" ? sort === "qtyDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"100px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
+							}
+							cursor="pointer"
+						>
+							Amount
+							{sort === "qtyAsc" ? sort === "qtyDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-						<Flex w={"100px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"status" + (sort === "statusAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Status
-								{sort === "statusAsc" ? sort === "statusDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"100px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange(
+									"status" + (sort === "statusAsc" ? "Desc" : "Asc")
+								)
+							}
+							cursor="pointer"
+						>
+							Status
+							{sort === "statusAsc" ? sort === "statusDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
-
-						<Flex w={"170px"} alignItems={"center"}>
-							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"date" + (sort === "dateAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Date
-								{sort === "dateAsc" ? sort === "dateDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
+						<Flex
+							w={"170px"}
+							alignItems={"center"}
+							onClick={() =>
+								handleSortChange("date" + (sort === "dateAsc" ? "Desc" : "Asc"))
+							}
+							cursor="pointer"
+						>
+							Date
+							{sort === "dateAsc" ? sort === "dateDesc" : null}
+							<UpDownIcon ml={"10px"} />
 						</Flex>
 						<Flex w={"25px"}></Flex>
 					</Flex>
@@ -360,7 +357,6 @@ export default function AdminMutation() {
 						  })
 						: null}
 				</Flex>
-				{/* {mutation.length ? ( */}
 				<ButtonGroup
 					paddingTop={"15px"}
 					justifyContent={"end"}
@@ -387,7 +383,6 @@ export default function AdminMutation() {
 						</Button>
 					)}
 				</ButtonGroup>
-				{/* ) : null} */}
 			</Flex>
 			<AddMutationModal
 				isOpen={addMutationModal.isOpen}
