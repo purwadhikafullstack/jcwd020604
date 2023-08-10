@@ -112,7 +112,7 @@ export default function Navbar(props) {
 					<HStack spacing={8} alignItems={"center"}>
 						<Box>
 							<Image
-								src={colorMode === "light" ? (Logo) : (Logo2)}
+								src={colorMode === "light" ? Logo : Logo2}
 								minW={"50px"}
 								w={"20px"}
 								cursor={"pointer"}

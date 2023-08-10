@@ -76,9 +76,9 @@ db.users.belongsTo(db.warehouses, { foreignKey: "warehouse_id" });
 // // db.carts foreignKey
 // db.stocks.hasMany(db.carts, { foreignKey: "stock_id", targetKey: "id" });
 
-// // db.orders foreignKey
-// db.users.hasMany(db.orders, { foreignKey: "user_id", targetKey: "id" });
-// db.addresses.hasMany(db.orders, { foreignKey: "address_id", targetKey: "id" });
+// db.orders foreignKey
+db.users.hasMany(db.orders, { foreignKey: "user_id", targetKey: "id" });
+db.addresses.hasMany(db.orders, { foreignKey: "address_id", targetKey: "id" });
 
 // // db.orderDetails foreignKey
 // db.stocks.hasMany(db.orderDetails, { foreignKey: "stock_id", targetKey: "id" });

@@ -27,7 +27,7 @@ const ProtectedPages = ({
         } else if (guestOnly && user.role) {
           return nav("/");
         } else if (needLogin && !user.role) {
-          return nav("/login");
+          return nav("/not-found");
         } else if (needLogin && needLoginAdmin && user.role !== "ADMIN") {
           return nav("/restricted");
         }
