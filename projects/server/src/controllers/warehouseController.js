@@ -3,67 +3,6 @@ const axios = require("axios");
 const Joi = require("joi");
 
 const warehouseController = {
-	getWarehouse: async (req, res) => {
-		try {
-			const warehouses = await db.warehouses.findAll();
-
-			const sortedWarehouses = warehouses.sort((a, b) => {
-				return a.warehouse_name.localeCompare(b.warehouse_name);
-			});
-
-			res.status(200).send(sortedWarehouses);
-		} catch (err) {
-			res.status(500).send({
-				message: err.message,
-			});
-		}
-	},
-	getWarehouseById: async (req, res) => {
-		const { id } = req.params;
-		try {
-			const warehouse = await db.warehouses.findOne({ where: { id } });
-			if (!warehouse) {
-				return res.status(404).send({ message: "Warehouse not found" });
-			}
-			return res.send(warehouse);
-		} catch (err) {
-			return res.status(500).send({ message: err.message });
-		}
-	},
-	getAllProvince: async (req, res) => {
-		try {
-			const result = await axios.get(
-				"https://api.rajaongkir.com/starter/province",
-				{
-					headers: {
-						key: process.env.RAJA_ONGKIR_API,
-					},
-				}
-			);
-			res.send(result.data.rajaongkir.results);
-		} catch (err) {
-			res.status(500).send({
-				message: err.message,
-			});
-		}
-	},
-	getAllCity: async (req, res) => {
-		try {
-			const result = await axios.get(
-				"https://api.rajaongkir.com/starter/city",
-				{
-					headers: {
-						key: process.env.RAJA_ONGKIR_API,
-					},
-				}
-			);
-			res.send(result.data.rajaongkir.results);
-		} catch (err) {
-			res.status(500).send({
-				message: err.message,
-			});
-		}
-	},
 	insertWarehouse: async (req, res) => {
 		const t = await db.sequelize.transaction();
 		const warehouseSchema = Joi.object({
@@ -90,17 +29,14 @@ const warehouseController = {
 				throw new Error("Warehouse with this name already exists.");
 			}
 
-			const response = await axios.get(
-				"https://api.opencagedata.com/geocode/v1/json",
-				{
-					params: {
-						q: `${address}, ${district}, ${province}, ${city}`,
-						countrycode: "id",
-						limit: 1,
-						key: process.env.GEOCODE_API_KEY,
-					},
-				}
-			);
+			const response = await axios.get("https://api.opencagedata.com/geocode/v1/json", {
+				params: {
+					q: `${address}, ${district}, ${province}, ${city}`,
+					countrycode: "id",
+					limit: 1,
+					key: process.env.GEOCODE_API_KEY,
+				},
+			});
 
 			const { lat, lng } = response.data.results[0].geometry;
 
@@ -146,9 +82,7 @@ const warehouseController = {
 		});
 
 		if (validation.error) {
-			return res
-				.status(400)
-				.send({ message: validation.error.details[0].message });
+			return res.status(400).send({ message: validation.error.details[0].message });
 		}
 
 		try {
@@ -157,22 +91,17 @@ const warehouseController = {
 			});
 
 			if (existingWarehouse && existingWarehouse.id !== id) {
-				return res
-					.status(400)
-					.send({ message: "Warehouse name already exists." });
+				return res.status(400).send({ message: "Warehouse name already exists." });
 			}
 
-			const response = await axios.get(
-				"https://api.opencagedata.com/geocode/v1/json",
-				{
-					params: {
-						q: `${address}, ${district}, ${province}, ${city}`,
-						countrycode: "id",
-						limit: 1,
-						key: process.env.GEOCODE_API_KEY,
-					},
-				}
-			);
+			const response = await axios.get("https://api.opencagedata.com/geocode/v1/json", {
+				params: {
+					q: `${address}, ${district}, ${province}, ${city}`,
+					countrycode: "id",
+					limit: 1,
+					key: process.env.GEOCODE_API_KEY,
+				},
+			});
 
 			const { lat, lng } = response.data.results[0].geometry;
 
@@ -196,7 +125,6 @@ const warehouseController = {
 			return res.status(500).send({ message: err.message });
 		}
 	},
-
 	deleteWarehouse: async (req, res) => {
 		const { id } = req.params;
 		const t = await db.sequelize.transaction();
@@ -219,48 +147,38 @@ const warehouseController = {
 			return res.status(500).send({ message: err.message });
 		}
 	},
+	assignAdminUserToWarehouse: async (req, res) => {
+		const t = await db.sequelize.transaction();
+		try {
+			const { warehouse_id, uuid } = req.body;
 
+			// Check jika warehouse yang dipilih ada
+			const warehouse = await db.warehouses.findByPk(warehouse_id);
+			if (!warehouse) {
+				return res.status(404).json({ error: "Warehouse not found." });
+			}
+			// Check user ada dan role w_admin
+			const existingUser = await db.users.findOne({
+				where: { uuid },
+			});
+			if (!existingUser) {
+				return res.status(404).json({ error: "User not found." });
+			}
+			// Cek user ada dan terverifikasi
+			if (!existingUser.verified) {
+				return res.status(403).json({ error: "The user is not an admin." });
+			}
 
-assignAdminUserToWarehouse: async (req, res) => {
-	const t = await db.sequelize.transaction();
-	try {
-		const { warehouse_id, uuid } = req.body;
+			// Update the user's warehouse_id to assign them to the selected warehouse
+			await db.users.update({ warehouse_id }, { where: { uuid }, transaction: t });
 
-		// Check jika warehouse yang dipilih ada
-		const warehouse = await db.warehouses.findByPk(warehouse_id);
-		if (!warehouse) {
-			return res.status(404).json({ error: 'Warehouse not found.' });
+			// Commit the transaction
+			await t.commit();
+			res.send({ message: "Warehouse assignment successful." });
+		} catch (err) {
+			await t.rollback();
+			return res.status(500).send({ message: err.message });
 		}
-
-		// Check user ada dan role w_admin
-		const existingUser = await db.users.findOne({
-			where: { uuid },
-		});
-		if (!existingUser) {
-			return res.status(404).json({ error: 'User not found.' });
-		}
-
-		// Cek user ada dan terverifikasi
-		if (!existingUser.verified) {
-			return res.status(403).json({ error: 'The user is not an admin.' });
-		}
-
-		// Update the user's warehouse_id to assign them to the selected warehouse
-		await db.users.update(
-			{ warehouse_id },
-			{ where: { uuid }, transaction: t }
-		);
-
-		// Commit the transaction
-		await t.commit();
-		res.send({ message: 'Warehouse assignment successful.' });
-
-	} catch (err) {
-		await t.rollback();
-		return res.status(500).send({ message: err.message });
-	}
-}
-  
-		
+	},
 };
 module.exports = warehouseController;

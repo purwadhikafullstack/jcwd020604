@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const stockController = require("../controllers").stockHistoryControllers;
+const stockController = require("../controllers").stockHistoryController;
 const checkRole = require("../middlewares/roleDecoder");
 
 router.get("/", checkRole.checkWAdmin, stockController.getHistory);

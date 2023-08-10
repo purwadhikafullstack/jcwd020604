@@ -1,14 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const stockMutation = require("../controllers").stockMutationControllers;
+const stockMutation = require("../controllers").stockMutationController;
+const handleStockMutation =
+	require("../controllers").handleStockMutationController;
+const getStockMutation = require("../controllers").getStockMutationController;
 const checkRole = require("../middlewares/roleDecoder");
 
-router.get("/", checkRole.checkWAdmin, stockMutation.getMutation);
+router.get("/", checkRole.checkWAdmin, getStockMutation.getMutation);
 
 router.get(
 	"/mutation/request",
 	checkRole.checkWAdmin,
-	stockMutation.getMutationRequest
+	getStockMutation.getMutationRequest
 );
 
 router.post("/", checkRole.checkWAdmin, stockMutation.requestMutation);
@@ -16,7 +19,7 @@ router.post("/", checkRole.checkWAdmin, stockMutation.requestMutation);
 router.patch(
 	"/mutation/handle/:id",
 	checkRole.checkWAdmin,
-	stockMutation.confirmMutation
+	handleStockMutation.confirmMutation
 );
 
 router.patch("/:id", checkRole.checkWAdmin, stockMutation.editMutation);

@@ -128,7 +128,7 @@ export default function MutationRequestModal({
 											id="id"
 											onClick={() => handleReject(request.id)}
 										>
-											Decline
+											Reject
 										</Button>
 										<Button
 											colorScheme="green"

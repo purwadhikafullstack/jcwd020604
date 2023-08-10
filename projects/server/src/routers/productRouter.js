@@ -1,17 +1,21 @@
 const express = require("express");
 const router = express.Router();
 const productController = require("../controllers").productController;
+const getProductController = require("../controllers").getProductController;
 const { fileUploader, upload } = require("../middlewares/multer");
 const checkRole = require("../middlewares/roleDecoder");
 
-router.get("/", checkRole.checkUser, productController.getAll);
+router.get("/", checkRole.checkUser, getProductController.getAll);
 router.get(
 	"/getAllProduct/getAll",
 	checkRole.checkWAdmin,
-	productController.getAllProduct
+	getProductController.getAllProduct
 );
-// router.get("/id/:id", productController.getProductById);
-router.get("/:uuid", checkRole.checkUser, productController.getProductByUuid);
+router.get(
+	"/:uuid",
+	checkRole.checkUser,
+	getProductController.getProductByUuid
+);
 router.post(
 	"/",
 	checkRole.checkAdmin,

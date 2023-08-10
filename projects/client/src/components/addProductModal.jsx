@@ -94,13 +94,11 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 		setSelectedFiles(files);
 		const images = [];
 		const maxImages = 5; // Set the maximum number of images to 5
-
 		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
 			const file = files[i];
 			const imageUrl = URL.createObjectURL(file);
 			images.push(imageUrl);
 		}
-
 		setSelectedImages(images);
 		formik.setFieldValue("productImg", [...files].slice(0, maxImages)); // Store up to the first 5 selected image files in formik state
 	};
@@ -199,7 +197,6 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 						) : null}
 					</FormControl>
 				</ModalBody>
-
 				<ModalFooter>
 					<Button
 						onClick={formik.handleSubmit}

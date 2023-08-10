@@ -15,13 +15,10 @@ import {
 	Select,
 	Flex,
 	Image,
-	Toast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../api/api";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 import { useSelector } from "react-redux";
 
 export default function EditProductModal({ isOpen, onClose, val, getProduct }) {

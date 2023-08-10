@@ -121,6 +121,14 @@ const stockHistory = {
 			console.log("masuk");
 			console.log(dataStock);
 			console.log(qty);
+			console.log({
+				qty: qty - dataStock.qty,
+				status,
+				reference,
+				stock_id: dataStock.id,
+				stock_before: dataStock.qty,
+				stock_after: qty,
+			});
 			const newHistory = await db.stock_histories.create(
 				{
 					qty: qty - dataStock.qty,
@@ -137,7 +145,7 @@ const stockHistory = {
 		} catch (err) {
 			console.log(err);
 			// await t.rollback();
-			return err.message;
+			throw err;
 		}
 	},
 };

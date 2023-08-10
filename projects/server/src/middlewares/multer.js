@@ -12,7 +12,6 @@ const fileUploader = ({
 		},
 
 		filename: (req, file, cb) => {
-			console.log(file);
 			const fileExtension = file.mimetype.split("/")[1];
 
 			const filename = `${prefix}_${nanoid()}.${fileExtension}`;
