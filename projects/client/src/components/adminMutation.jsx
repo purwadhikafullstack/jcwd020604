@@ -9,6 +9,7 @@ import {
 	Button,
 	ButtonGroup,
 	useDisclosure,
+	Grid,
 } from "@chakra-ui/react";
 import {
 	UpDownIcon,
@@ -26,6 +27,7 @@ import { useSelector } from "react-redux";
 import MutationList from "./mutationList";
 import AddMutationModal from "./addMutationModal";
 import MutationRequestModal from "./mutationRequestModal";
+import MutationCard from "./cardMutation";
 
 export default function AdminMutation() {
 	const [warehouse, setWarehouse] = useState([]);
@@ -133,6 +135,55 @@ export default function AdminMutation() {
 		setSearch("");
 		setTime("");
 	};
+
+	// Grid Wrap
+	const [pageWidth, setPageWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		// Update the page width on window resize
+		const handleResize = () => {
+			setPageWidth(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		// Clean up the event listener
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	let templateColumns;
+
+	if (pageWidth <= 700) {
+		templateColumns = "repeat(2, 1fr)";
+	} else {
+		templateColumns = "repeat(3, 1fr)";
+	}
+
+	let mutationListOrGrid;
+
+	if (pageWidth <= 900) {
+		mutationListOrGrid = (
+			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
+				{mutation?.length
+					? mutation.map((val) => {
+							return <MutationCard val={val} getMutation={getMutation} />;
+					  })
+					: null}
+			</Grid>
+		);
+	} else {
+		mutationListOrGrid = (
+			<>
+				{mutation?.length
+					? mutation?.map((val) => {
+							return <MutationList val={val} getMutation={getMutation} />;
+					  })
+					: null}
+			</>
+		);
+	}
 
 	return (
 		<Center flexDir={"column"}>
@@ -255,107 +306,108 @@ export default function AdminMutation() {
 							</InputRightElement>
 						</InputGroup>
 					</Center>
-					<Flex
-						padding={"7px"}
-						borderBottom={"1px"}
-						fontWeight={600}
-						borderColor={"#E6EBF2"}
-						gap={"7"}
-					>
+					{pageWidth > 900 ? (
 						<Flex
-							w={"325px"}
-							paddingLeft={"55px"}
-							alignItems={"center"}
-							onClick={() =>
-								handleSortChange(
-									"product" + (sort === "productAsc" ? "Desc" : "Asc")
-								)
-							}
-							cursor="pointer"
+							padding={"7px"}
+							borderBottom={"1px"}
+							fontWeight={600}
+							borderColor={"#E6EBF2"}
+							gap={"7"}
 						>
-							Product Name
-							<UpDownIcon ml={"10px"} />
-							{sort === "productAsc" ? sort === "productDesc" : null}
+							<Flex
+								w={"325px"}
+								minW={"275px"}
+								paddingLeft={"55px"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"product" + (sort === "productAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Product Name
+								<UpDownIcon ml={"10px"} />
+								{sort === "productAsc" ? sort === "productDesc" : null}
+							</Flex>
+							<Flex
+								w={"195px"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"from_Warehouse" +
+											(sort === "from_WarehouseDesc" ? "Asc" : "Desc")
+									)
+								}
+								cursor="pointer"
+							>
+								Warehouse (From-To)
+								{sort === "from_WarehouseDesc"
+									? sort === "from_WarehouseAsc"
+									: null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex
+								w={"195px"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"mutation_code" +
+											(sort === "mutation_codeAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Mutation Code
+								{sort === "mutation_codeAsc"
+									? sort === "mutation_codeDesc"
+									: null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex
+								w={"100px"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
+								}
+								cursor="pointer"
+							>
+								Amount
+								{sort === "qtyAsc" ? sort === "qtyDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex
+								w={"100px"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"status" + (sort === "statusAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Status
+								{sort === "statusAsc" ? sort === "statusDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex
+								w={"170px"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"date" + (sort === "dateAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Date
+								{sort === "dateAsc" ? sort === "dateDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex w={"25px"}></Flex>
 						</Flex>
-						<Flex
-							w={"195px"}
-							alignItems={"center"}
-							onClick={() =>
-								handleSortChange(
-									"from_Warehouse" +
-										(sort === "from_WarehouseDesc" ? "Asc" : "Desc")
-								)
-							}
-							cursor="pointer"
-						>
-							Warehouse (From-To)
-							{sort === "from_WarehouseDesc"
-								? sort === "from_WarehouseAsc"
-								: null}
-							<UpDownIcon ml={"10px"} />
-						</Flex>
-						<Flex
-							w={"195px"}
-							alignItems={"center"}
-							onClick={() =>
-								handleSortChange(
-									"mutation_code" +
-										(sort === "mutation_codeAsc" ? "Desc" : "Asc")
-								)
-							}
-							cursor="pointer"
-						>
-							Mutation Code
-							{sort === "mutation_codeAsc"
-								? sort === "mutation_codeDesc"
-								: null}
-							<UpDownIcon ml={"10px"} />
-						</Flex>
-						<Flex
-							w={"100px"}
-							alignItems={"center"}
-							onClick={() =>
-								handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
-							}
-							cursor="pointer"
-						>
-							Amount
-							{sort === "qtyAsc" ? sort === "qtyDesc" : null}
-							<UpDownIcon ml={"10px"} />
-						</Flex>
-						<Flex
-							w={"100px"}
-							alignItems={"center"}
-							onClick={() =>
-								handleSortChange(
-									"status" + (sort === "statusAsc" ? "Desc" : "Asc")
-								)
-							}
-							cursor="pointer"
-						>
-							Status
-							{sort === "statusAsc" ? sort === "statusDesc" : null}
-							<UpDownIcon ml={"10px"} />
-						</Flex>
-						<Flex
-							w={"170px"}
-							alignItems={"center"}
-							onClick={() =>
-								handleSortChange("date" + (sort === "dateAsc" ? "Desc" : "Asc"))
-							}
-							cursor="pointer"
-						>
-							Date
-							{sort === "dateAsc" ? sort === "dateDesc" : null}
-							<UpDownIcon ml={"10px"} />
-						</Flex>
-						<Flex w={"25px"}></Flex>
-					</Flex>
-					{mutation?.length
-						? mutation?.map((val) => {
-								return <MutationList val={val} getMutation={getMutation} />;
-						  })
-						: null}
+					) : null}
+					{mutationListOrGrid}
 				</Flex>
 				<ButtonGroup
 					paddingTop={"15px"}

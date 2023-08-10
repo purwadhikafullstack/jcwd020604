@@ -57,7 +57,6 @@ export default function StockList({ val, getStock }) {
 			borderColor={"#E6EBF2"}
 			gap={"7"}
 			alignItems={"center"}
-			flexWrap={"wrap"}
 		>
 			<Flex gap={"5px"} alignItems={"center"}>
 				<Image

@@ -13,13 +13,13 @@ import {
 	MenuItem,
 	ButtonGroup,
 	useDisclosure,
+	Grid,
 } from "@chakra-ui/react";
 import {
 	DeleteIcon,
 	AddIcon,
 	EditIcon,
 	HamburgerIcon,
-	PlusSquareIcon,
 	UpDownIcon,
 	RepeatIcon,
 	TimeIcon,
@@ -28,7 +28,7 @@ import { useSelector } from "react-redux";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { api } from "../api/api";
 import AddCategoryModal from "./addCategoryModal";
 import AddWarehouseModal from "./addWarehouseModal";
@@ -40,6 +40,7 @@ import AddStockModal from "./addStockModal";
 import StockList from "./stockList";
 import { BsFillCircleFill } from "react-icons/bs";
 import { FaBoxes } from "react-icons/fa";
+import StockCard from "./cardStock";
 
 export default function AdminManageData() {
 	const user = useSelector((state) => state.auth);
@@ -141,6 +142,55 @@ export default function AdminManageData() {
 		setPage(1);
 	};
 
+	// Grid Wrap
+	const [pageWidth, setPageWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		// Update the page width on window resize
+		const handleResize = () => {
+			setPageWidth(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		// Clean up the event listener
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	let templateColumns;
+
+	if (pageWidth <= 700) {
+		templateColumns = "repeat(2, 1fr)";
+	} else {
+		templateColumns = "repeat(3, 1fr)";
+	}
+
+	let stockListOrGrid;
+
+	if (pageWidth <= 900) {
+		stockListOrGrid = (
+			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
+				{stock?.length
+					? stock.map((val) => {
+							return <StockCard val={val} getStock={getStock} />;
+					  })
+					: null}
+			</Grid>
+		);
+	} else {
+		stockListOrGrid = (
+			<>
+				{stock.length
+					? stock.map((val) => {
+							return <StockList val={val} getStock={getStock} />;
+					  })
+					: null}
+			</>
+		);
+	}
+
 	return (
 		<>
 			<Center flexDir={"column"}>
@@ -233,19 +283,20 @@ export default function AdminManageData() {
 								gap={"15px"}
 								w={["100%", null, "auto"]} // Adjust width based on breakpoints
 								flexWrap={["wrap", null, "nowrap"]}
+								justifyContent={"space-between"}
 							>
 								<Link to={`/admin/product`}>
-									<Button gap={"5px"} w={"133px"}>
+									<Button gap={"5px"}>
 										<HamburgerIcon /> Product Data
 									</Button>
 								</Link>
 								<Link to={`/admin/mutation`}>
-									<Button gap={"5px"} w={"150px"}>
+									<Button gap={"5px"}>
 										<Icon as={FaBoxes} /> Stock Mutation
 									</Button>
 								</Link>
 								<Link to={`/admin/stockhistory`}>
-									<Button gap={"5px"} w={"140px"}>
+									<Button gap={"5px"}>
 										<TimeIcon /> Stock History
 									</Button>
 								</Link>
@@ -316,83 +367,79 @@ export default function AdminManageData() {
 								</InputRightElement>
 							</InputGroup>
 						</Center>
-						<Flex
-							padding={"7px"}
-							borderBottom={"1px"}
-							fontWeight={600}
-							borderColor={"#E6EBF2"}
-							gap={"7"}
-							flexWrap={"wrap"}
-						>
+						{pageWidth > 900 ? (
 							<Flex
-								maxW={"325px"}
-								w={"100%"}
-								paddingLeft={"55px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productDesc" ? "Asc" : "Desc")
-									)
-								}
-								cursor="pointer"
+								padding={"7px"}
+								borderBottom={"1px"}
+								fontWeight={600}
+								borderColor={"#E6EBF2"}
+								gap={"7"}
 							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productDesc" ? sort === "productAsc" : null}
+								<Flex
+									w={"325px"}
+									minW={"275px"}
+									paddingLeft={"55px"}
+									alignItems={"center"}
+									onClick={() =>
+										handleSortChange(
+											"product" + (sort === "productDesc" ? "Asc" : "Desc")
+										)
+									}
+									cursor="pointer"
+								>
+									Product Name
+									<UpDownIcon ml={"10px"} />
+									{sort === "productDesc" ? sort === "productAsc" : null}
+								</Flex>
+								<Flex
+									w={"190px"}
+									alignItems={"center"}
+									onClick={() =>
+										handleSortChange(
+											"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
+										)
+									}
+									cursor="pointer"
+								>
+									Warehouse
+									{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
+									<UpDownIcon ml={"10px"} />
+								</Flex>
+								<Flex
+									w={"190px"}
+									alignItems={"center"}
+									onClick={() =>
+										handleSortChange(
+											"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
+										)
+									}
+									cursor="pointer"
+								>
+									Category
+									{sort === "categoryAsc" ? sort === "categoryDesc" : null}
+									<UpDownIcon ml={"10px"} />
+								</Flex>
+								<Flex
+									w={"190px"}
+									alignItems={"center"}
+									onClick={() =>
+										handleSortChange(
+											"qty" + (sort === "qtyAsc" ? "Desc" : "Asc")
+										)
+									}
+									cursor="pointer"
+								>
+									Stock
+									<UpDownIcon ml={"10px"} />
+									{sort === "qtyAsc" ? sort === "qtyDesc" : null}
+								</Flex>
+								<Flex w={"190px"} alignItems={"center"}>
+									Status
+								</Flex>
+								<Flex w={"25px"}></Flex>
 							</Flex>
-							<Flex
-								maxW={"190px"}
-								w={"100%"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Warehouse
-								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								maxW={"190px"}
-								w={"100%"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Category
-								{sort === "categoryAsc" ? sort === "categoryDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								maxW={"190px"}
-								w={"100%"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
-								}
-								cursor="pointer"
-							>
-								Stock
-								<UpDownIcon ml={"10px"} />
-								{sort === "qtyAsc" ? sort === "qtyDesc" : null}
-							</Flex>
-							<Flex w={"190px"} alignItems={"center"}>
-								Status
-							</Flex>
-							<Flex w={"25px"}></Flex>
-						</Flex>
-						{stock.length
-							? stock.map((val) => {
-									return <StockList val={val} getStock={getStock} />;
-							  })
-							: null}
+						) : null}
+						{stockListOrGrid}
 					</Flex>
 					<Flex justifyContent={"end"} alignItems={"center"} gap={"30px"}>
 						<Flex alignItems={"center"} gap={"5px"} mt={"15px"}>

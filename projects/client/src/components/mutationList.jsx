@@ -8,14 +8,12 @@ import {
 	MenuList,
 	useToast,
 	useDisclosure,
-	CheckboxIcon,
 } from "@chakra-ui/react";
 import moment from "moment";
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
 import { api } from "../api/api";
-import { useSelector } from "react-redux";
 
 import DeleteMutationModal from "./deleteMutationModal";
 import EditMutationModal from "./editMutationModal";
@@ -25,7 +23,6 @@ export default function MutationList({ val, getMutation }) {
 	const editMutationModal = useDisclosure();
 	const toast = useToast();
 	const nav = useNavigate();
-	const user = useSelector((state) => state.auth);
 
 	console.log(val);
 

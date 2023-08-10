@@ -9,6 +9,7 @@ import {
 	Button,
 	ButtonGroup,
 	useDisclosure,
+	Grid,
 } from "@chakra-ui/react";
 import {
 	AddIcon,
@@ -24,7 +25,7 @@ import { api } from "../api/api";
 import ProductList from "./productList";
 import AddProductModal from "./addProductModal";
 import { useSelector } from "react-redux";
-import Navbar from "../components/Navbar";
+import ProductCardAdmin from "./cardProductAdmin";
 
 export default function AdminProduct() {
 	const [product, setProduct] = useState([]);
@@ -91,6 +92,63 @@ export default function AdminProduct() {
 		setSearch("");
 		setPage(1);
 	};
+
+	// Grid Wrap
+	const [pageWidth, setPageWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		// Update the page width on window resize
+		const handleResize = () => {
+			setPageWidth(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		// Clean up the event listener
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	let templateColumns;
+
+	if (pageWidth <= 700) {
+		templateColumns = "repeat(2, 1fr)";
+	} else {
+		templateColumns = "repeat(3, 1fr)";
+	}
+
+	let productListOrGrid;
+
+	if (pageWidth <= 900) {
+		productListOrGrid = (
+			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
+				{product.length ? (
+					product.map((val) => {
+						return <ProductCardAdmin val={val} getProduct={getProduct} />;
+					})
+				) : (
+					<Center fontSize={"20px"} fontWeight={"bold"} marginTop={"40px"}>
+						Product not found
+					</Center>
+				)}
+			</Grid>
+		);
+	} else {
+		productListOrGrid = (
+			<>
+				{product.length ? (
+					product.map((val) => {
+						return <ProductList val={val} getProduct={getProduct} />;
+					})
+				) : (
+					<Center fontSize={"20px"} fontWeight={"bold"} marginTop={"40px"}>
+						Product not found
+					</Center>
+				)}
+			</>
+		);
+	}
 
 	return (
 		<>
@@ -176,91 +234,84 @@ export default function AdminProduct() {
 							</InputGroup>
 						</Flex>
 					</Flex>
-					<Flex
-						padding={"7px"}
-						borderBottom={"1px"}
-						fontWeight={600}
-						borderColor={"#E6EBF2"}
-						gap={"7"}
-					>
+					{pageWidth > 900 ? (
 						<Flex
-							w={"325px"}
-							paddingLeft={"55px"}
-							onClick={() =>
-								handleSortChange(
-									"product" + (sort === "productDesc" ? "Asc" : "Desc")
-								)
-							}
-							cursor="pointer"
-							alignItems={"center"}
+							padding={"7px"}
+							borderBottom={"1px"}
+							fontWeight={600}
+							borderColor={"#E6EBF2"}
+							gap={"7"}
 						>
-							Product Name
-							<UpDownIcon ml={"10px"} />
-							{sort === "productDesc" ? sort === "productAsc" : null}
+							<Flex
+								w={"325px"}
+								minW={"275px"}
+								paddingLeft={"55px"}
+								onClick={() =>
+									handleSortChange(
+										"product" + (sort === "productDesc" ? "Asc" : "Desc")
+									)
+								}
+								cursor="pointer"
+								alignItems={"center"}
+							>
+								Product Name
+								<UpDownIcon ml={"10px"} />
+								{sort === "productDesc" ? sort === "productAsc" : null}
+							</Flex>
+							<Flex w={"300px"} alignItems={"center"}>
+								Description
+							</Flex>
+							<Flex
+								w={"160px"}
+								onClick={() =>
+									handleSortChange(
+										"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+								alignItems={"center"}
+							>
+								Category
+								{sort === "categoryAsc" ? sort === "categoryDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex
+								w={"160px"}
+								onClick={() =>
+									handleSortChange(
+										"price" + (sort === "priceAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+								alignItems={"center"}
+							>
+								Price (Rp)
+								{sort === "priceAsc" ? sort === "priceDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex
+								w={"160px"}
+								onClick={() =>
+									handleSortChange(
+										"weight" + (sort === "weightAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+								alignItems={"center"}
+							>
+								Weight (g)
+								{sort === "weightAsc" ? sort === "weightDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex w={"25px"}></Flex>
 						</Flex>
-						<Flex w={"300px"} alignItems={"center"}>
-							Description
-						</Flex>
-						<Flex
-							w={"160px"}
-							onClick={() =>
-								handleSortChange(
-									"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
-								)
-							}
-							cursor="pointer"
-							alignItems={"center"}
-						>
-							Category
-							{sort === "categoryAsc" ? sort === "categoryDesc" : null}
-							<UpDownIcon ml={"10px"} />
-						</Flex>
-
-						<Flex
-							w={"160px"}
-							onClick={() =>
-								handleSortChange(
-									"price" + (sort === "priceAsc" ? "Desc" : "Asc")
-								)
-							}
-							cursor="pointer"
-							alignItems={"center"}
-						>
-							Price (Rp)
-							{sort === "priceAsc" ? sort === "priceDesc" : null}
-							<UpDownIcon ml={"10px"} />
-						</Flex>
-						<Flex
-							w={"160px"}
-							onClick={() =>
-								handleSortChange(
-									"weight" + (sort === "weightAsc" ? "Desc" : "Asc")
-								)
-							}
-							cursor="pointer"
-							alignItems={"center"}
-						>
-							Weight (g)
-							{sort === "weightAsc" ? sort === "weightDesc" : null}
-							<UpDownIcon ml={"10px"} />
-						</Flex>
-						<Flex w={"25px"}></Flex>
-					</Flex>
-					{product.length ? (
-						product.map((val) => {
-							return <ProductList val={val} getProduct={getProduct} />;
-						})
-					) : (
-						<Center fontSize={"20px"} fontWeight={"bold"} marginTop={"40px"}>
-							Product not found
-						</Center>
-					)}
+					) : null}
+					{productListOrGrid}
 					<ButtonGroup
 						paddingTop={"15px"}
 						justifyContent={"end"}
 						alignItems={"center"}
 					>
-						{/* <Flex>{product.length} from (BUTUH DI FIX) Products</Flex> */}
 						{page === 1 || product.length === 0 ? null : (
 							<Button
 								onClick={() => {
