@@ -8,13 +8,12 @@ import { Box, Center, Flex, Grid } from "@chakra-ui/react";
 
 export default function WarehouseMap() {
 	const { isLoaded } = useLoadScript({
-		googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY,
+		// googleMapsApiKey: `${process.env.GOOGLE_MAPS_API_KEY}`,
 	});
-	if (!isLoaded) {
-		return <div>Loading...</div>;
-	}
 
-	return <Maps />;
+	if (isLoaded) {
+		return <Maps />;
+	}
 }
 
 function Maps() {
@@ -43,18 +42,24 @@ function Maps() {
 						center={center}
 						mapContainerClassName="map-container"
 					>
-						{warehouse.map((val) => (
+						{warehouse?.map((val) => (
 							<Marker
 								key={val.id}
 								position={{
-									lat: parseFloat(val.latitude),
-									lng: parseFloat(val.longitude),
+									lat: parseFloat(val?.latitude),
+									lng: parseFloat(val?.longitude),
 								}}
 							/>
 						))}
 					</GoogleMap>
 				</Box>
-				<Box border={"1px"} p={"15px"} borderRadius={"15px"}>
+				<Box
+					border={"1px"}
+					p={"15px"}
+					borderRadius={"15px"}
+					borderColor={"#E6EBF2"}
+					boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
+				>
 					<Center fontWeight={700} fontSize={"2xl"} pb={"20px"}>
 						Store Address
 					</Center>
@@ -63,15 +68,17 @@ function Maps() {
 							<Box
 								border={"1px"}
 								borderRadius={"15px"}
+								borderColor={"#E6EBF2"}
+								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
 								w={"100%"}
 								maxW={"350px"}
 								padding={"10px"}
 							>
-								<Flex fontWeight={600}>{val.warehouse_name}</Flex>
+								<Flex fontWeight={600}>{val?.warehouse_name}</Flex>
 								<Flex>
-									{val.address}, {val.district}, {val.city}, {val.province}.
+									{val?.address}, {val?.district}, {val?.city}, {val?.province}.
 								</Flex>
-								<Flex>{val.phone_number} </Flex>
+								<Flex>{val?.phone_number} </Flex>
 							</Box>
 						))}
 					</Grid>
