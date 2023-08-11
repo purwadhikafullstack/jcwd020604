@@ -55,7 +55,7 @@ function Maps() {
 					</GoogleMap>
 				</Box>
 				<Box border={"1px"} p={"15px"} borderRadius={"15px"}>
-					<Center fontWeight={700} fontSize={"2xl"} pb={"10px"}>
+					<Center fontWeight={700} fontSize={"2xl"} pb={"20px"}>
 						Store Address
 					</Center>
 					<Grid templateColumns={"repeat(2, 1fr)"} gap={"10px"}>
@@ -63,7 +63,8 @@ function Maps() {
 							<Box
 								border={"1px"}
 								borderRadius={"15px"}
-								w={"350px"}
+								w={"100%"}
+								maxW={"350px"}
 								padding={"10px"}
 							>
 								<Flex fontWeight={600}>{val.warehouse_name}</Flex>

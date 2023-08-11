@@ -35,6 +35,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
 import { BsGlobeAsiaAustralia } from "react-icons/bs";
+import "../css/maps.css";
 
 export default function Navbar() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -140,9 +141,19 @@ export default function Navbar() {
 						<Box m={2} pr={4} cursor={"pointer"}>
 							<FiShoppingCart />
 						</Box>
-						<Link to={`/maps`}>
-							<Icon mr={4} mt={"5px"} as={BsGlobeAsiaAustralia} />
-						</Link>
+						<Box className="hover-container" mr={4} mt={"5px"}>
+							<Link to={`/maps`}>
+								<Icon className="hover-icon" as={BsGlobeAsiaAustralia} />
+								<Flex
+									className="hover-text"
+									style={{
+										whiteSpace: "nowrap",
+									}}
+								>
+									Store map
+								</Flex>
+							</Link>
+						</Box>
 						<Menu>
 							{user.fullname ? (
 								<>
