@@ -20,6 +20,7 @@ import {
 	InputRightElement,
 	InputGroup,
 	useColorMode,
+	Icon,
 } from "@chakra-ui/react";
 import {
 	FiLogOut,
@@ -33,6 +34,7 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
+import { BsGlobeAsiaAustralia } from "react-icons/bs";
 
 export default function Navbar() {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -138,6 +140,9 @@ export default function Navbar() {
 						<Box m={2} pr={4} cursor={"pointer"}>
 							<FiShoppingCart />
 						</Box>
+						<Link to={`/maps`}>
+							<Icon mr={4} mt={"5px"} as={BsGlobeAsiaAustralia} />
+						</Link>
 						<Menu>
 							{user.fullname ? (
 								<>

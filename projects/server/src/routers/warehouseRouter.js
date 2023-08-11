@@ -4,7 +4,7 @@ const warehouseController = require("../controllers").warehouseController;
 const getWarehouseController = require("../controllers").getWarehouseController;
 const checkRole = require("../middlewares/roleDecoder");
 
-router.get("/", checkRole.checkWAdmin, getWarehouseController.getWarehouse);
+router.get("/", getWarehouseController.getWarehouse);
 router.get(
 	"/:id",
 	checkRole.checkWAdmin,

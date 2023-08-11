@@ -172,6 +172,16 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 								  ))
 								: null}
 						</Select>
+						<FormLabel>Phone Number:</FormLabel>
+						<Input
+							placeholder="08.. "
+							type="number"
+							id="phone_number"
+							defaultValue={data.phone_number}
+							onChange={(e) =>
+								setData({ ...data, phone_number: e.target.value })
+							}
+						/>
 					</FormControl>
 				</ModalBody>
 
