@@ -32,11 +32,11 @@ export default function HistoryCard({ val }) {
 								</Text>
 
 								<Flex flexDir={"column"}>
-									<Flex>
-										{val?.stock?.warehouse?.warehouse_name}(
-										<Flex>{val?.status}</Flex>)
+									<Flex gap={"5px"}>
+										<Flex> {val?.stock?.warehouse?.warehouse_name}</Flex>
+										<Flex>{`(${val?.status})`}</Flex>
 									</Flex>
-									<Flex>
+									<Flex gap={"5px"}>
 										<Flex>{val?.stock_after} </Flex>
 										<Flex style={{ color: val?.qty < 0 ? "red" : "green" }}>
 											{val?.qty === 0 ? null : `(${val?.qty})`}

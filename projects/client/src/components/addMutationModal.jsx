@@ -14,6 +14,7 @@ import {
 	HStack,
 	Center,
 	useToast,
+	Flex,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -34,6 +35,7 @@ export default function AddMutationModal({
 	const [stock, setStock] = useState([]);
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
+	const [selectedStock, setSelectedStock] = useState(null);
 
 	useEffect(() => {
 		getWarehouse();
@@ -111,6 +113,8 @@ export default function AddMutationModal({
 	const handleModalClose = () => {
 		formik.resetForm();
 		onClose();
+		setSelectedStock(null);
+		setSelectedWarehouse("");
 	};
 
 	return (
@@ -174,7 +178,13 @@ export default function AddMutationModal({
 						<Select
 							placeholder="All Product"
 							id="stock_id"
-							onChange={inputHandler}
+							onChange={(event) => {
+								inputHandler(event);
+								const selectedStock = stock.find(
+									(val) => val.id === parseInt(event.target.value)
+								);
+								setSelectedStock(selectedStock);
+							}}
 						>
 							{stock.length
 								? stock.map((val) => (
@@ -198,8 +208,10 @@ export default function AddMutationModal({
 						</Center>
 					</FormControl>
 				</ModalBody>
-				<ModalFooter>
+				<ModalFooter justifyContent={selectedStock ? "space-between" : null}>
+					{selectedStock ? <Flex>Max Amount: {selectedStock?.qty}</Flex> : null}
 					<Button
+						position={"sticky"}
 						colorScheme="green"
 						mr={3}
 						onClick={formik.handleSubmit}

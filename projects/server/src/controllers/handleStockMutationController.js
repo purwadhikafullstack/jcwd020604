@@ -55,7 +55,6 @@ const handleStockMutation = {
 						.send({ message: "Insufficient stock from selected warehouse." });
 				}
 
-				// Update stock quantities
 				await db.stocks.update(
 					{
 						qty: existingStock.qty - pendingMutation.qty,
@@ -72,7 +71,11 @@ const handleStockMutation = {
 					},
 				});
 
+				let destinationStockId = null;
+
 				if (destinationStock) {
+					destinationStockId = destinationStock.id;
+
 					await db.stocks.update(
 						{
 							qty: destinationStock.qty + pendingMutation.qty,
@@ -83,7 +86,7 @@ const handleStockMutation = {
 						}
 					);
 				} else {
-					await db.stocks.create(
+					const newDestinationStock = await db.stocks.create(
 						{
 							product_id: pendingMutation.stock.product_id,
 							warehouse_id: pendingMutation.to_warehouse_id,
@@ -93,6 +96,7 @@ const handleStockMutation = {
 							transaction: t,
 						}
 					);
+					destinationStockId = newDestinationStock.id;
 				}
 
 				await db.stock_mutations.update(
@@ -100,23 +104,34 @@ const handleStockMutation = {
 					{ where: { id: id }, transaction: t }
 				);
 
-				console.log(existingStock.dataValues.qty);
+				const destinationStockQty = destinationStock ? destinationStock.qty : 0;
 
-				// Log stock history for the mutation
-				await stockHistory.addStockHistory(
-					existingStock.dataValues,
-					"OUT",
-					pendingMutation.mutation_code,
-					pendingMutation.qty
+				await db.stock_histories.create(
+					{
+						qty: pendingMutation.qty,
+						status: "IN",
+						reference: pendingMutation.mutation_code,
+						stock_id: destinationStockId,
+						stock_before: existingStock.dataValues.qty,
+						stock_after: pendingMutation.qty + destinationStockQty,
+					},
+					{ transaction: t }
 				);
-				// await stockHistory.addStockHistory(
-				// 	existingStock.dataValues,
-				// 	"IN",
-				// 	pendingMutation.mutation_code,
-				// 	destinationStock.qty
-				// );
+
+				await db.stock_histories.create(
+					{
+						qty: -pendingMutation.qty,
+						status: "OUT",
+						reference: pendingMutation.mutation_code,
+						stock_id: existingStock.dataValues.id,
+						stock_before: existingStock.dataValues.qty,
+						stock_after: existingStock.dataValues.qty - pendingMutation.qty,
+					},
+					{ transaction: t }
+				);
 
 				await t.commit();
+
 				return res.status(200).send({ message: "Stock mutation confirmed." });
 			} else if (status === "REJECTED") {
 				await db.stock_mutations.update(
