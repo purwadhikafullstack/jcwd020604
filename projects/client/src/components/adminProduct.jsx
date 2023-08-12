@@ -128,7 +128,7 @@ export default function AdminProduct() {
 						return <ProductCardAdmin val={val} getProduct={getProduct} />;
 					})
 				) : (
-					<Center fontSize={"20px"} fontWeight={"bold"} marginTop={"40px"}>
+					<Center pt={"20px"} fontWeight={700}>
 						Product not found
 					</Center>
 				)}
@@ -142,7 +142,7 @@ export default function AdminProduct() {
 						return <ProductList val={val} getProduct={getProduct} />;
 					})
 				) : (
-					<Center fontSize={"20px"} fontWeight={"bold"} marginTop={"40px"}>
+					<Center pt={"20px"} fontWeight={700}>
 						Product not found
 					</Center>
 				)}

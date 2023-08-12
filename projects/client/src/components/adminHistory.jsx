@@ -129,21 +129,29 @@ export default function AdminHistory() {
 	if (pageWidth <= 900) {
 		historyListOrGrid = (
 			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
-				{history?.length
-					? history.map((val) => {
-							return <HistoryCard val={val} getHistory={getHistory} />;
-					  })
-					: null}
+				{history?.length ? (
+					history.map((val) => {
+						return <HistoryCard val={val} getHistory={getHistory} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock history not found
+					</Center>
+				)}
 			</Grid>
 		);
 	} else {
 		historyListOrGrid = (
 			<>
-				{history?.length
-					? history?.map((val) => {
-							return <HistoryList val={val} getHistory={getHistory} />;
-					  })
-					: null}
+				{history?.length ? (
+					history?.map((val) => {
+						return <HistoryList val={val} getHistory={getHistory} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock history not found
+					</Center>
+				)}
 			</>
 		);
 	}

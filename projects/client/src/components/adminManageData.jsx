@@ -172,21 +172,29 @@ export default function AdminManageData() {
 	if (pageWidth <= 900) {
 		stockListOrGrid = (
 			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
-				{stock?.length
-					? stock.map((val) => {
-							return <StockCard val={val} getStock={getStock} />;
-					  })
-					: null}
+				{stock?.length ? (
+					stock.map((val) => {
+						return <StockCard val={val} getStock={getStock} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock is empty
+					</Center>
+				)}
 			</Grid>
 		);
 	} else {
 		stockListOrGrid = (
 			<>
-				{stock.length
-					? stock.map((val) => {
-							return <StockList val={val} getStock={getStock} />;
-					  })
-					: null}
+				{stock.length ? (
+					stock.map((val) => {
+						return <StockList val={val} getStock={getStock} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock is empty
+					</Center>
+				)}
 			</>
 		);
 	}

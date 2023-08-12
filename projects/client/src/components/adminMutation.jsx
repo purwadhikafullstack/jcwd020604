@@ -166,21 +166,29 @@ export default function AdminMutation() {
 	if (pageWidth <= 900) {
 		mutationListOrGrid = (
 			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
-				{mutation?.length
-					? mutation.map((val) => {
-							return <MutationCard val={val} getMutation={getMutation} />;
-					  })
-					: null}
+				{mutation?.length ? (
+					mutation.map((val) => {
+						return <MutationCard val={val} getMutation={getMutation} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock mutation not found
+					</Center>
+				)}
 			</Grid>
 		);
 	} else {
 		mutationListOrGrid = (
 			<>
-				{mutation?.length
-					? mutation?.map((val) => {
-							return <MutationList val={val} getMutation={getMutation} />;
-					  })
-					: null}
+				{mutation?.length ? (
+					mutation?.map((val) => {
+						return <MutationList val={val} getMutation={getMutation} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock mutation not found
+					</Center>
+				)}
 			</>
 		);
 	}
