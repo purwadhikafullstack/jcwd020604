@@ -72,8 +72,10 @@ export default function MutationList({ val, getMutation }) {
 					/>
 					<Flex w={"270px"}>{val?.stock?.product?.product_name}</Flex>
 				</Flex>
-				<Flex w={"195px"}>
-					{`${val?.from_warehouse?.warehouse_name} - ${val?.to_warehouse?.warehouse_name}`}
+				<Flex w={"195px"} flexWrap={"wrap"} gap={"3px"}>
+					<Flex>{`${val?.from_warehouse?.warehouse_name}`}</Flex>
+					<Flex>-</Flex>
+					<Flex>{` ${val?.to_warehouse?.warehouse_name}`}</Flex>
 				</Flex>
 				<Flex w={"195px"}>{val?.mutation_code}</Flex>
 				<Flex w={"100px"}>{val?.qty}</Flex>

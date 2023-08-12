@@ -229,6 +229,8 @@ export default function AdminHistory() {
 						>
 							<option>ADD FROM ADMIN</option>
 							<option>EDIT FROM ADMIN</option>
+							<option>INVOICE</option>
+							<option value={"MUT"}>MUTATION</option>
 						</Select>
 						<InputGroup>
 							<Input placeholder="Search..." ref={inputFileRef} />
