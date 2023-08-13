@@ -60,7 +60,9 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 			onClose();
 		} catch (error) {
 			toast({
-				title: error.response.data.message,
+				title: !error.response.data.message
+					? "File is too large"
+					: error.response.data.message,
 				status: "error",
 				position: "top",
 				duration: 3000,
@@ -217,13 +219,14 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 						) : null}
 					</FormControl>
 				</ModalBody>
-				<ModalFooter>
-					{user.role === "ADMIN" ? (
+				{user.role === "ADMIN" ? (
+					<ModalFooter justifyContent={"space-between"}>
+						<Flex>Max: 1mb/file</Flex>
 						<Button colorScheme="blue" mr={3} onClick={editProduct}>
 							Save
 						</Button>
-					) : null}
-				</ModalFooter>
+					</ModalFooter>
+				) : null}
 			</ModalContent>
 		</Modal>
 	);

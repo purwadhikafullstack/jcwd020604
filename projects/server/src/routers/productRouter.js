@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const productController = require("../controllers").productController;
 const getProductController = require("../controllers").getProductController;
-const { fileUploader, upload } = require("../middlewares/multer");
+const { fileUploader } = require("../middlewares/multer");
 const checkRole = require("../middlewares/roleDecoder");
 
 router.get("/", checkRole.checkUser, getProductController.getAll);

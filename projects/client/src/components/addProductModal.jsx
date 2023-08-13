@@ -76,11 +76,14 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 					});
 					getProduct();
 					onClose();
+					setSelectedImages([]);
 					nav("/admin/product");
 				}
 			} catch (error) {
 				toast({
-					title: error.response.data.message,
+					title: !error.response.data.message
+						? "File is too large"
+						: error.response.data.message,
 					status: "error",
 					position: "top",
 					duration: 3000,
@@ -197,7 +200,8 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 						) : null}
 					</FormControl>
 				</ModalBody>
-				<ModalFooter>
+				<ModalFooter justifyContent={"space-between"}>
+					<Flex>Max: 1mb/file</Flex>
 					<Button
 						onClick={formik.handleSubmit}
 						colorScheme="green"
