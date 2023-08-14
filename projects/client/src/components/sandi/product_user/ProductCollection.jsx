@@ -112,7 +112,7 @@ export default function ProductCollection() {
 	}
 
 	return (
-		<Center>
+		<Center padding={"15px"}>
 			<Flex
 				w={"1300px"}
 				minW={"390px"}
@@ -134,7 +134,7 @@ export default function ProductCollection() {
 						style={{
 							backgroundColor: selectedCategory === "" ? "yellow" : "",
 							border: selectedCategory === "" ? "1px solid white" : "1px solid",
-							color: selectedCategory === "" ? "black" : ""
+							color: selectedCategory === "" ? "black" : "",
 						}}
 						borderRadius={"5px"}
 						onClick={() => handleCategoryChange("")}
@@ -158,7 +158,7 @@ export default function ProductCollection() {
 												selectedCategory === val.id
 													? "1px solid white"
 													: "1px solid",
-											color: selectedCategory === val.id ? "black" : ""
+											color: selectedCategory === val.id ? "black" : "",
 										}}
 										borderRadius={"5px"}
 										onClick={() => {
@@ -219,9 +219,9 @@ export default function ProductCollection() {
 										{loading ? (
 											<Loader />
 										) : (
-										<>
-											<ProductCard val={val} borderRadius={"15px"} />
-										</>	
+											<>
+												<ProductCard val={val} borderRadius={"15px"} />
+											</>
 										)}
 									</Suspense>
 								</Link>

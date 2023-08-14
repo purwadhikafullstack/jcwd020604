@@ -22,6 +22,7 @@ import ProtectedPages from "./ProtectedPages";
 import NotFound from "../pages/redirect/NotFound";
 import Restricted from "../pages/redirect/RestrictedPage";
 import AdminOrder from "../pages/admin/AdminOrder";
+import WarehouseMapPage from "../pages/WarehouseMapPage";
 
 const routes = [
 	//Sandi
@@ -33,6 +34,7 @@ const routes = [
 			</ProtectedPages>
 		}
 	></Route>,
+	<Route path="/maps" element={<WarehouseMapPage />}></Route>,
 	<Route
 		path="/collection/:uuid"
 		element={

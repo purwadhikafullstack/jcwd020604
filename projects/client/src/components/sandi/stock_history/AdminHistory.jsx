@@ -159,7 +159,7 @@ export default function AdminHistory() {
 	return (
 		<Center flexDir={"column"}>
 			<Flex
-				margin={"0px 20px 50px"}
+				margin={"30px 20px 30px"}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}

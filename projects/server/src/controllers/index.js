@@ -11,8 +11,6 @@ const stockHistoryController = require("./stockHistoryController");
 const stockMutationController = require("./stockMutationController");
 const handleStockMutationController = require("./handleStockMutationController");
 const getStockMutationController = require("./getStockMutationController");
-const stockHistoryControllers = require("./stockHistoryControllers");
-const stockMutationControllers = require("./stockMutationController");
 const cartControllers = require("./cartController");
 const ordersController = require("./OrderController");
 
@@ -30,8 +28,6 @@ module.exports = {
 	stockMutationController,
 	handleStockMutationController,
 	getStockMutationController,
-	stockHistoryControllers,
-	stockMutationControllers,
 	cartControllers,
 	ordersController,
 };

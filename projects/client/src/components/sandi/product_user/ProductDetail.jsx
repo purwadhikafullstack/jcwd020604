@@ -94,7 +94,7 @@ export default function ProductDetail() {
 			<Center>
 				<Flex w={"1600px"} minW={"390px"} flexDir={"column"}>
 					<Center
-						margin={"60px 20px 60px"}
+						margin={"30px 20px 30px"}
 						justifyContent={"space-evenly"}
 						alignItems={"start"}
 						flexWrap={"wrap"}

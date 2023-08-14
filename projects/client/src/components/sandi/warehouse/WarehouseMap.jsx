@@ -20,7 +20,7 @@ export default function Maps({ geolocation }) {
 
 	return (
 		<>
-			<Center fontWeight={700} fontSize={"4xl"}>
+			<Center fontWeight={700} fontSize={"4xl"} pt={"15px"}>
 				All Store
 			</Center>
 			<Center
@@ -28,7 +28,7 @@ export default function Maps({ geolocation }) {
 				pb={"20px"}
 				gap={"20px"}
 				padding={"40px"}
-				margin={"0px 40px 40px"}
+				margin={"15px 40px 30px"}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}
@@ -58,20 +58,22 @@ export default function Maps({ geolocation }) {
 								Get Directions
 							</Button>
 						)}
-						{warehouse?.map((val) => (
-							<Marker
-								key={val.id}
-								position={{
-									lat: parseFloat(val?.latitude),
-									lng: parseFloat(val?.longitude),
-								}}
-								icon={{
-									url: "https://cdn-icons-png.flaticon.com/512/7561/7561255.png",
-									scaledSize: new window.google.maps.Size(40, 40),
-								}}
-								onClick={() => setSelectedMarker(val)}
-							/>
-						))}
+						{warehouse.length
+							? warehouse?.map((val) => (
+									<Marker
+										key={val.id}
+										position={{
+											lat: parseFloat(val?.latitude),
+											lng: parseFloat(val?.longitude),
+										}}
+										icon={{
+											url: "https://cdn-icons-png.flaticon.com/512/7561/7561255.png",
+											scaledSize: new window.google.maps.Size(40, 40),
+										}}
+										onClick={() => setSelectedMarker(val)}
+									/>
+							  ))
+							: null}
 						<Marker
 							position={geolocation}
 							icon={{
@@ -95,27 +97,32 @@ export default function Maps({ geolocation }) {
 						Store Address
 					</Center>
 					<Grid templateColumns={"repeat(2, 1fr)"} gap={"10px"}>
-						{warehouse?.map((val) => (
-							<Box
-								border={"1px"}
-								borderRadius={"15px"}
-								borderColor={"#E6EBF2"}
-								boxShadow={
-									selectedMarker === val ? null : "0 2px 4px rgba(0, 0, 0, 0.4)"
-								}
-								w={"100%"}
-								maxW={"350px"}
-								padding={"10px"}
-								color={selectedMarker === val ? "black" : ""}
-								backgroundColor={selectedMarker === val ? "gray.300" : ""}
-							>
-								<Flex fontWeight={600}>{val?.warehouse_name}</Flex>
-								<Flex>
-									{val?.address}, {val?.district}, {val?.city}, {val?.province}.
-								</Flex>
-								<Flex>{val?.phone_number} </Flex>
-							</Box>
-						))}
+						{warehouse?.length
+							? warehouse?.map((val) => (
+									<Box
+										border={"1px"}
+										borderRadius={"15px"}
+										borderColor={"#E6EBF2"}
+										boxShadow={
+											selectedMarker === val
+												? null
+												: "0 2px 4px rgba(0, 0, 0, 0.4)"
+										}
+										w={"100%"}
+										maxW={"350px"}
+										padding={"10px"}
+										color={selectedMarker === val ? "black" : ""}
+										backgroundColor={selectedMarker === val ? "gray.300" : ""}
+									>
+										<Flex fontWeight={600}>{val?.warehouse_name}</Flex>
+										<Flex>
+											{val?.address}, {val?.district}, {val?.city},{" "}
+											{val?.province}.
+										</Flex>
+										<Flex>{val?.phone_number} </Flex>
+									</Box>
+							  ))
+							: null}
 					</Grid>
 				</Box>
 			</Center>
