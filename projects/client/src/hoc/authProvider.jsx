@@ -28,7 +28,7 @@ export default function AuthProvider({ children }) {
 				});
 			}
 		} catch (err) {
-			alert(err);
+			console.log(err);
 		} finally {
 			setIsLoading(false);
 		}
