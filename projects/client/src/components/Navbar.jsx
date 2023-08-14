@@ -53,17 +53,40 @@ export default function Navbar(props) {
 	const [product, setProduct] = useState([]);
 	const [search, setSearch] = useState("");
 
+	const [greeting, setGreeting] = useState('');
+  
+	useEffect(() => {
+	  const currentTime = new Date();
+	  const currentHour = currentTime.getHours();
+  
+	  let newGreeting;
+	  if (currentHour < 12) {
+		newGreeting = 'Selamat pagi';
+	  } else if (currentHour < 15) {
+		newGreeting = 'Selamat siang';
+	  }else if (currentHour < 18) {
+		newGreeting = 'Selamat sore';
+	  } else {
+		newGreeting = 'Selamat malam';
+	  }
+	  setGreeting(newGreeting);
+	}, []);
+
 	useEffect(() => {
 		getAll();
 	}, [search]);
 
 	async function getAll() {
-		const res = await api.get("/product", {
-			params: {
-				search: search,
-			},
-		});
-		setProduct(res.data.rows);
+		try {
+			const res = await api.get("/product", {
+				params: {
+					search: search,
+				},
+			});
+			setProduct(res.data.rows);
+		} catch (error) {
+			console.error("Error fetching data:", error);
+		}
 	}
 
 	async function getcart() {
@@ -238,9 +261,9 @@ export default function Navbar(props) {
 						<Menu>
 							{user.fullname ? (
 								<>
-									<Text fontSize={"12px"} mr={2}>
-										Welcome{" "}
-										<Text as={"b"}>
+									<Text fontSize={{base: '12px', sm: '10px', md: '12px'}} mr={2} display={'flex'} flexDir={{base: 'row' ,sm: 'column', md: 'column'}}>
+										{greeting}
+										<Text as={"b"} fontSize={{base: '12px', sm: '10px', md: '12px'}}>
 											{user.fullname.length > 18
 												? user.fullname.substring(0, 18) + "..."
 												: user.fullname}
@@ -288,6 +311,7 @@ export default function Navbar(props) {
 											size={"sm"}
 											variant={"ghost"}
 											leftIcon={<FiLogOut />}
+											fontSize={'xs'}
 											_hover={{ color: "red" }}
 										>
 											Logout
