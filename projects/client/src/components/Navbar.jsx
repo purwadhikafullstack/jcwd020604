@@ -240,6 +240,9 @@ export default function Navbar(props) {
 												<MenuItem onClick={() => navigate("/admin/managedata")}>
 													Manage Data
 												</MenuItem>
+												<MenuItem onClick={() => navigate("/admin_order")}>
+													Manage Order
+												</MenuItem>
 											</>
 										) : null}
 									</MenuList>

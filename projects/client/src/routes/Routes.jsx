@@ -21,6 +21,7 @@ import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 import ProtectedPages from "./ProtectedPages";
 import NotFound from "../pages/redirect/NotFound";
 import Restricted from "../pages/redirect/RestrictedPage";
+import AdminOrder from "../pages/admin/AdminOrder";
 
 const routes = [
 	//Sandi
@@ -125,6 +126,15 @@ const routes = [
 		element={
 			<ProtectedPages needLogin={true} needLoginAdmin={true}>
 				<AdminProfile />
+			</ProtectedPages>
+		}
+	></Route>,
+
+	<Route
+		path="/admin_order"
+		element={
+			<ProtectedPages needLogin={true} needLoginAdmin={true}>
+				<AdminOrder />
 			</ProtectedPages>
 		}
 	></Route>,

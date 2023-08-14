@@ -12,7 +12,7 @@ const userController = {
 	getAll: async (req, res) => {
 		try {
 			const user = await db.users.findAll({
-				attributes: ["uuid", "fullname", "email", "role"],
+				attributes: ["uuid", "fullname", "email","phone_number", "role"],
 			});
 			return res.send(user);
 		} catch (err) {

@@ -30,7 +30,7 @@ import {
 import { BsGithub, BsDiscord, BsPerson, BsPhone } from 'react-icons/bs';
 import { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { api } from '../../api/api';
 import Navbar from '../../components/Navbar';
 import Loading from '../../components/Loading';
@@ -42,6 +42,7 @@ import Footer from '../../components/Footer';
 export default function UserProfile() {
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const inputFileRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const toast = useToast();
@@ -111,6 +112,27 @@ export default function UserProfile() {
           });
       }
   }
+
+  async function fetch() {
+    try {
+      const token = JSON.parse(localStorage.getItem("auth"));
+      const user = await api
+        .get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((res) => res.data);
+      if (user) {
+        dispatch({
+          type: "login",
+          payload: user,
+        });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  }
       
   const getAddressByUser = async () => {
     try {
@@ -145,6 +167,7 @@ export default function UserProfile() {
             isClosable:false
         });
         fetchData();
+        fetch();
         navigate("/user_profile");
     } catch (error) {
       toast({
