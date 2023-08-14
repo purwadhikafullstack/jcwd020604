@@ -18,9 +18,9 @@ import {
 } from "@chakra-ui/react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { api } from "../api/api";
-import CarouselProduct from "./carauselProduct";
+import { api } from "../../../api/api";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import CarouselProduct from "./CarauselProduct";
 import { useSelector } from "react-redux";
 
 export default function ProductDetail() {
@@ -94,7 +94,7 @@ export default function ProductDetail() {
 			<Center>
 				<Flex w={"1600px"} minW={"390px"} flexDir={"column"}>
 					<Center
-						margin={"60px 20px 60px"}
+						margin={"30px 20px 30px"}
 						justifyContent={"space-evenly"}
 						alignItems={"start"}
 						flexWrap={"wrap"}
@@ -184,45 +184,45 @@ export default function ProductDetail() {
 								</Accordion>
 							</Flex>
 							<Flex justifyContent={"space-between"} alignItems={"center"}>
-								{/* <NumberInput
-                defaultValue={value}
-                min={1}
-                onChange={setValue}
-                paddingLeft={"150px"}
-                paddingBottom={"50px"}
-                isDisabled={isSoldOut}
-              >
-                <NumberInputStepper
-                  w={"160px"}
-                  h={"50px"}
-                  display={"flex"}
-                  flexDir={"row"}
-                  gap={"10px"}
-                  alignItems={"center"}
-                >
-                  <NumberDecrementStepper
-                    onClick={handleDecrement}
-                    fontSize={"15px"}
-                    borderColor={"transparent"}
-                    marginLeft={"10px"}
-                  />
-                  <NumberInputField textAlign="center" paddingLeft={"30px"} />
+								<NumberInput
+									defaultValue={value}
+									min={1}
+									max={stock}
+									paddingLeft={"150px"}
+									paddingBottom={"50px"}
+									isDisabled={isSoldOut}
+								>
+									<NumberInputStepper
+										w={"160px"}
+										h={"50px"}
+										display={"flex"}
+										flexDir={"row"}
+										gap={"10px"}
+										alignItems={"center"}
+									>
+										<NumberDecrementStepper
+											onClick={handleDecrement}
+											fontSize={"15px"}
+											borderColor={"transparent"}
+											marginLeft={"10px"}
+										/>
+										<NumberInputField textAlign="center" paddingLeft={"30px"} />
 
-                  <NumberIncrementStepper
-                    onClick={handleIncrement}
-                    fontSize={"15px"}
-                    borderColor={"transparent"}
-                    marginRight={"10px"}
-                  />
-                </NumberInputStepper>
-              </NumberInput> */}
-								<NumberInput defaultValue={value} min={1} max={stock}>
+										<NumberIncrementStepper
+											onClick={handleIncrement}
+											fontSize={"15px"}
+											borderColor={"transparent"}
+											marginRight={"10px"}
+										/>
+									</NumberInputStepper>
+								</NumberInput>
+								{/* <NumberInput defaultValue={value} min={1} max={stock}>
 									<NumberInputField />
 									<NumberInputStepper>
 										<NumberIncrementStepper onClick={handleIncrement} />
 										<NumberDecrementStepper onClick={handleDecrement} />
 									</NumberInputStepper>
-								</NumberInput>
+								</NumberInput> */}
 
 								<Button
 									onClick={() => {

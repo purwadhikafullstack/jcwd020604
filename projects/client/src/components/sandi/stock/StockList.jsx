@@ -13,10 +13,10 @@ import {
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillCircleFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api/api";
-import DeleteStockModal from "./deleteStockModal";
-import EditStockModal from "./editStockModal";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
+import DeleteStockModal from "./DeleteStockModal";
+import EditStockModal from "./EditStockModal";
 
 export default function StockList({ val, getStock }) {
 	const user = useSelector((state) => state.auth);
@@ -71,22 +71,22 @@ export default function StockList({ val, getStock }) {
 				/>
 				<Flex w={"270px"}>{val.product.product_name}</Flex>
 			</Flex>
-			<Flex w={"195px"}>
+			<Flex w={"190px"}>
 				{!val?.warehouse ? (
 					<Flex>Warehouse not found</Flex>
 				) : (
 					val?.warehouse?.warehouse_name
 				)}
 			</Flex>
-			<Flex w={"195px"}>
+			<Flex w={"190px"}>
 				{val.product.category == null ? (
 					<Flex>Category not found</Flex>
 				) : (
 					val.product.category.category_name
 				)}
 			</Flex>
-			<Flex w={"195px"}>{val.qty}</Flex>
-			<Flex w={"195px"}>
+			<Flex w={"190px"}>{val.qty}</Flex>
+			<Flex w={"190px"}>
 				{stock > 10 ? (
 					<Flex>
 						<Icon as={BsFillCircleFill} color={"green"} />

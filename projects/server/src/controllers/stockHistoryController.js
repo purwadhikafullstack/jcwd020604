@@ -115,8 +115,13 @@ const stockHistory = {
 	},
 
 	addStockHistory: async (dataStock, status, reference, qty) => {
+		const t = await db.sequelize.transaction();
+
 		try {
-			const newHistory = await db.stock_histories.create({
+			console.log("masuk");
+			console.log(dataStock);
+			console.log(qty);
+			console.log({
 				qty: qty - dataStock.qty,
 				status,
 				reference,
@@ -124,9 +129,23 @@ const stockHistory = {
 				stock_before: dataStock.qty,
 				stock_after: qty,
 			});
+			const newHistory = await db.stock_histories.create(
+				{
+					qty: qty - dataStock.qty,
+					status,
+					reference,
+					stock_id: dataStock.id,
+					stock_before: dataStock.qty,
+					stock_after: qty,
+				},
+				{ transaction: t }
+			);
+			await t.commit();
 			return newHistory;
 		} catch (err) {
-			res.status(500).send({ message: err.message });
+			console.log(err);
+			await t.rollback();
+			throw err;
 		}
 	},
 };

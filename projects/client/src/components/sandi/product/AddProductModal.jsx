@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -76,11 +76,14 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 					});
 					getProduct();
 					onClose();
+					setSelectedImages([]);
 					nav("/admin/product");
 				}
 			} catch (error) {
 				toast({
-					title: error.response.data.message,
+					title: !error.response.data.message
+						? "File is too large"
+						: error.response.data.message,
 					status: "error",
 					position: "top",
 					duration: 3000,
@@ -94,13 +97,20 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 		setSelectedFiles(files);
 		const images = [];
 		const maxImages = 5; // Set the maximum number of images to 5
-
+		const maxFileSizeBytes = 1024 * 1024; // 1MB in bytes
 		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
 			const file = files[i];
+			if (file.size >= maxFileSizeBytes) {
+				toast({
+					title: "File is too large",
+					status: "error",
+					position: "top",
+					duration: 3000,
+				});
+			}
 			const imageUrl = URL.createObjectURL(file);
 			images.push(imageUrl);
 		}
-
 		setSelectedImages(images);
 		formik.setFieldValue("productImg", [...files].slice(0, maxImages)); // Store up to the first 5 selected image files in formik state
 	};
@@ -199,8 +209,8 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 						) : null}
 					</FormControl>
 				</ModalBody>
-
-				<ModalFooter>
+				<ModalFooter justifyContent={"space-between"}>
+					<Flex>Max: 1mb/file</Flex>
 					<Button
 						onClick={formik.handleSubmit}
 						colorScheme="green"

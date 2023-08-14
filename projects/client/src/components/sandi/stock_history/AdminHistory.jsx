@@ -8,25 +8,23 @@ import {
 	Icon,
 	Button,
 	ButtonGroup,
+	Grid,
 } from "@chakra-ui/react";
-import {
-	UpDownIcon,
-	RepeatIcon,
-	ArrowBackIcon,
-	AddIcon,
-} from "@chakra-ui/icons";
+import { UpDownIcon, RepeatIcon, ArrowBackIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../api/api";
-import HistoryList from "./historyList";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
+import HistoryList from "./HistoryList";
+import HistoryCard from "./CardHistory";
 
-export default function AdminMutation() {
+export default function AdminHistory() {
 	const user = useSelector((state) => state.auth);
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
+	const [selectedReference, setSelectedReference] = useState("");
 	const [time, setTime] = useState("");
 	const [history, setHistory] = useState();
 	const [sort, setSort] = useState("");
@@ -40,8 +38,8 @@ export default function AdminMutation() {
 	}, []);
 
 	useEffect(() => {
-		// getHistory();
-	}, [page, sort, search, selectedWarehouse, time]);
+		getHistory();
+	}, [page, sort, search, selectedWarehouse, selectedReference, time]);
 
 	useEffect(() => {
 		if (user.role !== "ADMIN") {
@@ -53,7 +51,9 @@ export default function AdminMutation() {
 	async function getHistory() {
 		const res = await api.get("/stockhistory", {
 			params: {
-				warehouse_id: selectedWarehouse,
+				warehouse_id:
+					user.role === "ADMIN" ? selectedWarehouse : user.warehouse_id,
+				reference: selectedReference,
 				search: search,
 				sort: sort,
 				page: page,
@@ -94,48 +94,98 @@ export default function AdminMutation() {
 		setSort("");
 		setPage(1);
 		setSelectedWarehouse(user.role === "ADMIN" ? "" : user.warehouse_id);
+		setSelectedReference("");
 		setSearch("");
 		setTime("");
 	};
 
+	// Grid Wrap
+	const [pageWidth, setPageWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		// Update the page width on window resize
+		const handleResize = () => {
+			setPageWidth(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		// Clean up the event listener
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	let templateColumns;
+
+	if (pageWidth <= 700) {
+		templateColumns = "repeat(2, 1fr)";
+	} else {
+		templateColumns = "repeat(3, 1fr)";
+	}
+
+	let historyListOrGrid;
+
+	if (pageWidth <= 900) {
+		historyListOrGrid = (
+			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
+				{history?.length ? (
+					history.map((val) => {
+						return <HistoryCard val={val} getHistory={getHistory} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock history not found
+					</Center>
+				)}
+			</Grid>
+		);
+	} else {
+		historyListOrGrid = (
+			<>
+				{history?.length ? (
+					history?.map((val) => {
+						return <HistoryList val={val} getHistory={getHistory} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock history not found
+					</Center>
+				)}
+			</>
+		);
+	}
+
 	return (
 		<Center flexDir={"column"}>
 			<Flex
-				margin={"60px 20px 60px"}
+				margin={"30px 20px 30px"}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}
 				padding={"15px"}
-				w={"1322 px"}
+				maxW={"1300px"}
+				w={"100%"}
 				justifyContent={"center"}
 				flexDir={"column"}
 			>
 				<Flex flexDir={"column"}>
 					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
-						Stock Mutation
+						Stock History
 					</Flex>
-					<Flex>
-						<Flex gap={"10px"} w={"100%"} marginBottom={"15px"}>
+					<Flex gap={"15px"}>
+						<Flex w={"100%"} marginBottom={"15px"}>
 							<Link to={`/admin/managedata`}>
 								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
 							</Link>
-							{user.role === "ADMIN" ? (
-								<Button
-									as={Button}
-									paddingLeft={"9px"}
-									marginBottom={"15px"}
-									rightIcon={<AddIcon />}
-									colorScheme="green"
-								/>
-							) : null}
 						</Flex>
-						<Button onClick={handleReset} mr={"15px"}>
+						<Button onClick={handleReset}>
 							<RepeatIcon />
 						</Button>
 
 						<Input
 							type={"month"}
-							w={"420px"}
+							w={"520px"}
 							value={time}
 							onChange={(e) => {
 								setPage(1);
@@ -143,10 +193,15 @@ export default function AdminMutation() {
 							}}
 						/>
 					</Flex>
-					<Center gap={"15px"} paddingBottom={"15px"}>
+					<Center
+						gap={"15px"}
+						paddingBottom={"15px"}
+						w={["100%", null, "auto"]} // Adjust width based on breakpoints
+						flexWrap={["wrap", null, "nowrap"]}
+					>
 						{user.role === "ADMIN" ? (
 							<Select
-								placeholder="From Warehouse"
+								placeholder="All Warehouses"
 								value={selectedWarehouse}
 								onChange={(event) => {
 									setPage(1);
@@ -172,19 +227,18 @@ export default function AdminMutation() {
 									: null}
 							</Select>
 						)}
-						<Select placeholder="To Warehouse">
-							{warehouse.length
-								? warehouse.map((val) => (
-										<option key={val.id} value={val.id}>
-											{val.warehouse_name}
-										</option>
-								  ))
-								: null}
-						</Select>
-						<Select placeholder="Select Status">
-							<option>APPROVED</option>
-							<option>PENDING</option>
-							<option>REJECT</option>
+						<Select
+							placeholder="Select Reference"
+							value={selectedReference}
+							onChange={(event) => {
+								setPage(1);
+								setSelectedReference(event.target.value);
+							}}
+						>
+							<option>ADD FROM ADMIN</option>
+							<option>EDIT FROM ADMIN</option>
+							<option>INVOICE</option>
+							<option value={"MUT"}>MUTATION</option>
 						</Select>
 						<InputGroup>
 							<Input placeholder="Search..." ref={inputFileRef} />
@@ -201,15 +255,18 @@ export default function AdminMutation() {
 							</InputRightElement>
 						</InputGroup>
 					</Center>
-					<Flex
-						padding={"7px"}
-						borderBottom={"1px"}
-						fontWeight={600}
-						borderColor={"#E6EBF2"}
-						gap={"7"}
-					>
-						<Flex w={"325px"} paddingLeft={"55px"}>
+					{pageWidth > 900 ? (
+						<Flex
+							padding={"7px"}
+							borderBottom={"1px"}
+							fontWeight={600}
+							borderColor={"#E6EBF2"}
+							gap={"7"}
+						>
 							<Flex
+								w={"325px"}
+								minW={"275px"}
+								paddingLeft={"55px"}
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
@@ -222,9 +279,8 @@ export default function AdminMutation() {
 								<UpDownIcon ml={"10px"} />
 								{sort === "productAsc" ? sort === "productDesc" : null}
 							</Flex>
-						</Flex>
-						<Flex w={"195px"} alignItems={"center"}>
 							<Flex
+								w={"195px"}
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
@@ -233,28 +289,12 @@ export default function AdminMutation() {
 								}
 								cursor="pointer"
 							>
-								Warehouse (From-To)
+								Warehouse
 								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
-						</Flex>
-						<Flex w={"195px"} alignItems={"center"}>
 							<Flex
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Mutation Code
-								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-						</Flex>
-						<Flex w={"100px"}>
-							<Flex
+								w={"115px"}
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
@@ -267,9 +307,8 @@ export default function AdminMutation() {
 								{sort === "stockAfterAsc" ? sort === "stockAfterDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
-						</Flex>
-						<Flex w={"100px"} alignItems={"center"}>
 							<Flex
+								w={"100px"}
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
@@ -282,10 +321,22 @@ export default function AdminMutation() {
 								{sort === "statusAsc" ? sort === "statusDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
-						</Flex>
-
-						<Flex w={"170px"} alignItems={"center"}>
 							<Flex
+								w={"179px"}
+								alignItems={"center"}
+								onClick={() =>
+									handleSortChange(
+										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
+									)
+								}
+								cursor="pointer"
+							>
+								Reference
+								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
+								<UpDownIcon ml={"10px"} />
+							</Flex>
+							<Flex
+								w={"179px"}
 								alignItems={"center"}
 								onClick={() =>
 									handleSortChange(
@@ -298,21 +349,18 @@ export default function AdminMutation() {
 								{sort === "dateAsc" ? sort === "dateDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
+							<Flex w={"10px"}></Flex>
 						</Flex>
-						<Flex w={"10px"}></Flex>
-					</Flex>
-					{/* {history?.length
-						? history?.map((val) => {
-								return <HistoryList val={val} getHistory={getHistory} />;
-						  })
-						: null} */}
+					) : null}
+
+					{historyListOrGrid}
 				</Flex>
 				<ButtonGroup
 					paddingTop={"15px"}
 					justifyContent={"end"}
 					alignItems={"center"}
 				>
-					{page === 1 ? null : (
+					{page === 1 || history?.length === 0 ? null : (
 						<Button
 							onClick={() => {
 								handlePageChange(page - 1);
@@ -322,7 +370,7 @@ export default function AdminMutation() {
 							Previous
 						</Button>
 					)}
-					{page === totalPage ? null : (
+					{page === totalPage || history?.length === 0 ? null : (
 						<Button
 							onClick={() => {
 								handlePageChange(page + 1);

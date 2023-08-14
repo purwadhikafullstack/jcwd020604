@@ -1,4 +1,4 @@
-import AdminManageData from "../../components/adminManageData";
+import AdminManageData from "../../components/sandi/stock/AdminManageData";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 

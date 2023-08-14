@@ -15,13 +15,10 @@ import {
 	Select,
 	Flex,
 	Image,
-	Toast,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { api } from "../api/api";
-import { useFormik } from "formik";
-import * as Yup from "yup";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
 
 export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
@@ -63,7 +60,9 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 			onClose();
 		} catch (error) {
 			toast({
-				title: error.response.data.message,
+				title: !error.response.data.message
+					? "File is too large"
+					: error.response.data.message,
 				status: "error",
 				position: "top",
 				duration: 3000,
@@ -81,9 +80,17 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 		setSelectedFiles(files);
 		const images = [];
 		const maxImages = 5; // Set the maximum number of images to 5
-
+		const maxFileSizeBytes = 1024 * 1024; // 1MB in bytes
 		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
 			const file = files[i];
+			if (file.size >= maxFileSizeBytes) {
+				toast({
+					title: "File is too large",
+					status: "error",
+					position: "top",
+					duration: 3000,
+				});
+			}
 			const imageUrl = URL.createObjectURL(file);
 			images.push(imageUrl);
 		}
@@ -130,6 +137,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 						<Textarea
 							placeholder="e.g. A T-shirt with an impressive"
 							id="product_detail"
+							h={"170px"}
 							defaultValue={val.product_detail}
 							onChange={inputHandler}
 						/>
@@ -219,13 +227,14 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 						) : null}
 					</FormControl>
 				</ModalBody>
-				<ModalFooter>
-					{user.role === "ADMIN" ? (
+				{user.role === "ADMIN" ? (
+					<ModalFooter justifyContent={"space-between"}>
+						<Flex>Max: 1mb/file</Flex>
 						<Button colorScheme="blue" mr={3} onClick={editProduct}>
 							Save
 						</Button>
-					) : null}
-				</ModalFooter>
+					</ModalFooter>
+				) : null}
 			</ModalContent>
 		</Modal>
 	);

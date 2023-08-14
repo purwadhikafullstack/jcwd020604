@@ -15,8 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 
 export default function EditWarehouseModal({ isOpen, onClose }) {
 	const [warehouse, setWarehouse] = useState([]);
@@ -172,6 +171,16 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 								  ))
 								: null}
 						</Select>
+						<FormLabel>Phone Number:</FormLabel>
+						<Input
+							placeholder="08.. "
+							type="number"
+							id="phone_number"
+							defaultValue={data.phone_number}
+							onChange={(e) =>
+								setData({ ...data, phone_number: e.target.value })
+							}
+						/>
 					</FormControl>
 				</ModalBody>
 

@@ -12,11 +12,11 @@ import {
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, Suspense, lazy, useRef } from "react";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 import { Link } from "react-router-dom";
-import Loader from "../utils/Loader";
+import Loader from "../../../utils/Loader";
 
-const ProductCard = lazy(() => import("./productCard"));
+const ProductCard = lazy(() => import("./ProductCard"));
 
 export default function ProductCollection() {
 	const [product, setProduct] = useState([]);
@@ -112,14 +112,14 @@ export default function ProductCollection() {
 	}
 
 	return (
-		<Center>
+		<Center padding={"15px"}>
 			<Flex
-				w={"1600px"}
+				w={"1300px"}
 				minW={"390px"}
 				flexDir={"column"}
 				justifyContent={"center"}
 			>
-				<Center margin={"60px 20px 60px"} fontSize={"32px"} fontWeight={"bold"}>
+				<Center margin={"0px 20px 30px"} fontSize={"32px"} fontWeight={"bold"}>
 					{selectedCategory
 						? category.find((val) => val.id === selectedCategory).category_name
 						: "ALL ITEMS"}
@@ -134,7 +134,7 @@ export default function ProductCollection() {
 						style={{
 							backgroundColor: selectedCategory === "" ? "yellow" : "",
 							border: selectedCategory === "" ? "1px solid white" : "1px solid",
-							color: selectedCategory === "" ? "black" : ""
+							color: selectedCategory === "" ? "black" : "",
 						}}
 						borderRadius={"5px"}
 						onClick={() => handleCategoryChange("")}
@@ -158,7 +158,7 @@ export default function ProductCollection() {
 												selectedCategory === val.id
 													? "1px solid white"
 													: "1px solid",
-											color: selectedCategory === val.id ? "black" : ""
+											color: selectedCategory === val.id ? "black" : "",
 										}}
 										borderRadius={"5px"}
 										onClick={() => {
@@ -219,9 +219,9 @@ export default function ProductCollection() {
 										{loading ? (
 											<Loader />
 										) : (
-										<>
-											<ProductCard val={val} borderRadius={"15px"} />
-										</>	
+											<>
+												<ProductCard val={val} borderRadius={"15px"} />
+											</>
 										)}
 									</Suspense>
 								</Link>

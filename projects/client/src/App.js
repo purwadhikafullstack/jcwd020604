@@ -16,6 +16,7 @@ function App() {
 
 	return (
 		<>{isLoading ? <Loading /> : <Routes>{routes.map((val) => val)}</Routes>}</>
+		// <Routes>{routes.map((val) => val)}</Routes>
 	);
 }
 

@@ -13,34 +13,32 @@ import {
 	MenuItem,
 	ButtonGroup,
 	useDisclosure,
+	Grid,
 } from "@chakra-ui/react";
 import {
 	DeleteIcon,
 	AddIcon,
 	EditIcon,
 	HamburgerIcon,
-	PlusSquareIcon,
 	UpDownIcon,
 	RepeatIcon,
 	TimeIcon,
 } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
-
-import { FaSearch } from "react-icons/fa";
-import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { api } from "../api/api";
-import AddCategoryModal from "./addCategoryModal";
-import AddWarehouseModal from "./addWarehouseModal";
-import DeleteCategoryModal from "./deleteCategoryModal";
-import DeleteWarehouseModal from "./deleteWarehouseModal";
-import EditWarehouseModal from "./editWarehouseModal";
-import EditCategoryModal from "./editCategoryModal";
-import AddStockModal from "./addStockModal";
-import StockList from "./stockList";
-import Navbar from "./Navbar";
 import { BsFillCircleFill } from "react-icons/bs";
-import { FaBoxes } from "react-icons/fa";
+import { FaBoxes, FaSearch } from "react-icons/fa";
+import { useState, useEffect, useRef } from "react";
+import { Link } from "react-router-dom";
+import { api } from "../../../api/api";
+import AddCategoryModal from "../category/AddCategoryModal";
+import AddWarehouseModal from "../warehouse/AddWarehouseModal";
+import DeleteCategoryModal from "../category/DeleteCategoryModal";
+import DeleteWarehouseModal from "../warehouse/DeleteWarehouseModal";
+import EditWarehouseModal from "../warehouse/EditWarehouseModal";
+import EditCategoryModal from "../category/EditCategoryModal";
+import AddStockModal from "./AddStockModal";
+import StockList from "./StockList";
+import StockCard from "./CardStock";
 
 export default function AdminManageData() {
 	const user = useSelector((state) => state.auth);
@@ -84,7 +82,8 @@ export default function AdminManageData() {
 	async function getStock() {
 		const res = await api.get("/stock", {
 			params: {
-				warehouse_id: selectedWarehouse,
+				warehouse_id:
+					user.role === "ADMIN" ? selectedWarehouse : user.warehouse_id,
 				product_id: selectedProduct,
 				sort: sort,
 				search: search,
@@ -141,117 +140,180 @@ export default function AdminManageData() {
 		setPage(1);
 	};
 
+	// Grid Wrap
+	const [pageWidth, setPageWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		// Update the page width on window resize
+		const handleResize = () => {
+			setPageWidth(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		// Clean up the event listener
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	let templateColumns;
+
+	if (pageWidth <= 700) {
+		templateColumns = "repeat(2, 1fr)";
+	} else {
+		templateColumns = "repeat(3, 1fr)";
+	}
+
+	let stockListOrGrid;
+
+	if (pageWidth <= 900) {
+		stockListOrGrid = (
+			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
+				{stock?.length ? (
+					stock.map((val) => {
+						return <StockCard val={val} getStock={getStock} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock is empty
+					</Center>
+				)}
+			</Grid>
+		);
+	} else {
+		stockListOrGrid = (
+			<>
+				{stock.length ? (
+					stock.map((val) => {
+						return <StockList val={val} getStock={getStock} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Stock is empty
+					</Center>
+				)}
+			</>
+		);
+	}
+
 	return (
 		<>
 			<Center flexDir={"column"}>
 				<Flex
-					margin={"60px 20px 60px"}
+					margin={"30px 20px 30px"}
 					border={"1px"}
 					borderRadius={"15px"}
 					borderColor={"#E6EBF2"}
 					padding={"15px"}
-					w={"1400 px"}
+					maxW={"1300px"}
+					w={"100%"}
 					justifyContent={"center"}
 					flexDir={"column"}
 				>
-					<Flex flexDir={"column"}>
+					<Flex flexDir={"column"} paddingBottom={"15px"}>
 						<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
 							Manage Data
 						</Flex>
-						<Flex>
-							<Flex gap={"10px"} w={"100%"}>
-								<Button
-									colorScheme="green"
-									onClick={addStockModal.onOpen}
-									marginBottom={"15px"}
-								>
-									Add Stock
+						<Flex
+							justifyContent={"space-between"}
+							gap={"15px"}
+							paddingBottom={"15px"}
+							w={["100%", null, "auto"]} // Adjust width based on breakpoints
+							flexWrap={["wrap", null, "nowrap"]}
+						>
+							<Flex gap={"15px"} justifyContent={"space-between"} w={"100%"}>
+								<Flex gap={"15px"} w={"100%"}>
+									<Button colorScheme="green" onClick={addStockModal.onOpen}>
+										Add Stock
+									</Button>
+									{user.role === "ADMIN" ? (
+										<Flex gap={"15px"}>
+											<Menu>
+												<MenuButton as={Button}>
+													<AddIcon />
+												</MenuButton>
+												<MenuList>
+													<MenuItem onClick={addCategoryModal.onOpen}>
+														Add Category
+													</MenuItem>
+													<MenuItem onClick={addWarehouseModal.onOpen}>
+														Add Warehouse
+													</MenuItem>
+												</MenuList>
+											</Menu>
+											<Menu>
+												<MenuButton as={Button}>
+													<EditIcon />
+												</MenuButton>
+												<MenuList>
+													<MenuItem onClick={editCategoryModal.onOpen}>
+														View / Edit Category
+													</MenuItem>
+													<MenuItem onClick={editWarehouseModal.onOpen}>
+														View / Edit Warehouse
+													</MenuItem>
+												</MenuList>
+											</Menu>
+											<Menu>
+												<MenuButton
+													as={Button}
+													colorScheme="red"
+													color={"white"}
+												>
+													<DeleteIcon />
+												</MenuButton>
+												<MenuList>
+													<MenuItem
+														color={"red"}
+														onClick={deleteCategoryModal.onOpen}
+													>
+														Delete Category
+													</MenuItem>
+													<MenuItem
+														color={"red"}
+														onClick={deleteWarehouseModal.onOpen}
+													>
+														Delete Warehouse
+													</MenuItem>
+												</MenuList>
+											</Menu>
+										</Flex>
+									) : null}
+								</Flex>
+								<Button onClick={handleReset}>
+									<RepeatIcon />
 								</Button>
-								{user.role === "ADMIN" ? (
-									<Flex gap={"10px"}>
-										<Menu>
-											<MenuButton
-												as={Button}
-												paddingLeft={"9px"}
-												marginBottom={"15px"}
-												rightIcon={<AddIcon />}
-											></MenuButton>
-											<MenuList>
-												<MenuItem onClick={addCategoryModal.onOpen}>
-													Add Category
-												</MenuItem>
-												<MenuItem onClick={addWarehouseModal.onOpen}>
-													Add Warehouse
-												</MenuItem>
-											</MenuList>
-										</Menu>
-										<Menu>
-											<MenuButton
-												as={Button}
-												paddingLeft={"9px"}
-												marginBottom={"15px"}
-												rightIcon={<EditIcon />}
-											></MenuButton>
-											<MenuList>
-												<MenuItem onClick={editCategoryModal.onOpen}>
-													View / Edit Category
-												</MenuItem>
-												<MenuItem onClick={editWarehouseModal.onOpen}>
-													View / Edit Warehouse
-												</MenuItem>
-											</MenuList>
-										</Menu>
-										<Menu>
-											<MenuButton
-												as={Button}
-												colorScheme="red"
-												color={"white"}
-												paddingLeft={"9px"}
-												marginBottom={"15px"}
-												rightIcon={<DeleteIcon />}
-											></MenuButton>
-											<MenuList>
-												<MenuItem
-													color={"red"}
-													onClick={deleteCategoryModal.onOpen}
-												>
-													Delete Category
-												</MenuItem>
-												<MenuItem
-													color={"red"}
-													onClick={deleteWarehouseModal.onOpen}
-												>
-													Delete Warehouse
-												</MenuItem>
-											</MenuList>
-										</Menu>
-									</Flex>
-								) : null}
 							</Flex>
-							<Button onClick={handleReset} mr={"15px"}>
-								<RepeatIcon />
-							</Button>
-							<Link to={`/admin/mutation`}>
-								<Button
-									mr={"15px"}
-									leftIcon={<Icon as={FaBoxes} />}
-									px={"10px"}
-								>
-									Stock Mutation
-								</Button>
-							</Link>
-							<Link to={`/admin/product`}>
-								<Button mr={"15px"} leftIcon={<HamburgerIcon />}>
-									Product Data
-								</Button>
-							</Link>
-							<Link to={`/admin/stockhistory`}>
-								<Button leftIcon={<TimeIcon />} px={"10px"}>
-									Stock History
-								</Button>
-							</Link>
+							<Flex
+								gap={"15px"}
+								w={["100%", null, "auto"]} // Adjust width based on breakpoints
+								flexWrap={["wrap", null, "nowrap"]}
+								justifyContent={"space-between"}
+							>
+								<Link to={`/admin/product`}>
+									<Button gap={"5px"}>
+										<HamburgerIcon /> Product Data
+									</Button>
+								</Link>
+								<Link to={`/admin/mutation`}>
+									<Button gap={"5px"}>
+										<Icon as={FaBoxes} /> Stock Mutation
+									</Button>
+								</Link>
+								<Link to={`/admin/stockhistory`}>
+									<Button gap={"5px"}>
+										<TimeIcon /> Stock History
+									</Button>
+								</Link>
+							</Flex>
 						</Flex>
-						<Center gap={"15px"} paddingBottom={"15px"}>
+						<Center
+							gap={"15px"}
+							paddingBottom={"15px"}
+							w={["100%", null, "auto"]} // Adjust width based on breakpoints
+							flexWrap={["wrap", null, "nowrap"]}
+						>
 							<Select
 								placeholder="All Type of Products"
 								value={selectedProduct}
@@ -311,15 +373,18 @@ export default function AdminManageData() {
 								</InputRightElement>
 							</InputGroup>
 						</Center>
-						<Flex
-							padding={"7px"}
-							borderBottom={"1px"}
-							fontWeight={600}
-							borderColor={"#E6EBF2"}
-							gap={"7"}
-						>
-							<Flex w={"325px"} paddingLeft={"55px"}>
+						{pageWidth > 900 ? (
+							<Flex
+								padding={"7px"}
+								borderBottom={"1px"}
+								fontWeight={600}
+								borderColor={"#E6EBF2"}
+								gap={"7"}
+							>
 								<Flex
+									w={"325px"}
+									minW={"275px"}
+									paddingLeft={"55px"}
 									alignItems={"center"}
 									onClick={() =>
 										handleSortChange(
@@ -332,10 +397,8 @@ export default function AdminManageData() {
 									<UpDownIcon ml={"10px"} />
 									{sort === "productDesc" ? sort === "productAsc" : null}
 								</Flex>
-							</Flex>
-
-							<Flex w={"195px"} alignItems={"center"}>
 								<Flex
+									w={"190px"}
 									alignItems={"center"}
 									onClick={() =>
 										handleSortChange(
@@ -348,9 +411,8 @@ export default function AdminManageData() {
 									{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
 									<UpDownIcon ml={"10px"} />
 								</Flex>
-							</Flex>
-							<Flex w={"195px"} alignItems={"center"}>
 								<Flex
+									w={"190px"}
 									alignItems={"center"}
 									onClick={() =>
 										handleSortChange(
@@ -363,9 +425,8 @@ export default function AdminManageData() {
 									{sort === "categoryAsc" ? sort === "categoryDesc" : null}
 									<UpDownIcon ml={"10px"} />
 								</Flex>
-							</Flex>
-							<Flex w={"195px"} alignItems={"center"}>
 								<Flex
+									w={"190px"}
 									alignItems={"center"}
 									onClick={() =>
 										handleSortChange(
@@ -378,17 +439,13 @@ export default function AdminManageData() {
 									<UpDownIcon ml={"10px"} />
 									{sort === "qtyAsc" ? sort === "qtyDesc" : null}
 								</Flex>
+								<Flex w={"190px"} alignItems={"center"}>
+									Status
+								</Flex>
+								<Flex w={"25px"}></Flex>
 							</Flex>
-							<Flex w={"195px"} alignItems={"center"}>
-								<Flex alignItems={"center"}>Status</Flex>
-							</Flex>
-							<Flex w={"25px"}></Flex>
-						</Flex>
-						{stock.length
-							? stock.map((val) => {
-									return <StockList val={val} getStock={getStock} />;
-							  })
-							: null}
+						) : null}
+						{stockListOrGrid}
 					</Flex>
 					<Flex justifyContent={"end"} alignItems={"center"} gap={"30px"}>
 						<Flex alignItems={"center"} gap={"5px"} mt={"15px"}>
@@ -404,29 +461,30 @@ export default function AdminManageData() {
 
 							<Flex>{`Stock > 10`}</Flex>
 						</Flex>
-
-						<ButtonGroup paddingTop={"15px"} alignItems={"center"}>
-							{page === 1 ? null : (
-								<Button
-									onClick={() => {
-										handlePageChange(page - 1);
-										window.scrollTo({ top: 0, behavior: "smooth" });
-									}}
-								>
-									Previous
-								</Button>
-							)}
-							{page === totalPage ? null : (
-								<Button
-									onClick={() => {
-										handlePageChange(page + 1);
-										window.scrollTo({ top: 0, behavior: "smooth" });
-									}}
-								>
-									Next
-								</Button>
-							)}
-						</ButtonGroup>
+						{stock?.length ? (
+							<ButtonGroup paddingTop={"15px"} alignItems={"center"}>
+								{page === 1 ? null : (
+									<Button
+										onClick={() => {
+											handlePageChange(page - 1);
+											window.scrollTo({ top: 0, behavior: "smooth" });
+										}}
+									>
+										Previous
+									</Button>
+								)}
+								{page === totalPage ? null : (
+									<Button
+										onClick={() => {
+											handlePageChange(page + 1);
+											window.scrollTo({ top: 0, behavior: "smooth" });
+										}}
+									>
+										Next
+									</Button>
+								)}
+							</ButtonGroup>
+						) : null}
 					</Flex>
 					<AddStockModal
 						isOpen={addStockModal.isOpen}

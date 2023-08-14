@@ -15,44 +15,44 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 
-export default function DeleteWarehouseModal({ isOpen, onClose }) {
-	const [warehouse, setWarehouse] = useState([]);
-	const [selectedWarehouseId, setSelectedWarehouseId] = useState("");
+export default function DeleteCategoryModal({ isOpen, onClose }) {
+	const [category, setCategory] = useState([]);
+	const [selectedCategoryId, setSelectedCategoryId] = useState("");
 	const [confirmationText, setConfirmationText] = useState("");
 	const toast = useToast();
 	const nav = useNavigate();
 
 	useEffect(() => {
-		getWarehouse();
+		getCategory();
 	}, []);
 
 	useEffect(() => {
 		// Reset the state when the modal is closed
 		if (!isOpen) {
-			setSelectedWarehouseId("");
+			setSelectedCategoryId("");
 			setConfirmationText("");
 		}
 	}, [isOpen]);
 
-	async function getWarehouse() {
-		const res = await api.get("/warehouse");
-		setWarehouse(res.data);
+	async function getCategory() {
+		const res = await api.get("/category");
+		setCategory(res.data);
 	}
 
-	async function deleteWarehouse(warehouseId) {
+	async function deleteCategory(categoryId) {
 		try {
-			await api.delete(`/warehouse/${warehouseId}`);
+			await api.delete(`/category/${categoryId}`);
 
 			toast({
-				title: "Warehouse Deleted",
-				description: "The warehouse has been deleted successfully.",
+				title: "Category Deleted",
+				description: "The category has been deleted successfully.",
 				status: "success",
 				position: "top",
 				duration: 3000,
 			});
-			getWarehouse();
+			getCategory();
 			onClose();
 			nav("/admin/managedata");
 		} catch (error) {
@@ -65,8 +65,8 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 		}
 	}
 
-	const handleWarehouseSelect = (event) => {
-		setSelectedWarehouseId(event.target.value);
+	const handleCategorySelect = (event) => {
+		setSelectedCategoryId(event.target.value);
 	};
 
 	const handleConfirmationTextChange = (event) => {
@@ -74,7 +74,7 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 	};
 
 	const isDeleteButtonEnabled =
-		selectedWarehouseId !== "" && confirmationText.trim() === "DELETE";
+		selectedCategoryId !== "" && confirmationText.trim() === "DELETE";
 
 	return (
 		<Modal
@@ -85,21 +85,21 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 		>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Delete Warehouse</ModalHeader>
+				<ModalHeader>Delete Category</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Select Warehouse:</FormLabel>
+						<FormLabel>Select Category:</FormLabel>
 						<Select
-							placeholder="Select Warehouse"
-							id="warehouse"
-							value={selectedWarehouseId}
-							onChange={handleWarehouseSelect}
+							placeholder="Select Category"
+							id="category"
+							value={selectedCategoryId}
+							onChange={handleCategorySelect}
 						>
-							{warehouse.length
-								? warehouse.map((val) => (
+							{category.length
+								? category.map((val) => (
 										<option key={val.id} value={val.id}>
-											{val.warehouse_name}
+											{val.category_name}
 										</option>
 								  ))
 								: null}
@@ -122,12 +122,12 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 						mr={3}
 						onClick={() => {
 							if (isDeleteButtonEnabled) {
-								deleteWarehouse(selectedWarehouseId);
+								deleteCategory(selectedCategoryId);
 							}
 						}}
 						isDisabled={!isDeleteButtonEnabled}
 					>
-						Delete Warehouse
+						Delete Category
 					</Button>
 				</ModalFooter>
 			</ModalContent>

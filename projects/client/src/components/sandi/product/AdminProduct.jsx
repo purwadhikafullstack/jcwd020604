@@ -9,6 +9,7 @@ import {
 	Button,
 	ButtonGroup,
 	useDisclosure,
+	Grid,
 } from "@chakra-ui/react";
 import {
 	AddIcon,
@@ -19,12 +20,12 @@ import {
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { api } from "../api/api";
-import ProductList from "./productList";
-import AddProductModal from "./addProductModal";
+import { Link } from "react-router-dom";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
-import Navbar from "../components/Navbar";
+import ProductList from "./ProductList";
+import AddProductModal from "./AddProductModal";
+import ProductCardAdmin from "./CardProductAdmin";
 
 export default function AdminProduct() {
 	const [product, setProduct] = useState([]);
@@ -92,16 +93,74 @@ export default function AdminProduct() {
 		setPage(1);
 	};
 
+	// Grid Wrap
+	const [pageWidth, setPageWidth] = useState(window.innerWidth);
+
+	useEffect(() => {
+		// Update the page width on window resize
+		const handleResize = () => {
+			setPageWidth(window.innerWidth);
+		};
+
+		window.addEventListener("resize", handleResize);
+
+		// Clean up the event listener
+		return () => {
+			window.removeEventListener("resize", handleResize);
+		};
+	}, []);
+
+	let templateColumns;
+
+	if (pageWidth <= 700) {
+		templateColumns = "repeat(2, 1fr)";
+	} else {
+		templateColumns = "repeat(3, 1fr)";
+	}
+
+	let productListOrGrid;
+
+	if (pageWidth <= 900) {
+		productListOrGrid = (
+			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
+				{product.length ? (
+					product.map((val) => {
+						return <ProductCardAdmin val={val} getProduct={getProduct} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Product not found
+					</Center>
+				)}
+			</Grid>
+		);
+	} else {
+		productListOrGrid = (
+			<>
+				{product.length ? (
+					product.map((val) => {
+						return <ProductList val={val} getProduct={getProduct} />;
+					})
+				) : (
+					<Center pt={"20px"} fontWeight={700}>
+						Product not found
+					</Center>
+				)}
+			</>
+		);
+	}
+
 	return (
 		<>
 			<Center flexDir={"column"}>
 				<Flex
-					margin={"60px 20px 60px"}
+					margin={"30px 20px 30px"}
 					border={"1px"}
 					borderRadius={"15px"}
 					borderColor={"#E6EBF2"}
 					padding={"15px"}
-					w={"1400 px"}
+					maxW={"1300px"}
+					w={"100%"}
 					justifyContent={"center"}
 					flexDir={"column"}
 				>
@@ -110,33 +169,40 @@ export default function AdminProduct() {
 							Product Data
 						</Flex>
 					</Flex>
-					<Flex pb={"15px"} w={"100%"} justifyContent={"space-between"}>
-						<Flex gap={"10px"}>
-							<Link to={`/admin/managedata`}>
-								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
-							</Link>
-							{user.role === "ADMIN" ? (
-								<Button
-									as={Button}
-									paddingLeft={"9px"}
-									marginBottom={"15px"}
-									rightIcon={<AddIcon />}
-									colorScheme="green"
-									onClick={addProductModal.onOpen}
+					<Flex
+						pb={"15px"}
+						gap={"15px"}
+						justifyContent={"space-between"}
+						w={["100%", null, "auto"]} // Adjust width based on breakpoints
+						flexWrap={["wrap", null, "nowrap"]}
+					>
+						<Flex justifyContent={"space-between"} w={"100%"}>
+							<Flex gap={"15px"}>
+								<Link to={`/admin/managedata`}>
+									<Button leftIcon={<ArrowBackIcon />}>Back</Button>
+								</Link>
+								{user.role === "ADMIN" ? (
+									<Button
+										as={Button}
+										colorScheme="green"
+										onClick={addProductModal.onOpen}
+									>
+										<AddIcon />
+									</Button>
+								) : null}
+								<AddProductModal
+									isOpen={addProductModal.isOpen}
+									onClose={addProductModal.onClose}
+									getProduct={getProduct}
 								/>
-							) : null}
-							<AddProductModal
-								isOpen={addProductModal.isOpen}
-								onClose={addProductModal.onClose}
-								getProduct={getProduct}
-							/>
-						</Flex>
-						<Flex gap={"15px"} paddingBottom={"15px"}>
-							<Button onClick={handleReset}>
+							</Flex>
+							<Button onClick={handleReset} ml={"15px"}>
 								<RepeatIcon />
 							</Button>
+						</Flex>
+						<Flex gap={"15px"} w={"1500px"} flexWrap={["wrap", null, "nowrap"]}>
 							<Select
-								w={"418px"}
+								w={"100%"}
 								placeholder="All Type of Category"
 								value={selectedCategory}
 								onChange={(event) => {
@@ -152,7 +218,7 @@ export default function AdminProduct() {
 									  ))
 									: null}
 							</Select>
-							<InputGroup w={"418px"}>
+							<InputGroup w={"100%"}>
 								<Input placeholder="Search..." ref={inputFileRef} />
 								<InputRightElement cursor={"pointer"}>
 									<Button
@@ -168,15 +234,18 @@ export default function AdminProduct() {
 							</InputGroup>
 						</Flex>
 					</Flex>
-					<Flex
-						padding={"7px"}
-						borderBottom={"1px"}
-						fontWeight={600}
-						borderColor={"#E6EBF2"}
-						gap={"7"}
-					>
-						<Flex w={"325px"} paddingLeft={"55px"}>
+					{pageWidth > 900 ? (
+						<Flex
+							padding={"7px"}
+							borderBottom={"1px"}
+							fontWeight={600}
+							borderColor={"#E6EBF2"}
+							gap={"7"}
+						>
 							<Flex
+								w={"325px"}
+								minW={"275px"}
+								paddingLeft={"55px"}
 								onClick={() =>
 									handleSortChange(
 										"product" + (sort === "productDesc" ? "Asc" : "Desc")
@@ -189,13 +258,11 @@ export default function AdminProduct() {
 								<UpDownIcon ml={"10px"} />
 								{sort === "productDesc" ? sort === "productAsc" : null}
 							</Flex>
-						</Flex>
-
-						<Flex w={"300px"} alignItems={"center"}>
-							<Flex>Description</Flex>
-						</Flex>
-						<Flex w={"160px"}>
+							<Flex w={"300px"} alignItems={"center"}>
+								Description
+							</Flex>
 							<Flex
+								w={"160px"}
 								onClick={() =>
 									handleSortChange(
 										"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
@@ -208,9 +275,8 @@ export default function AdminProduct() {
 								{sort === "categoryAsc" ? sort === "categoryDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
-						</Flex>
-						<Flex w={"160px"}>
 							<Flex
+								w={"160px"}
 								onClick={() =>
 									handleSortChange(
 										"price" + (sort === "priceAsc" ? "Desc" : "Asc")
@@ -223,9 +289,8 @@ export default function AdminProduct() {
 								{sort === "priceAsc" ? sort === "priceDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
-						</Flex>
-						<Flex w={"160px"}>
 							<Flex
+								w={"160px"}
 								onClick={() =>
 									handleSortChange(
 										"weight" + (sort === "weightAsc" ? "Desc" : "Asc")
@@ -238,24 +303,15 @@ export default function AdminProduct() {
 								{sort === "weightAsc" ? sort === "weightDesc" : null}
 								<UpDownIcon ml={"10px"} />
 							</Flex>
+							<Flex w={"25px"}></Flex>
 						</Flex>
-						<Flex w={"25px"}></Flex>
-					</Flex>
-					{product.length ? (
-						product.map((val) => {
-							return <ProductList val={val} getProduct={getProduct} />;
-						})
-					) : (
-						<Center fontSize={"20px"} fontWeight={"bold"} marginTop={"40px"}>
-							Product not found
-						</Center>
-					)}
+					) : null}
+					{productListOrGrid}
 					<ButtonGroup
 						paddingTop={"15px"}
 						justifyContent={"end"}
 						alignItems={"center"}
 					>
-						{/* <Flex>{product.length} from (BUTUH DI FIX) Products</Flex> */}
 						{page === 1 || product.length === 0 ? null : (
 							<Button
 								onClick={() => {

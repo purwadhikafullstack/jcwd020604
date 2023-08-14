@@ -9,6 +9,7 @@ module.exports = (sequelize, Sequelize) => {
 			district: Sequelize.STRING,
 			latitude: Sequelize.STRING,
 			longitude: Sequelize.STRING,
+			phone_number: Sequelize.STRING,
 		},
 		{
 			paranoid: true,

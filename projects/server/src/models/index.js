@@ -149,18 +149,22 @@ db.stock_mutations.belongsTo(db.stocks, {
 db.warehouses.hasMany(db.stock_mutations, {
 	foreignKey: "from_warehouse_id",
 	targetKey: "id",
+	as: "from_warehouse",
 });
 
 db.warehouses.hasMany(db.stock_mutations, {
 	foreignKey: "to_warehouse_id",
 	targetKey: "id",
+	as: "to_warehouse",
 });
 
 db.stock_mutations.belongsTo(db.warehouses, {
 	foreignKey: "from_warehouse_id",
+	as: "from_warehouse",
 });
 db.stock_mutations.belongsTo(db.warehouses, {
 	foreignKey: "to_warehouse_id",
+	as: "to_warehouse",
 });
 
 module.exports = db;
