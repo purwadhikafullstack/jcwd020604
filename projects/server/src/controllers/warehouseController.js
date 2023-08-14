@@ -220,7 +220,6 @@ const warehouseController = {
 		}
 	},
 
-
 assignAdminUserToWarehouse: async (req, res) => {
 	const t = await db.sequelize.transaction();
 	try {
@@ -246,6 +245,11 @@ assignAdminUserToWarehouse: async (req, res) => {
 			return res.status(403).json({ error: 'The user is not an admin.' });
 		}
 
+		// Check jika pengguna telah ditugaskan ke gudang lain
+		if (existingUser.warehouse_id && existingUser.warehouse_id !== warehouse_id) {
+			return res.status(400).json({ error: 'User is already assigned to another warehouse.' });
+  		}
+  
 		// Update the user's warehouse_id to assign them to the selected warehouse
 		await db.users.update(
 			{ warehouse_id },

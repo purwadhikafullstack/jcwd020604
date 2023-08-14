@@ -51,12 +51,14 @@ export default function Assign (props) {
         setMessage('Error occurred while assigning admin to the warehouse');
         console.error(error);
         toast({
-          title: "The Warehouse has an active admin",
+          title: "User is already assigned to another warehouse",
           status: 'warning',
           duration: 3000,
           position: 'top',
           isClosable: false
         });
+        props.onClose();
+        props.fetchData();
       }
     }
 

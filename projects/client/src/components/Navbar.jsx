@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	Box,
 	Flex,
 	Avatar,
+	AvatarBadge,
 	HStack,
 	IconButton,
 	Image,
@@ -33,9 +34,8 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
-import { api } from "../api/api";
-
 import Logo2 from "../assets/logo2.png";
+import { api } from "../api/api";
 
 export default function Navbar(props) {
 	const { isOpen, onOpen, onClose } = useDisclosure();
@@ -45,17 +45,28 @@ export default function Navbar(props) {
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.auth);
 	const toast = useToast();
+	const inputFileRef = useRef(null);
 
 	const [product, setProduct] = useState([]);
+	const [search, setSearch] = useState("");
 
-	console.log(props.cart);
+	useEffect(() => {
+		getAll();
+	}, [search]);
+
+	async function getAll() {
+		const res = await api.get("/product", {
+			params: {
+				search: search,
+			},
+		});
+		setProduct(res.data.rows);
+	}
 
 	async function getcart() {
-		console.log(user.id);
 		const res = await api.get(`/cart/` + user.id);
 		setProduct(res.data);
 	}
-	console.log(product);
 
 	const totalCart = () => {
 		let total = 0;
@@ -95,6 +106,7 @@ export default function Navbar(props) {
 						icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
 						aria-label={"Open Menu"}
 						display={{ md: "none" }}
+						mr={2}
 						onClick={isOpen ? onClose : onOpen}
 					/>
 					<HStack spacing={8} alignItems={"center"}>
@@ -139,7 +151,7 @@ export default function Navbar(props) {
 										<Link to={"/collection"}>Bottoms</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/collection"}>Outerwares</Link>
+										<Link to={"/collection"}>Headwear</Link>
 									</Flex>
 									<Flex>
 										<Link to={"/collection"}>Accerories</Link>
@@ -149,9 +161,12 @@ export default function Navbar(props) {
 							<Flex>
 								<InputGroup>
 									<InputRightElement pointerEvents="none">
-										<FiSearch color="gray.300" cursor={"pointer"} />
+										<FiSearch color="gray.300" cursor={"pointer"} onClick={() => {
+										const searchValue = inputFileRef.current.value;
+										setSearch(searchValue);
+									}} />
 									</InputRightElement>
-									<Input type="tel" placeholder="Search . . ." />
+									<Input type="tel" placeholder="Search . . ." ref={inputFileRef}/>
 								</InputGroup>
 							</Flex>
 						</HStack>
@@ -160,31 +175,40 @@ export default function Navbar(props) {
 						<IconButton
 							icon={colorMode === "light" ? <FiSun /> : <FiMoon />}
 							isRound={"true"}
-							size={"md"}
+							size={"sm"}
+							m={2}
 							alignSelf={"flex-end"}
 							onClick={toggleColorMode}
 						></IconButton>
+						{user.role === "ADMIN" || user.role === "W_ADMIN" ? null : (<>
 						<Link to={"/cart"}>
 							<Box m={2} pr={4} cursor={"pointer"}>
 								<FiShoppingCart />
 							</Box>
 						</Link>
-						<Box
-							ml={"-5"}
-							mr={"20px"}
-							border={"solid yellow 1px"}
-							borderRadius={"50px"}
-							fontWeight={"bold"}
-							bgColor={"yellow"}
-							display={totalQty == 0 ? "none" : "box"}
-						>
-							{totalQty}
-						</Box>
+							<Box
+								ml={"-5"}
+								mr={"20px"}
+								fontWeight={"bold"}
+								rounded={'full'}
+								h={5}
+								w={5}
+								color={'black'}
+								bgColor={"yellow"}
+								display={totalQty === 0 ? "none" : "box"}
+							>
+								<Flex justifyContent={'center'} alignItems={'center'} h={5} w={5} fontSize={'x-small'}>
+									{totalQty}
+								</Flex>
+							</Box>
+							</>
+						)}
+						
 						<Menu>
 							{user.fullname ? (
 								<>
 									<Text fontSize={"12px"} mr={2}>
-										Welcome <Text as={"b"}>{user.fullname}</Text>
+										Welcome <Text as={"b"}>{user.fullname.length > 18 ? user.fullname.substring(0, 18) + "..." : user.fullname}</Text>
 									</Text>
 									<MenuButton
 										as={Button}
@@ -193,7 +217,9 @@ export default function Navbar(props) {
 										cursor={"pointer"}
 										minW={0}
 									>
-										<Avatar size={"sm"} src={user.avatar_url} />
+										<Avatar size={"sm"} src={user.avatar_url}>
+											<AvatarBadge boxSize='1.25em' bg='green.500' />
+										</Avatar>
 									</MenuButton>
 									<MenuList>
 										{user.role === "ADMIN" ? (
@@ -213,6 +239,9 @@ export default function Navbar(props) {
 											<>
 												<MenuItem onClick={() => navigate("/admin/managedata")}>
 													Manage Data
+												</MenuItem>
+												<MenuItem onClick={() => navigate("/admin_order")}>
+													Manage Order
 												</MenuItem>
 											</>
 										) : null}
@@ -254,9 +283,12 @@ export default function Navbar(props) {
 								<>
 									<InputGroup>
 										<InputRightElement pointerEvents="none">
-											<FiSearch color="gray.300" />
+										<FiSearch color="gray.300" cursor={'pointer'} onClick={() => {
+										const searchValue = inputFileRef.current.value;
+										setSearch(searchValue);
+									}}/>
 										</InputRightElement>
-										<Input type="tel" placeholder="Search . . ." />
+										<Input type="tel" placeholder="Search . . ." ref={inputFileRef} />
 									</InputGroup>
 									<Flex>
 										<Link to={"/"}>Dashboard</Link>
@@ -278,9 +310,12 @@ export default function Navbar(props) {
 								<>
 									<InputGroup>
 										<InputRightElement pointerEvents="none">
-											<FiSearch color="gray.300" />
+											<FiSearch color="gray.300" cursor={'pointer'} onClick={() => {
+										const searchValue = inputFileRef.current.value;
+										setSearch(searchValue);
+									}}/>
 										</InputRightElement>
-										<Input type="tel" placeholder="Search . . ." />
+										<Input type="tel" placeholder="Search . . ." ref={inputFileRef}/>
 									</InputGroup>
 									<Flex>
 										<Link to={"/collection"}>Tops</Link>
@@ -289,7 +324,7 @@ export default function Navbar(props) {
 										<Link to={"/collection"}>Bottoms</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/collection"}>Outerwares</Link>
+										<Link to={"/collection"}>Headwear</Link>
 									</Flex>
 									<Flex>
 										<Link to={"/collection"}>Accerories</Link>
