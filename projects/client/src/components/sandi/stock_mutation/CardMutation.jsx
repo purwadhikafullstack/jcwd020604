@@ -17,10 +17,9 @@ import moment from "moment";
 import { BiDotsVerticalRounded } from "react-icons/bi";
 import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api/api";
-
-import DeleteMutationModal from "./deleteMutationModal";
-import EditMutationModal from "./editMutationModal";
+import { api } from "../../../api/api";
+import DeleteMutationModal from "./DeleteMutationModal";
+import EditMutationModal from "./EditMutationModal";
 
 export default function MutationCard({ val, getMutation }) {
 	const deleteMutationModal = useDisclosure();

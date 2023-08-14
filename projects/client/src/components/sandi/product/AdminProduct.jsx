@@ -20,12 +20,12 @@ import {
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { api } from "../api/api";
-import ProductList from "./productList";
-import AddProductModal from "./addProductModal";
+import { Link } from "react-router-dom";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
-import ProductCardAdmin from "./cardProductAdmin";
+import ProductList from "./ProductList";
+import AddProductModal from "./AddProductModal";
+import ProductCardAdmin from "./CardProductAdmin";
 
 export default function AdminProduct() {
 	const [product, setProduct] = useState([]);

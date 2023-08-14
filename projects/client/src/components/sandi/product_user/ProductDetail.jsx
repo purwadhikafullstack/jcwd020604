@@ -17,9 +17,9 @@ import {
 } from "@chakra-ui/react";
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { api } from "../api/api";
-import CarouselProduct from "./carauselProduct";
+import { api } from "../../../api/api";
 import { AiOutlineShoppingCart } from "react-icons/ai";
+import CarouselProduct from "./CarauselProduct";
 
 export default function ProductDetail() {
 	const [product, setProduct] = useState([]);

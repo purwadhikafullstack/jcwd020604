@@ -15,12 +15,11 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { BiDotsVerticalRounded } from "react-icons/bi";
-import DeleteProductModal from "./deleteProductModal";
 import { useNavigate } from "react-router-dom";
-
-import { api } from "../api/api";
-import EditProductModal from "./editProductModal";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
+import DeleteProductModal from "./DeleteProductModal";
+import EditProductModal from "./EditProductModal";
 
 export default function ProductList({ val, getProduct }) {
 	const deleteProductModal = useDisclosure();

@@ -13,10 +13,10 @@ import {
 import { BiDotsHorizontalRounded } from "react-icons/bi";
 import { BsFillCircleFill } from "react-icons/bs";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api/api";
-import DeleteStockModal from "./deleteStockModal";
-import EditStockModal from "./editStockModal";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
+import DeleteStockModal from "./DeleteStockModal";
+import EditStockModal from "./EditStockModal";
 
 export default function StockList({ val, getStock }) {
 	const user = useSelector((state) => state.auth);

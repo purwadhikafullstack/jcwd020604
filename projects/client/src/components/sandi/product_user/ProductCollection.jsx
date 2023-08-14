@@ -12,11 +12,11 @@ import {
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, Suspense, lazy, useRef } from "react";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 import { Link } from "react-router-dom";
-import Loader from "../utils/Loader";
+import Loader from "../../../utils/Loader";
 
-const ProductCard = lazy(() => import("./productCard"));
+const ProductCard = lazy(() => import("./ProductCard"));
 
 export default function ProductCollection() {
 	const [product, setProduct] = useState([]);

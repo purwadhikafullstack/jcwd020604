@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 

@@ -15,10 +15,10 @@ import { UpDownIcon, RepeatIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../api/api";
-import HistoryList from "./historyList";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
-import HistoryCard from "./cardHistory";
+import HistoryList from "./HistoryList";
+import HistoryCard from "./CardHistory";
 
 export default function AdminHistory() {
 	const user = useSelector((state) => state.auth);

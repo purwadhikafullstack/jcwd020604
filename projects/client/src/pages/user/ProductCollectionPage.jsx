@@ -1,4 +1,4 @@
-import ProductCollection from "../../components/productCollection";
+import ProductCollection from "../../components/sandi/product_user/ProductCollection";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 

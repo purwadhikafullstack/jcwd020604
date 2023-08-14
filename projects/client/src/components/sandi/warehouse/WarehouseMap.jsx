@@ -1,47 +1,12 @@
+import "../../../css/maps.css";
 import { useEffect, useMemo, useState } from "react";
-import { GoogleMap, Marker, useLoadScript } from "@react-google-maps/api";
-import "../css/maps.css";
-import { api } from "../api/api";
-import Navbar from "../components/Navbar";
-import Footer from "../components/Footer";
+import { GoogleMap, Marker } from "@react-google-maps/api";
+import { api } from "../../../api/api";
 import { Box, Button, Center, Flex, Grid } from "@chakra-ui/react";
 
-export default function WarehouseMap() {
-	const [geolocation, setGeolocation] = useState(null);
-
-	useEffect(() => {
-		geo();
-	}, []);
-
-	function geo() {
-		if (navigator.geolocation) {
-			navigator.geolocation.getCurrentPosition(
-				function (position) {
-					const latitude = position.coords.latitude;
-					const longitude = position.coords.longitude;
-					setGeolocation({ lat: latitude, lng: longitude });
-				},
-				function (error) {
-					console.error("Error getting geolocation:", error);
-				}
-			);
-		} else {
-			console.error("Geolocation is not supported by this browser.");
-		}
-	}
-
-	const { isLoaded } = useLoadScript({
-		// googleMapsApiKey: `${process.env.GOOGLE_MAPS_API_KEY}`,
-	});
-
-	if (isLoaded) {
-		return <Maps geolocation={geolocation} />;
-	}
-}
-
-function Maps({ geolocation }) {
+export default function Maps({ geolocation }) {
 	const [warehouse, setWarehouse] = useState([]);
-	const [selectedMarker, setSelectedMarker] = useState(null); // Track selected marker
+	const [selectedMarker, setSelectedMarker] = useState(null);
 
 	useEffect(() => {
 		getWarehouse();
@@ -55,16 +20,25 @@ function Maps({ geolocation }) {
 
 	return (
 		<>
-			<Navbar />
-			<Center fontWeight={700} fontSize={"4xl"} pb={"10px"}>
+			<Center fontWeight={700} fontSize={"4xl"}>
 				All Store
 			</Center>
-			<Center flexWrap={"wrap"} pb={"30px"} gap={"20px"}>
-				<Box margin={"0px 20px 00px"}>
+			<Center
+				flexWrap={"wrap"}
+				pb={"20px"}
+				gap={"20px"}
+				padding={"40px"}
+				margin={"0px 40px 40px"}
+				border={"1px"}
+				borderRadius={"15px"}
+				borderColor={"#E6EBF2"}
+				boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
+			>
+				<Box className="map-container">
 					<GoogleMap
 						zoom={!geolocation ? 5 : 12}
 						center={geolocation ? geolocation : center}
-						mapContainerClassName="map-container"
+						mapContainerClassName="map"
 					>
 						{selectedMarker && geolocation && (
 							<Button
@@ -145,7 +119,6 @@ function Maps({ geolocation }) {
 					</Grid>
 				</Box>
 			</Center>
-			<Footer />
 		</>
 	);
 }

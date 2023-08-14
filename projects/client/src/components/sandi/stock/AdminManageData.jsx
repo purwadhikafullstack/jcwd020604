@@ -25,22 +25,20 @@ import {
 	TimeIcon,
 } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
-
-import { FaSearch } from "react-icons/fa";
+import { BsFillCircleFill } from "react-icons/bs";
+import { FaBoxes, FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../api/api";
-import AddCategoryModal from "./addCategoryModal";
-import AddWarehouseModal from "./addWarehouseModal";
-import DeleteCategoryModal from "./deleteCategoryModal";
-import DeleteWarehouseModal from "./deleteWarehouseModal";
-import EditWarehouseModal from "./editWarehouseModal";
-import EditCategoryModal from "./editCategoryModal";
-import AddStockModal from "./addStockModal";
-import StockList from "./stockList";
-import { BsFillCircleFill } from "react-icons/bs";
-import { FaBoxes } from "react-icons/fa";
-import StockCard from "./cardStock";
+import { api } from "../../../api/api";
+import AddCategoryModal from "../category/AddCategoryModal";
+import AddWarehouseModal from "../warehouse/AddWarehouseModal";
+import DeleteCategoryModal from "../category/DeleteCategoryModal";
+import DeleteWarehouseModal from "../warehouse/DeleteWarehouseModal";
+import EditWarehouseModal from "../warehouse/EditWarehouseModal";
+import EditCategoryModal from "../category/EditCategoryModal";
+import AddStockModal from "./AddStockModal";
+import StockList from "./StockList";
+import StockCard from "./CardStock";
 
 export default function AdminManageData() {
 	const user = useSelector((state) => state.auth);

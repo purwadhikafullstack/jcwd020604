@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
@@ -97,8 +97,17 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 		setSelectedFiles(files);
 		const images = [];
 		const maxImages = 5; // Set the maximum number of images to 5
+		const maxFileSizeBytes = 1024 * 1024; // 1MB in bytes
 		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
 			const file = files[i];
+			if (file.size >= maxFileSizeBytes) {
+				toast({
+					title: "File is too large",
+					status: "error",
+					position: "top",
+					duration: 3000,
+				});
+			}
 			const imageUrl = URL.createObjectURL(file);
 			images.push(imageUrl);
 		}

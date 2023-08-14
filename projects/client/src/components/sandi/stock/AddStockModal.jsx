@@ -11,72 +11,57 @@ import {
 	FormLabel,
 	Input,
 	Select,
+	useNumberInput,
 	HStack,
 	Center,
 	useToast,
-	Flex,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
 
-export default function AddMutationModal({
-	isOpen,
-	onClose,
-	getMutation,
-	getRequest,
-}) {
+export default function AddStockModal({ isOpen, onClose, getStock }) {
 	const user = useSelector((state) => state.auth);
 	const toast = useToast();
 	const nav = useNavigate();
-	const [stock, setStock] = useState([]);
+	const [product, setProduct] = useState([]);
 	const [warehouse, setWarehouse] = useState([]);
-	const [selectedWarehouse, setSelectedWarehouse] = useState("");
-	const [selectedStock, setSelectedStock] = useState(null);
 
 	useEffect(() => {
 		getWarehouse();
+		getAllProduct();
 	}, []);
-
-	useEffect(() => {
-		getAllStock();
-	}, [selectedWarehouse]);
 
 	const formik = useFormik({
 		initialValues: {
 			qty: "",
-			from_warehouse_id: "",
-			to_warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
-			stock_id: "",
+			warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
+
+			product_id: "",
 		},
 		validationSchema: Yup.object().shape({
 			qty: Yup.number().min(0).required(),
-			from_warehouse_id: Yup.number().required(),
-			to_warehouse_id: Yup.number().required(),
-			stock_id: Yup.number().required(),
+			warehouse_id: Yup.number().required(),
+			product_id: Yup.number().required(),
 		}),
 		onSubmit: async () => {
 			try {
-				const { qty, from_warehouse_id, to_warehouse_id, stock_id } =
-					formik.values;
+				const { qty, warehouse_id, product_id } = formik.values;
 				if (formik.isValid) {
-					const res = await api.post("/stockmutation", formik.values);
+					const res = await api.post("/stock", formik.values);
 					toast({
-						title: `Request Mutation Success`,
-						description: "Stock mutation request submitted for confirmation.",
+						title: `Add Stock Success`,
+						description: "The stock has been added successfully.",
 						status: "success",
 						position: "top",
 						duration: 3000,
 					});
-
-					getMutation();
-					getRequest();
+					getStock();
 					onClose();
-					setSelectedWarehouse("");
-					nav("/admin/mutation");
+					nav("/admin/managedata");
 				}
 			} catch (error) {
 				toast({
@@ -89,13 +74,9 @@ export default function AddMutationModal({
 		},
 	});
 
-	async function getAllStock() {
-		const res = await api.get("/stock/getAll/stock", {
-			params: {
-				warehouse_id: selectedWarehouse,
-			},
-		});
-		setStock(res.data);
+	async function getAllProduct() {
+		const res = await api.get("/product/getAllProduct/getAll");
+		setProduct(res.data);
 	}
 
 	async function getWarehouse() {
@@ -113,41 +94,21 @@ export default function AddMutationModal({
 	const handleModalClose = () => {
 		formik.resetForm();
 		onClose();
-		setSelectedStock(null);
-		setSelectedWarehouse("");
 	};
 
 	return (
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Add Mutation</ModalHeader>
+				<ModalHeader>Add Stock</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl w={"100%"}>
-						<FormLabel>From Warehouse:</FormLabel>
-						<Select
-							placeholder="Select Source Warehouse"
-							id="from_warehouse_id"
-							value={selectedWarehouse}
-							onChange={(event) => {
-								setSelectedWarehouse(event.target.value);
-								inputHandler(event);
-							}}
-						>
-							{warehouse.length
-								? warehouse.map((val) => (
-										<option key={val.id} value={val.id}>
-											{val.warehouse_name}
-										</option>
-								  ))
-								: null}
-						</Select>
-						<FormLabel>To Warehouse:</FormLabel>
+						<FormLabel>Select Warehouse:</FormLabel>
 						{user.role === "ADMIN" ? (
 							<Select
 								placeholder="All Warehouses"
-								id="to_warehouse_id"
+								id="warehouse_id"
 								onChange={inputHandler}
 							>
 								{warehouse.length
@@ -160,8 +121,8 @@ export default function AddMutationModal({
 							</Select>
 						) : (
 							<Select
-								placeholder="Select Destination Warehouse"
-								id="to_warehouse_id"
+								placeholder="All Warehouses"
+								id="warehouse_id"
 								defaultValue={user.warehouse_id}
 								isDisabled
 							>
@@ -177,25 +138,19 @@ export default function AddMutationModal({
 						<FormLabel>Select Product:</FormLabel>
 						<Select
 							placeholder="All Product"
-							id="stock_id"
-							onChange={(event) => {
-								inputHandler(event);
-								const selectedStock = stock.find(
-									(val) => val.id === parseInt(event.target.value)
-								);
-								setSelectedStock(selectedStock);
-							}}
+							id="product_id"
+							onChange={inputHandler}
 						>
-							{stock.length
-								? stock.map((val) => (
+							{product.length
+								? product.map((val) => (
 										<option key={val.id} value={val.id}>
-											{val.product?.product_name}
+											{val.product_name}
 										</option>
 								  ))
 								: null}
 						</Select>
 						<Center flexDir={"column"} pt={"15px"}>
-							<FormLabel pl={"18px"}>Mutation Amount:</FormLabel>
+							<FormLabel pl={"18px"}>Stock Amount:</FormLabel>
 							<HStack w="100px">
 								<Input
 									textAlign={"center"}
@@ -208,10 +163,9 @@ export default function AddMutationModal({
 						</Center>
 					</FormControl>
 				</ModalBody>
-				<ModalFooter justifyContent={selectedStock ? "space-between" : null}>
-					{selectedStock ? <Flex>Max Amount: {selectedStock?.qty}</Flex> : null}
+
+				<ModalFooter>
 					<Button
-						position={"sticky"}
 						colorScheme="green"
 						mr={3}
 						onClick={formik.handleSubmit}

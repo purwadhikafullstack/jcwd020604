@@ -21,10 +21,10 @@ import {
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 import { useFormik } from "formik";
-import * as Yup from "yup";
 import { useSelector } from "react-redux";
+import * as Yup from "yup";
 
 export default function EditMutationModal({
 	isOpen,

@@ -18,13 +18,13 @@ import AdminMutationPage from "../pages/admin/AdminMutationPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 // import ProtectedPages from "./ProtectedPages";
 import EditUserProfile from "../pages/user/EditUserProfile";
-import WarehouseMap from "../pages/warehouseMap";
+import WarehouseMapPage from "../pages/WarehouseMapPage";
 
 const routes = [
 	//Sandi
 	<Route path="/collection" element={<CollectionPage />}></Route>,
 	<Route path="/collection/:uuid" element={<DetailPage />}></Route>,
-	<Route path="/maps" element={<WarehouseMap />}></Route>,
+	<Route path="/maps" element={<WarehouseMapPage />}></Route>,
 
 	// Admin Page
 	// <Route path="/admin/managedata" element={<ProtectedPages needLoginAdmin={true}><AdminManageDataPage /></ProtectedPages>}></Route>,

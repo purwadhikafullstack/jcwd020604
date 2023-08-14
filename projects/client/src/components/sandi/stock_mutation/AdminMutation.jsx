@@ -22,12 +22,12 @@ import {
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
-import { api } from "../api/api";
+import { api } from "../../../api/api";
 import { useSelector } from "react-redux";
-import MutationList from "./mutationList";
-import AddMutationModal from "./addMutationModal";
-import MutationRequestModal from "./mutationRequestModal";
-import MutationCard from "./cardMutation";
+import MutationList from "./MutationList";
+import AddMutationModal from "./AddMutationModal";
+import MutationRequestModal from "./MutationRequestModal";
+import MutationCard from "./CardMutation";
 
 export default function AdminMutation() {
 	const [warehouse, setWarehouse] = useState([]);
