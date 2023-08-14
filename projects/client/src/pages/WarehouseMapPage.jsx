@@ -3,7 +3,7 @@ import { useLoadScript } from "@react-google-maps/api";
 import "../css/maps.css";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
-import Maps from "../components/sandi/warehouse/WarehouseMap";
+import Maps from "../components/warehouse/WarehouseMap";
 
 export default function WarehouseMap() {
 	const [geolocation, setGeolocation] = useState(null);
