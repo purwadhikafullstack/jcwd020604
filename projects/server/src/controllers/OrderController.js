@@ -5,20 +5,17 @@ const ordersController = {
     getAllOrder: async (req, res) => {
         try {
             const orders = await db.orders.findAll({
-                // where: {
-                //     "$stocks.warehouse_id$": warehouse_id
-                // },
                 include: [
                     {model: db.order_details, 
                         include: [{model: db.stocks, 
                             include: [{model: db.products,
-                            include: [{model: db.product_images}]
+                                include: [{model: db.product_images}]
                         }, 
-                            {include: [{model: db.warehouses}]}
+                            {model: db.warehouses}
                         ]
                     }]
                 },
-                {model: db.users}
+                    {model: db.users}
                 ],
             });
             res.status(200).json(orders);
@@ -36,13 +33,13 @@ const ordersController = {
                     {model: db.order_details, 
                         include: [{model: db.stocks, 
                             include: [{model: db.products,
-                            include: [{model: db.product_images}]
+                                include: [{model: db.product_images}]
                         }, 
-                            {include: [{model: db.warehouses}]}
+                            {model: db.warehouses}
                         ]
                     }]
                 },
-                {model: db.users}
+                    {model: db.users}
                 ],
             });
             if (order) {
