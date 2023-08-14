@@ -287,9 +287,8 @@ export default function AdminManageData() {
 							</Flex>
 							<Flex
 								gap={"15px"}
-								w={["100%", null, "auto"]} // Adjust width based on breakpoints
+								w={["100%", null, "auto"]}
 								flexWrap={["wrap", null, "nowrap"]}
-								justifyContent={"space-between"}
 							>
 								<Link to={`/admin/product`}>
 									<Button gap={"5px"}>
