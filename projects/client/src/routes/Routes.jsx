@@ -18,17 +18,6 @@ import Checkout from "../components/Checkout";
 import AdminHistoryPage from "../pages/admin/AdminHistoryPage";
 import AdminMutationPage from "../pages/admin/AdminMutationPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
-<<<<<<< HEAD
-// import ProtectedPages from "./ProtectedPages";
-import EditUserProfile from "../pages/user/EditUserProfile";
-import WarehouseMapPage from "../pages/WarehouseMapPage";
-
-const routes = [
-	//Sandi
-	<Route path="/collection" element={<CollectionPage />}></Route>,
-	<Route path="/collection/:uuid" element={<DetailPage />}></Route>,
-	<Route path="/maps" element={<WarehouseMapPage />}></Route>,
-=======
 import ProtectedPages from "./ProtectedPages";
 import NotFound from "../pages/redirect/NotFound";
 import Restricted from "../pages/redirect/RestrictedPage";
@@ -52,7 +41,6 @@ const routes = [
 			</ProtectedPages>
 		}
 	></Route>,
->>>>>>> develop
 
 	// Admin Page
 	<Route
@@ -152,8 +140,22 @@ const routes = [
 	></Route>,
 
 	// Maulana
-	<Route path="/cart" element={<ProtectedPages needLogin={true}><Cart /></ProtectedPages>}></Route>,
-	<Route path="/checkout" element={<ProtectedPages needLogin={true}><Checkout /></ProtectedPages>}></Route>,
+	<Route
+		path="/cart"
+		element={
+			<ProtectedPages needLogin={true}>
+				<Cart />
+			</ProtectedPages>
+		}
+	></Route>,
+	<Route
+		path="/checkout"
+		element={
+			<ProtectedPages needLogin={true}>
+				<Checkout />
+			</ProtectedPages>
+		}
+	></Route>,
 ];
 
 export default routes;
