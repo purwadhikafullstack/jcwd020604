@@ -1,8 +1,9 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
 	Box,
 	Flex,
 	Avatar,
+	AvatarBadge,
 	HStack,
 	IconButton,
 	Image,
@@ -34,10 +35,15 @@ import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/Logo.png";
+<<<<<<< HEAD
 import { BsGlobeAsiaAustralia } from "react-icons/bs";
 import "../css/maps.css";
+=======
+import Logo2 from "../assets/logo2.png";
+import { api } from "../api/api";
+>>>>>>> develop
 
-export default function Navbar() {
+export default function Navbar(props) {
 	const { isOpen, onOpen, onClose } = useDisclosure();
 	const { colorMode, toggleColorMode } = useColorMode();
 
@@ -45,6 +51,42 @@ export default function Navbar() {
 	const navigate = useNavigate();
 	const user = useSelector((state) => state.auth);
 	const toast = useToast();
+	const inputFileRef = useRef(null);
+
+	const [product, setProduct] = useState([]);
+	const [search, setSearch] = useState("");
+
+	useEffect(() => {
+		getAll();
+	}, [search]);
+
+	async function getAll() {
+		const res = await api.get("/product", {
+			params: {
+				search: search,
+			},
+		});
+		setProduct(res.data.rows);
+	}
+
+	async function getcart() {
+		const res = await api.get(`/cart/` + user.id);
+		setProduct(res.data);
+	}
+
+	const totalCart = () => {
+		let total = 0;
+		product.forEach((val) => {
+			total += val.qty;
+		});
+		return total;
+	};
+
+	useEffect(() => {
+		getcart();
+	}, []);
+
+	const totalQty = totalCart();
 
 	function logout() {
 		localStorage.removeItem("auth");
@@ -70,15 +112,17 @@ export default function Navbar() {
 						icon={isOpen ? <CloseIcon /> : <HamburgerIcon />}
 						aria-label={"Open Menu"}
 						display={{ md: "none" }}
+						mr={2}
 						onClick={isOpen ? onClose : onOpen}
 					/>
 					<HStack spacing={8} alignItems={"center"}>
 						<Box>
 							<Image
-								src={Logo}
+								src={colorMode === "light" ? Logo : Logo2}
 								minW={"50px"}
 								w={"20px"}
 								cursor={"pointer"}
+								onClick={() => navigate("/")}
 							></Image>
 						</Box>
 						<HStack
@@ -107,25 +151,28 @@ export default function Navbar() {
 							) : (
 								<>
 									<Flex>
-										<Link to={"/#"}>Tops</Link>
+										<Link to={"/collection"}>Tops</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Bottoms</Link>
+										<Link to={"/collection"}>Bottoms</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Outerwares</Link>
+										<Link to={"/collection"}>Headwear</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Accerories</Link>
+										<Link to={"/collection"}>Accerories</Link>
 									</Flex>
 								</>
 							)}
 							<Flex>
 								<InputGroup>
 									<InputRightElement pointerEvents="none">
-										<FiSearch color="gray.300" cursor={"pointer"} />
+										<FiSearch color="gray.300" cursor={"pointer"} onClick={() => {
+										const searchValue = inputFileRef.current.value;
+										setSearch(searchValue);
+									}} />
 									</InputRightElement>
-									<Input type="tel" placeholder="Search . . ." />
+									<Input type="tel" placeholder="Search . . ." ref={inputFileRef}/>
 								</InputGroup>
 							</Flex>
 						</HStack>
@@ -134,10 +181,12 @@ export default function Navbar() {
 						<IconButton
 							icon={colorMode === "light" ? <FiSun /> : <FiMoon />}
 							isRound={"true"}
-							size={"md"}
+							size={"sm"}
+							m={2}
 							alignSelf={"flex-end"}
 							onClick={toggleColorMode}
 						></IconButton>
+<<<<<<< HEAD
 						<Box m={2} pr={4} cursor={"pointer"}>
 							<FiShoppingCart />
 						</Box>
@@ -154,11 +203,37 @@ export default function Navbar() {
 								</Flex>
 							</Link>
 						</Box>
+=======
+						{user.role === "ADMIN" || user.role === "W_ADMIN" ? null : (<>
+						<Link to={"/cart"}>
+							<Box m={2} pr={4} cursor={"pointer"}>
+								<FiShoppingCart />
+							</Box>
+						</Link>
+							<Box
+								ml={"-5"}
+								mr={"20px"}
+								fontWeight={"bold"}
+								rounded={'full'}
+								h={5}
+								w={5}
+								color={'black'}
+								bgColor={"yellow"}
+								display={totalQty === 0 ? "none" : "box"}
+							>
+								<Flex justifyContent={'center'} alignItems={'center'} h={5} w={5} fontSize={'x-small'}>
+									{totalQty}
+								</Flex>
+							</Box>
+							</>
+						)}
+						
+>>>>>>> develop
 						<Menu>
 							{user.fullname ? (
 								<>
 									<Text fontSize={"12px"} mr={2}>
-										Welcome <Text as={"b"}>{user.fullname}</Text>
+										Welcome <Text as={"b"}>{user.fullname.length > 18 ? user.fullname.substring(0, 18) + "..." : user.fullname}</Text>
 									</Text>
 									<MenuButton
 										as={Button}
@@ -167,7 +242,9 @@ export default function Navbar() {
 										cursor={"pointer"}
 										minW={0}
 									>
-										<Avatar size={"sm"} src={user.avatar_url} />
+										<Avatar size={"sm"} src={user.avatar_url}>
+											<AvatarBadge boxSize='1.25em' bg='green.500' />
+										</Avatar>
 									</MenuButton>
 									<MenuList>
 										{user.role === "ADMIN" ? (
@@ -187,6 +264,9 @@ export default function Navbar() {
 											<>
 												<MenuItem onClick={() => navigate("/admin/managedata")}>
 													Manage Data
+												</MenuItem>
+												<MenuItem onClick={() => navigate("/admin_order")}>
+													Manage Order
 												</MenuItem>
 											</>
 										) : null}
@@ -228,9 +308,12 @@ export default function Navbar() {
 								<>
 									<InputGroup>
 										<InputRightElement pointerEvents="none">
-											<FiSearch color="gray.300" />
+										<FiSearch color="gray.300" cursor={'pointer'} onClick={() => {
+										const searchValue = inputFileRef.current.value;
+										setSearch(searchValue);
+									}}/>
 										</InputRightElement>
-										<Input type="tel" placeholder="Search . . ." />
+										<Input type="tel" placeholder="Search . . ." ref={inputFileRef} />
 									</InputGroup>
 									<Flex>
 										<Link to={"/"}>Dashboard</Link>
@@ -252,21 +335,24 @@ export default function Navbar() {
 								<>
 									<InputGroup>
 										<InputRightElement pointerEvents="none">
-											<FiSearch color="gray.300" />
+											<FiSearch color="gray.300" cursor={'pointer'} onClick={() => {
+										const searchValue = inputFileRef.current.value;
+										setSearch(searchValue);
+									}}/>
 										</InputRightElement>
-										<Input type="tel" placeholder="Search . . ." />
+										<Input type="tel" placeholder="Search . . ." ref={inputFileRef}/>
 									</InputGroup>
 									<Flex>
-										<Link to={"/#"}>Tops</Link>
+										<Link to={"/collection"}>Tops</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Bottoms</Link>
+										<Link to={"/collection"}>Bottoms</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Outerwares</Link>
+										<Link to={"/collection"}>Headwear</Link>
 									</Flex>
 									<Flex>
-										<Link to={"/#"}>Accerories</Link>
+										<Link to={"/collection"}>Accerories</Link>
 									</Flex>
 									<Box></Box>
 								</>
@@ -275,8 +361,6 @@ export default function Navbar() {
 					</Box>
 				) : null}
 			</Box>
-
-			<Box p={4}></Box>
 		</>
 	);
 }

@@ -30,6 +30,7 @@ app.use(express.json());
 
 app.use("/api/product", router.productRouter);
 app.use("/api/category", router.categoryRouter);
+app.use("/api/cart", router.cartRouter);
 app.use("/api/stock", router.stockRouter);
 app.use("/api/stockhistory", router.stockHistoryRouter);
 app.use("/api/stockmutation", router.stockMutationRouter);
@@ -37,6 +38,7 @@ app.use("/api/warehouse", router.warehouseRouter);
 app.use("/api/productImg", express.static(`${__dirname}/public/productImg`));
 app.use("/api/auth", router.userRouter);
 app.use("/api/address", router.addressRouter);
+app.use('/api/orders', router.orderRouter);
 app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
 
 app.get("/api", (req, res) => {

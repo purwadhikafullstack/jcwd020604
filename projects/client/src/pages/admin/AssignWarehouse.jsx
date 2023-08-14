@@ -12,15 +12,14 @@ import {
   ModalBody,
   useToast, 
   ModalFooter, } from '@chakra-ui/react';
+import { useNavigate } from 'react-router-dom';
 
 export default function Assign (props) {
   const [warehouse, setWarehouse] = useState([]);
-  const [wAdmin, setWAdmin] = useState({warehouse_id: "", uuid: props.uuid});
+  const [wAdmin, setWAdmin] = useState({warehouse_id: ""});
   const [message, setMessage] = useState('');
   const toast = useToast();
-  // console.log(message);
-  // console.log(wAdmin);
-  console.log(props);
+  const nav = useNavigate();
 
     async function getWarehouse() {
       try {
@@ -36,7 +35,7 @@ export default function Assign (props) {
 
     const assignUser = async () => {
       try {
-        const res = await api.post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign`, wAdmin);
+        const res = await api.post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign`, {...wAdmin, uuid: props.uuid});
         setMessage(res.data.message);
         toast({
           title: "Assign admin success",
@@ -45,16 +44,21 @@ export default function Assign (props) {
           position: 'top',
           isClosable: false
         });
+        nav('/user_list');
+        props.fetchData();
+        props.onClose();
       } catch (error) {
         setMessage('Error occurred while assigning admin to the warehouse');
         console.error(error);
         toast({
-          title: "The Warehouse has an active admin",
+          title: "User is already assigned to another warehouse",
           status: 'warning',
           duration: 3000,
           position: 'top',
           isClosable: false
         });
+        props.onClose();
+        props.fetchData();
       }
     }
 

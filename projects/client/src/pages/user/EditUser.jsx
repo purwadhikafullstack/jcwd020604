@@ -21,18 +21,18 @@ export default function EditUser (props) {
   const [users, setUsers] = useState({
     name: "",
     email: "",
+    phone_number: "",
     password: "",
     verified: true,
     role: "",
   });
-    console.log(users);
+
     const navigate = useNavigate();
     const toast = useToast();
   
     useEffect(() => {
       if (props.uuid){
         getUserById();
-        console.log(props.uuid);
       }
     }, [props.uuid]);
   
@@ -93,7 +93,7 @@ export default function EditUser (props) {
             <ModalHeader>Edit Data {users.fullname}</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
-            <FormControl isRequired>
+                <FormControl isRequired>
                     <FormLabel>Name</FormLabel>
                     <Input type='text' name="fullname"
                     value={users.fullname}
@@ -105,6 +105,12 @@ export default function EditUser (props) {
                     value={users.email}
                     onChange={handleInputChange}/>
                     <FormHelperText>We'll never share your email.</FormHelperText>
+                </FormControl>
+                <FormControl isRequired>
+                    <FormLabel>Phone</FormLabel>
+                    <Input type='number' name="phone_number"
+                    value={users.phone_number}
+                    onChange={handleInputChange}/>
                 </FormControl>
                 <FormControl id="password" isRequired>
                   <FormLabel>Password</FormLabel>
@@ -144,4 +150,3 @@ export default function EditUser (props) {
       </>
     );
   };
-  
