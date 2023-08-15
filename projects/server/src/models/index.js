@@ -80,6 +80,7 @@ db.stocks.hasMany(db.carts, { foreignKey: "stock_id", targetKey: "id" });
 db.users.hasMany(db.orders, { foreignKey: "user_id", targetKey: "id" });
 db.orders.belongsTo(db.users,{ foreignKey: "user_id", targetKey: "id" });
 db.addresses.hasMany(db.orders, { foreignKey: "address_id", targetKey: "id" });
+db.warehouses.hasMany(db.orders, {foreignKey: "warehouse_id", targetKey: "id"});
 
 // db.orderDetails foreignKey
 db.stocks.hasMany(db.order_details, { foreignKey: "stock_id", targetKey: "id" });
