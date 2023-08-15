@@ -14,7 +14,7 @@ import {
 	Select,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { api } from "../../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -39,6 +39,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 			address: "",
 			province: "",
 			city: "",
+			city_id: "",
 			district: "",
 			phone_number: "",
 		},
@@ -47,6 +48,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 			address: Yup.string().required(),
 			province: Yup.string().required(),
 			city: Yup.string().required(),
+			city_id: Yup.number().required(),
 			district: Yup.string().required(),
 			phone_number: Yup.string().required(),
 		}),
@@ -57,6 +59,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 					address,
 					province,
 					city,
+					city_id,
 					district,
 					phone_number,
 				} = formik.values;
@@ -83,6 +86,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 			}
 		},
 	});
+	console.log(formik.values);
 
 	async function getAllProvince() {
 		const res = await api.get("/warehouse/getAll/province");
@@ -96,7 +100,14 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 
 	async function inputHandler(event) {
 		const { value, id } = event.target;
-		formik.setFieldValue(id, value);
+
+		if (id === "city") {
+			const [selectedCityName, selectedCityId] = value.split("|");
+			formik.setFieldValue("city", selectedCityName);
+			formik.setFieldValue("city_id", selectedCityId);
+		} else {
+			formik.setFieldValue(id, value);
+		}
 	}
 
 	const isAddButtonEnabled = formik.dirty && formik.isValid;
@@ -136,7 +147,10 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 						<Select placeholder="Choose City" id="city" onChange={inputHandler}>
 							{city.length
 								? city.map((val) => (
-										<option key={val.id} value={val.id}>
+										<option
+											key={val.id}
+											value={`${val.city_name}|${val.city_id}`}
+										>
 											{val.city_name}
 										</option>
 								  ))

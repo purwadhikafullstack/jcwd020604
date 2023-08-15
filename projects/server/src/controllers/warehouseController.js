@@ -10,6 +10,7 @@ const warehouseController = {
 			address: Joi.string().required(),
 			province: Joi.string().required(),
 			city: Joi.string().required(),
+			city_id: Joi.number().required(),
 			district: Joi.string().required(),
 			phone_number: Joi.string().required(),
 		});
@@ -24,6 +25,7 @@ const warehouseController = {
 				address,
 				district,
 				city,
+				city_id,
 				province,
 				phone_number,
 			} = value;
@@ -56,6 +58,7 @@ const warehouseController = {
 					address,
 					province,
 					city,
+					city_id,
 					district,
 					phone_number,
 					latitude: lat,
@@ -71,8 +74,15 @@ const warehouseController = {
 		}
 	},
 	editWarehouse: async (req, res) => {
-		const { warehouse_name, address, province, city, district, phone_number } =
-			req.body;
+		const {
+			warehouse_name,
+			address,
+			province,
+			city,
+			city_id,
+			district,
+			phone_number,
+		} = req.body;
 		const { id } = req.params;
 		const t = await db.sequelize.transaction();
 		const schema = Joi.object({
@@ -80,6 +90,7 @@ const warehouseController = {
 			address: Joi.string().required(),
 			province: Joi.string().required(),
 			city: Joi.string().required(),
+			city_id: Joi.number().required(),
 			district: Joi.string().required(),
 			phone_number: Joi.string().required(),
 		});
@@ -88,6 +99,7 @@ const warehouseController = {
 			address,
 			province,
 			city,
+			city_id,
 			district,
 			phone_number,
 		});
@@ -123,6 +135,7 @@ const warehouseController = {
 					address,
 					province,
 					city,
+					city_id,
 					district,
 					phone_number,
 					latitude: lat,
