@@ -7,6 +7,7 @@ router.get("/:user_id", cartControllers.getCartByUser);
 router.post("/addCart", cartControllers.addCartByUser);
 router.patch("/update/:id", cartControllers.editCartQty);
 router.delete("/delete", cartControllers.deleteCartItem);
+router.post("/get/cost", cartControllers.getCost);
 
 // router.delete("/carts/delete", cartControllers.deleteCartByUser);
 

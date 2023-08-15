@@ -131,7 +131,7 @@ export default function Cart() {
                       defaultValue={val.qty}
                       min={1}
                       max={stock}
-                      w={"100px"}
+                      w={"70px"}
                       onChange={(e) => {
                         if (e.target.value && e.target.value != "") {
                           val.qty = e.target.value;
