@@ -7,7 +7,9 @@ const Cart = db.carts;
 const User = db.users;
 const Product = db.products;
 const Stock = db.stocks;
+const axios = require("axios");
 
+// bug di add to cart jika stock di berbeda warehouse
 const cartControllers = {
   getCartByUser: async (req, res) => {
     const { user_id } = req.params;
@@ -99,6 +101,57 @@ const cartControllers = {
     } catch (error) {
       console.log("Error deleting cart item:", error);
       return res.status(500).send(error.message);
+    }
+  },
+  // getCost: async (req, res) => {
+  //   try {
+  //     const { origin, destination, weight, courier } = req.body;
+
+  //     const result = await axios.post(
+  //       "https://api.rajaongkir.com/starter/cost",
+  //       {
+  //         origin: origin,
+  //         destination: destination,
+  //         weight: weight,
+  //         courier: courier,
+  //       },
+  //       {
+  //         headers: {
+  //           key: process.env.RAJA_ONGKIR_API,
+  //         },
+  //       }
+  //     );
+  //     res.send(result);
+  //   } catch (err) {
+  //     res.status(500).send({
+  //       message: err.message,
+  //     });
+  //   }
+  // },
+  getCost: async (req, res) => {
+    try {
+      const { origin, destination, weight, courier } = req.body;
+      const input = {
+        origin: "",
+        destination: "",
+        weight,
+        courier,
+      };
+      console.log(input);
+      const result = await axios.post(
+        "https://api.rajaongkir.com/starter/cost",
+        input,
+        {
+          headers: {
+            key: process.env.RAJA_ONGKIR_API,
+          },
+        }
+      );
+      res.send(result.data.rajaongkir.results);
+    } catch (err) {
+      res.status(500).send({
+        message: err.message,
+      });
     }
   },
   editCartQty: async (req, res) => {

@@ -32,7 +32,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	useEffect(() => {
 		getAllCity();
 	}, []);
-
+	console.log(city);
 	const formik = useFormik({
 		initialValues: {
 			warehouse_name: "",
@@ -41,7 +41,6 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 			city: "",
 			city_id: "",
 			district: "",
-			phone_number: "",
 		},
 		validationSchema: Yup.object().shape({
 			warehouse_name: Yup.string().required(),
@@ -50,7 +49,6 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 			city: Yup.string().required(),
 			city_id: Yup.number().required(),
 			district: Yup.string().required(),
-			phone_number: Yup.string().required(),
 		}),
 		onSubmit: async () => {
 			try {
@@ -170,13 +168,6 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 								  ))
 								: null}
 						</Select>
-						<FormLabel>Phone Number:</FormLabel>
-						<Input
-							placeholder="08.."
-							type="number"
-							id="phone_number"
-							onChange={inputHandler}
-						/>
 					</FormControl>
 				</ModalBody>
 
