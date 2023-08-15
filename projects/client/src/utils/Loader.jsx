@@ -6,7 +6,7 @@ export default function Loader() {
 	return (
 		<div>
 			<SkeletonTheme color={"#202020 "} highlightColor={"#444"}>
-				<Skeleton height={300} duration={2} />
+				<Skeleton duration={2} />
 			</SkeletonTheme>
 		</div>
 	);

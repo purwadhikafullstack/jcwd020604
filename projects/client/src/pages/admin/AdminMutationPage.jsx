@@ -1,4 +1,4 @@
-import AdminMutation from "../../components/adminMutation";
+import AdminMutation from "../../components/stock_mutation/AdminMutation";
 import Navbar from "../../components/Navbar";
 import Footer from "../../components/Footer";
 

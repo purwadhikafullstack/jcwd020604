@@ -1,19 +1,24 @@
 const express = require("express");
 const router = express.Router();
 const warehouseController = require("../controllers").warehouseController;
+const getWarehouseController = require("../controllers").getWarehouseController;
 const checkRole = require("../middlewares/roleDecoder");
 
-router.get("/", checkRole.checkWAdmin, warehouseController.getWarehouse);
-router.get("/:id", checkRole.checkWAdmin, warehouseController.getWarehouseById);
+router.get("/", getWarehouseController.getWarehouse);
+router.get(
+	"/:id",
+	checkRole.checkWAdmin,
+	getWarehouseController.getWarehouseById
+);
 router.get(
 	"/getAll/province/",
 	checkRole.checkAdmin,
-	warehouseController.getAllProvince
+	getWarehouseController.getAllProvince
 );
 router.get(
 	"/getAll/city/",
 	checkRole.checkAdmin,
-	warehouseController.getAllCity
+	getWarehouseController.getAllCity
 );
 
 router.post("/", checkRole.checkAdmin, warehouseController.insertWarehouse);

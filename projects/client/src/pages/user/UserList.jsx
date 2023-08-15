@@ -101,6 +101,7 @@ const UserList = () => {
                         <Th>No</Th>
                         <Th>Name</Th>
                         <Th>Email</Th>
+                        <Th>Phone</Th>
                         <Th>Role</Th>
                         <Th>Warehouse</Th>
                         <Th display={'flex'} alignItems={'center'} justifyContent={'center'}>Action</Th>
@@ -112,6 +113,7 @@ const UserList = () => {
                             <Td>{index + 1}</Td>
                             <Td>{user.fullname}</Td>
                             <Td>{user.email}</Td>
+                            <Td><Text fontSize={'sm'}>{user.phone_number}</Text></Td>
                             <Td><Text fontFamily={'sans-serif'} fontSize={'sm'}>{user.role}</Text></Td>
                             <Td><Text fontFamily={'sans-serif'} fontSize={'sm'}>{user?.warehouse?.warehouse_name}</Text></Td>
                             <Td>

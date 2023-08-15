@@ -21,6 +21,8 @@ import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 import ProtectedPages from "./ProtectedPages";
 import NotFound from "../pages/redirect/NotFound";
 import Restricted from "../pages/redirect/RestrictedPage";
+import AdminOrder from "../pages/admin/AdminOrder";
+import WarehouseMapPage from "../pages/WarehouseMapPage";
 
 const routes = [
 	//Sandi
@@ -32,6 +34,7 @@ const routes = [
 			</ProtectedPages>
 		}
 	></Route>,
+	<Route path="/maps" element={<WarehouseMapPage />}></Route>,
 	<Route
 		path="/collection/:uuid"
 		element={
@@ -129,9 +132,32 @@ const routes = [
 		}
 	></Route>,
 
+	<Route
+		path="/admin_order"
+		element={
+			<ProtectedPages needLogin={true} needLoginAdmin={true}>
+				<AdminOrder />
+			</ProtectedPages>
+		}
+	></Route>,
+
 	// Maulana
-	<Route path="/cart" element={<Cart />}></Route>,
-	<Route path="/checkout" element={<Checkout />}></Route>,
+	<Route
+		path="/cart"
+		element={
+			<ProtectedPages needLogin={true}>
+				<Cart />
+			</ProtectedPages>
+		}
+	></Route>,
+	<Route
+		path="/checkout"
+		element={
+			<ProtectedPages needLogin={true}>
+				<Checkout />
+			</ProtectedPages>
+		}
+	></Route>,
 ];
 
 export default routes;

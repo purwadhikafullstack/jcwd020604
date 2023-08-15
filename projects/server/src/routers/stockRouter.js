@@ -1,9 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const stockController = require("../controllers").stockController;
+const getStockController = require("../controllers").getStockController;
 const checkRole = require("../middlewares/roleDecoder");
 
-router.get("/", checkRole.checkUser, stockController.getStock);
+router.get("/", checkRole.checkUser, getStockController.getStock);
+
+router.get("/getAll/stock", getStockController.getAllStock);
 
 router.post("/", checkRole.checkWAdmin, stockController.addStock);
 
