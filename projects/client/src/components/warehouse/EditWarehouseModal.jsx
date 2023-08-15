@@ -26,6 +26,8 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	const toast = useToast();
 	const nav = useNavigate();
 
+	console.log(data);
+
 	useEffect(() => {
 		getWarehouse();
 		getAllProvince();
@@ -144,17 +146,31 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						<FormLabel>City:</FormLabel>
 						<Select
 							id="city"
-							value={data.city}
 							placeholder="Choose City"
-							onChange={(e) => setData({ ...data, city: e.target.value })}
+							onChange={(e) => {
+								const [cityName, cityId] = e.target.value.split("|");
+								setData({ ...data, city: cityName, city_id: cityId });
+							}}
 						>
-							{city.length
-								? city.map((val) => (
-										<option key={val.id} value={val.id}>
+							{city &&
+								city.map((val, idx) =>
+									data.city != val.city_name ? (
+										<option
+											key={val.city_id}
+											value={`${val.city_name}|${val.city_id}`}
+										>
 											{val.city_name}
 										</option>
-								  ))
-								: null}
+									) : (
+										<option
+											selected
+											key={val.city_id}
+											value={`${val.city_name}|${val.city_id}`}
+										>
+											{val.city_name}
+										</option>
+									)
+								)}
 						</Select>
 						<FormLabel>Province:</FormLabel>
 						<Select
@@ -183,7 +199,6 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						/>
 					</FormControl>
 				</ModalBody>
-
 				<ModalFooter>
 					<Button onClick={editWarehouse} colorScheme="blue" mr={3}>
 						Save

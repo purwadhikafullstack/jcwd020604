@@ -17,7 +17,7 @@ import {
 	Image,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { api } from "../../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -26,6 +26,7 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 	const [category, setCategory] = useState([]);
 	const [selectedImages, setSelectedImages] = useState([]);
 	const [selectedFiles, setSelectedFiles] = useState([]);
+	const inputFileRef = useRef(null);
 	const toast = useToast();
 	const nav = useNavigate();
 
@@ -81,9 +82,7 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 				}
 			} catch (error) {
 				toast({
-					title: !error.response.data.message
-						? "File is too large"
-						: error.response.data.message,
+					title: error.response.data.message,
 					status: "error",
 					position: "top",
 					duration: 3000,
@@ -96,20 +95,21 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 		const files = event.target.files;
 		setSelectedFiles(files);
 		const images = [];
-		const maxImages = 5; // Set the maximum number of images to 5
-		const maxFileSizeBytes = 1024 * 1024; // 1MB in bytes
+		const maxImages = 5;
+		const maxFileSizeBytes = 1024 * 1024;
 		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
 			const file = files[i];
 			if (file.size >= maxFileSizeBytes) {
 				toast({
-					title: "File is too large",
+					title: "Selected image is too large",
 					status: "error",
 					position: "top",
 					duration: 3000,
 				});
+			} else {
+				const imageUrl = URL.createObjectURL(file);
+				images.push(imageUrl);
 			}
-			const imageUrl = URL.createObjectURL(file);
-			images.push(imageUrl);
 		}
 		setSelectedImages(images);
 		formik.setFieldValue("productImg", [...files].slice(0, maxImages)); // Store up to the first 5 selected image files in formik state
@@ -185,7 +185,16 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 							paddingTop={"4px"}
 							multiple
 							onChange={handleImageChange}
+							ref={inputFileRef}
+							display={"none"}
 						/>
+						<Button
+							onClick={() => inputFileRef.current.click()}
+							size={"sm"}
+							colorScheme="facebook"
+						>
+							Choose image
+						</Button>
 						{/* Preview the selected images */}
 						{selectedImages.length ? (
 							<Flex

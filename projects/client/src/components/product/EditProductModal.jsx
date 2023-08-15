@@ -17,7 +17,7 @@ import {
 	Image,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { api } from "../../api/api";
 import { useSelector } from "react-redux";
 
@@ -26,6 +26,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 	const [category, setCategory] = useState([]);
 	const [selectedFiles, setSelectedFiles] = useState([]);
 	const [product, setProduct] = useState(val);
+	const inputFileRef = useRef(null);
 	const imagesProduct = val.product_images;
 	const toast = useToast();
 	const nav = useNavigate();
@@ -56,13 +57,12 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 				duration: 3000,
 			});
 			getProduct();
-			nav("/admin/product");
 			onClose();
+			setSelectedImages([]);
+			nav("/admin/product");
 		} catch (error) {
 			toast({
-				title: !error.response.data.message
-					? "File is too large"
-					: error.response.data.message,
+				title: error.response.data.message,
 				status: "error",
 				position: "top",
 				duration: 3000,
@@ -79,8 +79,8 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 		const files = event.target.files;
 		setSelectedFiles(files);
 		const images = [];
-		const maxImages = 5; // Set the maximum number of images to 5
-		const maxFileSizeBytes = 1024 * 1024; // 1MB in bytes
+		const maxImages = 5;
+		const maxFileSizeBytes = 1024 * 1024;
 		for (let i = 0; i < Math.min(files.length, maxImages); i++) {
 			const file = files[i];
 			if (file.size >= maxFileSizeBytes) {
@@ -90,9 +90,10 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 					position: "top",
 					duration: 3000,
 				});
+			} else {
+				const imageUrl = URL.createObjectURL(file);
+				images.push(imageUrl);
 			}
-			const imageUrl = URL.createObjectURL(file);
-			images.push(imageUrl);
 		}
 
 		setSelectedImages(images);
@@ -195,14 +196,25 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 							<FormLabel>Change Product Images:</FormLabel>
 						) : null}
 						{user.role === "ADMIN" ? (
-							<Input
-								accept="image/png, image/jpeg"
-								type="file"
-								id="product_images"
-								paddingTop={"4px"}
-								multiple
-								onChange={handleImageChange}
-							/>
+							<>
+								<Input
+									accept="image/png, image/jpeg"
+									type="file"
+									id="product_images"
+									paddingTop={"4px"}
+									multiple
+									onChange={handleImageChange}
+									ref={inputFileRef}
+									display={"none"}
+								/>
+								<Button
+									onClick={() => inputFileRef.current.click()}
+									size={"sm"}
+									colorScheme="facebook"
+								>
+									Choose image
+								</Button>
+							</>
 						) : null}
 						{/* Preview the selected images */}
 						{selectedImages.length ? (

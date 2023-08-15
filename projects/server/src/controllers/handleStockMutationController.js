@@ -1,6 +1,7 @@
 const db = require("../models");
 const Joi = require("joi");
 const stockHistory = require("./stockHistoryController");
+const geolib = require("geolib");
 
 const handleStockMutation = {
 	handleMutation: async (req, res) => {
@@ -152,8 +153,53 @@ const handleStockMutation = {
 			res.status(500).send({ message: err.message });
 		}
 	},
-	autoMutation: async () => {
+	autoMutation: async (setWarehouse) => {
 		try {
+			const warehouses = await db.warehouses.findAll(); // Assuming you have a 'warehouses' table
+
+			const referenceWarehouse = setWarehouse; // Use the provided warehouse or choose a reference warehouse
+
+			const otherWarehouses = warehouses.filter(
+				(warehouse) => warehouse.id !== referenceWarehouse.id
+			); // Remove the reference warehouse from the list
+
+			const nearestWarehouse = otherWarehouses.reduce((nearest, warehouse) => {
+				const distance = geolib.getDistance(
+					{
+						latitude: referenceWarehouse.lat,
+						longitude: referenceWarehouse.lng,
+					},
+					{ latitude: warehouse.lat, longitude: warehouse.lng }
+				);
+
+				if (!nearest || distance < nearest.distance) {
+					return { warehouse, distance };
+				}
+				return nearest;
+			}, null);
+
+			if (nearestWarehouse) {
+				console.log(
+					"Nearest warehouse:",
+					nearestWarehouse.warehouse.name,
+					"Distance:",
+					nearestWarehouse.distance
+				);
+
+				// Deduct qty from nearest warehouse's stock
+				if (qty && nearestWarehouse.warehouse.stock >= qty) {
+					nearestWarehouse.warehouse.stock -= qty;
+					console.log(
+						`Deducted ${qty} from ${nearestWarehouse.warehouse.name}'s stock.`
+					);
+				} else {
+					console.log(
+						`Insufficient stock in ${nearestWarehouse.warehouse.name}.`
+					);
+				}
+			} else {
+				console.log("No nearest warehouse found.");
+			}
 		} catch (err) {
 			throw err;
 		}
