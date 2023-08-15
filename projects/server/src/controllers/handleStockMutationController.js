@@ -185,6 +185,18 @@ const handleStockMutation = {
 					"Distance:",
 					nearestWarehouse.distance
 				);
+
+				// Deduct qty from nearest warehouse's stock
+				if (qty && nearestWarehouse.warehouse.stock >= qty) {
+					nearestWarehouse.warehouse.stock -= qty;
+					console.log(
+						`Deducted ${qty} from ${nearestWarehouse.warehouse.name}'s stock.`
+					);
+				} else {
+					console.log(
+						`Insufficient stock in ${nearestWarehouse.warehouse.name}.`
+					);
+				}
 			} else {
 				console.log("No nearest warehouse found.");
 			}
