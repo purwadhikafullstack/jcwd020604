@@ -18,15 +18,17 @@ import {
     Badge,
     Image,
     HStack,
-    useToast
+    useToast,
+    VStack,
+    Spacer,
+    Divider
   } from '@chakra-ui/react'
   import { api } from '../../api/api';
 
 const OrderModal = (props) => {
     const [orderById, setOrderById] = useState([]);
     const toast = useToast();
-
-    console.log(orderById);
+    const orderDate = orderById?.createdAt ? new Date(orderById.createdAt) : null;
 
     useEffect(() => {
         if(props.selectedOrder)
@@ -57,18 +59,20 @@ const OrderModal = (props) => {
         <Modal isOpen={props.isOpen} onClose={props.onClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
+            <ModalHeader fontSize={'sm'} color={'blackAlpha.700'} fontWeight={'bold'} fontFamily={'sans-serif'}>Detail Product</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-                 
-                    <Card my={2} mx={{base: '12', sm: '6', md: '14'}} size={'sm'} display={'block'} position={'relative'} bgColor={'white'}>
+                    <Card my={2} mx={{base: '12', sm: '6', md: '10'}} size={'sm'} display={'block'} position={'relative'} bgColor={'white'}>
                         <CardHeader>
-                            <Stack direction={'row'} px={1} display={'flex'} align={'center'} justifyContent={'flex-end'}>
+                            <Stack direction={{base:'column', md: 'row', sm: 'row'}} px={1} display={'flex'} align={'flex-start'} justifyContent={'flex-start'}>
                                 <Badge variant='solid' colorScheme={orderById?.status === "CANCELLED" ? 'red' : orderById?.status === "PAYMENT" ? 'blue' : orderById?.status === "CONFIRM_PAYMENT" ? 'purple' : orderById?.status === "DELIVERY" ? 'grey' : orderById?.status === "PROCESSING" ? 'teal' : 'green'}>
                                     {orderById?.status}
                                 </Badge>
-                                <Text fontSize={'sm'} fontWeight={'medium'} textColor={'blackAlpha.600'}>No. Invoice: {orderById?.invoice}</Text>
+                                <Text fontSize={'xs'} fontWeight={'medium'} textColor={'green.400'}>No.Invoice:{orderById?.invoice}</Text>
                             </Stack>
+                            <Flex m={1}>
+                                <Text fontSize={'xs'} fontWeight={'medium'} textColor={'blackAlpha.600'}>Order Date: {orderDate ? orderDate.toDateString() : 'N/A'}</Text>
+                            </Flex>
                         </CardHeader>
                         <CardBody>
                             <Flex align={'flex-start'} justifyContent={'flex-start'}>
@@ -76,7 +80,7 @@ const OrderModal = (props) => {
                             </Flex>
                                 {orderById?.order_details?.map(detail => (
                                     <Box key={detail.id}>
-                                        <HStack>
+                                        <VStack>
                                             <Image src={detail?.stock?.product?.product_images[0]?.product_image}
                                                 w={"100%"}
                                                 boxSize='250px'
@@ -84,22 +88,42 @@ const OrderModal = (props) => {
                                             </Image>
                                             <Stack spacing={'3'}>
                                                 <Text fontSize={'sm'} fontWeight={'bold'} textColor={'blackAlpha.600'}>{detail?.stock?.product?.product_name}</Text>
-                                                    <Flex w={{base: '50%', sm: '100%', md: '50%'}}>
+                                                    <Flex w={{base: '100%', sm: '100%', md: '100%'}}>
                                                         <Text textAlign={'justify'} as={'p'} fontSize={'sm'} fontWeight={'semibold'} textColor={'blackAlpha.600'}>{detail?.stock?.product?.product_detail}</Text>
                                                     </Flex>
-                                                <Text fontSize={'sm'} fontWeight={'normal'} textColor={'blackAlpha.600'}>{detail?.qty} barang x Rp{detail?.price}</Text>
+                                                <HStack display={'flex'} flexDir={{base: 'column', md: 'row'}} bgColor={'green.300'} rounded={'md'} boxShadow={'2xl'}>
+                                                    <Text fontSize={'sm'} fontWeight={'normal'} textColor={'white'}>{detail?.qty} barang x Rp{detail?.price}</Text>
+                                                    <Spacer/>
+                                                    <Text fontSize={'sm'} fontWeight={'normal'} textColor={'white'}>Total Harga : {detail?.price}</Text>
+                                                </HStack>
                                             </Stack>
-                                        </HStack>
+                                        <Divider orientation='horizontal'/>
+                                            <Flex flexWrap={'wrap'} flexDir={'column'} alignItems={'flex-start'} justifyContent={'flex-start'} my={2}>
+                                                <Text fontWeight={'bold'} textColor={'blackAlpha.600'} my={2}>Shipping Information</Text>
+                                                <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'blackAlpha.600'}>Kurir : {orderById?.courier}</Text>
+                                                    <Divider orientation='horizontal' my={2}/>
+                                                        <Flex w={{base: '100%', sm: '100%', md: '100%'}}>
+                                                            <Text textAlign={'justify'} as={'p'} fontSize={'sm'} fontWeight={'semibold'} textColor={'blackAlpha.600'}>No. Resi : {orderById?.payment_proof}</Text>
+                                                        </Flex>
+                                                    <Divider orientation='horizontal' my={2}/>
+                                                    <Stack display={'flex'} flexDir={{base: 'column', md: 'column'}}>
+                                                            <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'blackAlpha.600'}>Alamat : </Text>
+                                                            <Divider orientation='horizontal'/>
+                                                            <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'blackAlpha.600'}>{orderById?.user?.addresses[0]?.address}, {orderById?.user?.addresses[0]?.district}</Text>
+                                                            <Text fontSize={'sm'} fontWeight={'semibold'} textColor={'blackAlpha.600'}>{orderById?.user?.addresses[0]?.city}, {orderById?.user?.addresses[0]?.province}</Text>                                                    
+                                                    </Stack>
+                                                    <Divider orientation='horizontal'/>
+                                            </Flex>
+                                        </VStack>
                                     </Box>
                                 ))}
                         </CardBody>
                     </Card>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={props.onClose}>
+              <Button colorScheme='orange' size={'xs'} mr={3} onClick={props.onClose}>
                 Close
               </Button>
-              <Button variant='ghost'>Secondary Action</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
