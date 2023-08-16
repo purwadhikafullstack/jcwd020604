@@ -25,6 +25,7 @@ export default function AddressUser(props) {
     address: "",
     province: "",
     city: "",
+    city_id: "",
     district: "",
   });
   const [city, setCity] = useState("");
@@ -106,12 +107,23 @@ export default function AddressUser(props) {
   };
 
   const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    setAddress((prevState) => ({
-      ...prevState,
-      [id]: value,
-    }));
+    const { name, value, id } = e.target;
+    if (id === "city") {
+      const [selectedCityName, selectedCityId] = value.split("|");
+      setAddress((prevState) => ({
+        ...prevState,
+        city: selectedCityName,
+        city_id: selectedCityId,
+      }));
+    } else {
+      setAddress((prevState) => ({
+        ...prevState,
+        [name]: value,
+      }));
+    }
+    console.log(address);
   };
+  
 
   return (
     <>
@@ -140,7 +152,7 @@ export default function AddressUser(props) {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Province</FormLabel>
-              <Select id="province" onChange={handleInputChange}>
+              <Select id="province" name="province" onChange={handleInputChange}>
                 {province.length
                   ? province.map((val) =>
                       val.province == address.province ? (
@@ -154,22 +166,43 @@ export default function AddressUser(props) {
                   : null}
               </Select>
             </FormControl>
-            <FormControl isRequired>
+            {/* <FormControl isRequired>
               <FormLabel>City</FormLabel>
-              <Select id="city" onChange={handleInputChange}>
-                {city.length
+              <Select id="city" name="city" onChange={handleInputChange}>
+                {city
                   ? city.map((val) =>
                       val.province == address.province ? (
                         val.city_name == address.city ? (
-                          <option selected value={val.city_name}>
+                          <option key={val.city_id} selected value={`${val.city_name}|${val.city_id}`}>
                             {val.city_name}
                           </option>
                         ) : (
-                          <option value={val.city_name}>{val.city_name}</option>
+                          <option key={val.city_id} value={`${val.city_name}|${val.city_id}`}>{val.city_name}</option>
                         )
                       ) : null
                     )
                   : null}
+              </Select>
+            </FormControl> */}
+            <FormControl isRequired>
+              <FormLabel>City</FormLabel>
+              <Select
+                id="city"
+                name="city"
+                onChange={handleInputChange}
+                value={`${address.city}|${address.city_id}`}
+              >
+                {city.length &&
+                  city.map((val) => (
+                    val.province === address.province ? (
+                      <option
+                        key={val.city_id}
+                        value={`${val.city_name}|${val.city_id}`}
+                      >
+                        {val.city_name}
+                      </option>
+                    ) : null
+                  ))}
               </Select>
             </FormControl>
           </ModalBody>

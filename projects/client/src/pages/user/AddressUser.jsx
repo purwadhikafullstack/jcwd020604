@@ -26,6 +26,7 @@ export default function AddressUser(props) {
     address: "",
     province: "",
     city: "",
+    city_id: "",
     district: "",
   });
 
@@ -112,12 +113,21 @@ export default function AddressUser(props) {
   };
 
   const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setAddress((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
-    console.log(address);
+    const { name, value, id } = e.target;
+      if (id === "city") {
+        const [selectedCityName, selectedCityId] = value.split("|");
+        setAddress((prevState) => ({
+          ...prevState,
+          city: selectedCityName,
+          city_id: selectedCityId,
+        }));
+      } else {
+        setAddress((prevState) => ({
+          ...prevState,
+          [name]: value,
+        }));
+      }
+      console.log(address);
   };
 
   return (
@@ -158,10 +168,15 @@ export default function AddressUser(props) {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>City</FormLabel>
-              <Select name="city" onChange={(val) => handleInputChange(val)}>
+              <Select name="city" id="city" onChange={(val) => handleInputChange(val)}>
                 {city.length
                   ? city.map((val) => (
-                      <option value={val.city_name}>{val.city_name}</option>
+                      <option
+                        key={val.id}
+                        value={`${val.city_name}|${val.city_id}`}
+                      >
+                        {val.city_name}
+                      </option>
                     ))
                   : null}
               </Select>
