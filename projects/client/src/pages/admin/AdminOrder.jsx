@@ -92,11 +92,12 @@ const AdminOrder = () => {
                 </>
             ) : (
                 <>
-                    <Flex flexDir={'row'}>
+                    <Flex flexDir={'row'} mx={{base: '12', sm: '6', md: '14'}}>
                         <Select
-                            placeholder="Select Status"
+                            placeholder="All Status"
                             w={{base:'12%',sm:'md', md:'12%'}}
                             m={4}
+                            cursor={'pointer'}
                             fontSize={'xs'}
                             variant='unstyled'
                             value={selectedStatus}
@@ -108,14 +109,15 @@ const AdminOrder = () => {
                                 <option>DONE</option>
                                 <option>CANCELLED</option>
                                 <option>CONFIRM_PAYMENT</option>
-                                <option>PAYMENT</option>
+                                <option>WAITING_PAYMENT</option>
                                 <option>DELIVERY</option>
                                 <option>PROCESSING</option>
                         </Select>                   
                         <Select
-                            placeholder="Select Status"
+                            placeholder="All Warehouse"
                             w={{base:'12%',sm:'md', md:'12%'}}
                             m={4}
+                            cursor={'pointer'}
                             fontSize={'xs'}
                             variant='unstyled'
                             value={selectedWarehouse}

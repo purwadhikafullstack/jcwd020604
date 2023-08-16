@@ -206,6 +206,52 @@ const ordersController = {
             res.status(500).json({ message: "Error retrieving order", error: error.message });
         }
     },
+
+    confirmOrderPayment: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { action } = req.body; // 'accept' atau 'reject'
+        
+            // Temukan pesanan berdasarkan ID
+            const order = await db.orders.findByPk(id);
+        
+            if (!order) {
+              return res.status(404).json({ message: "Order not found" });
+            }
+        
+            if (action === "accept") {
+              // Periksa apakah status pesanan memenuhi syarat untuk konfirmasi bukti pembayaran
+              if (order.status !== "WAITING_PAYMENT") {
+                return res.status(400).json({ message: "Invalid order status for confirmation proof of payment" });
+              }
+        
+              // Update status pesanan menjadi "PROCESSING"
+              order.status = "PROCESSING";
+              await order.save();
+        
+              return res.status(200).json({ message: "Payment received, order status updated to Processed" });
+
+            } else if (action === "reject") {
+              // Periksa apakah status pesanan memenuhi syarat untuk menolak bukti pembayaran
+              if (order.status !== "WAITING_PAYMENT") {
+                return res.status(400).json({ message: "Invalid order status to refuse proof of payment" });
+              }
+        
+              // Update status pesanan menjadi "WAITING_PAYMENT"
+              order.status = "WAITING_PAYMENT";
+              await order.save();
+        
+              return res.status(200).json({ message: "Payment is rejected, order status is updated to Waiting for Payment" });
+              
+            } else {
+              return res.status(400).json({ message: "Invalid action" });
+            }
+            
+          } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "There was an error while processing the payment" });
+          }
+    },
     
     updateOrder: async (req, res) => {
         const { id } = req.params;
