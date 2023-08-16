@@ -17,7 +17,6 @@ import {
 	RepeatIcon,
 	UpDownIcon,
 } from "@chakra-ui/icons";
-
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";

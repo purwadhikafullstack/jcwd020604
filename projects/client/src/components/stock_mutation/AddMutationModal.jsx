@@ -39,7 +39,7 @@ export default function AddMutationModal({
 
 	useEffect(() => {
 		getWarehouse();
-	}, []);
+	}, [isOpen]);
 
 	useEffect(() => {
 		getAllStock();

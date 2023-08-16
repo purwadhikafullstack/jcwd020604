@@ -11,7 +11,6 @@ import {
 	FormLabel,
 	Input,
 	Select,
-	useNumberInput,
 	HStack,
 	Center,
 	useToast,
@@ -33,13 +32,12 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 	useEffect(() => {
 		getWarehouse();
 		getAllProduct();
-	}, []);
+	}, [isOpen]);
 
 	const formik = useFormik({
 		initialValues: {
 			qty: "",
 			warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
-
 			product_id: "",
 		},
 		validationSchema: Yup.object().shape({

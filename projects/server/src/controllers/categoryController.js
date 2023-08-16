@@ -88,10 +88,13 @@ const categoryController = {
 		}
 		try {
 			const existingCategory = await db.categories.findOne({
-				where: { category_name },
+				where: {
+					category_name,
+					id: { [db.Sequelize.Op.not]: id }, // Exclude the current category ID
+				},
 			});
 
-			if (existingCategory && existingCategory.id !== id) {
+			if (existingCategory) {
 				return res.status(400).send({ message: "Category already exists." });
 			}
 

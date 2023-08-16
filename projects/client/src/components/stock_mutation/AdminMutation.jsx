@@ -53,8 +53,6 @@ export default function AdminMutation() {
 		getRequest();
 	}, [selectedFromWarehouse]);
 
-	console.log();
-
 	useEffect(() => {
 		getMutation();
 	}, [

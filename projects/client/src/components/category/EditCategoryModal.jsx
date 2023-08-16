@@ -26,7 +26,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 
 	useEffect(() => {
 		getCategory();
-	}, []);
+	}, [isOpen]);
 
 	useEffect(() => {
 		getCategoryById();

@@ -110,9 +110,12 @@ const warehouseController = {
 		}
 		try {
 			const existingWarehouse = await db.warehouses.findOne({
-				where: { warehouse_name },
+				where: {
+					warehouse_name,
+					id: { [db.Sequelize.Op.not]: id },
+				},
 			});
-			if (existingWarehouse && existingWarehouse.id !== id) {
+			if (existingWarehouse) {
 				return res
 					.status(400)
 					.send({ message: "Warehouse name already exists." });
