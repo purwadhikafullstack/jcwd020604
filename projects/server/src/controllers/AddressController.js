@@ -240,7 +240,7 @@ const addressController = {
         where: { address },
       });
 
-      if (existingAddress && existingAddress.id !== id) {
+      if (existingAddress?.id != id) {
         return res
           .status(400)
           .send({ message: "Address name already exists." });

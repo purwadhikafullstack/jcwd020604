@@ -79,7 +79,7 @@ export default function AddressUser(props) {
       Close();
     } catch (error) {
       toast({
-        title: "Address cannot more than 2, must delete 1 address",
+        title: error.response.data.message,
         status: "error",
         duration: 3000,
         position: "top",
@@ -107,7 +107,7 @@ export default function AddressUser(props) {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, id } = e.target;
+    const { value, id } = e.target;
     if (id === "city") {
       const [selectedCityName, selectedCityId] = value.split("|");
       setAddress((prevState) => ({
@@ -118,11 +118,12 @@ export default function AddressUser(props) {
     } else {
       setAddress((prevState) => ({
         ...prevState,
-        [name]: value,
+        [id]: value,
       }));
     }
-    console.log(address);
   };
+
+  console.log(address);
   
 
   return (
@@ -152,7 +153,7 @@ export default function AddressUser(props) {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Province</FormLabel>
-              <Select id="province" name="province" onChange={handleInputChange}>
+              <Select id="province" onChange={handleInputChange}>
                 {province.length
                   ? province.map((val) =>
                       val.province == address.province ? (
@@ -188,7 +189,6 @@ export default function AddressUser(props) {
               <FormLabel>City</FormLabel>
               <Select
                 id="city"
-                name="city"
                 onChange={handleInputChange}
                 value={`${address.city}|${address.city_id}`}
               >
