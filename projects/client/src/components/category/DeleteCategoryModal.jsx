@@ -26,7 +26,7 @@ export default function DeleteCategoryModal({ isOpen, onClose }) {
 
 	useEffect(() => {
 		getCategory();
-	}, []);
+	}, [isOpen]);
 
 	useEffect(() => {
 		// Reset the state when the modal is closed

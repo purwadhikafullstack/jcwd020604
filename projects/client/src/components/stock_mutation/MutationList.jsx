@@ -23,8 +23,6 @@ export default function MutationList({ val, getMutation }) {
 	const toast = useToast();
 	const nav = useNavigate();
 
-	console.log(val);
-
 	async function deleteMutation() {
 		try {
 			await api.delete(`/stockmutation/${val.id}`);

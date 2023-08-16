@@ -41,7 +41,6 @@ export default function ProductDetail() {
 	async function getProductByUuid() {
 		const res = await api.get(`/product/${uuid}`);
 		setProduct(res.data);
-		console.log(res);
 		const totalQty = res.data.stocks.reduce(
 			(accumulator, stock) => accumulator + stock.qty,
 			0
@@ -60,9 +59,7 @@ export default function ProductDetail() {
 		}
 	};
 
-	useEffect(() => {
-		console.log(value);
-	}, [value]);
+	useEffect(() => {}, [value]);
 	const addCart = async () => {
 		await api
 			.post("/cart/addCart", {

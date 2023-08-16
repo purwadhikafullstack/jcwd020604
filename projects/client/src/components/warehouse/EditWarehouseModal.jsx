@@ -26,13 +26,11 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	const toast = useToast();
 	const nav = useNavigate();
 
-	console.log(data);
-
 	useEffect(() => {
 		getWarehouse();
 		getAllProvince();
 		getAllCity();
-	}, []);
+	}, [isOpen]);
 
 	useEffect(() => {
 		getWarehouseById();

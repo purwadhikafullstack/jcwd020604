@@ -32,7 +32,7 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 
 	useEffect(() => {
 		getCategory();
-	}, []);
+	}, [isOpen]);
 
 	async function getCategory() {
 		const res = await api.get("/category");

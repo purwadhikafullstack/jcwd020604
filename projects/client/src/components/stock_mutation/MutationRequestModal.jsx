@@ -3,22 +3,14 @@ import {
 	ModalOverlay,
 	ModalContent,
 	ModalHeader,
-	ModalFooter,
 	ModalBody,
 	ModalCloseButton,
 	Button,
-	FormControl,
-	FormLabel,
-	Input,
 	useToast,
 	Flex,
 	Image,
 } from "@chakra-ui/react";
-import { useNavigate } from "react-router-dom";
-import { useEffect, useState } from "react";
 import { api } from "../../api/api";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 
 export default function MutationRequestModal({
 	isOpen,
@@ -28,8 +20,6 @@ export default function MutationRequestModal({
 	getRequest,
 }) {
 	const toast = useToast();
-	const nav = useNavigate();
-	console.log(request);
 
 	const handleApprove = async (requestId) => {
 		try {
