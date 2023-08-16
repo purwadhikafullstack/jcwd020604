@@ -92,7 +92,7 @@ const addressController = {
   insertAddress: async (req, res) => {
     const t = await db.sequelize.transaction();
     try {
-      const { user_id, address, district, city, province } = req.body;
+      const { user_id, address, district, city, province, city_id } = req.body;
       // Check if a warehouse with the same warehouse_name already exists
       const existingAddress = await db.addresses.findOne({
         where: { address },
@@ -129,6 +129,7 @@ const addressController = {
           address,
           province,
           city,
+		  city_id,
           district,
           latitude: lat,
           longitude: lng,
@@ -208,7 +209,7 @@ const addressController = {
     }
   },
   editAddress: async (req, res) => {
-    const { address, province, city, district } = req.body;
+    const { address, province, city, city_id, district } = req.body;
     const { id } = req.params;
     const t = await db.sequelize.transaction();
 
@@ -216,6 +217,7 @@ const addressController = {
       address: Joi.string().required(),
       province: Joi.string().required(),
       city: Joi.string().required(),
+      city_id: Joi.string().required(),
       district: Joi.string().required(),
     });
 
@@ -223,6 +225,7 @@ const addressController = {
       address,
       province,
       city,
+	  city_id,
       district,
     });
 
@@ -262,6 +265,7 @@ const addressController = {
           address,
           province,
           city,
+		  city_id,
           district,
           latitude: lat,
           longitude: lng,
