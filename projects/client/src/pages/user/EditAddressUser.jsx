@@ -167,24 +167,6 @@ export default function AddressUser(props) {
                   : null}
               </Select>
             </FormControl>
-            {/* <FormControl isRequired>
-              <FormLabel>City</FormLabel>
-              <Select id="city" name="city" onChange={handleInputChange}>
-                {city
-                  ? city.map((val) =>
-                      val.province == address.province ? (
-                        val.city_name == address.city ? (
-                          <option key={val.city_id} selected value={`${val.city_name}|${val.city_id}`}>
-                            {val.city_name}
-                          </option>
-                        ) : (
-                          <option key={val.city_id} value={`${val.city_name}|${val.city_id}`}>{val.city_name}</option>
-                        )
-                      ) : null
-                    )
-                  : null}
-              </Select>
-            </FormControl> */}
             <FormControl isRequired>
               <FormLabel>City</FormLabel>
               <Select
