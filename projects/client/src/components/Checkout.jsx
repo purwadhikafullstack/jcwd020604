@@ -468,8 +468,13 @@ export default function Checkout() {
                     Return to cart
                   </Button>
                 </Link>
-                <Button w={"200px"} bgColor={"#ffe401"} borderRadius={"none"}>
-                  Continue to shipping
+                <Button
+                  w={"200px"}
+                  bgColor={"#ffe401"}
+                  borderRadius={"none"}
+                  onClick={handleContinueShipping}
+                >
+                  Order
                 </Button>
               </Box>
             </Flex>
