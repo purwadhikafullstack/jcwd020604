@@ -11,11 +11,7 @@ import {
 	FormLabel,
 	Input,
 	useToast,
-	Textarea,
 	Select,
-	Flex,
-	Image,
-	Toast,
 	Center,
 	HStack,
 } from "@chakra-ui/react";
@@ -35,11 +31,10 @@ export default function EditMutationModal({
 	const toast = useToast();
 	const nav = useNavigate();
 	const user = useSelector((state) => state.auth);
-	console.log(mutation);
 
 	useEffect(() => {
 		getWarehouse();
-	}, []);
+	}, [isOpen]);
 
 	const editMutation = async () => {
 		try {

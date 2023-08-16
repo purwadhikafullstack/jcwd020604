@@ -2,33 +2,6 @@ const db = require("../models");
 const Joi = require("joi");
 
 const categoryController = {
-	getCategory: async (req, res) => {
-		try {
-			const categories = await db.categories.findAll();
-
-			const sortedCategories = categories.sort((a, b) => {
-				return a.category_name.localeCompare(b.category_name);
-			});
-
-			res.status(200).send(sortedCategories);
-		} catch (err) {
-			res.status(500).send({
-				message: err.message,
-			});
-		}
-	},
-	getCategoryById: async (req, res) => {
-		const { id } = req.params;
-		try {
-			const category = await db.categories.findOne({ where: { id } });
-			if (!category) {
-				return res.status(404).send({ message: "Category not found" });
-			}
-			return res.status(200).send(category);
-		} catch (err) {
-			return res.status(500).send({ message: err.message });
-		}
-	},
 	insertCategory: async (req, res) => {
 		const { category_name } = req.body;
 		const t = await db.sequelize.transaction();
@@ -88,10 +61,13 @@ const categoryController = {
 		}
 		try {
 			const existingCategory = await db.categories.findOne({
-				where: { category_name },
+				where: {
+					category_name,
+					id: { [db.Sequelize.Op.not]: id }, // Exclude the current category ID
+				},
 			});
 
-			if (existingCategory && existingCategory.id !== id) {
+			if (existingCategory) {
 				return res.status(400).send({ message: "Category already exists." });
 			}
 

@@ -94,10 +94,13 @@ const productController = {
 
 		try {
 			const existingProduct = await db.products.findOne({
-				where: { product_name },
+				where: {
+					product_name,
+					id: { [db.Sequelize.Op.not]: id },
+				},
 			});
 
-			if (existingProduct && existingProduct.id !== id) {
+			if (existingProduct) {
 				return res
 					.status(409)
 					.send({ message: "Product name already exists." });

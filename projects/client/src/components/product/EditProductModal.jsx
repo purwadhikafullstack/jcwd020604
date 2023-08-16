@@ -34,7 +34,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 
 	useEffect(() => {
 		getCategory();
-	}, []);
+	}, [isOpen]);
 
 	const editProduct = async () => {
 		const formData = new FormData();

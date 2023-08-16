@@ -14,7 +14,7 @@ import {
 	Select,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import { api } from "../../api/api";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -27,12 +27,9 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 
 	useEffect(() => {
 		getAllProvince();
-	}, []);
-
-	useEffect(() => {
 		getAllCity();
-	}, []);
-	console.log(city);
+	}, [isOpen]);
+
 	const formik = useFormik({
 		initialValues: {
 			warehouse_name: "",
@@ -84,7 +81,6 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 			}
 		},
 	});
-	console.log(formik.values);
 
 	async function getAllProvince() {
 		const res = await api.get("/warehouse/getAll/province");

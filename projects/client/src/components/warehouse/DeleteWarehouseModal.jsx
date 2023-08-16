@@ -26,7 +26,7 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 
 	useEffect(() => {
 		getWarehouse();
-	}, []);
+	}, [isOpen]);
 
 	useEffect(() => {
 		// Reset the state when the modal is closed
