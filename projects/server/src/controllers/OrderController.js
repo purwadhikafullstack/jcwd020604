@@ -1,13 +1,37 @@
 const db = require("../models");
 const Joi = require("joi");
+const { Op } = require('sequelize');
 
 const ordersController = {
     getAllOrder: async (req, res) => {
         try {
-            const orders = await db.orders.findAll({
+            const { status, warehouse_id } = req.query;
+			const limit = 3;
+
+            const page = req?.query?.page || 1;
+			let offset = (parseInt(page) - 1) * limit;
+
+            let whereClause = {};
+
+            if (status) {
+				whereClause["$status$"] = {
+					[Op.like]: `${status}`,
+				};
+			}
+
+            if (warehouse_id) {
+				whereClause["$orders.warehouse_id$"] = {
+					[Op.like]: `${warehouse_id}`,
+				};
+			}
+
+            const orders = await db.orders.findAndCountAll({
+                where: {
+                   ...whereClause,
+                },
                 include: [
                     {model: db.order_details, 
-                        include: [{model: db.stocks, 
+                        include: [{model: db.stocks,
                             include: [{model: db.products,
                                 include: [{model: db.product_images}]
                         }, 
@@ -15,10 +39,16 @@ const ordersController = {
                         ]
                     }]
                 },
-                    {model: db.users}
+                    {model: db.users,
+                        include: [{model: db.addresses}]
+                    },
                 ],
+                distinct: true,
             });
-            res.status(200).json(orders);
+            res.status(200).json({
+                count: orders.count,
+                rows: orders.rows.slice(offset, limit * page)
+            });
         } catch (error) {
             res.status(500).json({ message: "Error retrieving order", error: error.message });
         }
@@ -39,7 +69,9 @@ const ordersController = {
                         ]
                     }]
                 },
-                    {model: db.users}
+                    {model: db.users,
+                        include: [{model: db.addresses}]
+                    },
                 ],
             });
             if (order) {
