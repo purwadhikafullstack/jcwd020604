@@ -118,9 +118,9 @@ const OrderModal = (props) => {
                                 <Text fontSize={'xs'} fontWeight={'medium'} textColor={'blackAlpha.600'}>Order Date: {orderDate ? orderDate.toDateString() : 'N/A'}</Text>
                             </Flex>
                             <Flex m={1}>
-                            <Select placeholder="Select action" cursor={'pointer'} w={'sm'} fontSize={'xs'} variant='unstyled' value={action} onChange={handleActionChange}>
-                                        <option value="accept">Accept Payment</option>
-                                        <option value="reject">Reject Payment</option>
+                            <Select placeholder="Select action" textColor={'blackAlpha.600'} fontWeight={'bold'} cursor={'pointer'} w={'sm'} fontSize={'xs'} variant='unstyled' value={action} onChange={handleActionChange}>
+                                <option value="accept" style={{fontWeight:'bold'}}>Accept Payment</option>
+                                <option value="reject" style={{fontWeight:'bold'}}>Reject Payment</option>
                             </Select>
                             </Flex>
                         </CardHeader>

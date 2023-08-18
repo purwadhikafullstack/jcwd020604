@@ -207,7 +207,7 @@ const ordersController = {
         }
     },
 
-    confirmOrderPayment: async (req, res) => {
+    adminConfirmOrderPayment: async (req, res) => {
         try {
             const { id } = req.params;
             const { action } = req.body; // 'accept' atau 'reject'
@@ -228,7 +228,7 @@ const ordersController = {
               // Update status pesanan menjadi "PROCESSING"
               order.status = "PROCESSING";
               await order.save();
-        
+
               return res.status(200).json({ message: "Payment received, order status updated to Processed" });
 
             } else if (action === "reject") {
@@ -252,6 +252,29 @@ const ordersController = {
             return res.status(500).json({ message: "There was an error while processing the payment" });
           }
     },
+
+    adminCancelOrder: async (req, res) => {
+        try {
+          const { id } = req.params;
+          const order = await db.orders.findByPk(id);
+    
+          if (!order) {
+            return res.status(404).json({ message: "Order not found" });
+          }
+    
+          if (order.status === "DELIVERY" || order.status === "CANCELLED" || order.status === "DONE") {
+            return res.status(400).json({ message: "Order cannot be cancelled at this status" });
+          }
+    
+          order.status = "CANCELLED";
+          await order.save();
+    
+          return res.status(200).json({ message: "Order cancelled successfully" });
+        } catch (error) {
+          console.error(error);
+          return res.status(500).json({ message: "An error occurred while cancelling the order" });
+        }
+      },
     
     updateOrder: async (req, res) => {
         const { id } = req.params;
