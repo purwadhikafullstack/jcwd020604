@@ -21,7 +21,9 @@ import {
     useToast,
     VStack,
     Spacer,
-    Divider
+    Divider,
+    ButtonGroup,
+    Select
   } from '@chakra-ui/react'
   import { api } from '../../api/api';
 
@@ -29,6 +31,7 @@ const OrderModal = (props) => {
     const [orderById, setOrderById] = useState([]);
     const toast = useToast();
     const orderDate = orderById?.createdAt ? new Date(orderById.createdAt) : null;
+    const [action, setAction] = useState('');
 
     useEffect(() => {
         if(props.selectedOrder)
@@ -37,7 +40,7 @@ const OrderModal = (props) => {
        
     const getDetailById = async() => {
         try {
-            api.get(`/orders/orders/${props.selectedOrder}`)
+            await api.get(`/orders/orders/${props.selectedOrder}`)
             .then((response) => {
                 setOrderById(response.data);
             })
@@ -54,6 +57,47 @@ const OrderModal = (props) => {
         }
     }
 
+    const confirmOrReject = async () => {
+        try {
+            await api.patch(`/orders/orders/confirm-payment/${props.selectedOrder}`,{ action });
+            if (action === "accept") {
+                toast({
+                    title:"Payment received, order status updated to Processing",
+                    status:"success",
+                    position: 'top',
+                    duration:3000,
+                    isClosable:false
+                });
+                getDetailById();
+                props.onClose();
+                props.fetchData();
+              } else {
+                toast({
+                    title:"Payment is rejected, order status is updated to Waiting for Payment",
+                    status:'error',
+                    duration:3000,
+                    position: 'top',
+                    isClosable:false
+                });
+                getDetailById();
+                props.onClose();
+                props.fetchData();
+              }
+        } catch (error) {
+            toast({
+                title:'Invalid order status to refuse proof of payment',
+                status:'error',
+                duration:3000,
+                isClosable:false
+            });
+            props.onClose();
+        }
+    }
+
+    const handleActionChange = (e) => {
+        setAction(e.target.value);
+      };
+
     return (
         <>
         <Modal isOpen={props.isOpen} onClose={props.onClose}>
@@ -64,14 +108,20 @@ const OrderModal = (props) => {
             <ModalBody>
                     <Card my={2} mx={{base: '12', sm: '6', md: '10'}} size={'sm'} display={'block'} position={'relative'} bgColor={'white'}>
                         <CardHeader>
-                            <Stack direction={{base:'column', md: 'row', sm: 'row'}} px={1} display={'flex'} align={'flex-start'} justifyContent={'flex-start'}>
-                                <Badge variant='solid' colorScheme={orderById?.status === "CANCELLED" ? 'red' : orderById?.status === "PAYMENT" ? 'blue' : orderById?.status === "CONFIRM_PAYMENT" ? 'purple' : orderById?.status === "DELIVERY" ? 'grey' : orderById?.status === "PROCESSING" ? 'teal' : 'green'}>
+                            <Stack direction={{base:'column', md: 'column', sm: 'row'}} px={1} display={'flex'} align={'flex-start'} justifyContent={'flex-start'}>
+                                <Badge variant='solid' colorScheme={orderById?.status === "CANCELLED" ? 'red' : orderById?.status === "PAYMENT" ? 'blue' : orderById?.status === "WAITING_PAYMENT" ? 'purple' : orderById?.status === "DELIVERY" ? 'grey' : orderById?.status === "PROCESSING" ? 'teal' : 'green'}>
                                     {orderById?.status}
                                 </Badge>
                                 <Text fontSize={'xs'} fontWeight={'medium'} textColor={'green.400'}>No.Invoice:{orderById?.invoice}</Text>
                             </Stack>
                             <Flex m={1}>
                                 <Text fontSize={'xs'} fontWeight={'medium'} textColor={'blackAlpha.600'}>Order Date: {orderDate ? orderDate.toDateString() : 'N/A'}</Text>
+                            </Flex>
+                            <Flex m={1}>
+                            <Select placeholder="Select action" cursor={'pointer'} w={'sm'} fontSize={'xs'} variant='unstyled' value={action} onChange={handleActionChange}>
+                                        <option value="accept">Accept Payment</option>
+                                        <option value="reject">Reject Payment</option>
+                            </Select>
                             </Flex>
                         </CardHeader>
                         <CardBody>
@@ -121,9 +171,14 @@ const OrderModal = (props) => {
                     </Card>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='orange' size={'xs'} mr={3} onClick={props.onClose}>
-                Close
-              </Button>
+                <ButtonGroup mx={{base: '12', sm: '6', md: '10'}}>
+                    <Button colorScheme='green' size={'xs'} onClick={confirmOrReject}>
+                        Confirm
+                    </Button>
+                    <Button colorScheme='orange' size={'xs'} onClick={props.onClose}>
+                        Close
+                    </Button>
+                </ButtonGroup>
             </ModalFooter>
           </ModalContent>
         </Modal>

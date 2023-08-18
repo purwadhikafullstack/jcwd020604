@@ -80,9 +80,7 @@ const AdminOrder = () => {
 			setPage(newPage);
 		}
 	};
-
-    console.log(orders);
-
+    
     return (
         <>
             <Navbar/>
@@ -95,7 +93,7 @@ const AdminOrder = () => {
                     <Flex flexDir={'row'} mx={{base: '12', sm: '6', md: '14'}}>
                         <Select
                             placeholder="All Status"
-                            w={{base:'12%',sm:'md', md:'12%'}}
+                            w={{base:'12%',sm:'md', md:'13%'}}
                             m={4}
                             cursor={'pointer'}
                             fontSize={'xs'}
@@ -106,12 +104,12 @@ const AdminOrder = () => {
                                 setSelectedStatus(event.target.value);
                             }}
                             >
-                                <option>DONE</option>
-                                <option>CANCELLED</option>
-                                <option>CONFIRM_PAYMENT</option>
-                                <option>WAITING_PAYMENT</option>
-                                <option>DELIVERY</option>
-                                <option>PROCESSING</option>
+                                {orders.length
+                                    ? orders.map((val) => (
+                                        <option key={val.id} value={val.id}>
+                                            {val.status}
+                                        </option>
+                                )) : null}
                         </Select>                   
                         <Select
                             placeholder="All Warehouse"
@@ -139,7 +137,7 @@ const AdminOrder = () => {
                         <Card my={2} mx={{base: '12', sm: '6', md: '14'}} size={'sm'} display={'block'} position={'relative'} bgColor={'white'}>
                             <CardHeader key={order.id}>
                                 <Stack direction={'row'} px={1} display={'flex'} align={'center'} justifyContent={'flex-end'}>
-                                    <Badge variant='solid' colorScheme={order.status === "CANCELLED" ? 'red' : order.status === "PAYMENT" ? 'blue' : order.status === "CONFIRM_PAYMENT" ? 'purple' : order.status === "DELIVERY" ? 'grey' : order.status === "PROCESSING" ? 'teal' : 'green'}>
+                                    <Badge variant='solid' colorScheme={order.status === "CANCELLED" ? 'red' : order.status === "PAYMENT" ? 'blue' : order.status === "WAITING_PAYMENT" ? 'purple' : order.status === "DELIVERY" ? 'grey' : order.status === "PROCESSING" ? 'teal' : 'green'}>
                                         {order.status}
                                     </Badge>
                                     <Text fontSize={'sm'} fontWeight={'medium'} textColor={'blackAlpha.600'}>No. Invoice: {order.invoice}</Text>
