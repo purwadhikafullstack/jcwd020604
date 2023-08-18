@@ -153,7 +153,7 @@ const handleStockMutation = {
 			res.status(500).send({ message: err.message });
 		}
 	},
-	autoMutation: async (setWarehouse) => {
+	autoMutation: async (setWarehouse, qty) => {
 		try {
 			const warehouses = await db.warehouses.findAll(); // Assuming you have a 'warehouses' table
 
@@ -172,7 +172,10 @@ const handleStockMutation = {
 					{ latitude: warehouse.lat, longitude: warehouse.lng }
 				);
 
-				if (!nearest || distance < nearest.distance) {
+				if (
+					!nearest ||
+					(distance < nearest.distance && warehouse.stock >= qty)
+				) {
 					return { warehouse, distance };
 				}
 				return nearest;
@@ -187,18 +190,12 @@ const handleStockMutation = {
 				);
 
 				// Deduct qty from nearest warehouse's stock
-				if (qty && nearestWarehouse.warehouse.stock >= qty) {
-					nearestWarehouse.warehouse.stock -= qty;
-					console.log(
-						`Deducted ${qty} from ${nearestWarehouse.warehouse.name}'s stock.`
-					);
-				} else {
-					console.log(
-						`Insufficient stock in ${nearestWarehouse.warehouse.name}.`
-					);
-				}
-			} else {
-				console.log("No nearest warehouse found.");
+
+				nearestWarehouse.warehouse.stock -= qty;
+				console.log(
+					`Deducted ${qty} from ${nearestWarehouse.warehouse.name}'s stock.`
+				);
+				// kasih stock history in and out
 			}
 		} catch (err) {
 			throw err;
