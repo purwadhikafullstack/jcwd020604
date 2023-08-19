@@ -49,7 +49,7 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 			try {
 				const { qty, warehouse_id, product_id } = formik.values;
 				if (formik.isValid) {
-					const res = await api.post("/stock", formik.values);
+					const res = await api().post("/stock", formik.values);
 					toast({
 						title: `Add Stock Success`,
 						description: "The stock has been added successfully.",
@@ -73,12 +73,12 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 	});
 
 	async function getAllProduct() {
-		const res = await api.get("/product/getAllProduct/getAll");
+		const res = await api().get("/product/getAllProduct/getAll");
 		setProduct(res.data);
 	}
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 

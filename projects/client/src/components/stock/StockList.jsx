@@ -28,7 +28,7 @@ export default function StockList({ val, getStock }) {
 
 	async function deleteStock() {
 		try {
-			await api.delete(`/stock/${val.id}`);
+			await api().delete(`/stock/${val.id}`);
 
 			toast({
 				title: "Stock Deleted",

@@ -42,7 +42,7 @@ import { useNavigate } from "react-router-dom";
 
     const register = async (values) => {
       try {
-        await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, values);
+        await api().post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, values);
         toast({
           title: "Periksa email verifikasi anda",
           status: "success",

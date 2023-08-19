@@ -48,7 +48,7 @@ export default function AdminProduct() {
 	}, [selectedCategory, sort, search, page]);
 
 	async function getProduct() {
-		const res = await api.get("/product", {
+		const res = await api().get("/product", {
 			params: {
 				category_id: selectedCategory,
 				sort: sort,
@@ -74,7 +74,7 @@ export default function AdminProduct() {
 	};
 
 	async function getCategory() {
-		const res = await api.get("/category");
+		const res = await api().get("/category");
 		setCategory(res.data);
 	}
 

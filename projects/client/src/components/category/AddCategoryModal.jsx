@@ -32,7 +32,7 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 			try {
 				const { category_name } = formik.values;
 				if (formik.isValid) {
-					const res = await api.post("/category", formik.values);
+					const res = await api().post("/category", formik.values);
 					toast({
 						title: `Add Category Success`,
 						description: "The category has been added successfully.",

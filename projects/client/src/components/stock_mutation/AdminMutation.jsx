@@ -74,7 +74,7 @@ export default function AdminMutation() {
 	}, []);
 
 	async function getMutation() {
-		const res = await api.get("/stockmutation", {
+		const res = await api().get("/stockmutation", {
 			params: {
 				from_warehouse_id: selectedWarehouse,
 				to_warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
@@ -90,7 +90,7 @@ export default function AdminMutation() {
 	}
 
 	async function getRequest() {
-		const res = await api.get("/stockmutation/mutation/request", {
+		const res = await api().get("/stockmutation/mutation/request", {
 			params: {
 				from_warehouse_id: user.role === "ADMIN" ? "" : user.warehouse_id,
 			},
@@ -99,7 +99,7 @@ export default function AdminMutation() {
 	}
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 

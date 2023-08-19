@@ -80,7 +80,7 @@ export default function AdminManageData() {
 	}, []);
 
 	async function getStock() {
-		const res = await api.get("/stock", {
+		const res = await api().get("/stock", {
 			params: {
 				warehouse_id:
 					user.role === "ADMIN" ? selectedWarehouse : user.warehouse_id,
@@ -95,17 +95,17 @@ export default function AdminManageData() {
 	}
 
 	async function getAllProduct() {
-		const res = await api.get("/product/getAllProduct/getAll");
+		const res = await api().get("/product/getAllProduct/getAll");
 		setProduct(res.data);
 	}
 
 	async function getCategory() {
-		const res = await api.get("/category");
+		const res = await api().get("/category");
 		setCategory(res.data);
 	}
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 

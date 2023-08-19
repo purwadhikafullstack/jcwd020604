@@ -35,7 +35,7 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 	}, [isOpen]);
 
 	async function getCategory() {
-		const res = await api.get("/category");
+		const res = await api().get("/category");
 		setCategory(res.data);
 	}
 
@@ -67,7 +67,7 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 					formData.append("productImg", files);
 				}
 				if (formik.isValid) {
-					const res = await api.post("/product", formData);
+					const res = await api().post("/product", formData);
 					toast({
 						title: `Add Product Success`,
 						description: "The product has been added successfully.",
