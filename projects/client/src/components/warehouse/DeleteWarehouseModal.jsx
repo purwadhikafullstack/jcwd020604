@@ -37,13 +37,13 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 	}, [isOpen]);
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 
 	async function deleteWarehouse(warehouseId) {
 		try {
-			await api.delete(`/warehouse/${warehouseId}`);
+			await api().delete(`/warehouse/${warehouseId}`);
 
 			toast({
 				title: "Warehouse Deleted",

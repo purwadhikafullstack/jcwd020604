@@ -44,7 +44,7 @@ export default function Cart() {
 
   const handleDeleteCartItem = async (id) => {
     try {
-      const res = await api.delete(`/cart/delete`, {
+      const res = await api().delete(`/cart/delete`, {
         params: { user_id: userSelector.id, id },
       });
       alert(res.data.message);
@@ -57,7 +57,7 @@ export default function Cart() {
   const editCartItem = async (qty) => {
     try {
       console.log(qty, product_id, cart_id);
-      await api.patch(`/cart/update/${cart_id}`, {
+      await api().patch(`/cart/update/${cart_id}`, {
         qty: qty,
         product_id: product_id,
       });
@@ -71,7 +71,7 @@ export default function Cart() {
 
   async function getcart() {
     console.log(userSelector.id);
-    const res = await api.get(`/cart/` + userSelector.id);
+    const res = await api().get(`/cart/` + userSelector.id);
     setProduct(res.data);
   }
   // console.log(product);

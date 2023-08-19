@@ -38,7 +38,7 @@ export default function EditMutationModal({
 
 	const editMutation = async () => {
 		try {
-			await api.patch(`/stockmutation/${val.id}`, { qty: mutation.qty });
+			await api().patch(`/stockmutation/${val.id}`, { qty: mutation.qty });
 			toast({
 				title: "Mutation updated successfully.",
 				status: "success",
@@ -59,7 +59,7 @@ export default function EditMutationModal({
 	};
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 

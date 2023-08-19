@@ -40,7 +40,7 @@ const OrderModal = (props) => {
        
     const getDetailById = async() => {
         try {
-            await api.get(`/orders/orders/${props.selectedOrder}`)
+            await api().get(`/orders/orders/${props.selectedOrder}`)
             .then((response) => {
                 setOrderById(response.data);
             })
@@ -59,7 +59,7 @@ const OrderModal = (props) => {
 
     const confirmOrReject = async () => {
         try {
-            await api.patch(`/orders/orders/confirm-payment/${props.selectedOrder}`,{ action });
+            await api().patch(`/orders/orders/confirm-payment/${props.selectedOrder}`,{ action });
             if (action === "accept") {
                 toast({
                     title:"Payment received, order status updated to Processing",

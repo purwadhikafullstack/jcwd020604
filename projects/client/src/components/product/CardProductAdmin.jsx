@@ -30,7 +30,7 @@ export default function ProductList({ val, getProduct }) {
 
 	async function deleteProduct() {
 		try {
-			await api.delete(`/product/${val.id}`);
+			await api().delete(`/product/${val.id}`);
 
 			toast({
 				title: "Product Deleted",

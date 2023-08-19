@@ -68,7 +68,7 @@ export default function Checkout() {
     const token = JSON.parse(localStorage.getItem("user"));
 
     try {
-      const response = await api.post(
+      const response = await api().post(
         "/cart/get/cost",
         {
           // destination: address[addressId].city.id
@@ -139,7 +139,7 @@ export default function Checkout() {
 
   const fetchData = async () => {
     try {
-      const response = await api.get(
+      const response = await api().get(
         `${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`,
         users
       );
@@ -158,7 +158,7 @@ export default function Checkout() {
 
   const getAddressByUser = async () => {
     try {
-      const response = await api.get(
+      const response = await api().get(
         `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
       );
       setAddress(response.data);
@@ -181,7 +181,7 @@ export default function Checkout() {
 
   const saveUser = async () => {
     try {
-      await api.patch(
+      await api().patch(
         `${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`,
         changes
       );
@@ -213,7 +213,7 @@ export default function Checkout() {
 
   async function getcart() {
     console.log(user.id);
-    const res = await api.get(`/cart/` + user.id);
+    const res = await api().get(`/cart/` + user.id);
     setProduct(res.data);
   }
   // console.log(product);

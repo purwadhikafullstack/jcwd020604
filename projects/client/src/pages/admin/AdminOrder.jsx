@@ -46,7 +46,7 @@ const AdminOrder = () => {
 
     const fetchData = async() => {
         try {
-            api.get(`/orders/orders`, {
+            api().get(`/orders/orders`, {
                 params: {
                     status: selectedStatus,
                     warehouse_id: selectedWarehouse,
@@ -71,7 +71,7 @@ const AdminOrder = () => {
     }
 
     async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 

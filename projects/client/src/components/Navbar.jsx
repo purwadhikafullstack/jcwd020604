@@ -79,7 +79,7 @@ export default function Navbar(props) {
 
   async function getAll() {
     try {
-      const res = await api.get("/product", {
+      const res = await api().get("/product", {
         params: {
           search: search,
         },
@@ -92,7 +92,7 @@ export default function Navbar(props) {
 
   async function getcart() {
     try {
-      const res = await api.get(`/cart/${user.id}`);
+      const res = await api().get(`/cart/${user.id}`);
       setProduct(res.data);
 
       let total = 0;

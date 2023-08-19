@@ -39,7 +39,7 @@ export default function CarouselProduct() {
 	const { uuid } = useParams();
 
 	async function getProductById() {
-		const res = await api.get(`/product/${uuid}`);
+		const res = await api().get(`/product/${uuid}`);
 		setProductImage(res.data.product_images.map((val) => val.product_image));
 	}
 

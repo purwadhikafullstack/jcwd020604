@@ -78,7 +78,7 @@ export default function UserProfile() {
   async function uploadAvatar() {
     const formData = new FormData();
     formData.append("userImg", selectedFile);
-    await api
+    await api()
     .post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData)
     .then((res) => {
       toast({
@@ -100,7 +100,7 @@ export default function UserProfile() {
 
   const fetchData = async() => {
     try {
-      const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`);
+      const response = await api().get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`);
       setUsers(response.data);
     } catch (error) {
       console.log(error);
@@ -116,7 +116,7 @@ export default function UserProfile() {
   async function fetch() {
     try {
       const token = JSON.parse(localStorage.getItem("auth"));
-      const user = await api
+      const user = await api()
         .get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -136,7 +136,7 @@ export default function UserProfile() {
       
   const getAddressByUser = async () => {
     try {
-      const response = await api.get(
+      const response = await api().get(
         `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
       );
       setAddress(response.data);
@@ -159,7 +159,7 @@ export default function UserProfile() {
 
   const saveUser = async () => {
     try {
-        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, changes);
+        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, changes);
         toast({
             title:"User has been updated",
             status:"success",

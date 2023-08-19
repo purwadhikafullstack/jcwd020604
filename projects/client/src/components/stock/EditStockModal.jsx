@@ -25,7 +25,7 @@ export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 
 	const editStock = async () => {
 		try {
-			await api.patch(`/stock/${val.id}`, { qty: stock.qty });
+			await api().patch(`/stock/${val.id}`, { qty: stock.qty });
 			toast({
 				title: "Stock updated successfully.",
 				status: "success",

@@ -38,7 +38,7 @@ export default function EditUser (props) {
   
     const updateUser = async () => {
       try {
-        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.uuid}`, users);
+        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.uuid}`, users);
         toast({
           title: "User has been updated",
           status: "success",
@@ -63,7 +63,7 @@ export default function EditUser (props) {
   
     const getUserById = async () => {
       try {
-        const response = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.uuid}`);
+        const response = await api().get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${props.uuid}`);
         setUsers(response.data);
       } catch (error) {
         console.log(error);

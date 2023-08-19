@@ -48,14 +48,14 @@ export default function AddressUser(props) {
   };
 
   const getUserCity = async () => {
-    const res = await api.get(
+    const res = await api().get(
       `${process.env.REACT_APP_API_BASE_URL}/address/getAll/city`
     );
     setCity(res.data);
   };
 
   const getUserProvince = async () => {
-    const res = await api.get(
+    const res = await api().get(
       `${process.env.REACT_APP_API_BASE_URL}/address/getAll/province`
     );
     setProvince(res.data);
@@ -63,7 +63,7 @@ export default function AddressUser(props) {
 
   const editAddress = async () => {
     try {
-      await api.patch(
+      await api().patch(
         `${process.env.REACT_APP_API_BASE_URL}/address/${props.addressId}`,
         address
       );
@@ -90,7 +90,7 @@ export default function AddressUser(props) {
 
   const getAddressByUser = async () => {
     try {
-      const response = await api.get(
+      const response = await api().get(
         `${process.env.REACT_APP_API_BASE_URL}/address/${props.addressId}`
       );
       setAddress(response.data);
