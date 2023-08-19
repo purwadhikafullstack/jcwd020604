@@ -7,17 +7,10 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	ButtonGroup,
 	useDisclosure,
 	Grid,
 } from "@chakra-ui/react";
-import {
-	UpDownIcon,
-	RepeatIcon,
-	ArrowBackIcon,
-	AddIcon,
-	BellIcon,
-} from "@chakra-ui/icons";
+import { RepeatIcon, ArrowBackIcon, AddIcon, BellIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";

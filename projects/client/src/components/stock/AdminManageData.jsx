@@ -7,23 +7,10 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
-	ButtonGroup,
 	useDisclosure,
 	Grid,
 } from "@chakra-ui/react";
-import {
-	DeleteIcon,
-	AddIcon,
-	EditIcon,
-	HamburgerIcon,
-	UpDownIcon,
-	RepeatIcon,
-	TimeIcon,
-} from "@chakra-ui/icons";
+import { HamburgerIcon, RepeatIcon, TimeIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
 import { BsFillCircleFill } from "react-icons/bs";
 import { FaBoxes, FaSearch } from "react-icons/fa";
@@ -44,11 +31,9 @@ import SortStock from "./SortStock";
 import ButtonData from "./ButtonData";
 
 export default function AdminManageData() {
-	const user = useSelector((state) => state.auth);
 	const [warehouse, setWarehouse] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [stock, setStock] = useState([]);
-	const inputFileRef = useRef(null);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
 	const [selectedProduct, setSelectedProduct] = useState("");
 	const [sort, setSort] = useState("");
@@ -56,6 +41,8 @@ export default function AdminManageData() {
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const [product, setProduct] = useState([]);
+	const user = useSelector((state) => state.auth);
+	const inputFileRef = useRef(null);
 
 	const addStockModal = useDisclosure();
 	const addCategoryModal = useDisclosure();
@@ -368,7 +355,6 @@ export default function AdminManageData() {
 				onClose={addStockModal.onClose}
 				getStock={getStock}
 			/>
-
 			<AddCategoryModal
 				isOpen={addCategoryModal.isOpen}
 				onClose={addCategoryModal.onClose}
