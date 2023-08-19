@@ -23,7 +23,7 @@ export default function MutationRequestModal({
 
 	const handleApprove = async (requestId) => {
 		try {
-			await api.patch(`/stockmutation/mutation/handle/${requestId}`, {
+			await api().patch(`/stockmutation/mutation/handle/${requestId}`, {
 				status: "APPROVED",
 			});
 			toast({
@@ -46,7 +46,7 @@ export default function MutationRequestModal({
 	};
 	const handleReject = async (requestId) => {
 		try {
-			await api.patch(`/stockmutation/mutation/handle/${requestId}`, {
+			await api().patch(`/stockmutation/mutation/handle/${requestId}`, {
 				status: "REJECTED",
 			});
 			toast({

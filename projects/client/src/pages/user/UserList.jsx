@@ -41,7 +41,7 @@ const UserList = () => {
 
     const fetchData = async() => {
         try {
-            api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}`)
+            api().get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}`)
             .then((response) => {
                 setUsers(response.data);
             })
@@ -60,7 +60,7 @@ const UserList = () => {
 
     const deleteUser = async(id) => {
         try {
-            await api.delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}/${id}`);
+            await api().delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}/${id}`);
             setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
             toast({
                 title:"User has been deleted",
@@ -83,19 +83,15 @@ const UserList = () => {
         <Navbar/>
         <Stack>
             <HStack>
-                <Box m={2}>
-                    <Button onClick={() => navigate('/add_user')} colorScheme={'messenger'} size={'sm'}>Add Users</Button>
-                </Box>
-                <Box>
-                    <Button colorScheme={'messenger'} size={'sm'} cursor={'pointer'} onClick={() => navigate("/admin/manageData")}>Manage Data</Button>
-                </Box>
-                <Box>
-                    <Button colorScheme={'messenger'} size={'sm'} cursor={'pointer'} onClick={() => navigate("/")}>Back to home</Button>
-                </Box>
+               <ButtonGroup m={2}>
+                    <Button onClick={() => navigate('/add_user')} fontSize={'xs'} colorScheme={'messenger'} size={'xs'}>Add Users</Button>
+                    <Button colorScheme={'messenger'} size={'xs'} fontSize={'xs'} cursor={'pointer'} onClick={() => navigate("/admin/manageData")}>Manage Data</Button>
+                    <Button colorScheme={'messenger'} size={'xs'} fontSize={'xs'}cursor={'pointer'} onClick={() => navigate("/")}>Back to home</Button>
+               </ButtonGroup>
             </HStack>
         </Stack>
             <TableContainer>
-                <Table variant={'striped'} size={'sm'}>
+                <Table variant={'simple'} size={'sm'} bgColor={'twitter.200'}>
                     <Thead>
                     <Tr>
                         <Th>No</Th>
@@ -104,23 +100,23 @@ const UserList = () => {
                         <Th>Phone</Th>
                         <Th>Role</Th>
                         <Th>Warehouse</Th>
-                        <Th display={'flex'} alignItems={'center'} justifyContent={'center'}>Action</Th>
+                        <Th display={'flex'} justifyContent={'center'}>Action</Th>
                     </Tr>
                     </Thead>
                     <Tbody>
                         {users.map((user, index) => (
                         <Tr key={user.uuid}>
                             <Td>{index + 1}</Td>
-                            <Td>{user.fullname}</Td>
-                            <Td>{user.email}</Td>
-                            <Td><Text fontSize={'sm'}>{user.phone_number}</Text></Td>
-                            <Td><Text fontFamily={'sans-serif'} fontSize={'sm'}>{user.role}</Text></Td>
-                            <Td><Text fontFamily={'sans-serif'} fontSize={'sm'}>{user?.warehouse?.warehouse_name}</Text></Td>
+                            <Td textColor={'blackAlpha.700'} fontWeight={'semibold'}>{user.fullname}</Td>
+                            <Td textColor={'blackAlpha.700'} fontWeight={'semibold'}>{user.email}</Td>
+                            <Td><Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>{user.phone_number}</Text></Td>
+                            <Td><Text fontFamily={'sans-serif'} textColor={'blackAlpha.700'} fontWeight={'semibold'} fontSize={'xs'}>{user.role}</Text></Td>
+                            <Td><Text fontFamily={'sans-serif'} textColor={'blackAlpha.700'} fontSize={'xs'} fontWeight={'semibold'}>{user?.warehouse?.warehouse_name}</Text></Td>
                             <Td>
-                                <ButtonGroup display={'flex'} alignItems={'center'} justifyContent={'center'}>
-                                    <Button colorScheme={'green'} size={'sm'} onClick={()=> {editUser.onOpen();setAdminId(user.uuid)} }>Edit</Button>
-                                    <Button colorScheme={'facebook'} size={'sm'} onClick={() => {assignUser.onOpen();setAdminId(user.uuid)}}>Assign</Button>
-                                    <Button colorScheme={'red'} size={'sm'} onClick={() => {deleteUser(user.uuid); navigate("/user_list")}}>Delete</Button>
+                                <ButtonGroup display={'flex'} justifyContent={'center'}>
+                                    <Button colorScheme={'green'} fontSize={'xs'} size={'xs'} onClick={()=> {editUser.onOpen();setAdminId(user.uuid)} }>Edit</Button>
+                                    <Button colorScheme={'facebook'} fontSize={'xs'} size={'xs'} onClick={() => {assignUser.onOpen();setAdminId(user.uuid)}}>Assign</Button>
+                                    <Button colorScheme={'red'} fontSize={'xs'} size={'xs'} onClick={() => {deleteUser(user.uuid); navigate("/user_list")}}>Delete</Button>
                                 </ButtonGroup>
                             </Td>
                         </Tr>

@@ -49,7 +49,7 @@ export default function AdminHistory() {
 	}, []);
 
 	async function getHistory() {
-		const res = await api.get("/stockhistory", {
+		const res = await api().get("/stockhistory", {
 			params: {
 				warehouse_id:
 					user.role === "ADMIN" ? selectedWarehouse : user.warehouse_id,
@@ -65,7 +65,7 @@ export default function AdminHistory() {
 	}
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 

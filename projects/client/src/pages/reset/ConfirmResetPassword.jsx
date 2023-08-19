@@ -55,7 +55,7 @@ import {
 
   async function fetchUser(data){
     console.log(data)
-   const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
+   const res = await api().get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
     headers:{
       Authorization:'Bearer '+ data,
     }
@@ -82,7 +82,7 @@ import {
         console.log('asfkas')
         console.log(token)
 
-        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify-password?token=`+token, {
+        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify-password?token=`+token, {
           password,
         },
           {headers:{

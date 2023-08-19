@@ -15,11 +15,11 @@ export default function Login() {
 
   const handleLogin = async (values) => {
     try {
-      const loginResponse = await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, values);
+      const loginResponse = await api().post(`${process.env.REACT_APP_API_BASE_URL}/auth/login`, values);
       const token = loginResponse.data.token;
       console.log(token);
   
-      const userDetailsResponse = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
+      const userDetailsResponse = await api().get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

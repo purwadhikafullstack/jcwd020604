@@ -25,7 +25,7 @@ export default function MutationList({ val, getMutation }) {
 
 	async function deleteMutation() {
 		try {
-			await api.delete(`/stockmutation/${val.id}`);
+			await api().delete(`/stockmutation/${val.id}`);
 
 			toast({
 				title: "Mutation Deleted",

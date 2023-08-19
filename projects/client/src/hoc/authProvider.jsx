@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import Loading from "../components/Loading";
+import { api } from '../api/api';
 
 export default function AuthProvider({ children }) {
 	const dispatch = useDispatch();
@@ -14,7 +15,7 @@ export default function AuthProvider({ children }) {
 	async function fetch() {
 		try {
 			const token = JSON.parse(localStorage.getItem("auth"));
-			const user = await axios
+			const user = await api()
 				.get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
 					headers: {
 						Authorization: `Bearer ${token}`,

@@ -31,7 +31,7 @@ const DeleteAddress = (props) => {
 
     const handleDelete = async () => {
     try {
-      const response = await api.delete(`/address/${props.addressId}`);
+      const response = await api().delete(`/address/${props.addressId}`);
       setDeleteMessage(response.data.message);
       toast({
         title: "Delete address success",
