@@ -1,7 +1,4 @@
 const db = require("../models");
-const { Op } = require("sequelize");
-const warehouse = require("../models/warehouse");
-const moment = require("moment");
 
 const stockHistory = {
 	addStockHistory: async (dataStock, status, reference, qty) => {

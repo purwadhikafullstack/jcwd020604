@@ -1,6 +1,5 @@
 const db = require("../models");
 const Joi = require("joi");
-const stockHistory = require("./stockHistoryController");
 
 const stockMutation = {
 	requestMutation: async (req, res) => {
