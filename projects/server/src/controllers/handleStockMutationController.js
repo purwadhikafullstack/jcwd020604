@@ -152,11 +152,13 @@ const handleStockMutation = {
 			res.status(500).send({ message: err.message });
 		}
 	},
-	autoMutation: async (setWarehouse, qty) => {
-		try {
-			const warehouses = await db.warehouses.findAll(); // Assuming you have a 'warehouses' table
+	autoMutation: async (requestedWarehouse, qty) => {
+		const t = await db.sequelize.transaction();
 
-			const referenceWarehouse = setWarehouse; // Use the provided warehouse or choose a reference warehouse
+		try {
+			const warehouses = await db.warehouses.findAll();
+
+			const referenceWarehouse = requestedWarehouse;
 
 			const otherWarehouses = warehouses.filter(
 				(warehouse) => warehouse.id !== referenceWarehouse.id
@@ -181,20 +183,60 @@ const handleStockMutation = {
 			}, null);
 
 			if (nearestWarehouse) {
-				console.log(
-					"Nearest warehouse:",
-					nearestWarehouse.warehouse.name,
-					"Distance:",
-					nearestWarehouse.distance
-				);
-
 				// Deduct qty from nearest warehouse's stock
+				if (qty <= nearestWarehouse.warehouse.stock) {
+					nearestWarehouse.warehouse.stock -= qty;
+					requestedWarehouse.stock += qty;
 
-				nearestWarehouse.warehouse.stock -= qty;
-				console.log(
-					`Deducted ${qty} from ${nearestWarehouse.warehouse.name}'s stock.`
-				);
-				// kasih stock history in and out
+					// await db.stocks.update(
+					// 	{ qty }, // qty?
+					// 	{ where: { id: nearestWarehouse.warehouse.id }, transaction: t }
+					// );
+
+					// await db.stocks.update(
+					// 	{ qty }, // qty?
+					// 	{ where: { id: requestedWarehouse.id }, transaction: t }
+					// );
+
+					const mutation = await db.stock_mutations.create(
+						{
+							qty: qty,
+							stock_id: requestedWarehouse.stock_id,
+							to_warehouse_id: requestedWarehouse,
+							from_warehouse_id: nearestWarehouse,
+							status: "AUTO",
+						},
+						{ transaction: t }
+					);
+
+					// await db.stock_histories.create(
+					// 	{
+					// 		qty,
+					// 		status: "IN",
+					// 		reference: `Auto ${mutation.mutation_code}`,
+					// 		stock_id,
+					// 		stock_before,
+					// 		stock_after,
+					// 	},
+					// 	{ transaction: t }
+					// );
+
+					// await db.stock_histories.create(
+					// 	{
+					// 		qty,
+					// 		status: "OUT",
+					// 		reference: `Auto ${mutation.mutation_code}`,
+					// 		stock_id,
+					// 		stock_before,
+					// 		stock_after,
+					// 	},
+					// 	{ transaction: t }
+					// );
+				} else {
+					console.log(
+						`Insufficient stock in ${nearestWarehouse.warehouse.name}.`
+					);
+				}
 			}
 		} catch (err) {
 			throw err;
