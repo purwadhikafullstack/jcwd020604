@@ -1,10 +1,8 @@
 'use client'
 
-import { Box, Heading, Text, Button } from '@chakra-ui/react'
-import { useNavigate } from 'react-router-dom'
+import { Box, Heading, Text } from '@chakra-ui/react';
 
 export default function OrderNotFound() {
-    const navigate = useNavigate();
   return (
     <Box textAlign="center" py={10} px={6}>
       <Heading
@@ -21,15 +19,6 @@ export default function OrderNotFound() {
       <Text color={'gray.500'} mb={6}>
         There is no order right now
       </Text>
-
-      <Button
-        colorScheme="teal"
-        bgGradient="linear(to-r, teal.400, teal.500, teal.600)"
-        color="white"
-        variant="solid"
-        onClick={() => navigate('/')}>
-        Go to Home
-      </Button>
     </Box>
   )
 }

@@ -296,7 +296,6 @@ const userController = {
 						{
 							expired: {
 								[db.Sequelize.Op.gt]: moment("00:00:00", "hh:mm:ss").format(),
-								// [db.Sequelize.Op.lte]: moment().add(1, "d").format(),
 							},
 						},
 						{

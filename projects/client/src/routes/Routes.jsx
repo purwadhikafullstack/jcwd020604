@@ -20,6 +20,7 @@ import AdminMutationPage from "../pages/admin/AdminMutationPage";
 import ConfirmResetPassword from "../pages/reset/ConfirmResetPassword";
 import ProtectedPages from "./ProtectedPages";
 import NotFound from "../pages/redirect/NotFound";
+import OrderNotFound from "../pages/redirect/OrderNotFound";
 import Restricted from "../pages/redirect/RestrictedPage";
 import AdminOrder from "../pages/admin/AdminOrder";
 import WarehouseMapPage from "../pages/WarehouseMapPage";
@@ -89,6 +90,7 @@ const routes = [
 	></Route>,
 
 	<Route path="/not-found" element={<NotFound />}></Route>,
+	<Route path="/order-not-found" element={<OrderNotFound />}></Route>,
 	<Route path="/restricted" element={<Restricted />}></Route>,
 
 	<Route
