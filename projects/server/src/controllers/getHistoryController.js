@@ -1,5 +1,6 @@
-const { Op } = require("sequelize");
 const db = require("../models");
+const { Op } = require("sequelize");
+const moment = require("moment");
 
 const getHistoryController = {
 	getHistory: async (req, res) => {
@@ -49,7 +50,11 @@ const getHistoryController = {
 			};
 			const sortOrder = sortOptions[sort] || sortOptions.dateDesc;
 
-			let whereClause = {};
+			let whereClause = {
+				"$stock.id$": {
+					[Op.ne]: null,
+				},
+			};
 
 			if (search) {
 				whereClause["$stock.product.product_name$"] = {

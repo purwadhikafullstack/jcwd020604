@@ -7,17 +7,10 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	ButtonGroup,
 	useDisclosure,
 	Grid,
 } from "@chakra-ui/react";
-import {
-	UpDownIcon,
-	RepeatIcon,
-	ArrowBackIcon,
-	AddIcon,
-	BellIcon,
-} from "@chakra-ui/icons";
+import { RepeatIcon, ArrowBackIcon, AddIcon, BellIcon } from "@chakra-ui/icons";
 
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
@@ -28,6 +21,8 @@ import MutationList from "./MutationList";
 import AddMutationModal from "./AddMutationModal";
 import MutationRequestModal from "./MutationRequestModal";
 import MutationCard from "./CardMutation";
+import ButtonPage from "../ButtonPage";
+import SortMutation from "./SortMutation";
 
 export default function AdminMutation() {
 	const [warehouse, setWarehouse] = useState([]);
@@ -165,8 +160,14 @@ export default function AdminMutation() {
 		mutationListOrGrid = (
 			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
 				{mutation?.length ? (
-					mutation.map((val) => {
-						return <MutationCard val={val} getMutation={getMutation} />;
+					mutation?.map((val) => {
+						return (
+							<MutationCard
+								val={val}
+								getMutation={getMutation}
+								getRequest={getRequest}
+							/>
+						);
 					})
 				) : (
 					<Center pt={"20px"} fontWeight={700}>
@@ -180,7 +181,13 @@ export default function AdminMutation() {
 			<>
 				{mutation?.length ? (
 					mutation?.map((val) => {
-						return <MutationList val={val} getMutation={getMutation} />;
+						return (
+							<MutationList
+								val={val}
+								getMutation={getMutation}
+								getRequest={getRequest}
+							/>
+						);
 					})
 				) : (
 					<Center pt={"20px"} fontWeight={700}>
@@ -312,135 +319,19 @@ export default function AdminMutation() {
 							</InputRightElement>
 						</InputGroup>
 					</Center>
-					{pageWidth > 900 ? (
-						<Flex
-							padding={"7px"}
-							borderBottom={"1px"}
-							fontWeight={600}
-							borderColor={"#E6EBF2"}
-							gap={"7"}
-						>
-							<Flex
-								w={"325px"}
-								minW={"275px"}
-								paddingLeft={"55px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productAsc" ? sort === "productDesc" : null}
-							</Flex>
-							<Flex
-								w={"195px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"from_Warehouse" +
-											(sort === "from_WarehouseDesc" ? "Asc" : "Desc")
-									)
-								}
-								cursor="pointer"
-							>
-								Warehouse (From-To)
-								{sort === "from_WarehouseDesc"
-									? sort === "from_WarehouseAsc"
-									: null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"195px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"mutation_code" +
-											(sort === "mutation_codeAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Mutation Code
-								{sort === "mutation_codeAsc"
-									? sort === "mutation_codeDesc"
-									: null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"100px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
-								}
-								cursor="pointer"
-							>
-								Amount
-								{sort === "qtyAsc" ? sort === "qtyDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"100px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"status" + (sort === "statusAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Status
-								{sort === "statusAsc" ? sort === "statusDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"170px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"date" + (sort === "dateAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Date
-								{sort === "dateAsc" ? sort === "dateDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex w={"25px"}></Flex>
-						</Flex>
-					) : null}
+					<SortMutation
+						pageWidth={pageWidth}
+						handleSortChange={handleSortChange}
+						sort={sort}
+					/>
 					{mutationListOrGrid}
 				</Flex>
-				<ButtonGroup
-					paddingTop={"15px"}
-					justifyContent={"end"}
-					alignItems={"center"}
-				>
-					{page === 1 || mutation?.length === 0 ? null : (
-						<Button
-							onClick={() => {
-								handlePageChange(page - 1);
-								window.scrollTo({ top: 0, behavior: "smooth" });
-							}}
-						>
-							Previous
-						</Button>
-					)}
-					{page === totalPage || mutation?.length === 0 ? null : (
-						<Button
-							onClick={() => {
-								handlePageChange(page + 1);
-								window.scrollTo({ top: 0, behavior: "smooth" });
-							}}
-						>
-							Next
-						</Button>
-					)}
-				</ButtonGroup>
+				<ButtonPage
+					data={mutation}
+					page={page}
+					totalPage={totalPage}
+					handlePageChange={handlePageChange}
+				/>
 			</Flex>
 			<AddMutationModal
 				isOpen={addMutationModal.isOpen}

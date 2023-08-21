@@ -19,6 +19,8 @@ import { api } from "../../api/api";
 import { useSelector } from "react-redux";
 import HistoryList from "./HistoryList";
 import HistoryCard from "./CardHistory";
+import ButtonPage from "../ButtonPage";
+import SortHistory from "./SortHistory";
 
 export default function AdminHistory() {
 	const user = useSelector((state) => state.auth);
@@ -255,132 +257,19 @@ export default function AdminHistory() {
 							</InputRightElement>
 						</InputGroup>
 					</Center>
-					{pageWidth > 900 ? (
-						<Flex
-							padding={"7px"}
-							borderBottom={"1px"}
-							fontWeight={600}
-							borderColor={"#E6EBF2"}
-							gap={"7"}
-						>
-							<Flex
-								w={"325px"}
-								minW={"275px"}
-								paddingLeft={"55px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productAsc" ? sort === "productDesc" : null}
-							</Flex>
-							<Flex
-								w={"195px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Warehouse
-								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"115px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"stockAfter" + (sort === "stockAfterAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Stock
-								{sort === "stockAfterAsc" ? sort === "stockAfterDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"100px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"status" + (sort === "statusAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Status
-								{sort === "statusAsc" ? sort === "statusDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"179px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Reference
-								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"179px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"date" + (sort === "dateAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Date
-								{sort === "dateAsc" ? sort === "dateDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex w={"10px"}></Flex>
-						</Flex>
-					) : null}
-
+					<SortHistory
+						pageWidth={pageWidth}
+						handleSortChange={handleSortChange}
+						sort={sort}
+					/>
 					{historyListOrGrid}
 				</Flex>
-				<ButtonGroup
-					paddingTop={"15px"}
-					justifyContent={"end"}
-					alignItems={"center"}
-				>
-					{page === 1 || history?.length === 0 ? null : (
-						<Button
-							onClick={() => {
-								handlePageChange(page - 1);
-								window.scrollTo({ top: 0, behavior: "smooth" });
-							}}
-						>
-							Previous
-						</Button>
-					)}
-					{page === totalPage || history?.length === 0 ? null : (
-						<Button
-							onClick={() => {
-								handlePageChange(page + 1);
-								window.scrollTo({ top: 0, behavior: "smooth" });
-							}}
-						>
-							Next
-						</Button>
-					)}
-				</ButtonGroup>
+				<ButtonPage
+					data={history}
+					page={page}
+					totalPage={totalPage}
+					handlePageChange={handlePageChange}
+				/>
 			</Flex>
 		</Center>
 	);

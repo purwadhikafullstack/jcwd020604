@@ -8,13 +8,14 @@ import {
 	Input,
 	InputRightElement,
 	Icon,
-	ButtonGroup,
 } from "@chakra-ui/react";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, Suspense, lazy, useRef } from "react";
 import { api } from "../../api/api";
 import { Link } from "react-router-dom";
 import Loader from "../../utils/Loader";
+import ButtonPageProduct from "./ButtonPageProduct";
+import SelectCategory from "./SelectCategory";
 
 const ProductCard = lazy(() => import("./ProductCard"));
 
@@ -88,14 +89,10 @@ export default function ProductCollection() {
 	const [pageWidth, setPageWidth] = useState(window.innerWidth);
 
 	useEffect(() => {
-		// Update the page width on window resize
 		const handleResize = () => {
 			setPageWidth(window.innerWidth);
 		};
-
 		window.addEventListener("resize", handleResize);
-
-		// Clean up the event listener
 		return () => {
 			window.removeEventListener("resize", handleResize);
 		};
@@ -124,54 +121,12 @@ export default function ProductCollection() {
 						? category.find((val) => val.id === selectedCategory).category_name
 						: "ALL ITEMS"}
 				</Center>
-				<Center gap={"10px"} marginBottom={"20px"} flexWrap={"wrap"}>
-					<Flex
-						padding={"7px 12px"}
-						border={"1px"}
-						fontSize={"15px"}
-						fontWeight={"bold"}
-						cursor={"pointer"}
-						style={{
-							backgroundColor: selectedCategory === "" ? "yellow" : "",
-							border: selectedCategory === "" ? "1px solid white" : "1px solid",
-							color: selectedCategory === "" ? "black" : "",
-						}}
-						borderRadius={"5px"}
-						onClick={() => handleCategoryChange("")}
-					>
-						ALL ITEMS
-					</Flex>
-
-					{category.length
-						? category.map((val) => {
-								return (
-									<Flex
-										padding={"7px 12px"}
-										border={"1px"}
-										fontSize={"15px"}
-										fontWeight={"bold"}
-										cursor={"pointer"}
-										style={{
-											backgroundColor:
-												selectedCategory === val.id ? "yellow" : "",
-											border:
-												selectedCategory === val.id
-													? "1px solid white"
-													: "1px solid",
-											color: selectedCategory === val.id ? "black" : "",
-										}}
-										borderRadius={"5px"}
-										onClick={() => {
-											setPage(1);
-											handleCategoryChange(val.id);
-										}}
-									>
-										{val.category_name}
-									</Flex>
-								);
-						  })
-						: null}
-				</Center>
+				<SelectCategory
+					selectedCategory={selectedCategory}
+					category={category}
+					handleCategoryChange={handleCategoryChange}
+					setPage={setPage}
+				/>
 				<Flex
 					justifyContent={"space-between"}
 					paddingX={"40px"}
@@ -233,59 +188,12 @@ export default function ProductCollection() {
 						Product not available
 					</Center>
 				)}
-
-				{product.length > 0 && (
-					<ButtonGroup
-						justifyContent={"center"}
-						gap={"25px"}
-						marginBottom={"25px"}
-					>
-						{page === 1 ? (
-							<Button
-								isDisabled
-								// bgColor={"white"}
-								w={"117px"}
-								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
-							>
-								PREVIOUS
-							</Button>
-						) : (
-							<Button
-								// bgColor={"white"}
-								w={"117px"}
-								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
-								onClick={() => {
-									handlePageChange(page - 1);
-									window.scrollTo({ top: 0, behavior: "smooth" });
-								}}
-							>
-								PREVIOUS
-							</Button>
-						)}
-						{page === totalPage ? (
-							<Button
-								isDisabled
-								// bgColor={"white"}
-								w={"117px"}
-								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
-							>
-								NEXT
-							</Button>
-						) : (
-							<Button
-								// bgColor={"white"}
-								w={"117px"}
-								boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
-								onClick={() => {
-									handlePageChange(page + 1);
-									window.scrollTo({ top: 0, behavior: "smooth" });
-								}}
-							>
-								NEXT
-							</Button>
-						)}
-					</ButtonGroup>
-				)}
+				<ButtonPageProduct
+					data={product}
+					page={page}
+					totalPage={totalPage}
+					handlePageChange={handlePageChange}
+				/>
 			</Flex>
 		</Center>
 	);

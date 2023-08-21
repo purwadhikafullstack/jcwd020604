@@ -67,7 +67,6 @@ export default function MutationRequestModal({
 			});
 		}
 	};
-
 	return (
 		<Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
 			<ModalOverlay />
@@ -78,58 +77,63 @@ export default function MutationRequestModal({
 					{request?.length ? (
 						request?.map((request) => {
 							return (
-								<Flex
-									flexDir={"column"}
-									border={"1px"}
-									p={"15px"}
-									mb={"15px"}
-									borderRadius={"10px"}
-									borderColor={"#E6EBF2"}
-									id="id"
-								>
-									<Flex></Flex>
-									<Flex gap={"15px"}>
-										<Image
+								<>
+									{request?.stock?.id ? (
+										<Flex
+											flexDir={"column"}
+											border={"1px"}
+											p={"15px"}
+											mb={"15px"}
 											borderRadius={"10px"}
-											w={"70px"}
-											h={"70px"}
-											src={
-												request?.stock?.product?.product_images[0]
-													? request?.stock?.product?.product_images[0]
-															.product_image
-													: null
-											}
-										/>
-										<Flex flexDir={"column"}>
-											<Flex>
-												From: {request?.from_warehouse?.warehouse_name}
+											borderColor={"#E6EBF2"}
+											id="id"
+										>
+											<Flex gap={"15px"}>
+												<Image
+													borderRadius={"10px"}
+													w={"70px"}
+													h={"70px"}
+													src={
+														request?.stock?.product?.product_images[0]
+															? request?.stock?.product?.product_images[0]
+																	.product_image
+															: null
+													}
+												/>
+												<Flex flexDir={"column"}>
+													<Flex>
+														From: {request?.from_warehouse?.warehouse_name}
+													</Flex>
+													<Flex>
+														To: {request?.to_warehouse?.warehouse_name}
+													</Flex>
+													<Flex>
+														Product: {request?.stock?.product?.product_name}
+													</Flex>
+													<Flex>Amount: {request.qty}</Flex>
+												</Flex>
 											</Flex>
-											<Flex>To: {request?.to_warehouse?.warehouse_name}</Flex>
-											<Flex>
-												Product: {request?.stock?.product?.product_name}
+											<Flex justifyContent={"end"} gap={"10px"} pt={"15px"}>
+												<Button
+													colorScheme="red"
+													size={"sm"}
+													id="id"
+													onClick={() => handleReject(request.id)}
+												>
+													Reject
+												</Button>
+												<Button
+													colorScheme="green"
+													size={"sm"}
+													id="id"
+													onClick={() => handleApprove(request.id)}
+												>
+													Approve
+												</Button>
 											</Flex>
-											<Flex>Amount: {request.qty}</Flex>
 										</Flex>
-									</Flex>
-									<Flex justifyContent={"end"} gap={"10px"} pt={"15px"}>
-										<Button
-											colorScheme="red"
-											size={"sm"}
-											id="id"
-											onClick={() => handleReject(request.id)}
-										>
-											Reject
-										</Button>
-										<Button
-											colorScheme="green"
-											size={"sm"}
-											id="id"
-											onClick={() => handleApprove(request.id)}
-										>
-											Approve
-										</Button>
-									</Flex>
-								</Flex>
+									) : null}
+								</>
 							);
 						})
 					) : (

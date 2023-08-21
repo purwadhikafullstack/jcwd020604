@@ -1,30 +1,13 @@
-import {
-	Center,
-	Flex,
-	Select,
-	InputGroup,
-	Input,
-	InputRightElement,
-	Icon,
-	Button,
-	ButtonGroup,
-	useDisclosure,
-	Grid,
-} from "@chakra-ui/react";
-import {
-	AddIcon,
-	ArrowBackIcon,
-	RepeatIcon,
-	UpDownIcon,
-} from "@chakra-ui/icons";
-import { FaSearch } from "react-icons/fa";
+import { Center, Flex, useDisclosure, Grid } from "@chakra-ui/react";
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import { api } from "../../api/api";
 import { useSelector } from "react-redux";
 import ProductList from "./ProductList";
 import AddProductModal from "./AddProductModal";
 import ProductCardAdmin from "./CardProductAdmin";
+import SortProduct from "./SortProduct";
+import ButtonPage from "../ButtonPage";
+import TopMenu from "./TopMenu";
 
 export default function AdminProduct() {
 	const [product, setProduct] = useState([]);
@@ -168,172 +151,36 @@ export default function AdminProduct() {
 							Product Data
 						</Flex>
 					</Flex>
-					<Flex
-						pb={"15px"}
-						gap={"15px"}
-						justifyContent={"space-between"}
-						w={["100%", null, "auto"]} // Adjust width based on breakpoints
-						flexWrap={["wrap", null, "nowrap"]}
-					>
-						<Flex justifyContent={"space-between"} w={"100%"}>
-							<Flex gap={"15px"}>
-								<Link to={`/admin/managedata`}>
-									<Button leftIcon={<ArrowBackIcon />}>Back</Button>
-								</Link>
-								{user.role === "ADMIN" ? (
-									<Button
-										as={Button}
-										colorScheme="green"
-										onClick={addProductModal.onOpen}
-									>
-										<AddIcon />
-									</Button>
-								) : null}
-								<AddProductModal
-									isOpen={addProductModal.isOpen}
-									onClose={addProductModal.onClose}
-									getProduct={getProduct}
-								/>
-							</Flex>
-							<Button onClick={handleReset} ml={"15px"}>
-								<RepeatIcon />
-							</Button>
-						</Flex>
-						<Flex gap={"15px"} w={"1500px"} flexWrap={["wrap", null, "nowrap"]}>
-							<Select
-								w={"100%"}
-								placeholder="All Type of Category"
-								value={selectedCategory}
-								onChange={(event) => {
-									setPage(1);
-									setSelectedCategory(event.target.value);
-								}}
-							>
-								{category.length
-									? category.map((val) => (
-											<option key={val.id} value={val.id}>
-												{val.category_name}
-											</option>
-									  ))
-									: null}
-							</Select>
-							<InputGroup w={"100%"}>
-								<Input placeholder="Search..." ref={inputFileRef} />
-								<InputRightElement cursor={"pointer"}>
-									<Button
-										border="none"
-										onClick={() => {
-											setPage(1);
-											setSearch(inputFileRef.current.value);
-										}}
-									>
-										<Icon as={FaSearch} color="gray.400" />
-									</Button>
-								</InputRightElement>
-							</InputGroup>
-						</Flex>
-					</Flex>
-					{pageWidth > 900 ? (
-						<Flex
-							padding={"7px"}
-							borderBottom={"1px"}
-							fontWeight={600}
-							borderColor={"#E6EBF2"}
-							gap={"7"}
-						>
-							<Flex
-								w={"325px"}
-								minW={"275px"}
-								paddingLeft={"55px"}
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productDesc" ? "Asc" : "Desc")
-									)
-								}
-								cursor="pointer"
-								alignItems={"center"}
-							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productDesc" ? sort === "productAsc" : null}
-							</Flex>
-							<Flex w={"300px"} alignItems={"center"}>
-								Description
-							</Flex>
-							<Flex
-								w={"160px"}
-								onClick={() =>
-									handleSortChange(
-										"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-								alignItems={"center"}
-							>
-								Category
-								{sort === "categoryAsc" ? sort === "categoryDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"160px"}
-								onClick={() =>
-									handleSortChange(
-										"price" + (sort === "priceAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-								alignItems={"center"}
-							>
-								Price (Rp)
-								{sort === "priceAsc" ? sort === "priceDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"160px"}
-								onClick={() =>
-									handleSortChange(
-										"weight" + (sort === "weightAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-								alignItems={"center"}
-							>
-								Weight (g)
-								{sort === "weightAsc" ? sort === "weightDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex w={"25px"}></Flex>
-						</Flex>
-					) : null}
+					<TopMenu
+						user={user}
+						addProductModal={addProductModal}
+						handleReset={handleReset}
+						selectedCategory={selectedCategory}
+						setPage={setPage}
+						setSelectedCategory={setSelectedCategory}
+						category={category}
+						inputFileRef={inputFileRef}
+						setSearch={setSearch}
+					/>
+					<SortProduct
+						pageWidth={pageWidth}
+						handleSortChange={handleSortChange}
+						sort={sort}
+					/>
 					{productListOrGrid}
-					<ButtonGroup
-						paddingTop={"15px"}
-						justifyContent={"end"}
-						alignItems={"center"}
-					>
-						{page === 1 || product.length === 0 ? null : (
-							<Button
-								onClick={() => {
-									handlePageChange(page - 1);
-									window.scrollTo({ top: 0, behavior: "smooth" });
-								}}
-							>
-								Previous
-							</Button>
-						)}
-						{page === totalPage || product.length === 0 ? null : (
-							<Button
-								onClick={() => {
-									handlePageChange(page + 1);
-									window.scrollTo({ top: 0, behavior: "smooth" });
-								}}
-							>
-								Next
-							</Button>
-						)}
-					</ButtonGroup>
+					<ButtonPage
+						data={product}
+						page={page}
+						totalPage={totalPage}
+						handlePageChange={handlePageChange}
+					/>
 				</Flex>
 			</Center>
+			<AddProductModal
+				isOpen={addProductModal.isOpen}
+				onClose={addProductModal.onClose}
+				getProduct={getProduct}
+			/>
 		</>
 	);
 }
