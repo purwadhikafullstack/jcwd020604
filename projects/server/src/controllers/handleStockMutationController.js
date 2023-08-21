@@ -181,6 +181,7 @@ const handleStockMutation = {
 				}
 				return nearest;
 			}, null);
+			console.log(nearestWarehouse);
 
 			if (nearestWarehouse) {
 				// Deduct qty from nearest warehouse's stock
