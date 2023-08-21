@@ -50,7 +50,11 @@ const getHistoryController = {
 			};
 			const sortOrder = sortOptions[sort] || sortOptions.dateDesc;
 
-			let whereClause = {};
+			let whereClause = {
+				"$stock.id$": {
+					[Op.ne]: null,
+				},
+			};
 
 			if (search) {
 				whereClause["$stock.product.product_name$"] = {

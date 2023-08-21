@@ -44,7 +44,6 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 	async function deleteWarehouse(warehouseId) {
 		try {
 			await api().delete(`/warehouse/${warehouseId}`);
-
 			toast({
 				title: "Warehouse Deleted",
 				description: "The warehouse has been deleted successfully.",
@@ -52,8 +51,8 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 				position: "top",
 				duration: 3000,
 			});
-			getWarehouse();
 			onClose();
+			getWarehouse();
 			nav("/admin/managedata");
 		} catch (error) {
 			toast({

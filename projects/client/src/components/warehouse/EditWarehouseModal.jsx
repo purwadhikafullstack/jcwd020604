@@ -39,7 +39,6 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 	async function editWarehouse() {
 		try {
 			await api().patch(`/warehouse/${selectedWarehouse}`, data);
-
 			toast({
 				title: "Warehouse updated successfully.",
 				status: "success",

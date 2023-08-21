@@ -120,6 +120,7 @@ export default function StockList({ val, getStock }) {
 				isOpen={editStockModal.isOpen}
 				onClose={editStockModal.onClose}
 				val={val}
+				getStock={getStock}
 			/>
 			<DeleteStockModal
 				isOpen={deleteStockModal.isOpen}

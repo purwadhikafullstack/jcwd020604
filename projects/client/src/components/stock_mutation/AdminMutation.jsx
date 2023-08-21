@@ -160,8 +160,14 @@ export default function AdminMutation() {
 		mutationListOrGrid = (
 			<Grid padding={"20px"} templateColumns={templateColumns} gap={"25px"}>
 				{mutation?.length ? (
-					mutation.map((val) => {
-						return <MutationCard val={val} getMutation={getMutation} />;
+					mutation?.map((val) => {
+						return (
+							<MutationCard
+								val={val}
+								getMutation={getMutation}
+								getRequest={getRequest}
+							/>
+						);
 					})
 				) : (
 					<Center pt={"20px"} fontWeight={700}>
@@ -175,7 +181,13 @@ export default function AdminMutation() {
 			<>
 				{mutation?.length ? (
 					mutation?.map((val) => {
-						return <MutationList val={val} getMutation={getMutation} />;
+						return (
+							<MutationList
+								val={val}
+								getMutation={getMutation}
+								getRequest={getRequest}
+							/>
+						);
 					})
 				) : (
 					<Center pt={"20px"} fontWeight={700}>
