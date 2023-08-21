@@ -210,34 +210,83 @@ const ordersController = {
     adminConfirmOrderPayment: async (req, res) => {
         try {
             const { id } = req.params;
-            const { action } = req.body; // 'accept' atau 'reject'
+            const { action } = req.body;
         
-            // Temukan pesanan berdasarkan ID
-            const order = await db.orders.findByPk(id);
+            const order = await db.orders.findOne({
+                where: {id},
+                include: [
+                    {model: db.order_details, 
+                        include: [{model: db.stocks, 
+                            include: [{model: db.products,
+                                include: [{model: db.product_images}]
+                        }, 
+                            {model: db.warehouses}
+                        ]
+                    }]
+                },
+                    {model: db.users,
+                        include: [{model: db.addresses}]
+                    },
+                ],
+            });
         
             if (!order) {
               return res.status(404).json({ message: "Order not found" });
             }
         
             if (action === "accept") {
-              // Periksa apakah status pesanan memenuhi syarat untuk konfirmasi bukti pembayaran
-              if (order.status !== "WAITING_PAYMENT") {
-                return res.status(400).json({ message: "Invalid order status for confirmation proof of payment" });
-              }
-        
-              // Update status pesanan menjadi "PROCESSING"
-              order.status = "PROCESSING";
-              await order.save();
+                if (order.status !== "WAITING_PAYMENT") {
+                    return res.status(400).json({ message: "Invalid order status for confirmation proof of payment" });
+                }
 
-              return res.status(200).json({ message: "Payment received, order status updated to Processed" });
+                    // cek kekurangan stock
+                    let stockShortage = false;
+                    for (const orderDetail of order.order_details) {
+                        const stock = orderDetail.stock;
+                            if (stock.qty < orderDetail.qty) {
+                                stockShortage = true;
+                                break;
+                            }
+                        
+                        if (stockShortage) {
+                            //  membuat permintaan mutasi stok pada cabang terdekat yang memiliki stok mencukupi
+                            const nearestBranch = findNearestBranchWithStock(order);
+
+                            if (nearestBranch) {
+                                // buat request stock mutasi
+                                const stockMutationRequest = await db.stock_mutations.create({
+                                    order_id: order_id,
+                                    from_warehouse_id: order.warehouse_id,
+                                    to_warehouse_id: nearestBranch.warehouse_id,
+                                    status: "PENDING",
+                                   
+                                });
+
+                                order.status = "WAITING_STOCK_TRANSFER";
+                                await order.save();
+
+                                return res
+                                    .status(200)
+                                    .json({ message: "Stock shortage detected, stock mutation request initiated" });
+                            } else {
+                                return res
+                                    .status(400)
+                                    .json({ message: "No branch with sufficient stock found for stock mutation" });
+                            }
+                        }
+                    }
+
+                order.status = "PROCESSING";
+                await order.save();
+
+                return res.status(200).json({ message: "Payment received, order status updated to Processed" });
 
             } else if (action === "reject") {
-              // Periksa apakah status pesanan memenuhi syarat untuk menolak bukti pembayaran
+
               if (order.status !== "WAITING_PAYMENT") {
                 return res.status(400).json({ message: "Invalid order status to refuse proof of payment" });
               }
         
-              // Update status pesanan menjadi "WAITING_PAYMENT"
               order.status = "WAITING_PAYMENT";
               await order.save();
         
@@ -251,6 +300,37 @@ const ordersController = {
             console.error(error);
             return res.status(500).json({ message: "There was an error while processing the payment" });
           }
+    },
+
+    adminSendOrder: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const { send } = req.body;
+
+            const order = await db.orders.findByPk(id);
+        
+            if (!order) {
+              return res.status(404).json({ message: "Order not found" });
+            }
+
+            if (send === "send") {
+                // Periksa apakah status pesanan memenuhi syarat untuk konfirmasi bukti pembayaran
+                if (order.status !== "PROCESSING") {
+                  return res.status(400).json({ message: "Invalid order, Payment has not been paid" });
+                }
+          
+                // Update status pesanan menjadi "DELIVERY"
+                order.status = "DELIVERY";
+                await order.save();
+  
+                return res.status(200).json({ message: "Order status updated to Delivered" });
+  
+              } 
+
+        } catch (error) {
+            console.error(error);
+            return res.status(500).json({ message: "Invalid action" });
+        }
     },
 
     adminCancelOrder: async (req, res) => {

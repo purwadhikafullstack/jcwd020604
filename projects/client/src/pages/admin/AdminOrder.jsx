@@ -17,6 +17,7 @@ import {
     ButtonGroup
 } from '@chakra-ui/react'
 import { useState, useEffect } from 'react';
+import { useSelector } from "react-redux";
 import { api } from '../../api/api';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
@@ -25,6 +26,7 @@ import OrderModal from './OrderModal';
 import OrderNotFound from '../redirect/OrderNotFound';
 
 const AdminOrder = () => {
+	const user = useSelector((state) => state.auth);
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState([]);
     const navigate = useNavigate();
@@ -37,16 +39,22 @@ const AdminOrder = () => {
     const [page, setPage] = useState(1);
     
     useEffect(() => {
-     fetchData();
+        fetchData();
     }, [selectedStatus, selectedWarehouse, page]);
 
     useEffect(() => {
         getWarehouse();
     }, []);
 
+    useEffect(() => {
+		if (user.role !== "ADMIN") {
+			setSelectedWarehouse(user.warehouse_id);
+		}
+	}, []);
+
     const fetchData = async() => {
         try {
-            api().get(`/orders/orders`, {
+            await api().get(`/orders/orders`, {
                 params: {
                     status: selectedStatus,
                     warehouse_id: selectedWarehouse,
@@ -84,11 +92,6 @@ const AdminOrder = () => {
     return (
         <>
             <Navbar/>
-            {orders.length < 0 ? (
-                <>
-                    <OrderNotFound/>
-                </>
-            ) : (
                 <>
                     <Flex flexDir={'row'} mx={{base: '12', sm: '6', md: '14'}}>
                         <Select
@@ -104,40 +107,65 @@ const AdminOrder = () => {
                                 setSelectedStatus(event.target.value);
                             }}
                             >
-                                {orders.length
-                                    ? orders.map((val) => (
-                                        <option key={val.id} value={val.id}>
-                                            {val.status}
-                                        </option>
-                                )) : null}
+                                <option>DONE</option>
+                                <option>CANCELLED</option>
+                                <option value={'WAITING_PAYMENT'}>WAITING PAYMENT</option>
+                                <option value={'WAITING_STOCK_TRANSFER'}>WAITING STOCK</option>
+                                <option>PAYMENT</option>
+                                <option>DELIVERY</option>
+                                <option>PROCESSING</option>
                         </Select>                   
-                        <Select
-                            placeholder="All Warehouse"
-                            w={{base:'12%',sm:'md', md:'12%'}}
-                            m={4}
-                            cursor={'pointer'}
-                            fontSize={'xs'}
-                            variant='unstyled'
-                            value={selectedWarehouse}
-                            onChange={(event) => {
-                                setPage(1);
-                                setSelectedWarehouse(event.target.value);
-                            }}
-                            >
-                            {warehouse.length
-                                    ? warehouse.map((val) => (
-                                        <option key={val.id} value={val.id}>
-                                            {val.warehouse_name}
-                                        </option>
-                                    ))
-                                : null}
-                        </Select>
+                        {user.role === "ADMIN" ? (
+                            <Select
+                                placeholder="All Warehouse"
+                                w={{base:'12%',sm:'md', md:'12%'}}
+                                m={4}
+                                cursor={'pointer'}
+                                fontSize={'xs'}
+                                variant='unstyled'
+                                value={selectedWarehouse}
+                                onChange={(event) => {
+                                    setPage(1);
+                                    setSelectedWarehouse(event.target.value);
+                                }}
+                                >
+                                {warehouse.length
+                                        ? warehouse.map((val) => (
+                                            <option key={val.id} value={val.id}>
+                                                {val.warehouse_name}
+                                            </option>
+                                        ))
+                                    : null}
+                            </Select>
+                        ) : (
+                            <Select placeholder="All Warehouse"
+                                w={{base:'12%',sm:'md', md:'12%'}}
+                                m={4}
+                                cursor={'pointer'}
+                                fontSize={'xs'}
+                                variant='unstyled' value={selectedWarehouse} isDisabled>
+									{warehouse.length
+										? warehouse.map((val) => (
+												<option key={val.id} value={val.id}>
+													{val.warehouse_name}
+												</option>
+										    ))
+									: null}
+							</Select>)}
+                        
                     </Flex>
-                    {orders.map((order) => (
+                    {orders.length === 0 ? (
+                          <OrderNotFound/>
+                    ) : (
+                    <>
+                        {orders.map((order) => (
                         <Card my={2} mx={{base: '12', sm: '6', md: '14'}} size={'sm'} display={'block'} position={'relative'} bgColor={'white'}>
                             <CardHeader key={order.id}>
                                 <Stack direction={'row'} px={1} display={'flex'} align={'center'} justifyContent={'flex-end'}>
-                                    <Badge variant='solid' colorScheme={order.status === "CANCELLED" ? 'red' : order.status === "PAYMENT" ? 'blue' : order.status === "WAITING_PAYMENT" ? 'purple' : order.status === "DELIVERY" ? 'grey' : order.status === "PROCESSING" ? 'teal' : 'green'}>
+                                    <Badge variant='solid' colorScheme={order.status === "CANCELLED" ? 'red' : 
+                                    order.status === "PAYMENT" ? 'blue' : order.status === "WAITING_PAYMENT" ? 'purple' : 
+                                    order.status === "WAITING_STOCK_TRANSFER" ? 'orange' : order.status === "DELIVERY" ? 'blue' : 
+                                    order.status === "PROCESSING" ? 'teal' : 'green'}>
                                         {order.status}
                                     </Badge>
                                     <Text fontSize={'sm'} fontWeight={'medium'} textColor={'blackAlpha.600'}>No. Invoice: {order.invoice}</Text>
@@ -169,8 +197,9 @@ const AdminOrder = () => {
                             </CardBody>
                         </Card>
                     ))}
+                    </> 
+                )}   
                 </>
-            )}
                 <OrderModal isOpen={orderModal.isOpen} onClose={orderModal.onClose} fetchData={fetchData} orders={orders} selectedOrder={selectedOrder} setSelectedOrder={setSelectedOrder}/>
                     <ButtonGroup
                         p={3}

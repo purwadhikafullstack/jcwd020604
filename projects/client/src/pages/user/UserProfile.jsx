@@ -78,18 +78,28 @@ export default function UserProfile() {
   async function uploadAvatar() {
     const formData = new FormData();
     formData.append("userImg", selectedFile);
-    await api()
-    .post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData)
-    .then((res) => {
+  
+    try {
+      await api().post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData);
       toast({
-        title:"Photo has been updated",
-        status:"success",
-        duration:3000,
-        position:'top',
-        isClosable:false
+        title: "Photo has been updated",
+        status: "success",
+        duration: 3000,
+        position: 'top',
+        isClosable: false
       });
       fetchData();
-    });
+      fetch();
+    } catch (error) {
+      console.error("An error occurred:", error);
+      toast({
+        title: "File too large",
+        status: "error",
+        duration: 3000,
+        position: 'top',
+        isClosable: false
+      });
+    }
   }
 
   useEffect(() => {
@@ -409,7 +419,7 @@ const handleInputChange = (e) => {
                         </Box>
                       </WrapItem>
                   </Wrap>
-                  </Box>
+                </Box>
                 </Box>
               </Flex>
             </form>

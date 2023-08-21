@@ -32,6 +32,7 @@ const OrderModal = (props) => {
     const toast = useToast();
     const orderDate = orderById?.createdAt ? new Date(orderById.createdAt) : null;
     const [action, setAction] = useState('');
+    const [sending, setSending] = useState('');
 
     useEffect(() => {
         if(props.selectedOrder)
@@ -85,18 +86,20 @@ const OrderModal = (props) => {
               }
         } catch (error) {
             toast({
-                title:'Invalid order status to refuse proof of payment',
-                status:'error',
+                title:'Payment has been accepted or Done',
+                status:'info',
+                position: 'top',
                 duration:3000,
                 isClosable:false
             });
             props.onClose();
+            props.fetchData();
         }
     }
 
     const handleActionChange = (e) => {
         setAction(e.target.value);
-      };
+    };
 
     return (
         <>
@@ -106,10 +109,13 @@ const OrderModal = (props) => {
             <ModalHeader fontSize={'sm'} color={'blackAlpha.700'} fontWeight={'bold'} fontFamily={'sans-serif'}>Detail Product</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-                    <Card my={2} mx={{base: '12', sm: '6', md: '10'}} size={'sm'} display={'block'} position={'relative'} bgColor={'white'}>
+                    <Card my={2} mx={{base: '12', sm: '6', md: '10'}} size={'md'} display={'block'} position={'relative'} bgColor={'white'}>
                         <CardHeader>
                             <Stack direction={{base:'column', md: 'column', sm: 'row'}} px={1} display={'flex'} align={'flex-start'} justifyContent={'flex-start'}>
-                                <Badge variant='solid' colorScheme={orderById?.status === "CANCELLED" ? 'red' : orderById?.status === "PAYMENT" ? 'blue' : orderById?.status === "WAITING_PAYMENT" ? 'purple' : orderById?.status === "DELIVERY" ? 'grey' : orderById?.status === "PROCESSING" ? 'teal' : 'green'}>
+                                <Badge variant='solid' 
+                                colorScheme={orderById?.status === "CANCELLED" ? 'red' : orderById?.status === "PAYMENT" ? 'blue' : 
+                                orderById?.status === "WAITING_PAYMENT" ? 'purple' : orderById?.status === "WAITING_STOCK_TRANSFER" ? 'orange' : orderById?.status === "DELIVERY" ? 'blue' : 
+                                orderById?.status === "PROCESSING" ? 'teal' : 'green'}>
                                     {orderById?.status}
                                 </Badge>
                                 <Text fontSize={'xs'} fontWeight={'medium'} textColor={'green.400'}>No.Invoice:{orderById?.invoice}</Text>
@@ -118,10 +124,10 @@ const OrderModal = (props) => {
                                 <Text fontSize={'xs'} fontWeight={'medium'} textColor={'blackAlpha.600'}>Order Date: {orderDate ? orderDate.toDateString() : 'N/A'}</Text>
                             </Flex>
                             <Flex m={1}>
-                            <Select placeholder="Select action" textColor={'blackAlpha.600'} fontWeight={'bold'} cursor={'pointer'} w={'sm'} fontSize={'xs'} variant='unstyled' value={action} onChange={handleActionChange}>
-                                <option value="accept" style={{fontWeight:'bold'}}>Accept Payment</option>
-                                <option value="reject" style={{fontWeight:'bold'}}>Reject Payment</option>
-                            </Select>
+                                <Select placeholder='Select action ...' textColor={'blackAlpha.600'} fontWeight={'bold'} cursor={'pointer'} w={'sm'} fontSize={'xs'} variant='unstyled' value={action} onChange={handleActionChange}>
+                                    <option value="accept" style={{fontWeight:'bold'}}>Accept Payment</option>
+                                    <option value="reject" style={{fontWeight:'bold'}}>Reject Payment</option>
+                                </Select>
                             </Flex>
                         </CardHeader>
                         <CardBody>
