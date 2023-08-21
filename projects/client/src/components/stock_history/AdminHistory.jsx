@@ -7,11 +7,9 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	ButtonGroup,
 	Grid,
 } from "@chakra-ui/react";
-import { UpDownIcon, RepeatIcon, ArrowBackIcon } from "@chakra-ui/icons";
-
+import { RepeatIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
@@ -24,6 +22,7 @@ import SortHistory from "./SortHistory";
 
 export default function AdminHistory() {
 	const user = useSelector((state) => state.auth);
+	const inputFileRef = useRef(null);
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
 	const [selectedReference, setSelectedReference] = useState("");
@@ -33,7 +32,6 @@ export default function AdminHistory() {
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
-	const inputFileRef = useRef(null);
 
 	useEffect(() => {
 		getWarehouse();
