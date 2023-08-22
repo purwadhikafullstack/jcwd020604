@@ -2,6 +2,8 @@ const db = require("../models");
 const Joi = require("joi");
 const { Op } = require("sequelize");
 const autoMutation = require("./handleStockMutationController");
+const warehouse = require("../models/warehouse");
+const haversine = require('haversine');
 
 const ordersController = {
 	getAllOrder: async (req, res) => {
@@ -279,24 +281,44 @@ const ordersController = {
 					const stock = orderDetail.stock;
 					if (stock.qty < orderDetail.qty) {
 						stockShortage = true;
-						break;
 					}
 
 					if (stockShortage) {
 						//  membuat permintaan mutasi stok pada cabang terdekat yang memiliki stok mencukupi
-						const nearestBranch = otherWarehouses.reduce(
-							(nearest, warehouse) => {
-								const distance = geolib.getDistance(
-									{
-										latitude: referenceWarehouse.lat,
-										longitude: referenceWarehouse.lng,
+                        const warehouses = await db.warehouses.findAll({
+							include: [
+								{
+									model: db.stocks,
+									where: {
+										product_id: stock?.product_id,
+										qty: {
+											[Op.gte]: orderDetail?.qty,
+										},
 									},
-									{ latitude: warehouse.lat, longitude: warehouse.lng }
-								);
+								},
+							],
+						});
+
+                        const referenceWarehouse = stock.warehouse;
+                        const otherWarehouses = warehouses.filter((warehouse) => 
+							warehouse.id !== referenceWarehouse.id); // Remove the reference warehouse from the list
+
+						const nearestBranch = otherWarehouses.reduce(							
+							(nearest, warehouse) => {
+								const distance = haversine(
+									{
+									  latitude: referenceWarehouse?.latitude,
+									  longitude: referenceWarehouse?.longitude,
+									},
+									{
+									  latitude: warehouse.latitude,
+									  longitude: warehouse.longitude,
+									}
+								  );
 
 								if (
 									!nearest ||
-									(distance < nearest.distance && warehouse.stock >= qty)
+									(distance < nearest.distance && warehouse.stock >= orderDetail.qty)
 								) {
 									return { warehouse, distance };
 								}
@@ -305,10 +327,12 @@ const ordersController = {
 							null
 						);
 
+                        
 						if (nearestBranch) {
+                            console.log(nearestBranch);
 							// buat request stock mutasi
 
-							await autoMutation.autoMutation(nearestBranch, stockShortage);
+							// await autoMutation.autoMutation(nearestBranch, stockShortage);
 
 							return res.status(200).json({
 								message:
