@@ -1,6 +1,6 @@
 const db = require("../models");
 const Joi = require("joi");
-const geolib = require("geolib");
+const haversine = require("haversine");
 
 const handleStockMutation = {
 	handleMutation: async (req, res) => {
@@ -159,7 +159,7 @@ const handleStockMutation = {
 					{
 						model: db.stocks,
 						where: {
-							product_id,
+							product_id: stock?.product_id,
 							stock: {
 								[Op.gte]: qty,
 							},
@@ -205,27 +205,31 @@ const handleStockMutation = {
 						{ where: { id: nearestWarehouse.warehouse.id }, transaction: t }
 					);
 
-					let referenceWarehouseId;
+					await db.stocks.update(
+						{ qty: referenceWarehouse.qty + qty }, // qty?
+						{ where: { id: referenceWarehouse.id }, transaction: t }
+					);
 
-					if (referenceWarehouse) {
-						referenceWarehouseId = referenceWarehouse.id;
+					// let referenceWarehouseId;
 
-						await db.stocks.update(
-							{ qty: referenceWarehouse.qty + qty }, // qty?
-							{ where: { id: referenceWarehouse.id }, transaction: t }
-						);
-					}
-					// else {
-					//     const newRequestStock = await db.stocks.create(
-					//         {
-					//             product_id: nearestWarehouse.stock.product_id,
-					//             warehouse_id: nearestWarehouse,
-					//             qty : nearestWarehouse.qty
-					//         },{
-					//             transaction: t,
-					//         }
-					//     )
-					//     referenceWarehouseId = newRequestStock.id
+					// if (referenceWarehouse) {
+					// 	referenceWarehouseId = referenceWarehouse.id;
+					// 	await db.stocks.update(
+					// 		{ qty: referenceWarehouse.qty + qty }, // qty?
+					// 		{ where: { id: referenceWarehouse.id }, transaction: t }
+					// 	);
+					// } else {
+					// 	const newRequestStock = await db.stocks.create(
+					// 		{
+					// 			product_id: nearestWarehouse.stock.product_id,
+					// 			warehouse_id: nearestWarehouse,
+					// 			qty: nearestWarehouse.qty,
+					// 		},
+					// 		{
+					// 			transaction: t,
+					// 		}
+					// 	);
+					// 	referenceWarehouseId = newRequestStock.id;
 					// }
 
 					const mutation = await db.stock_mutations.create(
@@ -239,21 +243,21 @@ const handleStockMutation = {
 						{ transaction: t }
 					);
 
-					// await db.stock_histories.create(
-					// 	{
-					// 		qty,
-					// 		status: "IN",
-					// 		reference: `Auto ${mutation.mutation_code}`,
-					// 		stock_id,
-					// 		stock_before,
-					// 		stock_after,
-					// 	},
-					// 	{ transaction: t }
-					// );
+					await db.stock_histories.create(
+						{
+							qty: qty,
+							status: "IN",
+							reference: `Auto ${mutation.mutation_code}`,
+							stock_id,
+							stock_before,
+							stock_after,
+						},
+						{ transaction: t }
+					);
 
 					// await db.stock_histories.create(
 					// 	{
-					// 		qty,
+					// 		qty: -qty,
 					// 		status: "OUT",
 					// 		reference: `Auto ${mutation.mutation_code}`,
 					// 		stock_id,
