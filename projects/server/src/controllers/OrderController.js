@@ -1,6 +1,6 @@
 const db = require("../models");
 const Joi = require("joi");
-const { Op } = require("sequelize");
+const { Op, or } = require("sequelize");
 const autoMutation = require("./handleStockMutationController");
 const warehouse = require("../models/warehouse");
 const haversine = require("haversine");
@@ -237,7 +237,6 @@ const ordersController = {
 				.json({ message: "Error retrieving order", error: error.message });
 		}
 	},
-
 	adminConfirmOrderPayment: async (req, res) => {
 		try {
 			const { id } = req.params;
@@ -276,7 +275,6 @@ const ordersController = {
 					});
 				}
 
-				// cek kekurangan stock
 				let stockShortage;
 				for (const orderDetail of order.order_details) {
 					const stock = orderDetail.stock;
@@ -285,7 +283,6 @@ const ordersController = {
 					}
 
 					if (stockShortage) {
-						//  membuat permintaan mutasi stok pada cabang terdekat yang memiliki stok mencukupi
 						const warehouses = await db.warehouses.findAll({
 							include: [
 								{
@@ -303,7 +300,7 @@ const ordersController = {
 						const referenceWarehouse = stock;
 						const otherWarehouses = warehouses.filter(
 							(warehouse) => warehouse.id !== referenceWarehouse.warehouse.id
-						); // Remove the reference warehouse from the list
+						);
 
 						const nearestBranch = otherWarehouses.reduce(
 							(nearest, warehouse) => {
@@ -336,25 +333,6 @@ const ordersController = {
 								nearestBranch,
 								stockShortage
 							);
-
-							// await db.stocks.update(
-							// 	{
-							// 		qty: referenceWarehouse.dataValues.qty - stock.dataValues.qty,
-							// 	},
-							// 	{
-							// 		where: { id: referenceWarehouse.dataValues.id },
-							// 		// transaction: t,
-							// 	}
-							// );
-
-							// await db.stock_histories.create({
-							// 	qty: stock.dataValues.qty,
-							// 	status: "OUT",
-							// 	reference: `INVOICE`,
-							// 	stock_id: requestedWarehouse.dataValues.id,
-							// 	stock_before: requestedWarehouse.dataValues.qty,
-							// 	stock_after: requestedWarehouse.dataValues.qty + qty,
-							// });
 						} else {
 							return res.status(400).json({
 								message:
@@ -400,21 +378,58 @@ const ordersController = {
 			const { id } = req.params;
 			const { send } = req.body;
 
-			const order = await db.orders.findByPk(id);
+			const order = await db.orders.findOne({
+				where: { id },
+				include: [
+					{
+						model: db.order_details,
+						include: [
+							{
+								model: db.stocks,
+								include: [
+									{
+										model: db.products,
+										include: [{ model: db.product_images }],
+									},
+									{ model: db.warehouses },
+								],
+							},
+						],
+					},
+					{ model: db.users, include: [{ model: db.addresses }] },
+				],
+			});
 
 			if (!order) {
 				return res.status(404).json({ message: "Order not found" });
 			}
 
 			if (send === "send") {
-				// Periksa apakah status pesanan memenuhi syarat untuk konfirmasi bukti pembayaran
 				if (order.status !== "PROCESSING") {
 					return res
 						.status(400)
 						.json({ message: "Invalid order, Payment has not been paid" });
 				}
+				for (const orderDetail of order.order_details) {
+					const stock = orderDetail.stock;
 
-				// Update status pesanan menjadi "DELIVERY"
+					const referenceWarehouse = stock;
+
+					await db.stocks.update(
+						{ qty: referenceWarehouse.qty - order.order_details[0].qty },
+						{ where: { id: referenceWarehouse.id } }
+					);
+
+					await db.stock_histories.create({
+						qty: -order.order_details[0].qty,
+						status: "OUT",
+						reference: `INVOICE`,
+						stock_id: referenceWarehouse.id,
+						stock_before: referenceWarehouse.qty,
+						stock_after: referenceWarehouse.qty - order.order_details[0].qty,
+					});
+				}
+
 				order.status = "DELIVERY";
 				await order.save();
 
@@ -427,7 +442,6 @@ const ordersController = {
 			return res.status(500).json({ message: "Invalid action" });
 		}
 	},
-
 	adminCancelOrder: async (req, res) => {
 		try {
 			const { id } = req.params;
