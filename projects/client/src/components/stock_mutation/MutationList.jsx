@@ -94,7 +94,7 @@ export default function MutationList({ val, getMutation, getRequest }) {
 								</MenuItem>
 							</MenuList>
 						</Menu>
-					) : val?.status === "APPROVED" ? (
+					) : val?.status === "APPROVED" || "AUTO" ? (
 						<Icon
 							w={"20px"}
 							h={"20px"}

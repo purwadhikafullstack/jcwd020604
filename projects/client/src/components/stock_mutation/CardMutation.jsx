@@ -65,7 +65,7 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 							borderRadius="lg"
 						/>
 						<Stack mt="6" spacing="2">
-							<Flex>
+							<Flex justifyContent={"space-between"}>
 								<Heading size="md">{val?.stock?.product?.product_name}</Heading>
 								{val?.status === "PENDING" ? (
 									<Menu>
@@ -84,7 +84,7 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 											</MenuItem>
 										</MenuList>
 									</Menu>
-								) : val?.status === "APPROVED" ? (
+								) : val?.status === "APPROVED" || "AUTO" ? (
 									<Icon
 										w={"20px"}
 										h={"20px"}

@@ -1,6 +1,5 @@
 const db = require("../models");
 const Joi = require("joi");
-const geolib = require("geolib");
 
 const handleStockMutation = {
 	handleMutation: async (req, res) => {
@@ -131,7 +130,6 @@ const handleStockMutation = {
 				);
 
 				await t.commit();
-
 				return res.status(200).send({ message: "Stock mutation confirmed." });
 			} else if (status === "REJECTED") {
 				await db.stock_mutations.update(
@@ -147,92 +145,70 @@ const handleStockMutation = {
 				});
 			}
 		} catch (err) {
-			console.log(err);
 			await t.rollback();
 			res.status(500).send({ message: err.message });
 		}
 	},
-	autoMutation: async (requestedWarehouse, qty) => {
+	autoMutation: async (requestedWarehouse, nearestWarehouse, qty) => {
 		const t = await db.sequelize.transaction();
 
 		try {
-			const warehouses = await db.warehouses.findAll();
-
-			const referenceWarehouse = requestedWarehouse;
-
-			const otherWarehouses = warehouses.filter(
-				(warehouse) => warehouse.id !== referenceWarehouse.id
-			); // Remove the reference warehouse from the list
-
-			const nearestWarehouse = otherWarehouses.reduce((nearest, warehouse) => {
-				const distance = geolib.getDistance(
-					{
-						latitude: referenceWarehouse.lat,
-						longitude: referenceWarehouse.lng,
-					},
-					{ latitude: warehouse.lat, longitude: warehouse.lng }
-				);
-
-				if (
-					!nearest ||
-					(distance < nearest.distance && warehouse.stock >= qty)
-				) {
-					return { warehouse, distance };
-				}
-				return nearest;
-			}, null);
-			console.log(nearestWarehouse);
-
 			if (nearestWarehouse) {
-				// Deduct qty from nearest warehouse's stock
-				if (qty <= nearestWarehouse.warehouse.stock) {
-					nearestWarehouse.warehouse.stock -= qty;
-					requestedWarehouse.stock += qty;
+				if (qty <= nearestWarehouse.warehouse.dataValues.stocks[0].qty) {
+					await db.stocks.update(
+						{ qty: nearestWarehouse.warehouse.dataValues.stocks[0].qty - qty },
+						{
+							where: { id: nearestWarehouse.warehouse.dataValues.stocks[0].id },
+							transaction: t,
+						}
+					);
 
-					// await db.stocks.update(
-					// 	{ qty }, // qty?
-					// 	{ where: { id: nearestWarehouse.warehouse.id }, transaction: t }
-					// );
-
-					// await db.stocks.update(
-					// 	{ qty }, // qty?
-					// 	{ where: { id: requestedWarehouse.id }, transaction: t }
-					// );
+					await db.stocks.update(
+						{ qty: requestedWarehouse.dataValues.qty + qty },
+						{
+							where: { id: requestedWarehouse.dataValues.id },
+							transaction: t,
+						}
+					);
 
 					const mutation = await db.stock_mutations.create(
 						{
 							qty: qty,
-							stock_id: requestedWarehouse.stock_id,
-							to_warehouse_id: requestedWarehouse,
-							from_warehouse_id: nearestWarehouse,
+							stock_id: requestedWarehouse.dataValues.id,
+							to_warehouse_id: requestedWarehouse.dataValues.warehouse_id,
+							from_warehouse_id: nearestWarehouse.warehouse.dataValues.id,
 							status: "AUTO",
 						},
 						{ transaction: t }
 					);
 
-					// await db.stock_histories.create(
-					// 	{
-					// 		qty,
-					// 		status: "IN",
-					// 		reference: `Auto ${mutation.mutation_code}`,
-					// 		stock_id,
-					// 		stock_before,
-					// 		stock_after,
-					// 	},
-					// 	{ transaction: t }
-					// );
+					await db.stock_histories.create(
+						{
+							qty: -qty,
+							status: "OUT",
+							reference: `Auto ${mutation.mutation_code}`,
+							stock_id: nearestWarehouse.warehouse.dataValues.stocks[0].id,
+							stock_before: nearestWarehouse.warehouse.dataValues.stocks[0].qty,
+							stock_after:
+								nearestWarehouse.warehouse.dataValues.stocks[0].qty - qty,
+						},
+						{ transaction: t }
+					);
 
-					// await db.stock_histories.create(
-					// 	{
-					// 		qty,
-					// 		status: "OUT",
-					// 		reference: `Auto ${mutation.mutation_code}`,
-					// 		stock_id,
-					// 		stock_before,
-					// 		stock_after,
-					// 	},
-					// 	{ transaction: t }
-					// );
+					await db.stock_histories.create(
+						{
+							qty: qty,
+							status: "IN",
+							reference: `Auto ${mutation.mutation_code}`,
+							stock_id: requestedWarehouse.dataValues.id,
+							stock_before: requestedWarehouse.dataValues.qty,
+							stock_after: requestedWarehouse.dataValues.qty + qty,
+						},
+						{ transaction: t }
+					);
+
+					await t.commit();
+					return true;
 				} else {
 					console.log(
 						`Insufficient stock in ${nearestWarehouse.warehouse.name}.`
@@ -240,6 +216,7 @@ const handleStockMutation = {
 				}
 			}
 		} catch (err) {
+			await t.rollback();
 			throw err;
 		}
 	},

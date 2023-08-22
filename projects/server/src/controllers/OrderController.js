@@ -3,7 +3,8 @@ const Joi = require("joi");
 const { Op } = require("sequelize");
 const autoMutation = require("./handleStockMutationController");
 const warehouse = require("../models/warehouse");
-const haversine = require('haversine');
+const haversine = require("haversine");
+const orderDetail = require("../models/orderDetail");
 
 const ordersController = {
 	getAllOrder: async (req, res) => {
@@ -276,49 +277,51 @@ const ordersController = {
 				}
 
 				// cek kekurangan stock
-				let stockShortage = false;
+				let stockShortage;
 				for (const orderDetail of order.order_details) {
 					const stock = orderDetail.stock;
 					if (stock.qty < orderDetail.qty) {
-						stockShortage = true;
+						stockShortage = orderDetail.qty - stock.qty;
 					}
 
 					if (stockShortage) {
 						//  membuat permintaan mutasi stok pada cabang terdekat yang memiliki stok mencukupi
-                        const warehouses = await db.warehouses.findAll({
+						const warehouses = await db.warehouses.findAll({
 							include: [
 								{
 									model: db.stocks,
 									where: {
 										product_id: stock?.product_id,
 										qty: {
-											[Op.gte]: orderDetail?.qty,
+											[Op.gte]: stockShortage,
 										},
 									},
 								},
 							],
 						});
 
-                        const referenceWarehouse = stock.warehouse;
-                        const otherWarehouses = warehouses.filter((warehouse) => 
-							warehouse.id !== referenceWarehouse.id); // Remove the reference warehouse from the list
+						const referenceWarehouse = stock;
+						const otherWarehouses = warehouses.filter(
+							(warehouse) => warehouse.id !== referenceWarehouse.warehouse.id
+						); // Remove the reference warehouse from the list
 
-						const nearestBranch = otherWarehouses.reduce(							
+						const nearestBranch = otherWarehouses.reduce(
 							(nearest, warehouse) => {
 								const distance = haversine(
 									{
-									  latitude: referenceWarehouse?.latitude,
-									  longitude: referenceWarehouse?.longitude,
+										latitude: referenceWarehouse?.latitude,
+										longitude: referenceWarehouse?.longitude,
 									},
 									{
-									  latitude: warehouse.latitude,
-									  longitude: warehouse.longitude,
+										latitude: warehouse.latitude,
+										longitude: warehouse.longitude,
 									}
-								  );
+								);
 
 								if (
 									!nearest ||
-									(distance < nearest.distance && warehouse.stock >= orderDetail.qty)
+									(distance < nearest.distance &&
+										warehouse.stock >= orderDetail.qty)
 								) {
 									return { warehouse, distance };
 								}
@@ -327,17 +330,31 @@ const ordersController = {
 							null
 						);
 
-                        
 						if (nearestBranch) {
-                            console.log(nearestBranch);
-							// buat request stock mutasi
+							await autoMutation.autoMutation(
+								referenceWarehouse,
+								nearestBranch,
+								stockShortage
+							);
 
-							// await autoMutation.autoMutation(nearestBranch, stockShortage);
+							// await db.stocks.update(
+							// 	{
+							// 		qty: referenceWarehouse.dataValues.qty - stock.dataValues.qty,
+							// 	},
+							// 	{
+							// 		where: { id: referenceWarehouse.dataValues.id },
+							// 		// transaction: t,
+							// 	}
+							// );
 
-							return res.status(200).json({
-								message:
-									"Stock shortage detected, stock mutation request initiated",
-							});
+							// await db.stock_histories.create({
+							// 	qty: stock.dataValues.qty,
+							// 	status: "OUT",
+							// 	reference: `INVOICE`,
+							// 	stock_id: requestedWarehouse.dataValues.id,
+							// 	stock_before: requestedWarehouse.dataValues.qty,
+							// 	stock_after: requestedWarehouse.dataValues.qty + qty,
+							// });
 						} else {
 							return res.status(400).json({
 								message:
