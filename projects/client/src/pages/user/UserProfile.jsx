@@ -127,7 +127,7 @@ export default function UserProfile() {
     try {
       const token = JSON.parse(localStorage.getItem("auth"));
       const user = await api()
-        .get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
+        .get(`${process.env.REACT_APP_API_BASE_URL}/authentication/v2`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },

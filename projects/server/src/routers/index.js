@@ -8,8 +8,10 @@ const cartRouter = require("./cartRouter");
 const stockHistoryRouter = require("./stockHistoryRouter");
 const stockMutationRouter = require("./stockMutationRouter");
 const orderRouter = require('./OrderRouter');
+const authRouter = require('./AuthRouter');
 
 module.exports = {
+	authRouter,
 	productRouter,
 	categoryRouter,
 	stockRouter,

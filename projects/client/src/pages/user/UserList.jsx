@@ -9,7 +9,6 @@ import {
     Td,
     TableContainer,
     ButtonGroup,
-    Box,
     Text,
     Stack,
     HStack,
@@ -33,7 +32,6 @@ const UserList = () => {
     const toast = useToast();
     const { role = "W_ADMIN" } = useParams();
     const [adminId, setAdminId] = useState();
-    const [warehouseId, setWarehouseId] = useState();
     
     useEffect(() => {
      fetchData();

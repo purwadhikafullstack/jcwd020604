@@ -68,7 +68,7 @@ export default function Verify() {
   async function verif(values) {
     const { password, fullname } = values;
     try {
-      await api().patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify`, {
+      await api().patch(`${process.env.REACT_APP_API_BASE_URL}/authentication/verify`, {
         email,
         password,
         fullname,

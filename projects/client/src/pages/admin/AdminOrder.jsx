@@ -19,7 +19,6 @@ import {
 import { useState, useEffect } from 'react';
 import { useSelector } from "react-redux";
 import { api } from '../../api/api';
-import { useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import Footer from "../../components/Footer";
 import OrderModal from './OrderModal';
@@ -29,7 +28,6 @@ const AdminOrder = () => {
 	const user = useSelector((state) => state.auth);
     const [orders, setOrders] = useState([]);
     const [selectedOrder, setSelectedOrder] = useState([]);
-    const navigate = useNavigate();
     const toast = useToast();
     const orderModal = useDisclosure();
     const [selectedStatus, setSelectedStatus] = useState("");
@@ -77,6 +75,30 @@ const AdminOrder = () => {
             });
         }
     }
+
+    const sendOrder = async (orderId) => {
+        try {
+            await api().patch(`/orders/orders/sending-order/${orderId}`, {
+                send: "send",
+            });
+            toast({
+                title: "Sending order to user",
+                status: "success",
+                position: "top",
+                duration: 3000,
+                isClosable: false,
+            });
+            fetchData();
+        } catch (error) {
+            toast({
+                title: error.response.data.message,
+                status: "error",
+                position: "top",
+                duration: 3000,
+                isClosable: false,
+            });
+        }
+    };
 
     async function getWarehouse() {
 		const res = await api().get("/warehouse");
@@ -189,9 +211,40 @@ const AdminOrder = () => {
                                                             <Text textAlign={'justify'} as={'p'} fontSize={'sm'} fontWeight={'semibold'} textColor={'blackAlpha.600'}>{detail.stock.product.product_detail}</Text>
                                                         </Flex>
                                                     <Text fontSize={'sm'} fontWeight={'normal'} textColor={'blackAlpha.600'}>{detail.qty} barang x Rp{detail.price}</Text>
-                                                    <Button display={'flex'} justifyContent={{base:'flex-start', sm:'flex-start', md: 'flex-end'}} colorScheme='green' size={'xs'} variant={'link'} onClick={() => {orderModal.onOpen(); setSelectedOrder(order.id)}}>Show Detail Order</Button>
                                                 </Stack>
                                             </HStack>
+                                            <Flex justifyContent={"space-between"}>
+												<Flex></Flex>
+												{order.status === "PROCESSING" ? (
+													<Button
+														display={"flex"}
+														justifyContent={"end"}
+														colorScheme="green"
+                                                        size={'xs'}
+														onClick={() => sendOrder(order.id)}
+													>
+														Send
+													</Button>
+												) : (
+													<Button
+														display={"flex"}
+														justifyContent={{
+															base: "flex-start",
+															sm: "flex-start",
+															md: "flex-end",
+														}}
+														colorScheme="green"
+														size={"xs"}
+														variant={"link"}
+														onClick={() => {
+															orderModal.onOpen();
+															setSelectedOrder(order.id);
+														}}
+													>
+														Show Detail Order
+													</Button>
+												)}
+											</Flex>
                                         </Box>
                                     ))}
                             </CardBody>
