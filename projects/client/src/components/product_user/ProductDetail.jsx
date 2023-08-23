@@ -7,19 +7,11 @@ import {
 	AccordionPanel,
 	AccordionIcon,
 	Box,
-	NumberInput,
-	NumberInputField,
-	NumberInputStepper,
-	NumberIncrementStepper,
-	NumberDecrementStepper,
-	Button,
-	Icon,
 	useToast,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../../api/api";
-import { AiOutlineShoppingCart } from "react-icons/ai";
 import CarouselProduct from "./CarauselProduct";
 import { useSelector } from "react-redux";
 import CartButton from "./CartButton";
@@ -30,10 +22,11 @@ export default function ProductDetail() {
 	const { uuid } = useParams();
 	const [value, setValue] = useState(1);
 	const [stock, setStock] = useState(0);
+	const [booked, setBooked] = useState(0);
 	const nav = useNavigate();
 	const toast = useToast();
 
-	const isSoldOut = stock === 0;
+	const isSoldOut = stock - booked === 0;
 
 	useEffect(() => {
 		getProductByUuid();
@@ -46,10 +39,15 @@ export default function ProductDetail() {
 			(accumulator, stock) => accumulator + stock.qty,
 			0
 		);
+		const totalBooked = res.data.stocks.reduce(
+			(accumulator, stock) => accumulator + stock.booked,
+			0
+		);
 		setStock(totalQty || 0);
+		setBooked(totalBooked || 0);
 	}
 	const handleIncrement = () => {
-		if (value < stock) {
+		if (value < stock - booked) {
 			setValue(value + 1);
 		}
 	};
@@ -116,7 +114,7 @@ export default function ProductDetail() {
 								<Flex fontSize={"22px"} fontWeight={"bold"}>
 									{product.product_name}
 								</Flex>
-								{stock === 0 ? "Sold Out" : `Stock: ${stock}`}
+								{stock - booked === 0 ? "Sold Out" : `Stock: ${stock - booked}`}
 							</Flex>
 							{isSoldOut ? (
 								<Flex fontSize={"18px"} fontWeight={"bold"}>
@@ -183,7 +181,7 @@ export default function ProductDetail() {
 							</Flex>
 							<CartButton
 								value={value}
-								stock={stock}
+								stock={stock - booked}
 								isSoldOut={isSoldOut}
 								handleDecrement={handleDecrement}
 								handleIncrement={handleIncrement}

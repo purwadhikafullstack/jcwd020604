@@ -3,6 +3,7 @@ module.exports = (sequelize, Sequelize) => {
 		"stocks",
 		{
 			qty: Sequelize.INTEGER,
+			booked: Sequelize.INTEGER,
 		},
 		{
 			paranoid: true,

@@ -13,7 +13,11 @@ const stockController = {
 			warehouse_id: Joi.number().required(),
 		});
 
-		const validation = schema.validate({ qty, product_id, warehouse_id });
+		const validation = schema.validate({
+			qty,
+			product_id,
+			warehouse_id,
+		});
 
 		if (validation.error) {
 			return res
@@ -35,6 +39,7 @@ const stockController = {
 			const newStock = await db.stocks.create(
 				{
 					qty,
+					booked: 0,
 					product_id,
 					warehouse_id,
 				},

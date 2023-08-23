@@ -278,6 +278,8 @@ const ordersController = {
 				let stockShortage;
 				for (const orderDetail of order.order_details) {
 					const stock = orderDetail.stock;
+					const referenceWarehouse = stock;
+
 					if (stock.qty < orderDetail.qty) {
 						stockShortage = orderDetail.qty - stock.qty;
 					}
@@ -297,7 +299,6 @@ const ordersController = {
 							],
 						});
 
-						const referenceWarehouse = stock;
 						const otherWarehouses = warehouses.filter(
 							(warehouse) => warehouse.id !== referenceWarehouse.warehouse.id
 						);
@@ -340,6 +341,10 @@ const ordersController = {
 							});
 						}
 					}
+					await db.stocks.update(
+						{ booked: orderDetail.qty },
+						{ where: { id: referenceWarehouse.id } }
+					);
 				}
 
 				order.status = "PROCESSING";
@@ -412,25 +417,56 @@ const ordersController = {
 				}
 				for (const orderDetail of order.order_details) {
 					const stock = orderDetail.stock;
-
-					const referenceWarehouse = stock;
+					const userId = order.user.id;
 
 					await db.stocks.update(
-						{ qty: referenceWarehouse.qty - order.order_details[0].qty },
-						{ where: { id: referenceWarehouse.id } }
+						{
+							qty: stock.qty - order.order_details[0].qty,
+							booked: order.order_details[0].qty,
+						},
+						{ where: { id: stock.id } }
 					);
 
 					await db.stock_histories.create({
 						qty: -order.order_details[0].qty,
 						status: "OUT",
 						reference: `INVOICE`,
-						stock_id: referenceWarehouse.id,
-						stock_before: referenceWarehouse.qty,
-						stock_after: referenceWarehouse.qty - order.order_details[0].qty,
+						stock_id: stock.id,
+						stock_before: stock.qty,
+						stock_after: stock.qty - order.order_details[0].qty,
 					});
 				}
 
 				order.status = "DELIVERY";
+				await order.save();
+
+				return res
+					.status(200)
+					.json({ message: "Order status updated to Delivered" });
+			} else if (send === "cancel") {
+				if (order.status !== "PROCESSING") {
+					return res.status(400).json({ message: "Order mutation canceled" });
+				}
+
+				for (const orderDetail of order.order_details) {
+					const stock = orderDetail.stock;
+
+					await db.stocks.update(
+						{ qty: stock.qty + order.order_details[0].qty },
+						{ where: { id: stock.id } }
+					);
+
+					await db.stock_histories.create({
+						qty: order.order_details[0].qty,
+						status: "IN",
+						reference: `INVOICE`,
+						stock_id: stock.id,
+						stock_before: stock.qty,
+						stock_after: stock.qty + order.order_details[0].qty,
+					});
+				}
+
+				order.status = "CANCEL";
 				await order.save();
 
 				return res
