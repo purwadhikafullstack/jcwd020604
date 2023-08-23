@@ -23,19 +23,25 @@ export default function Assign (props) {
 
     async function getWarehouse() {
       try {
-        const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/warehouse`);
+        const res = await api().get(`${process.env.REACT_APP_API_BASE_URL}/warehouse`);
         if (res && res.data) {
           setWarehouse(res.data);
-        } else {
         }
       } catch (error) {
         console.error(error);
+        toast({
+          title: "Can't get warehouse",
+          status: 'warning',
+          duration: 3000,
+          position: 'top',
+          isClosable: false
+        });
       }
     };
 
     const assignUser = async () => {
       try {
-        const res = await api.post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign`, {...wAdmin, uuid: props.uuid});
+        const res = await api().post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign`, {...wAdmin, uuid: props.uuid});
         setMessage(res.data.message);
         toast({
           title: "Assign admin success",

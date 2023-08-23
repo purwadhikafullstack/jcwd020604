@@ -9,6 +9,7 @@ const stockHistoryRouter = require("./stockHistoryRouter");
 const stockMutationRouter = require("./stockMutationRouter");
 const orderRouter = require('./OrderRouter');
 const authRouter = require('./AuthRouter');
+const insertAddressRouter = require('./InsertAddressRouter');
 
 module.exports = {
 	authRouter,
@@ -18,6 +19,7 @@ module.exports = {
 	warehouseRouter,
 	userRouter,
 	addressRouter,
+	insertAddressRouter,
 	stockHistoryRouter,
 	stockMutationRouter,
 	cartRouter,

@@ -39,6 +39,7 @@ app.use("/api/productImg", express.static(`${__dirname}/public/productImg`));
 app.use("/api/auth", router.userRouter);
 app.use("/api/authentication", router.authRouter);
 app.use("/api/address", router.addressRouter);
+app.use("/api/insert-address", router.insertAddressRouter);
 app.use("/api/orders", router.orderRouter);
 app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
 
