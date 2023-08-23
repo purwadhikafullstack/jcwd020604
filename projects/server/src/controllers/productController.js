@@ -52,7 +52,7 @@ const productController = {
 			// Loop through each uploaded file
 			for (const file of req.files) {
 				const { filename } = file;
-				const imageUrl = process.env.product_img + filename;
+				const imageUrl = "productImg/" + filename;
 				imageUrls.push({ product_image: imageUrl, product_id: productId });
 			}
 			await db.product_images.bulkCreate(imageUrls, { transaction: t });
@@ -126,7 +126,7 @@ const productController = {
 				// Loop through each uploaded file (similar to the insert function)
 				for (const file of req.files) {
 					const { filename } = file;
-					const imageUrl = process.env.product_img + filename;
+					const imageUrl = "productImg/" + filename;
 					imageUrls.push({ product_image: imageUrl, product_id: id });
 				}
 

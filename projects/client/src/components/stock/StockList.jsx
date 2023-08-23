@@ -64,8 +64,8 @@ export default function StockList({ val, getStock }) {
 					h={"50px"}
 					borderRadius={"4px"}
 					src={
-						val.product.product_images[0]
-							? val.product.product_images[0].product_image
+						`${process.env.REACT_APP_API_BASE_URL}/${val.product.product_images[0]}`
+							? `${process.env.REACT_APP_API_BASE_URL}/${val.product.product_images[0].product_image}`
 							: null
 					}
 				/>

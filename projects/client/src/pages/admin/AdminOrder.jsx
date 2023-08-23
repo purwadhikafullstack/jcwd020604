@@ -273,9 +273,7 @@ const AdminOrder = () => {
 										<Box key={detail.id}>
 											<HStack>
 												<Image
-													src={
-														detail.stock.product.product_images[0].product_image
-													}
+													src={`${process.env.REACT_APP_API_BASE_URL}/${detail.stock.product.product_images[0].product_image}`}
 													w={"100%"}
 													boxSize="250px"
 													objectFit="cover"

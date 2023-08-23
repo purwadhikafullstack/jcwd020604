@@ -22,11 +22,10 @@ export default function ProductDetail() {
 	const { uuid } = useParams();
 	const [value, setValue] = useState(1);
 	const [stock, setStock] = useState(0);
-	const [booked, setBooked] = useState(0);
 	const nav = useNavigate();
 	const toast = useToast();
 
-	const isSoldOut = stock - booked === 0;
+	const isSoldOut = stock === 0;
 
 	useEffect(() => {
 		getProductByUuid();
@@ -39,15 +38,11 @@ export default function ProductDetail() {
 			(accumulator, stock) => accumulator + stock.qty,
 			0
 		);
-		const totalBooked = res.data.stocks.reduce(
-			(accumulator, stock) => accumulator + stock.booked,
-			0
-		);
+
 		setStock(totalQty || 0);
-		setBooked(totalBooked || 0);
 	}
 	const handleIncrement = () => {
-		if (value < stock - booked) {
+		if (value < stock) {
 			setValue(value + 1);
 		}
 	};
@@ -114,7 +109,7 @@ export default function ProductDetail() {
 								<Flex fontSize={"22px"} fontWeight={"bold"}>
 									{product.product_name}
 								</Flex>
-								{stock - booked === 0 ? "Sold Out" : `Stock: ${stock - booked}`}
+								{stock === 0 ? "Sold Out" : `Stock: ${stock}`}
 							</Flex>
 							{isSoldOut ? (
 								<Flex fontSize={"18px"} fontWeight={"bold"}>
@@ -181,7 +176,7 @@ export default function ProductDetail() {
 							</Flex>
 							<CartButton
 								value={value}
-								stock={stock - booked}
+								stock={stock}
 								isSoldOut={isSoldOut}
 								handleDecrement={handleDecrement}
 								handleIncrement={handleIncrement}

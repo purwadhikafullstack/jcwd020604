@@ -40,7 +40,11 @@ export default function CarouselProduct() {
 
 	async function getProductById() {
 		const res = await api().get(`/product/${uuid}`);
-		setProductImage(res.data.product_images.map((val) => val.product_image));
+		setProductImage(
+			res.data.product_images.map(
+				(val) => `${process.env.REACT_APP_API_BASE_URL}/${val.product_image}`
+			)
+		);
 	}
 
 	useEffect(() => {

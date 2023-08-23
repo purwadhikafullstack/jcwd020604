@@ -238,6 +238,7 @@ const ordersController = {
 		}
 	},
 	adminConfirmOrderPayment: async (req, res) => {
+		const t = await db.sequelize.transaction();
 		try {
 			const { id } = req.params;
 			const { action } = req.body;
@@ -332,7 +333,27 @@ const ordersController = {
 							await autoMutation.autoMutation(
 								referenceWarehouse,
 								nearestBranch,
-								stockShortage
+								stockShortage,
+								t
+							);
+
+							await db.stocks.update(
+								{
+									qty: 0,
+								},
+								{ where: { id: referenceWarehouse.id }, transaction: t }
+							);
+
+							await db.stock_histories.create(
+								{
+									qty: -orderDetail.qty,
+									status: "OUT",
+									reference: `INVOICE`,
+									stock_id: stock.id,
+									stock_before: referenceWarehouse.qty,
+									stock_after: 0,
+								},
+								{ transaction: t }
 							);
 						} else {
 							return res.status(400).json({
@@ -340,13 +361,28 @@ const ordersController = {
 									"No branch with sufficient stock found for stock mutation",
 							});
 						}
+					} else {
+						await db.stocks.update(
+							{
+								qty: referenceWarehouse.qty - orderDetail.qty,
+							},
+							{ where: { id: referenceWarehouse.id }, transaction: t }
+						);
+						await db.stock_histories.create(
+							{
+								qty: -orderDetail.qty,
+								status: "OUT",
+								reference: `INVOICE`,
+								stock_id: stock.id,
+								stock_before: referenceWarehouse.qty,
+								stock_after: referenceWarehouse.qty - orderDetail.qty,
+							},
+							{ transaction: t }
+						);
 					}
-					await db.stocks.update(
-						{ booked: orderDetail.qty },
-						{ where: { id: referenceWarehouse.id } }
-					);
 				}
 
+				await t.commit();
 				order.status = "PROCESSING";
 				await order.save();
 
@@ -371,6 +407,7 @@ const ordersController = {
 				return res.status(400).json({ message: "Invalid action" });
 			}
 		} catch (error) {
+			await t.rollback();
 			console.error(error);
 			return res
 				.status(500)
@@ -415,27 +452,6 @@ const ordersController = {
 						.status(400)
 						.json({ message: "Invalid order, Payment has not been paid" });
 				}
-				for (const orderDetail of order.order_details) {
-					const stock = orderDetail.stock;
-					const userId = order.user.id;
-
-					await db.stocks.update(
-						{
-							qty: stock.qty - order.order_details[0].qty,
-							booked: order.order_details[0].qty,
-						},
-						{ where: { id: stock.id } }
-					);
-
-					await db.stock_histories.create({
-						qty: -order.order_details[0].qty,
-						status: "OUT",
-						reference: `INVOICE`,
-						stock_id: stock.id,
-						stock_before: stock.qty,
-						stock_after: stock.qty - order.order_details[0].qty,
-					});
-				}
 
 				order.status = "DELIVERY";
 				await order.save();
@@ -450,23 +466,27 @@ const ordersController = {
 
 				for (const orderDetail of order.order_details) {
 					const stock = orderDetail.stock;
+					const updatedQty =
+						parseInt(stock.qty) + parseInt(order.order_details[0].qty);
+					const qtyBefore =
+						parseInt(stock.qty) - parseInt(order.order_details[0].qty);
 
 					await db.stocks.update(
-						{ qty: stock.qty + order.order_details[0].qty },
+						{ qty: updatedQty },
 						{ where: { id: stock.id } }
 					);
 
 					await db.stock_histories.create({
-						qty: order.order_details[0].qty,
+						qty: parseInt(order.order_details[0].qty),
 						status: "IN",
 						reference: `INVOICE`,
 						stock_id: stock.id,
-						stock_before: stock.qty,
-						stock_after: stock.qty + order.order_details[0].qty,
+						stock_before: qtyBefore,
+						stock_after: updatedQty,
 					});
 				}
 
-				order.status = "CANCEL";
+				order.status = "CANCELLED";
 				await order.save();
 
 				return res

@@ -39,7 +39,6 @@ const stockController = {
 			const newStock = await db.stocks.create(
 				{
 					qty,
-					booked: 0,
 					product_id,
 					warehouse_id,
 				},

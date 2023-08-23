@@ -45,8 +45,8 @@ const getHistoryController = {
 				statusDesc: [["status", "DESC"]],
 				referenceAsc: [["reference", "ASC"]],
 				referenceDesc: [["reference", "DESC"]],
-				dateAsc: [["createdAt", "ASC"]],
-				dateDesc: [["createdAt", "DESC"]],
+				dateAsc: [["id", "ASC"]],
+				dateDesc: [["id", "DESC"]],
 			};
 			const sortOrder = sortOptions[sort] || sortOptions.dateDesc;
 

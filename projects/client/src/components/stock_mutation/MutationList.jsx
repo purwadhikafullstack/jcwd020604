@@ -64,8 +64,8 @@ export default function MutationList({ val, getMutation, getRequest }) {
 							h={"50px"}
 							borderRadius={"4px"}
 							src={
-								val?.stock?.product?.product_images[0]
-									? val?.stock?.product?.product_images[0]?.product_image
+								`${process.env.REACT_APP_API_BASE_URL}/${val?.stock?.product?.product_images[0]}`
+									? `${process.env.REACT_APP_API_BASE_URL}/${val?.stock?.product?.product_images[0]?.product_image}`
 									: null
 							}
 						/>

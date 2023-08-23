@@ -107,24 +107,24 @@ const handleStockMutation = {
 
 				await db.stock_histories.create(
 					{
-						qty: pendingMutation.qty,
-						status: "IN",
-						reference: pendingMutation.mutation_code,
-						stock_id: destinationStockId,
-						stock_before: existingStock.dataValues.qty,
-						stock_after: pendingMutation.qty + destinationStockQty,
-					},
-					{ transaction: t }
-				);
-
-				await db.stock_histories.create(
-					{
 						qty: -pendingMutation.qty,
 						status: "OUT",
 						reference: pendingMutation.mutation_code,
 						stock_id: existingStock.dataValues.id,
 						stock_before: existingStock.dataValues.qty,
 						stock_after: existingStock.dataValues.qty - pendingMutation.qty,
+					},
+					{ transaction: t }
+				);
+
+				await db.stock_histories.create(
+					{
+						qty: pendingMutation.qty,
+						status: "IN",
+						reference: pendingMutation.mutation_code,
+						stock_id: destinationStockId,
+						stock_before: existingStock.dataValues.qty,
+						stock_after: pendingMutation.qty + destinationStockQty,
 					},
 					{ transaction: t }
 				);
@@ -149,9 +149,7 @@ const handleStockMutation = {
 			res.status(500).send({ message: err.message });
 		}
 	},
-	autoMutation: async (requestedWarehouse, nearestWarehouse, qty) => {
-		const t = await db.sequelize.transaction();
-
+	autoMutation: async (requestedWarehouse, nearestWarehouse, qty, t) => {
 		try {
 			if (nearestWarehouse) {
 				if (qty <= nearestWarehouse.warehouse.dataValues.stocks[0].qty) {
@@ -206,12 +204,10 @@ const handleStockMutation = {
 						},
 						{ transaction: t }
 					);
-
-					await t.commit();
-					return true;
+					return mutation;
 				} else {
 					console.log(
-						`Insufficient stock in ${nearestWarehouse.warehouse.name}.`
+						`Insufficient stock in ${nearestWarehouse.warehouse.dataValues.warehouse_name}.`
 					);
 				}
 			}

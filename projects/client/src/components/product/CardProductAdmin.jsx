@@ -57,7 +57,9 @@ export default function ProductList({ val, getProduct }) {
 			<CardBody>
 				<Image
 					src={
-						val.product_images[0] ? val.product_images[0].product_image : null
+						`${process.env.REACT_APP_API_BASE_URL}/${val.product_images[0]}`
+							? `${process.env.REACT_APP_API_BASE_URL}/${val.product_images[0]?.product_image}`
+							: null
 					}
 					borderRadius="lg"
 				/>
