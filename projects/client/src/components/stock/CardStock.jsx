@@ -58,8 +58,8 @@ export default function StockCard({ val, getStock }) {
 				<CardBody>
 					<Image
 						src={
-							val.product.product_images[0]
-								? val.product.product_images[0].product_image
+							`${process.env.REACT_APP_API_BASE_URL}/${val.product.product_images[0]}`
+								? `${process.env.REACT_APP_API_BASE_URL}/${val.product.product_images[0].product_image}`
 								: null
 						}
 						borderRadius="lg"

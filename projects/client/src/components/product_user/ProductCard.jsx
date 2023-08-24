@@ -17,8 +17,8 @@ export default function ProductCard({ val }) {
 			<Image
 				src={
 					hovered
-						? val.product_images[1]?.product_image
-						: val.product_images[0].product_image
+						? `${process.env.REACT_APP_API_BASE_URL}/${val.product_images[1]?.product_image}`
+						: `${process.env.REACT_APP_API_BASE_URL}/${val.product_images[0]?.product_image}`
 				}
 				style={{
 					width: "100%",

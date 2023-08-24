@@ -7,19 +7,11 @@ import {
 	AccordionPanel,
 	AccordionIcon,
 	Box,
-	NumberInput,
-	NumberInputField,
-	NumberInputStepper,
-	NumberIncrementStepper,
-	NumberDecrementStepper,
-	Button,
-	Icon,
 	useToast,
 } from "@chakra-ui/react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../../api/api";
-import { AiOutlineShoppingCart } from "react-icons/ai";
 import CarouselProduct from "./CarauselProduct";
 import { useSelector } from "react-redux";
 import CartButton from "./CartButton";
@@ -46,6 +38,7 @@ export default function ProductDetail() {
 			(accumulator, stock) => accumulator + stock.qty,
 			0
 		);
+
 		setStock(totalQty || 0);
 	}
 	const handleIncrement = () => {

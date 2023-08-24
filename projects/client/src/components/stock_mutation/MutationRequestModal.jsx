@@ -94,9 +94,8 @@ export default function MutationRequestModal({
 													w={"70px"}
 													h={"70px"}
 													src={
-														request?.stock?.product?.product_images[0]
-															? request?.stock?.product?.product_images[0]
-																	.product_image
+														`${process.env.REACT_APP_API_BASE_URL}/${request?.stock?.product?.product_images[0]}`
+															? `${process.env.REACT_APP_API_BASE_URL}/${request?.stock?.product?.product_images[0].product_image}`
 															: null
 													}
 												/>
