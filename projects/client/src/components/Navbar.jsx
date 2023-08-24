@@ -366,21 +366,18 @@ export default function Navbar(props) {
               {user.role === "ADMIN" ? (
                 <>
                   <InputGroup>
-                    <InputRightElement>
+                    <InputRightElement cursor={"pointer"}>
                       <FiSearch
                         color="gray.300"
-                        cursor={"pointer"}
-                        onClick={() => {
-                          const searchValue = inputFileRef.current.value;
-                          setSearch(searchValue);
-                        }}
+                        onClick={() => handleSearch(inputFileRef.current.value)}
                       />
                     </InputRightElement>
                     <Input
-                      type="tel"
-                      placeholder="Search . . ."
                       ref={inputFileRef}
-                    />
+                      type="text"
+                      placeholder="Cari produk..."
+                      onChange={(e) => handleSearch(e.target.value)}
+                    ></Input>
                   </InputGroup>
                   <Flex>
                     <Link to={"/"}>Dashboard</Link>
@@ -400,23 +397,20 @@ export default function Navbar(props) {
                 </>
               ) : (
                 <>
-                  <InputGroup>
-                    <InputRightElement pointerEvents="none">
-                      <FiSearch
-                        color="gray.300"
-                        cursor={"pointer"}
-                        onClick={() => {
-                          const searchValue = inputFileRef.current.value;
-                          setSearch(searchValue);
-                        }}
-                      />
-                    </InputRightElement>
-                    <Input
-                      type="tel"
-                      placeholder="Search . . ."
-                      ref={inputFileRef}
+                 <InputGroup>
+                  <InputRightElement cursor={"pointer"}>
+                    <FiSearch
+                      color="gray.300"
+                      onClick={() => handleSearch(inputFileRef.current.value)}
                     />
-                  </InputGroup>
+                  </InputRightElement>
+                  <Input
+                    ref={inputFileRef}
+                    type="text"
+                    placeholder="Cari produk..."
+                    onChange={(e) => handleSearch(e.target.value)}
+                  ></Input>
+                </InputGroup>
                   <Flex>
                     <Link to={"/collection"}>Tops</Link>
                   </Flex>
