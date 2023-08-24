@@ -122,10 +122,7 @@ export default function AddressUser(props) {
       }));
     }
   };
-
-  console.log(address);
   
-
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={Close}>
@@ -156,7 +153,7 @@ export default function AddressUser(props) {
               <Select id="province" onChange={handleInputChange}>
                 {province.length
                   ? province.map((val) =>
-                      val.province == address.province ? (
+                      val.province === address.province ? (
                         <option selected value={val.province}>
                           {val.province}
                         </option>

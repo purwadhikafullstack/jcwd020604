@@ -8,16 +8,22 @@ const cartRouter = require("./cartRouter");
 const stockHistoryRouter = require("./stockHistoryRouter");
 const stockMutationRouter = require("./stockMutationRouter");
 const orderRouter = require('./OrderRouter');
+const authRouter = require('./AuthRouter');
+const insertAddressRouter = require('./InsertAddressRouter');
+const passwordRouter = require('./PasswordRouter');
 
 module.exports = {
+	authRouter,
 	productRouter,
 	categoryRouter,
 	stockRouter,
 	warehouseRouter,
 	userRouter,
 	addressRouter,
+	insertAddressRouter,
 	stockHistoryRouter,
 	stockMutationRouter,
 	cartRouter,
-	orderRouter
+	orderRouter,
+	passwordRouter
 };

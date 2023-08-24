@@ -18,25 +18,27 @@ import {
 } from "@chakra-ui/react";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
-import { api } from "../../api/api";
-import { useNavigate } from "react-router-dom";
-import Navbar from "../../components/Navbar";
+import { api } from '../../api/api';
+import Navbar from '../../components/Navbar';
 import Footer from "../../components/Footer";
 import OrderModal from "./OrderModal";
 import OrderNotFound from "../redirect/OrderNotFound";
 
 const AdminOrder = () => {
 	const user = useSelector((state) => state.auth);
-	const [orders, setOrders] = useState([]);
-	const [selectedOrder, setSelectedOrder] = useState([]);
-	const navigate = useNavigate();
-	const toast = useToast();
-	const orderModal = useDisclosure();
-	const [selectedStatus, setSelectedStatus] = useState("");
-	const [selectedWarehouse, setSelectedWarehouse] = useState("");
-	const [warehouse, setWarehouse] = useState([]);
-	const [totalPage, setTotalPage] = useState(0);
-	const [page, setPage] = useState(1);
+    const toast = useToast();
+    const orderModal = useDisclosure();
+    const [orders, setOrders] = useState([]);
+    const [selectedOrder, setSelectedOrder] = useState([]);
+    const [selectedStatus, setSelectedStatus] = useState("");
+    const [selectedWarehouse, setSelectedWarehouse] = useState("");
+    const [warehouse, setWarehouse] = useState([]);
+    const [totalPage, setTotalPage] = useState(0);
+    const [page, setPage] = useState(1);
+    
+    useEffect(() => {
+        fetchData();
+    }, [selectedStatus, selectedWarehouse, page]);
 
 	useEffect(() => {
 		fetchData();
@@ -52,56 +54,52 @@ const AdminOrder = () => {
 		}
 	}, []);
 
-	const fetchData = async () => {
-		try {
-			await api()
-				.get(`/orders/orders`, {
-					params: {
-						status: selectedStatus,
-						warehouse_id: selectedWarehouse,
-						page: page,
-					},
-				})
-				.then((response) => {
-					setOrders(response.data.rows);
-					setTotalPage(Math.ceil(response.data.count / 3));
-				})
-				.catch((error) => {
-					console.error(error);
-				});
-		} catch (error) {
-			toast({
-				title: "There is something error while executing this command",
-				status: "error",
-				duration: 3000,
-				isClosable: false,
-			});
-		}
-	};
-
-	const sendOrder = async (orderId) => {
-		try {
-			await api().patch(`/orders/orders/sending-order/${orderId}`, {
-				send: "send",
-			});
-			toast({
-				title: "Sending order to user",
-				status: "success",
-				position: "top",
-				duration: 3000,
-				isClosable: false,
-			});
-			fetchData();
-		} catch (error) {
-			toast({
-				title: error.response.data.message,
-				status: "error",
-				position: "top",
-				duration: 3000,
-				isClosable: false,
-			});
-		}
-	};
+    const fetchData = async () => {
+        try {
+          const response = await api().get(`/orders/orders`, {
+            params: {
+              status: selectedStatus,
+              warehouse_id: selectedWarehouse,
+              page: page,
+            },
+          });
+          const { rows, count } = response.data;
+          setOrders(rows);
+          setTotalPage(Math.ceil(count / 3));
+        } catch (error) {
+          const errorMessage = "An error occurred while fetching data.";
+          toast({
+            title: errorMessage,
+            status: "error",
+            duration: 3000,
+            isClosable: false,
+          });
+        }
+      };
+      
+    const sendOrder = async (orderId) => {
+        try {
+            await api().patch(`/orders/orders/sending-order/${orderId}`, {
+                send: "send",
+            });
+            toast({
+                title: "Sending order to user",
+                status: "success",
+                position: "top",
+                duration: 3000,
+                isClosable: false,
+            });
+            fetchData();
+        } catch (error) {
+            toast({
+                title: error.response.data.message,
+                status: "error",
+                position: "top",
+                duration: 3000,
+                isClosable: false,
+            });
+        }
+    };
 
 	const cancelOrder = async (orderId) => {
 		try {

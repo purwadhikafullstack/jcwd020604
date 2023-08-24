@@ -15,8 +15,12 @@ const cartControllers = require("./cartController");
 const ordersController = require("./OrderController");
 const getCategoryController = require("./getCategoryController");
 const getHistoryController = require("./getHistoryController");
+const authController = require("./AuthController");
+const insertAddressController = require("./InsertAddressController");
+const passwordController = require('./PasswordController');
 
 module.exports = {
+	authController,
 	productController,
 	getProductController,
 	categoryController,
@@ -34,4 +38,6 @@ module.exports = {
 	ordersController,
 	getCategoryController,
 	getHistoryController,
+	insertAddressController,
+	passwordController
 };

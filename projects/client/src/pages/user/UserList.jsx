@@ -9,7 +9,6 @@ import {
     Td,
     TableContainer,
     ButtonGroup,
-    Box,
     Text,
     Stack,
     HStack,
@@ -33,7 +32,6 @@ const UserList = () => {
     const toast = useToast();
     const { role = "W_ADMIN" } = useParams();
     const [adminId, setAdminId] = useState();
-    const [warehouseId, setWarehouseId] = useState();
     
     useEffect(() => {
      fetchData();
@@ -94,19 +92,19 @@ const UserList = () => {
                 <Table variant={'simple'} size={'sm'} bgColor={'twitter.200'}>
                     <Thead>
                     <Tr>
-                        <Th>No</Th>
-                        <Th>Name</Th>
-                        <Th>Email</Th>
-                        <Th>Phone</Th>
-                        <Th>Role</Th>
-                        <Th>Warehouse</Th>
-                        <Th display={'flex'} justifyContent={'center'}>Action</Th>
+                        <Th textColor={'blackAlpha.700'}>No</Th>
+                        <Th textColor={'blackAlpha.700'}>Name</Th>
+                        <Th textColor={'blackAlpha.700'}>Email</Th>
+                        <Th textColor={'blackAlpha.700'}>Phone</Th>
+                        <Th textColor={'blackAlpha.700'}>Role</Th>
+                        <Th textColor={'blackAlpha.700'}>Warehouse</Th>
+                        <Th display={'flex'} justifyContent={'center'} textColor={'blackAlpha.700'}>Action</Th>
                     </Tr>
                     </Thead>
                     <Tbody>
                         {users.map((user, index) => (
                         <Tr key={user.uuid}>
-                            <Td>{index + 1}</Td>
+                            <Td textColor={'blackAlpha.700'}>{index + 1}</Td>
                             <Td textColor={'blackAlpha.700'} fontWeight={'semibold'}>{user.fullname}</Td>
                             <Td textColor={'blackAlpha.700'} fontWeight={'semibold'}>{user.email}</Td>
                             <Td><Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>{user.phone_number}</Text></Td>
