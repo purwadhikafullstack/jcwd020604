@@ -8,6 +8,8 @@ const User = db.users;
 const Product = db.products;
 const Stock = db.stocks;
 const axios = require("axios");
+// const closestWarehouse =
+//   require("../middlewares/findWarehouse").findClosestWarehouse;
 
 // bug di add to cart jika stock di berbeda warehouse
 const cartControllers = {
@@ -130,10 +132,10 @@ const cartControllers = {
   // },
   getCost: async (req, res) => {
     try {
-      const { origin, destination, weight, courier } = req.body;
+      const { destination, weight, courier } = req.body;
       const input = {
-        origin: "",
-        destination: "",
+        origin: req.closestWarehouse.city_id,
+        destination,
         weight,
         courier,
       };

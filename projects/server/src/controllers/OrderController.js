@@ -1,12 +1,15 @@
 const db = require("../models");
 const Joi = require("joi");
 const { Op, or } = require("sequelize");
+
 const autoMutation = require("../service/autoMutationService");
+
 const warehouse = require("../models/warehouse");
 const haversine = require("haversine");
 const orderDetail = require("../models/orderDetail");
 
 const ordersController = {
+
 	getAllOrder: async (req, res) => {
 		try {
 			const { status, warehouse_id } = req.query;
@@ -200,9 +203,11 @@ const ordersController = {
 				include: [{ model: db.stocks }],
 			});
 
-			if (existingOrder) {
-				throw new Error("Orders with the same name already exists");
-			}
+
+          if (stock.qty < orderDetail.qty) {
+            stockShortage = orderDetail.qty - stock.qty;
+          }
+
 
 			const newOrder = await db.order_details.create(req.body, {
 				transaction: t,

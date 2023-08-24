@@ -147,20 +147,6 @@ export default function AddressUser(props) {
               />
             </FormControl>
             <FormControl isRequired>
-              <Box>City</Box>
-              <Select
-                borderRadius={"none"}
-                name="city"
-                onChange={(val) => handleInputChange(val)}
-              >
-                {city.length
-                  ? city.map((val) => (
-                      <option value={val.city_name}>{val.city_name}</option>
-                    ))
-                  : null}
-              </Select>
-            </FormControl>
-            <FormControl isRequired>
               <Box>Province</Box>
               <Select
                 borderRadius={"none"}
@@ -170,6 +156,20 @@ export default function AddressUser(props) {
                 {province.length
                   ? province.map((val) => (
                       <option value={val.province}>{val.province}</option>
+                    ))
+                  : null}
+              </Select>
+            </FormControl>
+            <FormControl isRequired>
+              <Box>City</Box>
+              <Select
+                borderRadius={"none"}
+                name="city"
+                onChange={(val) => handleInputChange(val)}
+              >
+                {city.length
+                  ? city.map((val) => (
+                      <option value={val.city_name}>{val.city_name}</option>
                     ))
                   : null}
               </Select>

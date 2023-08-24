@@ -32,27 +32,19 @@ export default function Cart() {
 	const [cart_id, setCart_id] = useState(0);
 	const [product_id, setProduct_id] = useState(0);
 
-	// const totalQty = totalCart();
 
-	// const totalCart = () => {
-	//   let total = 0;
-	//   props?.cart?.forEach((val) => {
-	//     total += val.qty;
-	//   });
-	//   return total;
-	// };
+  const handleDeleteCartItem = async (id) => {
+    try {
+      const res = await api.delete(`/cart/delete`, {
+        params: { user_id: userSelector.id, id },
+      });
+      alert(res.data.message);
+      getcart();
+    } catch (error) {
+      console.log("Error deleting cart item:", error);
+    }
+  };
 
-	const handleDeleteCartItem = async (id) => {
-		try {
-			const res = await api().delete(`/cart/delete`, {
-				params: { user_id: userSelector.id, id },
-			});
-			alert(res.data.message);
-			getcart();
-		} catch (error) {
-			console.log("Error deleting cart item:", error);
-		}
-	};
 
 	const editCartItem = async (qty) => {
 		try {
