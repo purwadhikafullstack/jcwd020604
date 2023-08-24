@@ -13,7 +13,7 @@ export default function Maps({ geolocation }) {
 	}, []);
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 	const center = useMemo(() => ({ lat: -6.2094, lng: 106.8269 }), []);

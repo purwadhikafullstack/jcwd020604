@@ -1,5 +1,6 @@
 const db = require("../models");
 const Joi = require("joi");
+const { Op } = require("sequelize");
 
 const categoryController = {
 	insertCategory: async (req, res) => {
@@ -63,7 +64,7 @@ const categoryController = {
 			const existingCategory = await db.categories.findOne({
 				where: {
 					category_name,
-					id: { [db.Sequelize.Op.not]: id }, // Exclude the current category ID
+					id: { [Op.not]: id },
 				},
 			});
 

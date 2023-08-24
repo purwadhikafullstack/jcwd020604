@@ -16,11 +16,9 @@ import { Link } from "react-router-dom";
 import { api } from '../api/api';
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import { useNavigate } from "react-router-dom";
   
   export default function Register() {
     const toast = useToast({ position: "top" });
-    const nav = useNavigate();
   
     const validationSchema = Yup.object().shape({
       email: Yup.string()
@@ -42,7 +40,7 @@ import { useNavigate } from "react-router-dom";
 
     const register = async (values) => {
       try {
-        await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/register`, values);
+        await api().post(`${process.env.REACT_APP_API_BASE_URL}/authentication/register`, values);
         toast({
           title: "Periksa email verifikasi anda",
           status: "success",

@@ -31,7 +31,7 @@ export default function StockCard({ val, getStock }) {
 
 	async function deleteStock() {
 		try {
-			await api.delete(`/stock/${val.id}`);
+			await api().delete(`/stock/${val.id}`);
 
 			toast({
 				title: "Stock Deleted",
@@ -58,8 +58,8 @@ export default function StockCard({ val, getStock }) {
 				<CardBody>
 					<Image
 						src={
-							val.product.product_images[0]
-								? val.product.product_images[0].product_image
+							`${process.env.REACT_APP_API_BASE_URL}/${val.product.product_images[0]}`
+								? `${process.env.REACT_APP_API_BASE_URL}/${val.product.product_images[0].product_image}`
 								: null
 						}
 						borderRadius="lg"
@@ -121,6 +121,7 @@ export default function StockCard({ val, getStock }) {
 					isOpen={editStockModal.isOpen}
 					onClose={editStockModal.onClose}
 					val={val}
+					getStock={getStock}
 				/>
 				<DeleteStockModal
 					isOpen={deleteStockModal.isOpen}

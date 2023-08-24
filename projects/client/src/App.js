@@ -1,4 +1,3 @@
-import axios from "axios";
 import "./App.css";
 import { useEffect, useState } from "react";
 import { Routes } from "react-router-dom";
@@ -16,7 +15,6 @@ function App() {
 
 	return (
 		<>{isLoading ? <Loading /> : <Routes>{routes.map((val) => val)}</Routes>}</>
-		// <Routes>{routes.map((val) => val)}</Routes>
 	);
 }
 

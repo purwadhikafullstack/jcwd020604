@@ -7,11 +7,9 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	ButtonGroup,
 	Grid,
 } from "@chakra-ui/react";
-import { UpDownIcon, RepeatIcon, ArrowBackIcon } from "@chakra-ui/icons";
-
+import { RepeatIcon, ArrowBackIcon } from "@chakra-ui/icons";
 import { FaSearch } from "react-icons/fa";
 import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
@@ -19,9 +17,12 @@ import { api } from "../../api/api";
 import { useSelector } from "react-redux";
 import HistoryList from "./HistoryList";
 import HistoryCard from "./CardHistory";
+import ButtonPage from "../ButtonPage";
+import SortHistory from "./SortHistory";
 
 export default function AdminHistory() {
 	const user = useSelector((state) => state.auth);
+	const inputFileRef = useRef(null);
 	const [warehouse, setWarehouse] = useState([]);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
 	const [selectedReference, setSelectedReference] = useState("");
@@ -31,7 +32,6 @@ export default function AdminHistory() {
 	const [search, setSearch] = useState("");
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
-	const inputFileRef = useRef(null);
 
 	useEffect(() => {
 		getWarehouse();
@@ -49,7 +49,7 @@ export default function AdminHistory() {
 	}, []);
 
 	async function getHistory() {
-		const res = await api.get("/stockhistory", {
+		const res = await api().get("/stockhistory", {
 			params: {
 				warehouse_id:
 					user.role === "ADMIN" ? selectedWarehouse : user.warehouse_id,
@@ -65,7 +65,7 @@ export default function AdminHistory() {
 	}
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 
@@ -255,132 +255,19 @@ export default function AdminHistory() {
 							</InputRightElement>
 						</InputGroup>
 					</Center>
-					{pageWidth > 900 ? (
-						<Flex
-							padding={"7px"}
-							borderBottom={"1px"}
-							fontWeight={600}
-							borderColor={"#E6EBF2"}
-							gap={"7"}
-						>
-							<Flex
-								w={"325px"}
-								minW={"275px"}
-								paddingLeft={"55px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"product" + (sort === "productAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Product Name
-								<UpDownIcon ml={"10px"} />
-								{sort === "productAsc" ? sort === "productDesc" : null}
-							</Flex>
-							<Flex
-								w={"195px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Warehouse
-								{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"115px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"stockAfter" + (sort === "stockAfterAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Stock
-								{sort === "stockAfterAsc" ? sort === "stockAfterDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"100px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"status" + (sort === "statusAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Status
-								{sort === "statusAsc" ? sort === "statusDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"179px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Reference
-								{sort === "referenceAsc" ? sort === "referenceDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex
-								w={"179px"}
-								alignItems={"center"}
-								onClick={() =>
-									handleSortChange(
-										"date" + (sort === "dateAsc" ? "Desc" : "Asc")
-									)
-								}
-								cursor="pointer"
-							>
-								Date
-								{sort === "dateAsc" ? sort === "dateDesc" : null}
-								<UpDownIcon ml={"10px"} />
-							</Flex>
-							<Flex w={"10px"}></Flex>
-						</Flex>
-					) : null}
-
+					<SortHistory
+						pageWidth={pageWidth}
+						handleSortChange={handleSortChange}
+						sort={sort}
+					/>
 					{historyListOrGrid}
 				</Flex>
-				<ButtonGroup
-					paddingTop={"15px"}
-					justifyContent={"end"}
-					alignItems={"center"}
-				>
-					{page === 1 || history?.length === 0 ? null : (
-						<Button
-							onClick={() => {
-								handlePageChange(page - 1);
-								window.scrollTo({ top: 0, behavior: "smooth" });
-							}}
-						>
-							Previous
-						</Button>
-					)}
-					{page === totalPage || history?.length === 0 ? null : (
-						<Button
-							onClick={() => {
-								handlePageChange(page + 1);
-								window.scrollTo({ top: 0, behavior: "smooth" });
-							}}
-						>
-							Next
-						</Button>
-					)}
-				</ButtonGroup>
+				<ButtonPage
+					data={history}
+					page={page}
+					totalPage={totalPage}
+					handlePageChange={handlePageChange}
+				/>
 			</Flex>
 		</Center>
 	);

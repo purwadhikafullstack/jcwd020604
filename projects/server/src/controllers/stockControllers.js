@@ -1,7 +1,6 @@
-const { Op } = require("sequelize");
 const db = require("../models");
 const Joi = require("joi");
-const stockHistory = require("./stockHistoryController");
+const stockHistory = require("../service/stockHistoryService");
 
 const stockController = {
 	addStock: async (req, res) => {
@@ -14,7 +13,11 @@ const stockController = {
 			warehouse_id: Joi.number().required(),
 		});
 
-		const validation = schema.validate({ qty, product_id, warehouse_id });
+		const validation = schema.validate({
+			qty,
+			product_id,
+			warehouse_id,
+		});
 
 		if (validation.error) {
 			return res

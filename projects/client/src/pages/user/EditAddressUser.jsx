@@ -48,14 +48,14 @@ export default function AddressUser(props) {
   };
 
   const getUserCity = async () => {
-    const res = await api.get(
+    const res = await api().get(
       `${process.env.REACT_APP_API_BASE_URL}/address/getAll/city`
     );
     setCity(res.data);
   };
 
   const getUserProvince = async () => {
-    const res = await api.get(
+    const res = await api().get(
       `${process.env.REACT_APP_API_BASE_URL}/address/getAll/province`
     );
     setProvince(res.data);
@@ -63,7 +63,7 @@ export default function AddressUser(props) {
 
   const editAddress = async () => {
     try {
-      await api.patch(
+      await api().patch(
         `${process.env.REACT_APP_API_BASE_URL}/address/${props.addressId}`,
         address
       );
@@ -79,7 +79,7 @@ export default function AddressUser(props) {
       Close();
     } catch (error) {
       toast({
-        title: "Address cannot more than 2, must delete 1 address",
+        title: error.response.data.message,
         status: "error",
         duration: 3000,
         position: "top",
@@ -90,7 +90,7 @@ export default function AddressUser(props) {
 
   const getAddressByUser = async () => {
     try {
-      const response = await api.get(
+      const response = await api().get(
         `${process.env.REACT_APP_API_BASE_URL}/address/${props.addressId}`
       );
       setAddress(response.data);
@@ -107,7 +107,7 @@ export default function AddressUser(props) {
   };
 
   const handleInputChange = (e) => {
-    const { name, value, id } = e.target;
+    const { value, id } = e.target;
     if (id === "city") {
       const [selectedCityName, selectedCityId] = value.split("|");
       setAddress((prevState) => ({
@@ -118,13 +118,11 @@ export default function AddressUser(props) {
     } else {
       setAddress((prevState) => ({
         ...prevState,
-        [name]: value,
+        [id]: value,
       }));
     }
-    console.log(address);
   };
   
-
   return (
     <>
       <Modal isOpen={props.isOpen} onClose={Close}>
@@ -152,10 +150,10 @@ export default function AddressUser(props) {
             </FormControl>
             <FormControl isRequired>
               <FormLabel>Province</FormLabel>
-              <Select id="province" name="province" onChange={handleInputChange}>
+              <Select id="province" onChange={handleInputChange}>
                 {province.length
                   ? province.map((val) =>
-                      val.province == address.province ? (
+                      val.province === address.province ? (
                         <option selected value={val.province}>
                           {val.province}
                         </option>
@@ -166,29 +164,10 @@ export default function AddressUser(props) {
                   : null}
               </Select>
             </FormControl>
-            {/* <FormControl isRequired>
-              <FormLabel>City</FormLabel>
-              <Select id="city" name="city" onChange={handleInputChange}>
-                {city
-                  ? city.map((val) =>
-                      val.province == address.province ? (
-                        val.city_name == address.city ? (
-                          <option key={val.city_id} selected value={`${val.city_name}|${val.city_id}`}>
-                            {val.city_name}
-                          </option>
-                        ) : (
-                          <option key={val.city_id} value={`${val.city_name}|${val.city_id}`}>{val.city_name}</option>
-                        )
-                      ) : null
-                    )
-                  : null}
-              </Select>
-            </FormControl> */}
             <FormControl isRequired>
               <FormLabel>City</FormLabel>
               <Select
                 id="city"
-                name="city"
                 onChange={handleInputChange}
                 value={`${address.city}|${address.city_id}`}
               >

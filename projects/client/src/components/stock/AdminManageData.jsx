@@ -7,23 +7,10 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
-	Menu,
-	MenuButton,
-	MenuList,
-	MenuItem,
-	ButtonGroup,
 	useDisclosure,
 	Grid,
 } from "@chakra-ui/react";
-import {
-	DeleteIcon,
-	AddIcon,
-	EditIcon,
-	HamburgerIcon,
-	UpDownIcon,
-	RepeatIcon,
-	TimeIcon,
-} from "@chakra-ui/icons";
+import { HamburgerIcon, RepeatIcon, TimeIcon } from "@chakra-ui/icons";
 import { useSelector } from "react-redux";
 import { BsFillCircleFill } from "react-icons/bs";
 import { FaBoxes, FaSearch } from "react-icons/fa";
@@ -39,13 +26,14 @@ import EditCategoryModal from "../category/EditCategoryModal";
 import AddStockModal from "./AddStockModal";
 import StockList from "./StockList";
 import StockCard from "./CardStock";
+import ButtonPage from "../ButtonPage";
+import SortStock from "./SortStock";
+import ButtonData from "./ButtonData";
 
 export default function AdminManageData() {
-	const user = useSelector((state) => state.auth);
 	const [warehouse, setWarehouse] = useState([]);
 	const [category, setCategory] = useState([]);
 	const [stock, setStock] = useState([]);
-	const inputFileRef = useRef(null);
 	const [selectedWarehouse, setSelectedWarehouse] = useState("");
 	const [selectedProduct, setSelectedProduct] = useState("");
 	const [sort, setSort] = useState("");
@@ -53,6 +41,8 @@ export default function AdminManageData() {
 	const [page, setPage] = useState(1);
 	const [totalPage, setTotalPage] = useState(0);
 	const [product, setProduct] = useState([]);
+	const user = useSelector((state) => state.auth);
+	const inputFileRef = useRef(null);
 
 	const addStockModal = useDisclosure();
 	const addCategoryModal = useDisclosure();
@@ -80,7 +70,7 @@ export default function AdminManageData() {
 	}, []);
 
 	async function getStock() {
-		const res = await api.get("/stock", {
+		const res = await api().get("/stock", {
 			params: {
 				warehouse_id:
 					user.role === "ADMIN" ? selectedWarehouse : user.warehouse_id,
@@ -95,17 +85,17 @@ export default function AdminManageData() {
 	}
 
 	async function getAllProduct() {
-		const res = await api.get("/product/getAllProduct/getAll");
+		const res = await api().get("/product/getAllProduct/getAll");
 		setProduct(res.data);
 	}
 
 	async function getCategory() {
-		const res = await api.get("/category");
+		const res = await api().get("/category");
 		setCategory(res.data);
 	}
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 
@@ -227,59 +217,16 @@ export default function AdminManageData() {
 									<Button colorScheme="green" onClick={addStockModal.onOpen}>
 										Add Stock
 									</Button>
-									{user.role === "ADMIN" ? (
-										<Flex gap={"15px"}>
-											<Menu>
-												<MenuButton as={Button}>
-													<AddIcon />
-												</MenuButton>
-												<MenuList>
-													<MenuItem onClick={addCategoryModal.onOpen}>
-														Add Category
-													</MenuItem>
-													<MenuItem onClick={addWarehouseModal.onOpen}>
-														Add Warehouse
-													</MenuItem>
-												</MenuList>
-											</Menu>
-											<Menu>
-												<MenuButton as={Button}>
-													<EditIcon />
-												</MenuButton>
-												<MenuList>
-													<MenuItem onClick={editCategoryModal.onOpen}>
-														View / Edit Category
-													</MenuItem>
-													<MenuItem onClick={editWarehouseModal.onOpen}>
-														View / Edit Warehouse
-													</MenuItem>
-												</MenuList>
-											</Menu>
-											<Menu>
-												<MenuButton
-													as={Button}
-													colorScheme="red"
-													color={"white"}
-												>
-													<DeleteIcon />
-												</MenuButton>
-												<MenuList>
-													<MenuItem
-														color={"red"}
-														onClick={deleteCategoryModal.onOpen}
-													>
-														Delete Category
-													</MenuItem>
-													<MenuItem
-														color={"red"}
-														onClick={deleteWarehouseModal.onOpen}
-													>
-														Delete Warehouse
-													</MenuItem>
-												</MenuList>
-											</Menu>
-										</Flex>
-									) : null}
+									<ButtonData
+										user={user}
+										button={Button}
+										addCategoryModal={addCategoryModal}
+										addWarehouseModal={addWarehouseModal}
+										editCategoryModal={editCategoryModal}
+										editWarehouseModal={editWarehouseModal}
+										deleteCategoryModal={deleteCategoryModal}
+										deleteWarehouseModal={deleteWarehouseModal}
+									/>
 								</Flex>
 								<Button onClick={handleReset}>
 									<RepeatIcon />
@@ -372,78 +319,12 @@ export default function AdminManageData() {
 								</InputRightElement>
 							</InputGroup>
 						</Center>
-						{pageWidth > 900 ? (
-							<Flex
-								padding={"7px"}
-								borderBottom={"1px"}
-								fontWeight={600}
-								borderColor={"#E6EBF2"}
-								gap={"7"}
-							>
-								<Flex
-									w={"325px"}
-									minW={"275px"}
-									paddingLeft={"55px"}
-									alignItems={"center"}
-									onClick={() =>
-										handleSortChange(
-											"product" + (sort === "productDesc" ? "Asc" : "Desc")
-										)
-									}
-									cursor="pointer"
-								>
-									Product Name
-									<UpDownIcon ml={"10px"} />
-									{sort === "productDesc" ? sort === "productAsc" : null}
-								</Flex>
-								<Flex
-									w={"190px"}
-									alignItems={"center"}
-									onClick={() =>
-										handleSortChange(
-											"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
-										)
-									}
-									cursor="pointer"
-								>
-									Warehouse
-									{sort === "warehouseAsc" ? sort === "warehouseDesc" : null}
-									<UpDownIcon ml={"10px"} />
-								</Flex>
-								<Flex
-									w={"190px"}
-									alignItems={"center"}
-									onClick={() =>
-										handleSortChange(
-											"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
-										)
-									}
-									cursor="pointer"
-								>
-									Category
-									{sort === "categoryAsc" ? sort === "categoryDesc" : null}
-									<UpDownIcon ml={"10px"} />
-								</Flex>
-								<Flex
-									w={"190px"}
-									alignItems={"center"}
-									onClick={() =>
-										handleSortChange(
-											"qty" + (sort === "qtyAsc" ? "Desc" : "Asc")
-										)
-									}
-									cursor="pointer"
-								>
-									Stock
-									<UpDownIcon ml={"10px"} />
-									{sort === "qtyAsc" ? sort === "qtyDesc" : null}
-								</Flex>
-								<Flex w={"190px"} alignItems={"center"}>
-									Status
-								</Flex>
-								<Flex w={"25px"}></Flex>
-							</Flex>
-						) : null}
+						<SortStock
+							pageWidth={pageWidth}
+							handleSortChange={handleSortChange}
+							sort={sort}
+						/>
+
 						{stockListOrGrid}
 					</Flex>
 					<Flex justifyContent={"end"} alignItems={"center"} gap={"30px"}>
@@ -460,65 +341,46 @@ export default function AdminManageData() {
 
 							<Flex>{`Stock > 10`}</Flex>
 						</Flex>
-						{stock?.length ? (
-							<ButtonGroup paddingTop={"15px"} alignItems={"center"}>
-								{page === 1 ? null : (
-									<Button
-										onClick={() => {
-											handlePageChange(page - 1);
-											window.scrollTo({ top: 0, behavior: "smooth" });
-										}}
-									>
-										Previous
-									</Button>
-								)}
-								{page === totalPage ? null : (
-									<Button
-										onClick={() => {
-											handlePageChange(page + 1);
-											window.scrollTo({ top: 0, behavior: "smooth" });
-										}}
-									>
-										Next
-									</Button>
-								)}
-							</ButtonGroup>
-						) : null}
+						<ButtonPage
+							data={stock}
+							page={page}
+							totalPage={totalPage}
+							handlePageChange={handlePageChange}
+						/>
 					</Flex>
-					<AddStockModal
-						isOpen={addStockModal.isOpen}
-						onClose={addStockModal.onClose}
-						getStock={getStock}
-					/>
-
-					<AddCategoryModal
-						isOpen={addCategoryModal.isOpen}
-						onClose={addCategoryModal.onClose}
-						getCategory={getCategory}
-					/>
-					<EditCategoryModal
-						isOpen={editCategoryModal.isOpen}
-						onClose={editCategoryModal.onClose}
-					/>
-					<DeleteCategoryModal
-						isOpen={deleteCategoryModal.isOpen}
-						onClose={deleteCategoryModal.onClose}
-					/>
-					<AddWarehouseModal
-						isOpen={addWarehouseModal.isOpen}
-						onClose={addWarehouseModal.onClose}
-						getWarehouse={getWarehouse}
-					/>
-					<EditWarehouseModal
-						isOpen={editWarehouseModal.isOpen}
-						onClose={editWarehouseModal.onClose}
-					/>
-					<DeleteWarehouseModal
-						isOpen={deleteWarehouseModal.isOpen}
-						onClose={deleteWarehouseModal.onClose}
-					/>
 				</Flex>
 			</Center>
+			<AddStockModal
+				isOpen={addStockModal.isOpen}
+				onClose={addStockModal.onClose}
+				getStock={getStock}
+			/>
+			<AddCategoryModal
+				isOpen={addCategoryModal.isOpen}
+				onClose={addCategoryModal.onClose}
+				getCategory={getCategory}
+			/>
+			<EditCategoryModal
+				isOpen={editCategoryModal.isOpen}
+				onClose={editCategoryModal.onClose}
+			/>
+			<DeleteCategoryModal
+				isOpen={deleteCategoryModal.isOpen}
+				onClose={deleteCategoryModal.onClose}
+			/>
+			<AddWarehouseModal
+				isOpen={addWarehouseModal.isOpen}
+				onClose={addWarehouseModal.onClose}
+				getWarehouse={getWarehouse}
+			/>
+			<EditWarehouseModal
+				isOpen={editWarehouseModal.isOpen}
+				onClose={editWarehouseModal.onClose}
+			/>
+			<DeleteWarehouseModal
+				isOpen={deleteWarehouseModal.isOpen}
+				onClose={deleteWarehouseModal.onClose}
+			/>
 		</>
 	);
 }

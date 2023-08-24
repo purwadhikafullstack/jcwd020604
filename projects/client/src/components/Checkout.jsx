@@ -533,9 +533,7 @@ export default function Checkout() {
                       </option>
                     ))}
                   </Select>
-                  {/* <Center>
-                    {cost !== null && <p>Selected Cost: {cost} IDR</p>}
-                  </Center> */}
+                
                 </Box>
                 <Box fontSize={"18px"} fontWeight={"bold"} mt={"40px"}>
                   Payment method

@@ -61,7 +61,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 					phone_number,
 				} = formik.values;
 				if (formik.isValid) {
-					const res = await api.post("/warehouse", formik.values);
+					const res = await api().post("/warehouse", formik.values);
 					toast({
 						title: `Add Warehouse Success`,
 						description: "The warehouse has been added successfully.",
@@ -85,12 +85,12 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	});
 
 	async function getAllProvince() {
-		const res = await api.get("/warehouse/getAll/province");
+		const res = await api().get("/warehouse/getAll/province");
 		setProvince(res.data);
 	}
 
 	async function getAllCity() {
-		const res = await api.get("/warehouse/getAll/city");
+		const res = await api().get("/warehouse/getAll/city");
 		setCity(res.data);
 	}
 

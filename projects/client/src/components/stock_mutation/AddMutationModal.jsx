@@ -63,7 +63,7 @@ export default function AddMutationModal({
 				const { qty, from_warehouse_id, to_warehouse_id, stock_id } =
 					formik.values;
 				if (formik.isValid) {
-					const res = await api.post("/stockmutation", formik.values);
+					const res = await api().post("/stockmutation", formik.values);
 					toast({
 						title: `Request Mutation Success`,
 						description: "Stock mutation request submitted for confirmation.",
@@ -90,7 +90,7 @@ export default function AddMutationModal({
 	});
 
 	async function getAllStock() {
-		const res = await api.get("/stock/getAll/stock", {
+		const res = await api().get("/stock/getAll/stock", {
 			params: {
 				warehouse_id: selectedWarehouse,
 			},
@@ -99,7 +99,7 @@ export default function AddMutationModal({
 	}
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 

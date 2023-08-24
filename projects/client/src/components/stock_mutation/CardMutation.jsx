@@ -21,7 +21,7 @@ import { api } from "../../api/api";
 import DeleteMutationModal from "./DeleteMutationModal";
 import EditMutationModal from "./EditMutationModal";
 
-export default function MutationCard({ val, getMutation }) {
+export default function MutationCard({ val, getMutation, getRequest }) {
 	const deleteMutationModal = useDisclosure();
 	const editMutationModal = useDisclosure();
 	const toast = useToast();
@@ -29,7 +29,7 @@ export default function MutationCard({ val, getMutation }) {
 
 	async function deleteMutation() {
 		try {
-			await api.delete(`/stockmutation/${val.id}`);
+			await api().delete(`/stockmutation/${val.id}`);
 
 			toast({
 				title: "Mutation Deleted",
@@ -39,6 +39,7 @@ export default function MutationCard({ val, getMutation }) {
 				duration: 3000,
 			});
 			getMutation();
+			getRequest();
 			deleteMutationModal.onClose();
 			nav("/admin/mutation");
 		} catch (error) {
@@ -52,75 +53,80 @@ export default function MutationCard({ val, getMutation }) {
 	}
 	return (
 		<>
-			<Card maxW="xs">
-				<CardBody>
-					<Image
-						src={
-							val?.stock?.product?.product_images[0]
-								? val?.stock?.product?.product_images[0].product_image
-								: null
-						}
-						borderRadius="lg"
+			{val?.stock?.id ? (
+				<Card maxW="xs">
+					<CardBody>
+						<Image
+							src={
+								`${process.env.REACT_APP_API_BASE_URL}/${val?.stock?.product?.product_images[0]}`
+									? `${process.env.REACT_APP_API_BASE_URL}/${val?.stock?.product?.product_images[0]?.product_image}`
+									: null
+							}
+							borderRadius="lg"
+						/>
+						<Stack mt="6" spacing="2">
+							<Flex justifyContent={"space-between"}>
+								<Heading size="md">{val?.stock?.product?.product_name}</Heading>
+								{val?.status === "PENDING" ? (
+									<Menu>
+										<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
+											<Icon as={BiDotsVerticalRounded} />
+										</MenuButton>
+										<MenuList>
+											<MenuItem onClick={editMutationModal.onOpen}>
+												Edit
+											</MenuItem>
+											<MenuItem
+												onClick={deleteMutationModal.onOpen}
+												color={"red"}
+											>
+												Cancel
+											</MenuItem>
+										</MenuList>
+									</Menu>
+								) : val?.status === "APPROVED" || "AUTO" ? (
+									<Icon
+										w={"20px"}
+										h={"20px"}
+										color={"green"}
+										as={AiOutlineCheckCircle}
+									/>
+								) : (
+									<Icon
+										w={"20px"}
+										h={"20px"}
+										color={"red"}
+										as={AiOutlineCloseCircle}
+									/>
+								)}
+							</Flex>
+							<Flex flexDir={"column"}>
+								<Flex w={"100px"}>{val?.status}</Flex>
+								<Flex w={"100px"}>Amount: {val?.qty}</Flex>
+								<Flex w={"195px"}>
+									{`${val?.from_warehouse?.warehouse_name} ➜ ${val?.to_warehouse?.warehouse_name}`}
+								</Flex>
+								<Flex w={"195px"}>{val?.mutation_code}</Flex>
+								<Flex w={"170px"}>
+									{moment(val?.createdAt).format("DD/MM/YYYY HH:mm:ss")}
+								</Flex>
+							</Flex>
+						</Stack>
+					</CardBody>
+					<EditMutationModal
+						isOpen={editMutationModal.isOpen}
+						onClose={editMutationModal.onClose}
+						val={val}
+						getMutation={getMutation}
+						getRequest={getRequest}
 					/>
-					<Stack mt="6" spacing="2">
-						<Flex>
-							<Heading size="md">{val?.stock?.product?.product_name}</Heading>
-							{val?.status === "PENDING" ? (
-								<Menu>
-									<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
-										<Icon as={BiDotsVerticalRounded} />
-									</MenuButton>
-									<MenuList>
-										<MenuItem onClick={editMutationModal.onOpen}>Edit</MenuItem>
-										<MenuItem
-											onClick={deleteMutationModal.onOpen}
-											color={"red"}
-										>
-											Cancel
-										</MenuItem>
-									</MenuList>
-								</Menu>
-							) : val?.status === "APPROVED" ? (
-								<Icon
-									w={"20px"}
-									h={"20px"}
-									color={"green"}
-									as={AiOutlineCheckCircle}
-								/>
-							) : (
-								<Icon
-									w={"20px"}
-									h={"20px"}
-									color={"red"}
-									as={AiOutlineCloseCircle}
-								/>
-							)}
-						</Flex>
-						<Flex flexDir={"column"}>
-							<Flex w={"100px"}>{val?.status}</Flex>
-							<Flex w={"100px"}>Amount: {val?.qty}</Flex>
-							<Flex w={"195px"}>
-								{`${val?.from_warehouse?.warehouse_name} - ${val?.to_warehouse?.warehouse_name}`}
-							</Flex>
-							<Flex w={"195px"}>{val?.mutation_code}</Flex>
-							<Flex w={"170px"}>
-								{moment(val?.createdAt).format("DD/MM/YYYY HH:mm:ss")}
-							</Flex>
-						</Flex>
-					</Stack>
-				</CardBody>
-				<EditMutationModal
-					isOpen={editMutationModal.isOpen}
-					onClose={editMutationModal.onClose}
-					val={val}
-					getMutation={getMutation}
-				/>
-				<DeleteMutationModal
-					isOpen={deleteMutationModal.isOpen}
-					onClose={deleteMutationModal.onClose}
-					deleteMutation={deleteMutation}
-				/>
-			</Card>
+					<DeleteMutationModal
+						isOpen={deleteMutationModal.isOpen}
+						onClose={deleteMutationModal.onClose}
+						deleteMutation={deleteMutation}
+					/>
+				</Card>
+			) : null}
 		</>
 	);
 }

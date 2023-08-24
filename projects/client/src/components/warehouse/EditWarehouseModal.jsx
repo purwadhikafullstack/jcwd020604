@@ -38,8 +38,7 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 
 	async function editWarehouse() {
 		try {
-			await api.patch(`/warehouse/${selectedWarehouse}`, data);
-
+			await api().patch(`/warehouse/${selectedWarehouse}`, data);
 			toast({
 				title: "Warehouse updated successfully.",
 				status: "success",
@@ -63,23 +62,23 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 
 	async function getWarehouseById() {
 		if (selectedWarehouse) {
-			const res = await api.get(`/warehouse/${selectedWarehouse}`);
+			const res = await api().get(`/warehouse/${selectedWarehouse}`);
 			setData(res.data);
 		}
 	}
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 
 	async function getAllProvince() {
-		const res = await api.get("/warehouse/getAll/province");
+		const res = await api().get("/warehouse/getAll/province");
 		setProvince(res.data);
 	}
 
 	async function getAllCity() {
-		const res = await api.get("/warehouse/getAll/city");
+		const res = await api().get("/warehouse/getAll/city");
 		setCity(res.data);
 	}
 

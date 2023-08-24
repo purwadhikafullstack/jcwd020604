@@ -32,6 +32,7 @@ module.exports = (sequelize, Sequelize) => {
     }
   );
   return orders;
+
 };
 
 // Helper functions to format date and time

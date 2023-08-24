@@ -37,13 +37,13 @@ export default function DeleteCategoryModal({ isOpen, onClose }) {
 	}, [isOpen]);
 
 	async function getCategory() {
-		const res = await api.get("/category");
+		const res = await api().get("/category");
 		setCategory(res.data);
 	}
 
 	async function deleteCategory(categoryId) {
 		try {
-			await api.delete(`/category/${categoryId}`);
+			await api().delete(`/category/${categoryId}`);
 
 			toast({
 				title: "Category Deleted",

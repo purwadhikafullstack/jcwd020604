@@ -37,7 +37,11 @@ const getStockMutation = {
 			};
 			const sortOrder = sortOptions[sort] || sortOptions.dateDesc;
 
-			let whereClause = {};
+			let whereClause = {
+				"$stock.id$": {
+					[Op.ne]: null,
+				},
+			};
 
 			if (search) {
 				whereClause["$stock.product.product_name$"] = {
@@ -112,7 +116,11 @@ const getStockMutation = {
 		try {
 			const { from_warehouse_id } = req.query;
 
-			let whereClause = {};
+			let whereClause = {
+				"$stock.id$": {
+					[Op.ne]: null,
+				},
+			};
 
 			if (from_warehouse_id) {
 				whereClause["$from_warehouse_id$"] = {

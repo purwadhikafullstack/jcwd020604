@@ -49,7 +49,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 			}
 		}
 		try {
-			await api.patch(`/product/${val.id}`, formData);
+			await api().patch(`/product/${val.id}`, formData);
 			toast({
 				title: "Product updated successfully.",
 				status: "success",
@@ -71,7 +71,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 	};
 
 	async function getCategory() {
-		const res = await api.get("/category");
+		const res = await api().get("/category");
 		setCategory(res.data);
 	}
 
@@ -186,7 +186,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 							>
 								{imagesProduct.map((val) => (
 									<Image
-										src={val.product_image}
+										src={`${process.env.REACT_APP_API_BASE_URL}/${val.product_image}`}
 										style={{ width: "100px", height: "100px", margin: "8px" }}
 									/>
 								))}

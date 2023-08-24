@@ -34,7 +34,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 
 	async function editCategory() {
 		try {
-			await api.patch(`/category/${selectedCategory}`, data);
+			await api().patch(`/category/${selectedCategory}`, data);
 
 			toast({
 				title: "Category updated successfully.",
@@ -59,13 +59,13 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 
 	async function getCategoryById() {
 		if (selectedCategory) {
-			const res = await api.get(`/category/${selectedCategory}`);
+			const res = await api().get(`/category/${selectedCategory}`);
 			setData(res.data);
 		}
 	}
 
 	async function getCategory() {
-		const res = await api.get("/category");
+		const res = await api().get("/category");
 		setCategory(res.data);
 	}
 

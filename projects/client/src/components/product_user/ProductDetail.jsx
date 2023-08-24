@@ -7,21 +7,14 @@ import {
 	AccordionPanel,
 	AccordionIcon,
 	Box,
-	NumberInput,
-	NumberInputField,
-	NumberInputStepper,
-	NumberIncrementStepper,
-	NumberDecrementStepper,
-	Button,
-	Icon,
 	useToast,
 } from "@chakra-ui/react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { api } from "../../api/api";
-import { AiOutlineShoppingCart } from "react-icons/ai";
 import CarouselProduct from "./CarauselProduct";
 import { useSelector } from "react-redux";
+import CartButton from "./CartButton";
 
 export default function ProductDetail() {
 	const userSelector = useSelector((state) => state.auth);
@@ -39,12 +32,13 @@ export default function ProductDetail() {
 	}, []);
 
 	async function getProductByUuid() {
-		const res = await api.get(`/product/${uuid}`);
+		const res = await api().get(`/product/${uuid}`);
 		setProduct(res.data);
 		const totalQty = res.data.stocks.reduce(
 			(accumulator, stock) => accumulator + stock.qty,
 			0
 		);
+
 		setStock(totalQty || 0);
 	}
 	const handleIncrement = () => {
@@ -61,7 +55,7 @@ export default function ProductDetail() {
 
 	useEffect(() => {}, [value]);
 	const addCart = async () => {
-		await api
+		await api()
 			.post("/cart/addCart", {
 				user_id: userSelector.id,
 				product_id: product.id,
@@ -180,62 +174,14 @@ export default function ProductDetail() {
 									</AccordionItem>
 								</Accordion>
 							</Flex>
-							<Flex justifyContent={"space-between"} alignItems={"center"}>
-								<NumberInput
-									defaultValue={value}
-									min={1}
-									max={stock}
-									paddingLeft={"150px"}
-									paddingBottom={"50px"}
-									isDisabled={isSoldOut}
-								>
-									<NumberInputStepper
-										w={"160px"}
-										h={"50px"}
-										display={"flex"}
-										flexDir={"row"}
-										gap={"10px"}
-										alignItems={"center"}
-									>
-										<NumberDecrementStepper
-											onClick={handleDecrement}
-											fontSize={"15px"}
-											borderColor={"transparent"}
-											marginLeft={"10px"}
-										/>
-										<NumberInputField textAlign="center" paddingLeft={"30px"} />
-
-										<NumberIncrementStepper
-											onClick={handleIncrement}
-											fontSize={"15px"}
-											borderColor={"transparent"}
-											marginRight={"10px"}
-										/>
-									</NumberInputStepper>
-								</NumberInput>
-								{/* <NumberInput defaultValue={value} min={1} max={stock}>
-									<NumberInputField />
-									<NumberInputStepper>
-										<NumberIncrementStepper onClick={handleIncrement} />
-										<NumberDecrementStepper onClick={handleDecrement} />
-									</NumberInputStepper>
-								</NumberInput> */}
-
-								<Button
-									onClick={() => {
-										addCart();
-									}}
-									w={"150px"}
-									h={"50px"}
-									bgColor={"yellow"}
-									fontWeight={"bold"}
-									_hover={{ bgColor: "yellow.200" }}
-									isDisabled={isSoldOut}
-								>
-									<Icon as={AiOutlineShoppingCart} fontSize={"25px"} />
-									CART
-								</Button>
-							</Flex>
+							<CartButton
+								value={value}
+								stock={stock}
+								isSoldOut={isSoldOut}
+								handleDecrement={handleDecrement}
+								handleIncrement={handleIncrement}
+								addCart={addCart}
+							/>
 						</Flex>
 					</Center>
 				</Flex>

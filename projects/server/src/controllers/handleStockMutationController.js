@@ -1,7 +1,5 @@
 const db = require("../models");
 const Joi = require("joi");
-const stockHistory = require("./stockHistoryController");
-const geolib = require("geolib");
 
 const handleStockMutation = {
 	handleMutation: async (req, res) => {
@@ -109,18 +107,6 @@ const handleStockMutation = {
 
 				await db.stock_histories.create(
 					{
-						qty: pendingMutation.qty,
-						status: "IN",
-						reference: pendingMutation.mutation_code,
-						stock_id: destinationStockId,
-						stock_before: existingStock.dataValues.qty,
-						stock_after: pendingMutation.qty + destinationStockQty,
-					},
-					{ transaction: t }
-				);
-
-				await db.stock_histories.create(
-					{
 						qty: -pendingMutation.qty,
 						status: "OUT",
 						reference: pendingMutation.mutation_code,
@@ -131,8 +117,19 @@ const handleStockMutation = {
 					{ transaction: t }
 				);
 
-				await t.commit();
+				await db.stock_histories.create(
+					{
+						qty: pendingMutation.qty,
+						status: "IN",
+						reference: pendingMutation.mutation_code,
+						stock_id: destinationStockId,
+						stock_before: existingStock.dataValues.qty,
+						stock_after: pendingMutation.qty + destinationStockQty,
+					},
+					{ transaction: t }
+				);
 
+				await t.commit();
 				return res.status(200).send({ message: "Stock mutation confirmed." });
 			} else if (status === "REJECTED") {
 				await db.stock_mutations.update(
@@ -148,60 +145,8 @@ const handleStockMutation = {
 				});
 			}
 		} catch (err) {
-			console.log(err);
 			await t.rollback();
 			res.status(500).send({ message: err.message });
-		}
-	},
-	autoMutation: async (setWarehouse) => {
-		try {
-			const warehouses = await db.warehouses.findAll(); // Assuming you have a 'warehouses' table
-
-			const referenceWarehouse = setWarehouse; // Use the provided warehouse or choose a reference warehouse
-
-			const otherWarehouses = warehouses.filter(
-				(warehouse) => warehouse.id !== referenceWarehouse.id
-			); // Remove the reference warehouse from the list
-
-			const nearestWarehouse = otherWarehouses.reduce((nearest, warehouse) => {
-				const distance = geolib.getDistance(
-					{
-						latitude: referenceWarehouse.lat,
-						longitude: referenceWarehouse.lng,
-					},
-					{ latitude: warehouse.lat, longitude: warehouse.lng }
-				);
-
-				if (!nearest || distance < nearest.distance) {
-					return { warehouse, distance };
-				}
-				return nearest;
-			}, null);
-
-			if (nearestWarehouse) {
-				console.log(
-					"Nearest warehouse:",
-					nearestWarehouse.warehouse.name,
-					"Distance:",
-					nearestWarehouse.distance
-				);
-
-				// Deduct qty from nearest warehouse's stock
-				if (qty && nearestWarehouse.warehouse.stock >= qty) {
-					nearestWarehouse.warehouse.stock -= qty;
-					console.log(
-						`Deducted ${qty} from ${nearestWarehouse.warehouse.name}'s stock.`
-					);
-				} else {
-					console.log(
-						`Insufficient stock in ${nearestWarehouse.warehouse.name}.`
-					);
-				}
-			} else {
-				console.log("No nearest warehouse found.");
-			}
-		} catch (err) {
-			throw err;
 		}
 	},
 };

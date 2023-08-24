@@ -25,6 +25,7 @@ export default function EditMutationModal({
 	onClose,
 	val,
 	getMutation,
+	getRequest,
 }) {
 	const [warehouse, setWarehouse] = useState([]);
 	const [mutation, setMutation] = useState(val);
@@ -38,7 +39,7 @@ export default function EditMutationModal({
 
 	const editMutation = async () => {
 		try {
-			await api.patch(`/stockmutation/${val.id}`, { qty: mutation.qty });
+			await api().patch(`/stockmutation/${val.id}`, { qty: mutation.qty });
 			toast({
 				title: "Mutation updated successfully.",
 				status: "success",
@@ -46,6 +47,7 @@ export default function EditMutationModal({
 				duration: 3000,
 			});
 			getMutation();
+			getRequest();
 			nav("/admin/mutation");
 			onClose();
 		} catch (error) {
@@ -59,7 +61,7 @@ export default function EditMutationModal({
 	};
 
 	async function getWarehouse() {
-		const res = await api.get("/warehouse");
+		const res = await api().get("/warehouse");
 		setWarehouse(res.data);
 	}
 

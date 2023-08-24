@@ -23,8 +23,8 @@ import {
   import React, { useEffect, useState } from "react";
   
   export default function ConfirmResetPassword() {
-    const [user,setUser]=useState();
-    const [token,setToken]=useState();
+    const [user, setUser] = useState();
+    const [token, setToken] = useState();
 
     const queryParams = new URLSearchParams(window.location.search);
     const location = useLocation();
@@ -54,14 +54,12 @@ import {
     });
 
   async function fetchUser(data){
-    console.log(data)
-   const res = await api.get(`${process.env.REACT_APP_API_BASE_URL}/auth/v2`, {
+   const res = await api().get(`${process.env.REACT_APP_API_BASE_URL}/authentication/v2`, {
     headers:{
       Authorization:'Bearer '+ data,
     }
    });
-   await setUser(res.data);
-   console.log(res.data)
+   setUser(res.data);
   }
 
     const formik = useFormik({
@@ -71,7 +69,6 @@ import {
       },
       validationSchema: validationSchema,
       onSubmit: (values) => {
-        console.log(values)
         verif(values);
       },
     });
@@ -79,10 +76,7 @@ import {
     async function verif(values) {
       const { password } = values;
       try {
-        console.log('asfkas')
-        console.log(token)
-
-        await api.patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify-password?token=`+token, {
+        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/password/verify-password?token=`+token, {
           password,
         },
           {headers:{
@@ -216,10 +210,12 @@ import {
             <Button
               mt={"10px"}
               w={"100%"}
-              colorScheme="blue.100"
-              bgColor={'blue.100'}
+              bg={'blue.400'}
+              color={'white'}
               size="lg"
-              type="submit"
+              _hover={{
+                bg: 'blue.500',
+              }} type="submit"
             >
               Reset Password
             </Button>

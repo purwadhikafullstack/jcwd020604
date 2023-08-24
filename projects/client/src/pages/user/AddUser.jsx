@@ -45,7 +45,7 @@ const AddUser = () => {
 
     const saveUser = async (values) => {
         try {
-            await api.post(`${process.env.REACT_APP_API_BASE_URL}/auth/users`, values);
+            await api().post(`${process.env.REACT_APP_API_BASE_URL}/auth/users`, values);
             console.log(values);
             toast({
                 title:"User has been created",

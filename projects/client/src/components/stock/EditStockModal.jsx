@@ -15,7 +15,7 @@ import {
 	Center,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { api } from "../../api/api";
 
 export default function EditStockModal({ isOpen, onClose, val, getStock }) {
@@ -25,7 +25,7 @@ export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 
 	const editStock = async () => {
 		try {
-			await api.patch(`/stock/${val.id}`, { qty: stock.qty });
+			await api().patch(`/stock/${val.id}`, { qty: stock.qty });
 			toast({
 				title: "Stock updated successfully.",
 				status: "success",
