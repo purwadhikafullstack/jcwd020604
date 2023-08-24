@@ -7,7 +7,6 @@ const warehouseController = require("./warehouseController");
 const getWarehouseController = require("./getWarehouseController");
 const userController = require("./UserController");
 const addressController = require("./AddressController");
-const stockHistoryController = require("./stockHistoryController");
 const stockMutationController = require("./stockMutationController");
 const handleStockMutationController = require("./handleStockMutationController");
 const getStockMutationController = require("./getStockMutationController");
@@ -17,7 +16,7 @@ const getCategoryController = require("./getCategoryController");
 const getHistoryController = require("./getHistoryController");
 const authController = require("./AuthController");
 const insertAddressController = require("./InsertAddressController");
-const passwordController = require('./PasswordController');
+const passwordController = require("./PasswordController");
 
 module.exports = {
 	authController,
@@ -30,7 +29,6 @@ module.exports = {
 	getWarehouseController,
 	userController,
 	addressController,
-	stockHistoryController,
 	stockMutationController,
 	handleStockMutationController,
 	getStockMutationController,
@@ -39,5 +37,5 @@ module.exports = {
 	getCategoryController,
 	getHistoryController,
 	insertAddressController,
-	passwordController
+	passwordController,
 };

@@ -1,7 +1,7 @@
 const db = require("../models");
 const Joi = require("joi");
 const { Op, or } = require("sequelize");
-const autoMutation = require("./handleStockMutationController");
+const autoMutation = require("../service/autoMutationService");
 const warehouse = require("../models/warehouse");
 const haversine = require("haversine");
 const orderDetail = require("../models/orderDetail");

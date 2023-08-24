@@ -1,6 +1,6 @@
 const db = require("../models");
 const Joi = require("joi");
-const stockHistory = require("./stockHistoryController");
+const stockHistory = require("../service/stockHistoryService");
 
 const stockController = {
 	addStock: async (req, res) => {
