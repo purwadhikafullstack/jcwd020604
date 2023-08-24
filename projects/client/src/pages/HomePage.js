@@ -8,10 +8,10 @@ export default function HomePage() {
 	return (
 		<>
 			<Navbar />
-			<Carousel/>
-			<GridCategory/>
-			<GridProduct/>
-			<Footer/>
+			<Carousel />
+			<GridCategory />
+			<GridProduct />
+			<Footer />
 		</>
 	);
 }

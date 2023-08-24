@@ -1,5 +1,6 @@
 const db = require("../models");
 const Joi = require("joi");
+const { Op } = require("sequelize");
 
 const productController = {
 	insert: async (req, res) => {
@@ -95,7 +96,7 @@ const productController = {
 			const existingProduct = await db.products.findOne({
 				where: {
 					product_name,
-					id: { [db.Sequelize.Op.not]: id },
+					id: { [Op.not]: id },
 				},
 			});
 

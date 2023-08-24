@@ -1,6 +1,7 @@
 const db = require("../models");
 const axios = require("axios");
 const Joi = require("joi");
+const { Op } = require("sequelize");
 
 const warehouseController = {
 	insertWarehouse: async (req, res) => {
@@ -112,7 +113,7 @@ const warehouseController = {
 			const existingWarehouse = await db.warehouses.findOne({
 				where: {
 					warehouse_name,
-					id: { [db.Sequelize.Op.not]: id },
+					id: { [Op.not]: id },
 				},
 			});
 			if (existingWarehouse) {
