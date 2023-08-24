@@ -76,7 +76,7 @@ import {
     async function verif(values) {
       const { password } = values;
       try {
-        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/auth/verify-password?token=`+token, {
+        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/password/verify-password?token=`+token, {
           password,
         },
           {headers:{
@@ -210,10 +210,12 @@ import {
             <Button
               mt={"10px"}
               w={"100%"}
-              colorScheme="blue.100"
-              bgColor={'blue.100'}
+              bg={'blue.400'}
+              color={'white'}
               size="lg"
-              type="submit"
+              _hover={{
+                bg: 'blue.500',
+              }} type="submit"
             >
               Reset Password
             </Button>

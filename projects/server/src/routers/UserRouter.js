@@ -1,15 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const userController = require("../controllers").userController;
-const authController = require("../controllers").authController;
 const { fileUploader, upload } = require("../middlewares/multer");
-
-router.post("/reset-password", userController.resetPassword);
-router.patch(
-	"/verify-password",
-	authController.getByTokenV2,
-	userController.verifyV2
-);
 
 router.get("/users", userController.getAll);
 router.get("/users/:uuid", userController.getUsersById);

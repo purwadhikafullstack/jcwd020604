@@ -1,4 +1,3 @@
-require("dotenv/config");
 const express = require("express");
 const cors = require("cors");
 const { join } = require("path");
@@ -40,6 +39,7 @@ app.use("/api/auth", router.userRouter);
 app.use("/api/authentication", router.authRouter);
 app.use("/api/address", router.addressRouter);
 app.use("/api/insert-address", router.insertAddressRouter);
+app.use("/api/password", router.passwordRouter);
 app.use("/api/orders", router.orderRouter);
 app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
 
