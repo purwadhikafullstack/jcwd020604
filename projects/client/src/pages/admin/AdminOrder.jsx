@@ -26,10 +26,10 @@ import OrderNotFound from '../redirect/OrderNotFound';
 
 const AdminOrder = () => {
 	const user = useSelector((state) => state.auth);
-    const [orders, setOrders] = useState([]);
-    const [selectedOrder, setSelectedOrder] = useState([]);
     const toast = useToast();
     const orderModal = useDisclosure();
+    const [orders, setOrders] = useState([]);
+    const [selectedOrder, setSelectedOrder] = useState([]);
     const [selectedStatus, setSelectedStatus] = useState("");
     const [selectedWarehouse, setSelectedWarehouse] = useState("");
     const [warehouse, setWarehouse] = useState([]);
@@ -50,32 +50,29 @@ const AdminOrder = () => {
 		}
 	}, []);
 
-    const fetchData = async() => {
+    const fetchData = async () => {
         try {
-            await api().get(`/orders/orders`, {
-                params: {
-                    status: selectedStatus,
-                    warehouse_id: selectedWarehouse,
-                    page: page
-                },
-            })
-            .then((response) => {
-                setOrders(response.data.rows);
-                setTotalPage(Math.ceil(response.data.count / 3));
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+          const response = await api().get(`/orders/orders`, {
+            params: {
+              status: selectedStatus,
+              warehouse_id: selectedWarehouse,
+              page: page,
+            },
+          });
+          const { rows, count } = response.data;
+          setOrders(rows);
+          setTotalPage(Math.ceil(count / 3));
         } catch (error) {
-            toast({
-                title:"There is something error while executing this command",
-                status:"error",
-                duration:3000,
-                isClosable:false
-            });
+          const errorMessage = "An error occurred while fetching data.";
+          toast({
+            title: errorMessage,
+            status: "error",
+            duration: 3000,
+            isClosable: false,
+          });
         }
-    }
-
+      };
+      
     const sendOrder = async (orderId) => {
         try {
             await api().patch(`/orders/orders/sending-order/${orderId}`, {
