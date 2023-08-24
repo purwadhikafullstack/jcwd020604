@@ -28,10 +28,10 @@ import Navbar from "./Navbar";
 import Footer from "./Footer";
 import AddressUser from "./NewAddressModal";
 import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
+import axios from "axios";
 
 export default function Checkout() {
   const [product, setProduct] = useState([]);
-  const [subTotal, setSubTotal] = useState(0);
   const [value, setValue] = useState(1);
   const [stock, setStock] = useState(0);
   const [cart_id, setCart_id] = useState(0);
@@ -54,9 +54,15 @@ export default function Checkout() {
   const [addressId, setAddressId] = useState("");
   const [users, setUsers] = useState("");
   // const [value, setValue] = React.useState("1");
+  const [subTotal, setSubTotal] = useState(0);
+  const [cityId, setCityId] = useState("");
+  const nav = useNavigate();
 
-  const handleAddressSelection = (addressId) => {
+  const [feeship, setFeeship] = useState(0);
+  const [allFee, setAllFee] = useState(0);
+  const handleAddressSelection = (addressId, cityId) => {
     setAddressId(addressId); // Set the selected address ID to the state
+    setCityId(cityId);
   };
 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
@@ -64,14 +70,25 @@ export default function Checkout() {
   const [shipping, setShipping] = useState([]);
   const [courier, setCourier] = useState();
 
+  console.log(feeship);
   const fetchShipping = async () => {
+    console.log("fetchship");
     const token = JSON.parse(localStorage.getItem("user"));
+    // TODO: get the actual origin id from
+    // cara mencari warouse terdekat dengan destionation user
+    // 1. ambil semua warehouse yang ada di DB
+    // 2. lalu dapatkan destination ID dari user
+    // 3.
+
+    const destination = cityId;
+    console.log("destination", destination);
 
     try {
       const response = await api.post(
         "/cart/get/cost",
         {
-          // destination: address[addressId].city.id
+          destination,
+          addressId,
           weight: product.reduce((prev, curr) => {
             prev += curr.product.weight * curr.qty;
             return prev;
@@ -88,6 +105,7 @@ export default function Checkout() {
       console.log(err.response?.data);
     }
   };
+  console.log(addressId);
   console.log(shipping);
   useEffect(() => {
     if (courier) {
@@ -97,7 +115,7 @@ export default function Checkout() {
 
   console.log(address);
 
-  const handleContinueShipping = () => {
+  const handleContinueShippingg = () => {
     // Perform any necessary actions with the selected address
     if (addressId) {
       toast({
@@ -108,7 +126,7 @@ export default function Checkout() {
         isClosable: true,
       });
       // Address ID is selected
-      console.log("Selected Address ID:", addressId);
+      console.log("Selected Address city ID:", cityId);
       // ... Perform further actions or navigate to the next step
     } else {
       toast({
@@ -117,6 +135,53 @@ export default function Checkout() {
         status: "warning",
         duration: 3000,
         isClosable: true,
+      });
+    }
+  };
+
+  const order = async () => {
+    try {
+      // Prepare the order data
+      const orderData = {
+        courier: courier,
+        addressId,
+        shipping_cost: feeship,
+        total_price: subTotal,
+        user_id: user.id,
+        address_id: addressId,
+        payment_detail: "bank transfer",
+        status: "PAYMENT",
+      };
+
+      // Send the order data to the backend
+      const response = await api.post("/userOrders/addOrder", orderData);
+
+      // Handle the response
+      const responseData = response.data;
+      console.log(responseData);
+
+      // Show a success message to the user
+      toast({
+        title: "Order has been created",
+        position: "top",
+        status: "success",
+        duration: 3000,
+        isClosable: false,
+      });
+      nav("/order");
+
+      console.log("Order has been created");
+    } catch (error) {
+      // Handle any errors that might occur
+      console.error(error);
+
+      // Show an error message to the user
+      toast({
+        title: "An error occurred while creating the order",
+        position: "top",
+        status: "error",
+        duration: 3000,
+        isClosable: false,
       });
     }
   };
@@ -136,6 +201,7 @@ export default function Checkout() {
       setIsLoading(false);
     }, 1000);
   }, [isLoading]);
+  console.log(feeship, "feeship");
 
   const fetchData = async () => {
     try {
@@ -216,7 +282,7 @@ export default function Checkout() {
     const res = await api.get(`/cart/` + user.id);
     setProduct(res.data);
   }
-  // console.log(product);
+  console.log(product);
   const calculateTotal = () => {
     let total = 0;
     product.forEach((val) => {
@@ -376,10 +442,12 @@ export default function Checkout() {
                             />
                           </Box>
                           <Box>
-                            <Checkbox
+                            <Radio
                               w={"100px"}
-                              onChange={() => handleAddressSelection(val.id)} // Call the function when the checkbox is clicked
-                            ></Checkbox>
+                              onChange={() =>
+                                handleAddressSelection(val.id, val.city_id)
+                              } // Call the function when the checkbox is clicked
+                            ></Radio>
                           </Box>
                         </Box>
                       </>
@@ -400,13 +468,13 @@ export default function Checkout() {
                   _hover={"none"}
                   color={"blue"}
                   borderRadius={"none"}
-                  onClick={handleContinueShipping}
+                  onClick={handleContinueShippingg}
                 >
                   save address
                 </Button>
               </Box>
 
-              <Box mt={"20px"}>
+              <Box mt={"20px"} w={"515px"}>
                 <Box fontSize={"18px"} fontWeight={"bold"} mt={"10px"}>
                   Shipping method
                 </Box>
@@ -425,7 +493,7 @@ export default function Checkout() {
                       <Image
                         w={"200px"}
                         h={"50px"}
-                        src="https://www.tikibanjarmasin.com/images/Logo-TIKI.png"
+                        src="https://1.bp.blogspot.com/-uLgjCEGESQ4/X2GVUxAAThI/AAAAAAAAJdY/MC6BCnsxeecxVYMYWrRiJX6KgP7jUjufgCNcBGAsYHQ/w1200-h630-p-k-no-nu/2020-09-16%2B11_30_59-Cek-Resi-TIKI.png%2B%2528PNG%2BImage%252C%2B769%25C2%25A0%25C3%2597%25C2%25A0600%2Bpixels%2529.png"
                       />
                     </Radio>
                     <Radio
@@ -445,16 +513,54 @@ export default function Checkout() {
                 </RadioGroup>
 
                 <Box p={4}>
-                  <Select placeholder="Select shipping">
+                  <Select
+                    fontSize={15}
+                    placeholder="Select shipping"
+                    onClick={(e) => {
+                      setFeeship(e.target.value);
+                    }}
+                  >
                     {shipping?.map((val) => (
-                      <option key={val.id} value={val.id}>
-                        {`${val.name} - ${val?.costs[0]?.description} - (${val?.costs[0]?.cost[0]?.etd} days) - ${val?.costs[0]?.cost[0]?.value} IDR`}
+                      <option
+                        key={val.id}
+                        value={val?.costs[0]?.cost[0]?.value}
+                      >
+                        {`${val.name} - ${val?.costs[0]?.description} - (${
+                          val?.costs[0]?.cost[0]?.etd
+                        } days) -  Rp ${val?.costs[0]?.cost[0]?.value.toLocaleString(
+                          "id-ID"
+                        )},00`}{" "}
                       </option>
                     ))}
                   </Select>
                   {/* <Center>
                     {cost !== null && <p>Selected Cost: {cost} IDR</p>}
                   </Center> */}
+                </Box>
+                <Box fontSize={"18px"} fontWeight={"bold"} mt={"40px"}>
+                  Payment method
+                </Box>
+                <Box
+                  fontSize={15}
+                  display={"flex"}
+                  w={"515px"}
+                  mt={"10px"}
+                  justifyContent={"space-between"}
+                >
+                  <Box display={"flex"} gap={"5px"}>
+                    <Box>Transfer</Box>
+                    <Box fontWeight={"bold"}>ONLY</Box>
+                  </Box>
+                  <Image
+                    w={"150px"}
+                    h={"60px"}
+                    src="https://logos-download.com/wp-content/uploads/2016/06/Mandiri_logo.png"
+                  />
+                  <Box>
+                    <Box fontWeight={"bold"}>BANK Mandiri</Box>
+                    <Box>MMSAPPAREL</Box>
+                    <Box fontWeight={"semibold"}>1090018991489</Box>
+                  </Box>
                 </Box>
               </Box>
               <Box
@@ -468,14 +574,18 @@ export default function Checkout() {
                     Return to cart
                   </Button>
                 </Link>
+                {/* <Link to={"/payment"}> */}
                 <Button
                   w={"200px"}
                   bgColor={"#ffe401"}
                   borderRadius={"none"}
-                  onClick={handleContinueShipping}
+                  isLoading={isLoading}
+                  loadingText="Placing Order"
+                  onClick={order}
                 >
                   Order
                 </Button>
+                {/* </Link> */}
               </Box>
             </Flex>
 
@@ -543,9 +653,10 @@ export default function Checkout() {
                 <Box fontWeight={"bold"} fontSize={"15px"}>
                   Rp{" "}
                   {subTotal
-                    ? subTotal.toLocaleString("id-ID")
+                    ? parseInt(subTotal).toLocaleString("id-ID")
                     : "Price Not Available"}
                   ,00
+                  {/* {subTotal},00 */}
                 </Box>
               </Box>
               <Box
@@ -556,7 +667,8 @@ export default function Checkout() {
               >
                 <Box fontSize={"14px"}>Shipping fee</Box>
                 <Box fontWeight={"bold"} fontSize={"15px"}>
-                  Rp.0
+                  Rp {feeship ? parseInt(feeship).toLocaleString("id-ID") : "0"}
+                  ,00
                 </Box>
               </Box>
               <hr
@@ -575,10 +687,12 @@ export default function Checkout() {
                 <Box fontSize={"16px"}>Total</Box>
                 <Box fontWeight={"bold"} fontSize={"17px"}>
                   Rp{" "}
-                  {subTotal
-                    ? subTotal.toLocaleString("id-ID")
-                    : "Price Not Available"}
+                  {subTotal && feeship
+                    ? (subTotal + parseInt(feeship)).toLocaleString("id-ID")
+                    : parseInt(subTotal)}
                   ,00
+                  {/* Rp {subTotal + parseInt(feeship)}
+                  ,00 */}
                 </Box>
               </Box>
             </Flex>

@@ -7,17 +7,19 @@ const addressRouter = require("./AddressRouter");
 const cartRouter = require("./cartRouter");
 const stockHistoryRouter = require("./stockHistoryRouter");
 const stockMutationRouter = require("./stockMutationRouter");
-const orderRouter = require('./OrderRouter');
+const orderRouter = require("./OrderRouter");
+const userOrderRouter = require("./UserOrderRouter");
 
 module.exports = {
-	productRouter,
-	categoryRouter,
-	stockRouter,
-	warehouseRouter,
-	userRouter,
-	addressRouter,
-	stockHistoryRouter,
-	stockMutationRouter,
-	cartRouter,
-	orderRouter
+  productRouter,
+  categoryRouter,
+  stockRouter,
+  warehouseRouter,
+  userRouter,
+  addressRouter,
+  stockHistoryRouter,
+  stockMutationRouter,
+  cartRouter,
+  orderRouter,
+  userOrderRouter,
 };

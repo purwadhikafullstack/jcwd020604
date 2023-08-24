@@ -15,23 +15,25 @@ const cartControllers = require("./cartController");
 const ordersController = require("./OrderController");
 const getCategoryController = require("./getCategoryController");
 const getHistoryController = require("./getHistoryController");
+const userOrdersController = require("./UserOrderController");
 
 module.exports = {
-	productController,
-	getProductController,
-	categoryController,
-	stockController,
-	getStockController,
-	warehouseController,
-	getWarehouseController,
-	userController,
-	addressController,
-	stockHistoryController,
-	stockMutationController,
-	handleStockMutationController,
-	getStockMutationController,
-	cartControllers,
-	ordersController,
-	getCategoryController,
-	getHistoryController,
+  productController,
+  getProductController,
+  categoryController,
+  stockController,
+  getStockController,
+  warehouseController,
+  getWarehouseController,
+  userController,
+  addressController,
+  stockHistoryController,
+  stockMutationController,
+  handleStockMutationController,
+  getStockMutationController,
+  cartControllers,
+  ordersController,
+  getCategoryController,
+  getHistoryController,
+  userOrdersController,
 };
