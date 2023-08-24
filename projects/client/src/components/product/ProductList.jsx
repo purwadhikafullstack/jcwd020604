@@ -61,7 +61,9 @@ export default function ProductList({ val, getProduct }) {
 					h={"50px"}
 					borderRadius={"4px"}
 					src={
-						val.product_images[0] ? val.product_images[0].product_image : null
+						`${process.env.REACT_APP_API_BASE_URL}/${val.product_images[0]}`
+							? `${process.env.REACT_APP_API_BASE_URL}/${val.product_images[0]?.product_image}`
+							: null
 					}
 				/>
 				<Flex w={"270px"}>{val.product_name}</Flex>

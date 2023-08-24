@@ -186,7 +186,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 							>
 								{imagesProduct.map((val) => (
 									<Image
-										src={val.product_image}
+										src={`${process.env.REACT_APP_API_BASE_URL}/${val.product_image}`}
 										style={{ width: "100px", height: "100px", margin: "8px" }}
 									/>
 								))}
