@@ -52,6 +52,7 @@ export default function Navbar(props) {
 
   const [product, setProduct] = useState([]);
   const [search, setSearch] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [greeting, setGreeting] = useState("");
   const [totalQty, setTotalQty] = useState(0);
@@ -77,8 +78,12 @@ export default function Navbar(props) {
     getAll();
   }, [search]);
 
+  console.log(product);
+  console.log(search);
+
   async function getAll() {
     try {
+      setLoading(true);
       const res = await api().get("/product", {
         params: {
           search: search,
@@ -124,6 +129,10 @@ export default function Navbar(props) {
       isClosable: false,
     });
   }
+
+  const handleSearch = (searchValue) => {
+    setSearch(searchValue);
+  };
 
   return (
     <>
@@ -188,25 +197,30 @@ export default function Navbar(props) {
               )}
               <Flex>
                 <InputGroup>
-                  <InputRightElement pointerEvents="none">
+                  <InputRightElement cursor={"pointer"}>
                     <FiSearch
                       color="gray.300"
-                      cursor={"pointer"}
-                      onClick={() => {
-                        const searchValue = inputFileRef.current.value;
-                        setSearch(searchValue);
-                      }}
+                      onClick={() => handleSearch(inputFileRef.current.value)}
                     />
                   </InputRightElement>
                   <Input
-                    type="tel"
-                    placeholder="Search . . ."
                     ref={inputFileRef}
-                  />
+                    type="text"
+                    placeholder="Cari produk..."
+                    onChange={(e) => handleSearch(e.target.value)}
+                  ></Input>
                 </InputGroup>
               </Flex>
             </HStack>
           </HStack>
+            <Flex>
+                {search ? (<>{product?.map((val) => (
+                  <Flex key={val.uuid}>
+                      <p>{val.product_name}</p>
+                      <Link to={`/collection/${val.uuid}`}>Lihat Produk</Link>
+                  </Flex>
+                ))}</>) : null}
+            </Flex>
           <Flex alignItems={"center"}>
             <IconButton
               icon={colorMode === "light" ? <FiSun /> : <FiMoon />}
@@ -352,7 +366,7 @@ export default function Navbar(props) {
               {user.role === "ADMIN" ? (
                 <>
                   <InputGroup>
-                    <InputRightElement pointerEvents="none">
+                    <InputRightElement>
                       <FiSearch
                         color="gray.300"
                         cursor={"pointer"}
