@@ -1,18 +1,24 @@
-require("dotenv/config");
+const { join } = require("path");
+const dotenv = require("dotenv");
+dotenv.config({path:join(__dirname, "../.env")});
 const express = require("express");
 const cors = require("cors");
-const { join } = require("path");
+const router = require("./routers");
+const db = require("./models");
+// db.sequelize.sync({ alter: true });
+// db.sequelize.sync({ force: true });
 
 const PORT = process.env.PORT || 8000;
 const app = express();
-app.use(
-  cors({
-    origin: [
-      process.env.WHITELISTED_DOMAIN &&
-        process.env.WHITELISTED_DOMAIN.split(","),
-    ],
-  })
-);
+app.use(cors());
+// app.use(
+// 	cors({
+// 		origin: [
+// 			process.env.WHITELISTED_DOMAIN &&
+// 				process.env.WHITELISTED_DOMAIN.split(","),
+// 		],
+// 	})
+// );
 
 app.use(express.json());
 
@@ -20,6 +26,27 @@ app.use(express.json());
 
 // ===========================
 // NOTE : Add your routes here
+
+app.use("/api/product", router.productRouter);
+app.use("/api/category", router.categoryRouter);
+app.use("/api/cart", router.cartRouter);
+app.use("/api/stock", router.stockRouter);
+app.use("/api/stockhistory", router.stockHistoryRouter);
+app.use("/api/stockmutation", router.stockMutationRouter);
+app.use("/api/warehouse", router.warehouseRouter);
+app.use("/api/productImg", express.static(`${__dirname}/public/productImg`));
+app.use("/api/auth", router.userRouter);
+app.use("/api/authentication", router.authRouter);
+app.use("/api/address", router.addressRouter);
+app.use("/api/insert-address", router.insertAddressRouter);
+app.use("/api/password", router.passwordRouter);
+app.use("/api/orders", router.orderRouter);
+app.use("/api/userOrders", router.userOrderRouter);
+app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
+app.use(
+  "/api/paymentProof",
+  express.static(`${__dirname}/public/paymentProof`)
+);
 
 app.get("/api", (req, res) => {
   res.send(`Hello, this is my API`);
