@@ -78,9 +78,6 @@ export default function Navbar(props) {
     getAll();
   }, [search]);
 
-  console.log(product);
-  console.log(search);
-
   async function getAll() {
     try {
       setLoading(true);

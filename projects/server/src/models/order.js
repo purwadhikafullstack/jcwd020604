@@ -12,7 +12,8 @@ module.exports = (sequelize, Sequelize) => {
       total_price: Sequelize.INTEGER,
       status: Sequelize.ENUM(
         "PAYMENT",
-        "CONFIRM_PAYMENT",
+        "WAITING_STOCK_TRANSFER",
+        "WAITING_PAYMENT",
         "PROCESSING",
         "DELIVERY",
         "CANCELLED",
