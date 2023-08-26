@@ -33,7 +33,12 @@ export default function HistoryCard({ val }) {
 
 								<Flex flexDir={"column"}>
 									<Flex gap={"5px"}>
-										<Flex> {val?.stock?.warehouse?.warehouse_name}</Flex>
+										<Flex>
+											{" "}
+											{val?.stock?.warehouse?.warehouse_name
+												? val?.stock?.warehouse?.warehouse_name
+												: "Undefined warehouse"}
+										</Flex>
 										<Flex>{`(${val?.status})`}</Flex>
 									</Flex>
 									<Flex gap={"5px"}>

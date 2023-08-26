@@ -86,7 +86,7 @@ export default function StockCard({ val, getStock }) {
 						<Flex flexDir={"column"}>
 							<Flex w={"190px"}>
 								{!val?.warehouse ? (
-									<Flex>Warehouse not found</Flex>
+									<Flex>Undefined warehouse</Flex>
 								) : (
 									val?.warehouse?.warehouse_name
 								)}

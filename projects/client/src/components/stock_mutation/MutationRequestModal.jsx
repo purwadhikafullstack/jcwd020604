@@ -101,10 +101,16 @@ export default function MutationRequestModal({
 												/>
 												<Flex flexDir={"column"}>
 													<Flex>
-														From: {request?.from_warehouse?.warehouse_name}
+														From:{" "}
+														{request?.from_warehouse?.warehouse_name
+															? request?.from_warehouse?.warehouse_name
+															: "Undefined warehouse"}
 													</Flex>
 													<Flex>
-														To: {request?.to_warehouse?.warehouse_name}
+														To:{" "}
+														{request?.to_warehouse?.warehouse_name
+															? request?.to_warehouse?.warehouse_name
+															: "Undefined warehouse"}
 													</Flex>
 													<Flex>
 														Product: {request?.stock?.product?.product_name}
