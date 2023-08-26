@@ -108,7 +108,7 @@ const AddUser = () => {
                             {({ field }) => (
                                 <FormControl isRequired>
                                     <FormLabel>Phone Number</FormLabel>
-                                    <Input {...field} type="number" placeholder='Type your phone'/>
+                                    <Input {...field} type="tel" placeholder='Type your phone'/>
                                     <ErrorMessage name="phone_number" component={FormHelperText} />
                                 </FormControl>
                             )}

@@ -32,7 +32,6 @@ const OrderModal = (props) => {
 	const toast = useToast();
 	const orderDate = orderById?.createdAt ? new Date(orderById.createdAt) : null;
 	const [action, setAction] = useState("");
-	const [sending, setSending] = useState("");
 
 	useEffect(() => {
 		if (props.selectedOrder) getDetailById();
@@ -174,7 +173,7 @@ const OrderModal = (props) => {
 									</Text>
 								</Flex>
 								<Flex m={1}>
-										{orderById.status === "CANCELLED" ? 
+										{orderById.status !== "WAITING_PAYMENT" ? 
 										(<></>) : (
 										<>
 											<Select
