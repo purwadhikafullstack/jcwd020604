@@ -353,7 +353,7 @@ const ordersController = {
 								{
 									qty: -orderDetail.qty,
 									status: "OUT",
-									reference: `INVOICE`,
+									reference: order.invoice,
 									stock_id: stock.id,
 									stock_before: referenceWarehouse.qty,
 									stock_after: 0,
@@ -377,7 +377,7 @@ const ordersController = {
 							{
 								qty: -orderDetail.qty,
 								status: "OUT",
-								reference: `INVOICE`,
+								reference: order.invoice,
 								stock_id: stock.id,
 								stock_before: referenceWarehouse.qty,
 								stock_after: referenceWarehouse.qty - orderDetail.qty,
@@ -484,7 +484,7 @@ const ordersController = {
 					await db.stock_histories.create({
 						qty: parseInt(order.order_details[0].qty),
 						status: "IN",
-						reference: `INVOICE`,
+						reference: order.invoice,
 						stock_id: stock.id,
 						stock_before: qtyBefore,
 						stock_after: updatedQty,

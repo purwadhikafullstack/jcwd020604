@@ -44,7 +44,7 @@ const authController = {
                 });
     
                 return res.send({
-                    message: "register berhasil",
+                    message: "your account has been registered",
                 });
             }
         } catch (err) {

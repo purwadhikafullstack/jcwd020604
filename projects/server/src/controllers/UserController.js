@@ -58,6 +58,7 @@ const userController = {
 	},
 
 	createUser: async (req, res) => {
+		console.log('ini create user');
 		const userSchema = Joi.object({
 			fullname: Joi.string().required(),
 			email: Joi.string().email().required(),

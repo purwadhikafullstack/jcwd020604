@@ -74,7 +74,7 @@ export default function Verify() {
         fullname,
       });
       toast({
-        title: "Verifikasi berhasil, sekarang anda bisa login",
+        title: "Verification successful, now you can login",
         status: "success",
         duration: 3000,
         isClosable: true,
