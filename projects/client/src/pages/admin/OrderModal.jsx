@@ -60,7 +60,7 @@ const OrderModal = (props) => {
 	const confirmOrReject = async () => {
 		try {
 			await api().patch(
-				`/orders/orders/confirm-payment/${props.selectedOrder}`,
+				`/payment/payment/confirm-payment/${props.selectedOrder}`,
 				{ action }
 			);
 			if (action === "accept") {
@@ -173,8 +173,8 @@ const OrderModal = (props) => {
 									</Text>
 								</Flex>
 								<Flex m={1}>
-										{orderById.status !== "WAITING_PAYMENT" ? 
-										(<></>) : (
+										{orderById.status === "WAITING_PAYMENT" ? 
+										 (
 										<>
 											<Select
 												placeholder="Select action ..."
@@ -195,7 +195,7 @@ const OrderModal = (props) => {
 												</option>
 											</Select>
 										</>
-										)}	
+										): null}	
 								</Flex>
 							</CardHeader>
 							<CardBody>
@@ -240,25 +240,26 @@ const OrderModal = (props) => {
 												</Flex>
 												<HStack
 													display={"flex"}
+													p={2}
 													flexDir={{ base: "column", md: "row" }}
 													bgColor={"green.300"}
 													rounded={"md"}
 													boxShadow={"2xl"}
 												>
 													<Text
-														fontSize={"sm"}
-														fontWeight={"normal"}
+														fontSize={"xs"}
+														fontWeight={"bold"}
 														textColor={"white"}
 													>
 														{detail?.qty} barang x Rp{detail?.price}
 													</Text>
 													<Spacer />
 													<Text
-														fontSize={"sm"}
-														fontWeight={"normal"}
+														fontSize={"xs"}
+														fontWeight={"bold"}
 														textColor={"white"}
 													>
-														Total Harga : {detail?.price}
+														Total Harga : {orderById?.total_price}
 													</Text>
 												</HStack>
 											</Stack>
@@ -293,7 +294,7 @@ const OrderModal = (props) => {
 														fontWeight={"semibold"}
 														textColor={"blackAlpha.600"}
 													>
-														No. Resi : {orderById?.payment_proof}
+														Payment Proof : {orderById?.payment_proof}
 													</Text>
 												</Flex>
 												<Divider orientation="horizontal" my={2} />

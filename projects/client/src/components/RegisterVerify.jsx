@@ -214,8 +214,11 @@ export default function Verify() {
           <Button
             mt={"10px"}
             w={"100%"}
-            colorScheme="blue.100"
-            bgColor={'blue.100'}
+            bg={'blue.400'}
+            color={'white'}
+              _hover={{
+                bg: 'blue.500',
+            }}
             size="lg"
             type="submit"
           >

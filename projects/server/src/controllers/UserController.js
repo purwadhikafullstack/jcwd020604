@@ -1,12 +1,12 @@
 const db = require("../models");
 const bcrypt = require("bcrypt");
+const Joi = require("joi");
 const { nanoid } = require("nanoid");
 const moment = require("moment");
 const mailer = require("../lib/mailer");
 const fs = require("fs").promises;
 const handlebars = require("handlebars");
 const { where } = require("sequelize");
-const Joi = require("joi");
 
 const userController = {
 	getAll: async (req, res) => {
