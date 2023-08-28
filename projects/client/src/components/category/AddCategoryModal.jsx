@@ -41,7 +41,7 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 						duration: 3000,
 					});
 					getCategory();
-					onClose();
+					handleModalClose();
 					nav("/admin/managedata");
 				}
 			} catch (error) {

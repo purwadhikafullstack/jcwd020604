@@ -70,7 +70,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 						duration: 3000,
 					});
 					getWarehouse();
-					onClose();
+					handleModalClose();
 					nav("/admin/managedata");
 				}
 			} catch (error) {

@@ -1,6 +1,6 @@
 const { join } = require("path");
 const dotenv = require("dotenv");
-dotenv.config({path:join(__dirname, "../.env")});
+dotenv.config({ path: join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
 const router = require("./routers");
@@ -44,6 +44,8 @@ app.use("/api/orders", router.orderRouter);
 app.use("/api/action-order", router.handleActionOrderRouter);
 app.use("/api/payment", router.paymentRouter);
 app.use("/api/userOrders", router.userOrderRouter);
+app.use("/api/report", router.salesReportRouter);
+
 app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
 app.use(
   "/api/paymentProof",

@@ -293,10 +293,16 @@ const OrderModal = (props) => {
 														fontSize={"sm"}
 														fontWeight={"semibold"}
 														textColor={"blackAlpha.600"}
+														mr={2}
 													>
-														Payment Proof : {orderById?.payment_proof}
+														Payment Proof : 
 													</Text>
 												</Flex>
+													<Image 
+														src={orderById?.payment_proof}
+														w={'100%'}
+														h={'100%'}>
+													</Image>
 												<Divider orientation="horizontal" my={2} />
 												<Stack
 													display={"flex"}
