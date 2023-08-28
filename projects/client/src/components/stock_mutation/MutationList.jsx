@@ -102,7 +102,14 @@ export default function MutationList({ val, getMutation, getRequest }) {
 								</MenuItem>
 							</MenuList>
 						</Menu>
-					) : val?.status === "APPROVED" || "AUTO" ? (
+					) : val?.status === "APPROVED" ? (
+						<Icon
+							w={"20px"}
+							h={"20px"}
+							color={"green"}
+							as={AiOutlineCheckCircle}
+						/>
+					) : val?.status === "AUTO" ? (
 						<Icon
 							w={"20px"}
 							h={"20px"}
