@@ -193,7 +193,7 @@ export default function Navbar(props) {
                   </Flex>
                 </>
               )}
-              <Flex justifyContent={'center'} w={{base: 'lg', md: 'md', sm: 'sm'}}>
+              <Flex justifyContent={'center'}>
                 <InputGroup>
                   <InputRightElement cursor={"pointer"}>
                     <FiSearch
@@ -420,16 +420,16 @@ export default function Navbar(props) {
           </Box>
         ) : null}
       </Box>
-        <VStack overflow={'hidden'} zIndex={99} position={'fixed'}>
-          {search ? (<>{product?.map((val) => (
-          <Flex key={val.uuid} display={'flex'} justifyContent={'space-evenly'}>
-            <Text fontSize={'xs'} mx={2}>{val.product_name}</Text>
-              <Link to={`/collection/${val.uuid}`}>
-                  <Text fontSize={'xs'} fontWeight={'bold'} color={'green'}>Lihat Produk</Text>
-              </Link>
-          </Flex>
-          ))}</>) : null}
-        </VStack>
+          <VStack overflow={'clip'} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'}>
+            {search ? (<>{product?.map((val) => (
+            <Flex key={val.uuid}>
+              <Text fontSize={'xs'} mx={2}>{val.product_name}</Text>
+                <Link to={`/collection/${val.uuid}`}>
+                    <Text fontSize={'xs'} fontWeight={'bold'} color={'green'}>Lihat Produk</Text>
+                </Link>
+            </Flex>
+            ))}</>) : null}
+          </VStack>
     </>
   );
 }
