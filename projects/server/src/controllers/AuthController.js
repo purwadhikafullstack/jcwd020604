@@ -7,6 +7,7 @@ const fs = require("fs").promises;
 const handlebars = require("handlebars");
 const { where } = require("sequelize");
 const Joi = require("joi");
+const path = require("path");
 
 const authController = {
     register: async (req, res) => {
@@ -27,10 +28,9 @@ const authController = {
                     userId: JSON.stringify({ id: createAccount.dataValues.id }),
                     status: "VERIFY",
                 });
-                const template = await fs.readFile(
-                    "./src/template/register.html",
-                    "utf-8"
-                );
+                
+                const template = await fs.readFileSync(path.join(__dirname, "./src/template/register.html"), "utf-8");
+
                 let compiledTemplate = handlebars.compile(template);
                 let registerTemplate = compiledTemplate({
                     registrationLink: `${process.env.URL_REGISTER}/verify`,
