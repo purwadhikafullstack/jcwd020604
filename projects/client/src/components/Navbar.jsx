@@ -25,6 +25,7 @@ import {
   VStack,
   Popover,
   Spacer,
+  Container,
 } from "@chakra-ui/react";
 import {
   FiLogOut,
@@ -422,9 +423,9 @@ export default function Navbar(props) {
           </Box>
         ) : null}
       </Box>
-        <VStack overflow={'hidden'}>
+        <VStack overflow={'hidden'} zIndex={99} position={'fixed'}>
           {search ? (<>{product?.map((val) => (
-          <Flex key={val.uuid}>
+          <Flex key={val.uuid} display={'flex'} justifyContent={'space-evenly'}>
             <Text fontSize={'xs'} mx={2}>{val.product_name}</Text>
               <Link to={`/collection/${val.uuid}`}>
                   <Text fontSize={'xs'} fontWeight={'bold'} color={'green'}>Lihat Produk</Text>
