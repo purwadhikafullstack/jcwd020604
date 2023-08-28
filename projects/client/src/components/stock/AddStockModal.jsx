@@ -58,7 +58,7 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 						duration: 3000,
 					});
 					getStock();
-					onClose();
+					handleModalClose();
 					nav("/admin/managedata");
 				}
 			} catch (error) {

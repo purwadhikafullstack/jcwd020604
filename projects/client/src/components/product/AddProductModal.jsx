@@ -76,7 +76,7 @@ export default function AddCategoryModal({ isOpen, onClose, getProduct }) {
 						duration: 3000,
 					});
 					getProduct();
-					onClose();
+					handleModalClose();
 					setSelectedImages([]);
 					nav("/admin/product");
 				}

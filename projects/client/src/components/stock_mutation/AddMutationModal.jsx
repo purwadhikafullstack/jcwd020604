@@ -74,7 +74,7 @@ export default function AddMutationModal({
 
 					getMutation();
 					getRequest();
-					onClose();
+					handleModalClose();
 					setSelectedWarehouse("");
 					nav("/admin/mutation");
 				}
