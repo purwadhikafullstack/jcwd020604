@@ -74,7 +74,7 @@ export default function Verify() {
         fullname,
       });
       toast({
-        title: "Verifikasi berhasil, sekarang anda bisa login",
+        title: "Verification successful, now you can login",
         status: "success",
         duration: 3000,
         isClosable: true,
@@ -214,8 +214,11 @@ export default function Verify() {
           <Button
             mt={"10px"}
             w={"100%"}
-            colorScheme="blue.100"
-            bgColor={'blue.100'}
+            bg={'blue.400'}
+            color={'white'}
+              _hover={{
+                bg: 'blue.500',
+            }}
             size="lg"
             type="submit"
           >

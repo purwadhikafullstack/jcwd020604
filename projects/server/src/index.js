@@ -41,6 +41,8 @@ app.use("/api/address", router.addressRouter);
 app.use("/api/insert-address", router.insertAddressRouter);
 app.use("/api/password", router.passwordRouter);
 app.use("/api/orders", router.orderRouter);
+app.use("/api/action-order", router.handleActionOrderRouter);
+app.use("/api/payment", router.paymentRouter);
 app.use("/api/userOrders", router.userOrderRouter);
 app.use("/api/userImg", express.static(`${__dirname}/public/userImg`));
 app.use(

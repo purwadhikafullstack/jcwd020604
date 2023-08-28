@@ -91,7 +91,7 @@ const AddUser = () => {
                                 <FormControl isRequired>
                                     <FormLabel>Name</FormLabel>
                                     <Input {...field} type="text" placeholder='Input name'/>
-                                    <ErrorMessage name="fullname" component={FormHelperText} />
+                                    <ErrorMessage name="fullname" component={FormHelperText} color="red.500" />
                                 </FormControl>
                             )}
                         </Field>
@@ -100,7 +100,7 @@ const AddUser = () => {
                                 <FormControl isRequired>
                                     <FormLabel>Email address</FormLabel>
                                     <Input {...field} type="email" placeholder='Type your email'/>
-                                    <ErrorMessage name="email" component={FormHelperText} />
+                                    <ErrorMessage name="email" component={FormHelperText} color="red.500" />
                                 </FormControl>
                             )}
                         </Field>
@@ -108,8 +108,8 @@ const AddUser = () => {
                             {({ field }) => (
                                 <FormControl isRequired>
                                     <FormLabel>Phone Number</FormLabel>
-                                    <Input {...field} type="number" placeholder='Type your phone'/>
-                                    <ErrorMessage name="phone_number" component={FormHelperText} />
+                                    <Input {...field} type="tel" placeholder='Type your phone'/>
+                                    <ErrorMessage name="phone_number" component={FormHelperText} color="red.500" />
                                 </FormControl>
                             )}
                         </Field>
@@ -118,7 +118,7 @@ const AddUser = () => {
                                 <FormControl isRequired>
                                     <FormLabel>Password</FormLabel>
                                     <InputGroup>
-                                        <Input {...field} type="password" placeholder="Password" />
+                                        <Input {...field} type={showPassword ? 'text' : 'password'} placeholder="Password" />
                                         <InputRightElement h={'full'}>
                                             <Button
                                                 variant={'ghost'}
@@ -126,9 +126,9 @@ const AddUser = () => {
                                             >
                                             {showPassword ? <ViewIcon /> : <ViewOffIcon />}
                                          </Button>
-                        </InputRightElement>
+                                        </InputRightElement>
                                     </InputGroup>
-                                    <ErrorMessage name="password" component={FormHelperText} />
+                                    <ErrorMessage name="password" component={FormHelperText} color="red.500" />
                                 </FormControl>
                             )}
                         </Field>

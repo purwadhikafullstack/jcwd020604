@@ -25,7 +25,11 @@ export default function HistoryList({ val }) {
 						/>
 						<Flex w={"270px"}>{val?.stock?.product?.product_name}</Flex>
 					</Flex>
-					<Flex w={"195px"}>{val?.stock?.warehouse?.warehouse_name}</Flex>
+					<Flex w={"195px"}>
+						{val?.stock?.warehouse?.warehouse_name
+							? val?.stock?.warehouse?.warehouse_name
+							: "Undefined warehouse"}
+					</Flex>
 					<Flex w={"115px"} gap={"5px"}>
 						<Flex>{val?.stock_after}</Flex>
 						<Flex style={{ color: val?.qty < 0 ? "red" : "green" }}>
