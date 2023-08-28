@@ -100,7 +100,7 @@ db.orders.hasMany(db.order_details, {
   foreignKey: "order_id",
   targetKey: "id",
 });
-db.order_details.belongsTo(db.orders, { foreignKey: "order_id" });
+db.order_details.belongsTo(db.orders, { foreignKey: "order_id", as: "orders" });
 
 // db.products foreignKey
 db.categories.hasMany(db.products, {
