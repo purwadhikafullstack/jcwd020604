@@ -84,7 +84,14 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 											</MenuItem>
 										</MenuList>
 									</Menu>
-								) : val?.status === "APPROVED" || "AUTO" ? (
+								) : val?.status === "APPROVED" ? (
+									<Icon
+										w={"20px"}
+										h={"20px"}
+										color={"green"}
+										as={AiOutlineCheckCircle}
+									/>
+								) : val?.status === "AUTO" ? (
 									<Icon
 										w={"20px"}
 										h={"20px"}
@@ -104,7 +111,15 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 								<Flex w={"100px"}>{val?.status}</Flex>
 								<Flex w={"100px"}>Amount: {val?.qty}</Flex>
 								<Flex w={"195px"}>
-									{`${val?.from_warehouse?.warehouse_name} ➜ ${val?.to_warehouse?.warehouse_name}`}
+									{`${
+										val?.from_warehouse?.warehouse_name
+											? val?.from_warehouse?.warehouse_name
+											: "Undefined warehouse"
+									} ➜ ${
+										val?.to_warehouse?.warehouse_name
+											? val?.to_warehouse?.warehouse_name
+											: "Undefined warehouse"
+									}`}
 								</Flex>
 								<Flex w={"195px"}>{val?.mutation_code}</Flex>
 								<Flex w={"170px"}>

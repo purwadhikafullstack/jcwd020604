@@ -32,7 +32,6 @@ const OrderModal = (props) => {
 	const toast = useToast();
 	const orderDate = orderById?.createdAt ? new Date(orderById.createdAt) : null;
 	const [action, setAction] = useState("");
-	const [sending, setSending] = useState("");
 
 	useEffect(() => {
 		if (props.selectedOrder) getDetailById();
@@ -61,7 +60,7 @@ const OrderModal = (props) => {
 	const confirmOrReject = async () => {
 		try {
 			await api().patch(
-				`/orders/orders/confirm-payment/${props.selectedOrder}`,
+				`/payment/payment/confirm-payment/${props.selectedOrder}`,
 				{ action }
 			);
 			if (action === "accept") {
@@ -161,7 +160,7 @@ const OrderModal = (props) => {
 										fontWeight={"medium"}
 										textColor={"green.400"}
 									>
-										No.Invoice:{orderById?.invoice}
+										No {orderById?.invoice}
 									</Text>
 								</Stack>
 								<Flex m={1}>
@@ -174,8 +173,8 @@ const OrderModal = (props) => {
 									</Text>
 								</Flex>
 								<Flex m={1}>
-										{orderById.status === "CANCELLED" ? 
-										(<></>) : (
+										{orderById.status === "WAITING_PAYMENT" ? 
+										 (
 										<>
 											<Select
 												placeholder="Select action ..."
@@ -196,7 +195,7 @@ const OrderModal = (props) => {
 												</option>
 											</Select>
 										</>
-										)}	
+										): null}	
 								</Flex>
 							</CardHeader>
 							<CardBody>
@@ -241,25 +240,26 @@ const OrderModal = (props) => {
 												</Flex>
 												<HStack
 													display={"flex"}
+													p={2}
 													flexDir={{ base: "column", md: "row" }}
 													bgColor={"green.300"}
 													rounded={"md"}
 													boxShadow={"2xl"}
 												>
 													<Text
-														fontSize={"sm"}
-														fontWeight={"normal"}
+														fontSize={"xs"}
+														fontWeight={"bold"}
 														textColor={"white"}
 													>
 														{detail?.qty} barang x Rp{detail?.price}
 													</Text>
 													<Spacer />
 													<Text
-														fontSize={"sm"}
-														fontWeight={"normal"}
+														fontSize={"xs"}
+														fontWeight={"bold"}
 														textColor={"white"}
 													>
-														Total Harga : {detail?.price}
+														Total Harga : {orderById?.total_price}
 													</Text>
 												</HStack>
 											</Stack>
@@ -294,7 +294,7 @@ const OrderModal = (props) => {
 														fontWeight={"semibold"}
 														textColor={"blackAlpha.600"}
 													>
-														No. Resi : {orderById?.payment_proof}
+														Payment Proof : {orderById?.payment_proof}
 													</Text>
 												</Flex>
 												<Divider orientation="horizontal" my={2} />
@@ -337,9 +337,12 @@ const OrderModal = (props) => {
 					</ModalBody>
 					<ModalFooter>
 						<ButtonGroup mx={{ base: "12", sm: "6", md: "10" }}>
+							{orderById?.status === "WAITING_PAYMENT" ? (
+							<>
 							<Button colorScheme="green" size={"xs"} onClick={confirmOrReject}>
 								Confirm
 							</Button>
+							</>) : null }
 							<Button colorScheme="orange" size={"xs"} onClick={props.onClose}>
 								Close
 							</Button>

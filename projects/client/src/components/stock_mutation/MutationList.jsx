@@ -72,9 +72,17 @@ export default function MutationList({ val, getMutation, getRequest }) {
 						<Flex w={"270px"}>{val?.stock?.product?.product_name}</Flex>
 					</Flex>
 					<Flex w={"195px"} flexWrap={"wrap"} gap={"3px"}>
-						<Flex>{`${val?.from_warehouse?.warehouse_name}`}</Flex>
+						<Flex>{`${
+							val?.from_warehouse?.warehouse_name
+								? val?.from_warehouse?.warehouse_name
+								: "Undefined warehouse"
+						}`}</Flex>
 						<Flex>➜</Flex>
-						<Flex>{` ${val?.to_warehouse?.warehouse_name}`}</Flex>
+						<Flex>{` ${
+							val?.to_warehouse?.warehouse_name
+								? val?.to_warehouse?.warehouse_name
+								: "Undefined warehouse"
+						}`}</Flex>
 					</Flex>
 					<Flex w={"195px"}>{val?.mutation_code}</Flex>
 					<Flex w={"100px"}>{val?.qty}</Flex>
@@ -94,7 +102,14 @@ export default function MutationList({ val, getMutation, getRequest }) {
 								</MenuItem>
 							</MenuList>
 						</Menu>
-					) : val?.status === "APPROVED" || "AUTO" ? (
+					) : val?.status === "APPROVED" ? (
+						<Icon
+							w={"20px"}
+							h={"20px"}
+							color={"green"}
+							as={AiOutlineCheckCircle}
+						/>
+					) : val?.status === "AUTO" ? (
 						<Icon
 							w={"20px"}
 							h={"20px"}

@@ -67,19 +67,13 @@ const AdminOrder = () => {
           setOrders(rows);
           setTotalPage(Math.ceil(count / 3));
         } catch (error) {
-          const errorMessage = "An error occurred while fetching data.";
-          toast({
-            title: errorMessage,
-            status: "error",
-            duration: 3000,
-            isClosable: false,
-          });
+          console.log("An error occurred while fetching data.");
         }
       };
       
     const sendOrder = async (orderId) => {
         try {
-            await api().patch(`/orders/orders/sending-order/${orderId}`, {
+            await api().patch(`/action-order/orders/sending-order/${orderId}`, {
                 send: "send",
             });
             toast({
@@ -103,12 +97,12 @@ const AdminOrder = () => {
 
 	const cancelOrder = async (orderId) => {
 		try {
-			await api().patch(`/orders/orders/sending-order/${orderId}`, {
+			await api().patch(`/action-order/orders/sending-order/${orderId}`, {
 				send: "cancel",
 			});
 			toast({
-				title: "Sending order to user",
-				status: "success",
+				title: "Order cancelled",
+				status: "error",
 				position: "top",
 				duration: 3000,
 				isClosable: false,
@@ -251,7 +245,7 @@ const AdminOrder = () => {
 											fontWeight={"medium"}
 											textColor={"blackAlpha.600"}
 										>
-											No. Invoice: {order.invoice}
+											No {order.invoice}
 										</Text>
 									</Stack>
 								</CardHeader>
@@ -311,6 +305,7 @@ const AdminOrder = () => {
 														<Flex gap={"10px"}>
 															<Button
 																display={"flex"}
+																size={'xs'}
 																justifyContent={"end"}
 																colorScheme="red"
 																onClick={() => cancelOrder(order.id)}
@@ -319,6 +314,7 @@ const AdminOrder = () => {
 															</Button>
 															<Button
 																display={"flex"}
+																size={'xs'}
 																justifyContent={"end"}
 																colorScheme="green"
 																onClick={() => sendOrder(order.id)}

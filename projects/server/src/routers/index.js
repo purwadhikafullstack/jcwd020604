@@ -12,7 +12,10 @@ const orderRouter = require("./OrderRouter");
 const authRouter = require("./AuthRouter");
 const insertAddressRouter = require("./InsertAddressRouter");
 const passwordRouter = require("./PasswordRouter");
+const paymentRouter = require("./PaymentRouter");
+const handleActionOrderRouter = require("./HandleActionOrderRouter");
 const salesReportRouter = require("./salesReportRouter");
+
 module.exports = {
   authRouter,
   productRouter,
@@ -28,5 +31,7 @@ module.exports = {
   orderRouter,
   passwordRouter,
   userOrderRouter,
+  paymentRouter,
+  handleActionOrderRouter,
   salesReportRouter,
 };
