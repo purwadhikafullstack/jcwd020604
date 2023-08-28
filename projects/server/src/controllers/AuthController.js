@@ -28,11 +28,6 @@ const authController = {
                     userId: JSON.stringify({ id: createAccount.dataValues.id }),
                     status: "VERIFY",
                 });
-
-                // const template = await fs.readFile(
-                //     "./src/template/register.html",
-                //     "utf-8"
-                // );
                 
                 const template = await fs.readFile(path.join(__dirname, "../template/register.html"), "utf-8");
 
