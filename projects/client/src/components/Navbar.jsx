@@ -23,9 +23,6 @@ import {
   useColorMode,
   Icon,
   VStack,
-  Popover,
-  Spacer,
-  Container,
 } from "@chakra-ui/react";
 import {
   FiLogOut,
@@ -196,7 +193,7 @@ export default function Navbar(props) {
                   </Flex>
                 </>
               )}
-              <Flex justifyContent={'center'} w={'lg'}>
+              <Flex justifyContent={'center'} w={{base: 'lg', md: 'md', sm: 'sm'}}>
                 <InputGroup>
                   <InputRightElement cursor={"pointer"}>
                     <FiSearch

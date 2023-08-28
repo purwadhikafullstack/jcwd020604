@@ -33,7 +33,7 @@ const authController = {
                 );
                 let compiledTemplate = handlebars.compile(template);
                 let registerTemplate = compiledTemplate({
-                    registrationLink: `${process.env.production.REACT_APP_API_BASE_URL}/verify`,
+                    registrationLink: `${process.env.URL_REGISTER}/verify`,
                     email,
                     token: token.dataValues.token,
                 });
