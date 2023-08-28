@@ -88,7 +88,10 @@ const getStockMutation = {
 					{
 						model: db.stocks,
 						include: [
-							{ model: db.products, include: [{ model: db.product_images }] },
+							{
+								model: db.products,
+								include: [{ model: db.product_images, limit: 1 }],
+							},
 						],
 					},
 					{
