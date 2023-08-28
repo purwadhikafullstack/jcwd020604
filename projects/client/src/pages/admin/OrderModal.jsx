@@ -160,7 +160,7 @@ const OrderModal = (props) => {
 										fontWeight={"medium"}
 										textColor={"green.400"}
 									>
-										No.Invoice:{orderById?.invoice}
+										No {orderById?.invoice}
 									</Text>
 								</Stack>
 								<Flex m={1}>
@@ -337,9 +337,12 @@ const OrderModal = (props) => {
 					</ModalBody>
 					<ModalFooter>
 						<ButtonGroup mx={{ base: "12", sm: "6", md: "10" }}>
+							{orderById?.status === "WAITING_PAYMENT" ? (
+							<>
 							<Button colorScheme="green" size={"xs"} onClick={confirmOrReject}>
 								Confirm
 							</Button>
+							</>) : null }
 							<Button colorScheme="orange" size={"xs"} onClick={props.onClose}>
 								Close
 							</Button>
