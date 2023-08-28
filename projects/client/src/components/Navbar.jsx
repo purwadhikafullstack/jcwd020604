@@ -22,6 +22,9 @@ import {
   InputGroup,
   useColorMode,
   Icon,
+  VStack,
+  Popover,
+  Spacer,
 } from "@chakra-ui/react";
 import {
   FiLogOut,
@@ -77,9 +80,6 @@ export default function Navbar(props) {
   useEffect(() => {
     getAll();
   }, [search]);
-
-  console.log(product);
-  console.log(search);
 
   async function getAll() {
     try {
@@ -195,7 +195,7 @@ export default function Navbar(props) {
                   </Flex>
                 </>
               )}
-              <Flex>
+              <Flex justifyContent={'center'} w={'lg'}>
                 <InputGroup>
                   <InputRightElement cursor={"pointer"}>
                     <FiSearch
@@ -213,14 +213,6 @@ export default function Navbar(props) {
               </Flex>
             </HStack>
           </HStack>
-            <Flex>
-                {search ? (<>{product?.map((val) => (
-                  <Flex key={val.uuid}>
-                      <p>{val.product_name}</p>
-                      <Link to={`/collection/${val.uuid}`}>Lihat Produk</Link>
-                  </Flex>
-                ))}</>) : null}
-            </Flex>
           <Flex alignItems={"center"}>
             <IconButton
               icon={colorMode === "light" ? <FiSun /> : <FiMoon />}
@@ -430,6 +422,16 @@ export default function Navbar(props) {
           </Box>
         ) : null}
       </Box>
+        <VStack overflow={'hidden'}>
+          {search ? (<>{product?.map((val) => (
+          <Flex key={val.uuid}>
+            <Text fontSize={'xs'} mx={2}>{val.product_name}</Text>
+              <Link to={`/collection/${val.uuid}`}>
+                  <Text fontSize={'xs'} fontWeight={'bold'} color={'green'}>Lihat Produk</Text>
+              </Link>
+          </Flex>
+          ))}</>) : null}
+        </VStack>
     </>
   );
 }

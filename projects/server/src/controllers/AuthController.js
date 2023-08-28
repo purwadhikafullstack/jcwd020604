@@ -33,7 +33,7 @@ const authController = {
                 );
                 let compiledTemplate = handlebars.compile(template);
                 let registerTemplate = compiledTemplate({
-                    registrationLink: `${process.env.URL_REGISTER}/verify`,
+                    registrationLink: `${process.env.production.REACT_APP_API_BASE_URL}/verify`,
                     email,
                     token: token.dataValues.token,
                 });
@@ -44,7 +44,7 @@ const authController = {
                 });
     
                 return res.send({
-                    message: "register berhasil",
+                    message: "your account has been registered",
                 });
             }
         } catch (err) {

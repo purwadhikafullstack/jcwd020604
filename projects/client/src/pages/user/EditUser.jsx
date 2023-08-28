@@ -108,7 +108,7 @@ export default function EditUser (props) {
                 </FormControl>
                 <FormControl isRequired>
                     <FormLabel>Phone</FormLabel>
-                    <Input type='number' name="phone_number"
+                    <Input type='tel' name="phone_number"
                     value={users.phone_number}
                     onChange={handleInputChange}/>
                 </FormControl>

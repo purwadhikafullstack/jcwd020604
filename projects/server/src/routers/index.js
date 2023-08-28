@@ -12,6 +12,8 @@ const orderRouter = require('./OrderRouter');
 const authRouter = require('./AuthRouter');
 const insertAddressRouter = require('./InsertAddressRouter');
 const passwordRouter = require('./PasswordRouter');
+const paymentRouter = require('./PaymentRouter');
+const handleActionOrderRouter = require('./HandleActionOrderRouter');
 
 module.exports = {
 	authRouter,
@@ -27,5 +29,7 @@ module.exports = {
 	cartRouter,
 	orderRouter,
 	passwordRouter,
-  userOrderRouter
+  	userOrderRouter,
+	paymentRouter,
+	handleActionOrderRouter
 };
