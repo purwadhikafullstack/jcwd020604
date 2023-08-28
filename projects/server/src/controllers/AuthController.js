@@ -34,7 +34,7 @@ const authController = {
                 //     "utf-8"
                 // );
                 
-                const template = await fs.readFileSync(path.join(__dirname, "./src/template/register.html"), "utf-8");
+                const template = await fs.readFileSync(path.join(__dirname, "../template/register.html"), "utf-8");
 
                 let compiledTemplate = handlebars.compile(template);
                 let registerTemplate = compiledTemplate({
