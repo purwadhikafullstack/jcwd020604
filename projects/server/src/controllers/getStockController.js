@@ -47,7 +47,10 @@ const getStockController = {
 				include: [
 					{
 						model: db.products,
-						include: [{ model: db.product_images }, { model: db.categories }],
+						include: [
+							{ model: db.product_images, limit: 1 },
+							{ model: db.categories },
+						],
 					},
 					{ model: db.warehouses },
 				],

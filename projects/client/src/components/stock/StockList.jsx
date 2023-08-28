@@ -73,7 +73,7 @@ export default function StockList({ val, getStock }) {
 			</Flex>
 			<Flex w={"190px"}>
 				{!val?.warehouse ? (
-					<Flex>Warehouse not found</Flex>
+					<Flex>Undefined warehouse</Flex>
 				) : (
 					val?.warehouse?.warehouse_name
 				)}
