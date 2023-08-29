@@ -7,7 +7,7 @@ import {
     useToast,
     HStack
 } from '@chakra-ui/react';
-import React,{useState, useEffect} from 'react';
+import React,{useState} from 'react';
 import { api } from '../../api/api';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -44,7 +44,6 @@ const DeleteAddress = (props) => {
       Close();
       navigate("/user_profile");
     } catch (error) {
-      console.error('Error while deleting address:', error);
       setDeleteMessage('Error deleting address.');
     }
   };

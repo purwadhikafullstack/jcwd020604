@@ -98,7 +98,7 @@ const addressController = {
       address: Joi.string().required(),
       province: Joi.string().required(),
       city: Joi.string().required(),
-      city_id: Joi.string().required(),
+      city_id,
       district: Joi.string().required(),
     });
 
@@ -106,7 +106,7 @@ const addressController = {
       address,
       province,
       city,
-	  city_id,
+	    city_id,
       district,
     });
 
@@ -118,10 +118,10 @@ const addressController = {
 
     try {
       const existingAddress = await db.addresses.findOne({
-        where: { address },
+        where: { address, user_id: req.user.id },
       });
 
-      if (existingAddress?.id != id) {
+      if (existingAddress?.dataValues?.id != id && existingAddress != null) {
         return res
           .status(400)
           .send({ message: "Address name already exists." });
@@ -146,7 +146,7 @@ const addressController = {
           address,
           province,
           city,
-		  city_id,
+		      city_id,
           district,
           latitude: lat,
           longitude: lng,

@@ -19,7 +19,6 @@ import { useSelector } from "react-redux";
 
 export default function AddressUser(props) {
   const user = useSelector((state) => state.auth);
-  // const [changes, setChanges] = useState("");
   const [address, setAddress] = useState({
     address: "",
     province: "",
@@ -29,9 +28,6 @@ export default function AddressUser(props) {
   });
 
   const [city, setCity] = useState("");
-  console.log(address);
-  // console.log(city);
-
   const [province, setProvince] = useState("");
 
   const navigate = useNavigate();
@@ -50,22 +46,18 @@ export default function AddressUser(props) {
   };
 
   const getUserCity = async () => {
-    const res = await api().get(
-      `${process.env.REACT_APP_API_BASE_URL}/address/getAll/city`
-    );
+    const res = await api().get("/address/getAll/city");
     setCity(res.data);
   };
 
   const getUserProvince = async () => {
-    const res = await api().get(
-      `${process.env.REACT_APP_API_BASE_URL}/address/getAll/province`
-    );
+    const res = await api().get("/address/getAll/province");
     setProvince(res.data);
   };
 
   const saveAddress = async () => {
     try {
-      await api().post(`${process.env.REACT_APP_API_BASE_URL}/insert-address/users`, {
+      await api().post("/insert-address/users", {
         ...address,
         user_id: user.id,
       });
@@ -94,12 +86,9 @@ export default function AddressUser(props) {
 
   const getAddressByUser = async () => {
     try {
-      const response = await api().get(
-        `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
-      );
+      const response = await api().get(`/address/users/${user.id}`);
       setAddress(response.data);
     } catch (error) {
-      console.error(error);
       toast({
         title: "Error fetching user details",
         status: "error",
@@ -125,7 +114,6 @@ export default function AddressUser(props) {
           [name]: value,
         }));
       }
-      console.log(address);
   };
 
   return (

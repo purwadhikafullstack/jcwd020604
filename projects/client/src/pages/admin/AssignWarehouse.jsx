@@ -17,13 +17,12 @@ import { useNavigate } from 'react-router-dom';
 export default function Assign (props) {
   const [warehouse, setWarehouse] = useState([]);
   const [wAdmin, setWAdmin] = useState({warehouse_id: ""});
-  const [message, setMessage] = useState('');
   const toast = useToast();
   const nav = useNavigate();
 
     async function getWarehouse() {
       try {
-        const res = await api().get(`${process.env.REACT_APP_API_BASE_URL}/warehouse`);
+        const res = await api().get("/warehouse");
         if (res && res.data) {
           setWarehouse(res.data);
         }
@@ -41,8 +40,7 @@ export default function Assign (props) {
 
     const assignUser = async () => {
       try {
-        const res = await api().post(`${process.env.REACT_APP_API_BASE_URL}/warehouse/assign`, {...wAdmin, uuid: props.uuid});
-        setMessage(res.data.message);
+        await api().post("/warehouse/assign", {...wAdmin, uuid: props.uuid});
         toast({
           title: "Assign admin success",
           status: "success",
@@ -54,8 +52,6 @@ export default function Assign (props) {
         props.fetchData();
         props.onClose();
       } catch (error) {
-        setMessage('Error occurred while assigning admin to the warehouse');
-        console.error(error);
         toast({
           title: "User is already assigned to another warehouse",
           status: 'warning',

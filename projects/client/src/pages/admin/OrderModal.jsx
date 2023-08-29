@@ -39,14 +39,8 @@ const OrderModal = (props) => {
 
 	const getDetailById = async () => {
 		try {
-			await api()
-				.get(`/orders/orders/${props.selectedOrder}`)
-				.then((response) => {
-					setOrderById(response.data);
-				})
-				.catch((error) => {
-					console.error(error);
-				});
+			const response = await api().get(`/orders/orders/${props.selectedOrder}`);
+			setOrderById(response.data);
 		} catch (error) {
 			toast({
 				title: "There is something error while executing this command",

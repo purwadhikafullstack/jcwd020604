@@ -72,7 +72,6 @@ export default function UserProfile() {
 
   const handleFile = (e) => {
     setSelectedFile(e.target.files[0]);
-    console.log(e.target.files[0]);
   };
 
   async function uploadAvatar() {
@@ -80,7 +79,7 @@ export default function UserProfile() {
     formData.append("userImg", selectedFile);
   
     try {
-      await api().post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData);
+      await api().post(`/auth/${user.id}`, formData);
       toast({
         title: "Photo has been updated",
         status: "success",
@@ -91,7 +90,6 @@ export default function UserProfile() {
       fetchData();
       fetch();
     } catch (error) {
-      console.error("An error occurred:", error);
       toast({
         title: "File too large",
         status: "error",
@@ -110,10 +108,9 @@ export default function UserProfile() {
 
   const fetchData = async() => {
     try {
-      const response = await api().get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`);
+      const response = await api().get(`/auth/users/${user.uuid}`);
       setUsers(response.data);
     } catch (error) {
-      console.log(error);
       toast({
             title:"There is something error while executing this command",
             status:"error",
@@ -126,8 +123,7 @@ export default function UserProfile() {
   async function fetch() {
     try {
       const token = JSON.parse(localStorage.getItem("auth"));
-      const user = await api()
-        .get(`${process.env.REACT_APP_API_BASE_URL}/authentication/v2`, {
+      const user = await api().get("/authentication/v2", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -140,18 +136,21 @@ export default function UserProfile() {
         });
       }
     } catch (err) {
-      console.log(err);
+      toast({
+        title: "Error fetching user details",
+        status: "error",
+        duration: 3000,
+        position: "top",
+        isClosable: false,
+      });
     }
   }
       
   const getAddressByUser = async () => {
     try {
-      const response = await api().get(
-        `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
-      );
+      const response = await api().get(`/address/users/${user.id}`);
       setAddress(response.data);
     } catch (error) {
-      console.error(error);
       toast({
         title: "Error fetching user details",
         status: "error",
@@ -169,7 +168,7 @@ export default function UserProfile() {
 
   const saveUser = async () => {
     try {
-        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, changes);
+        await api().patch(`/auth/users/${user.uuid}`, changes);
         toast({
             title:"User has been updated",
             status:"success",
@@ -194,7 +193,6 @@ const handleInputChange = (e) => {
   const tempUser = { ...users };
   tempUser[id] = value;
   setChanges(tempUser);
-  console.log(changes);
 };
 
   return (

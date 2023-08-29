@@ -8,7 +8,7 @@ import {
 	Text,
 	Flex,
 } from '@chakra-ui/react';
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import Product1 from "../../assets/product photos/TOPS/FR2LogoLongsleeveT-shirt2.jpg";
 import Product2 from "../../assets/product photos/BOTTOMS/Pants1.jpg";
