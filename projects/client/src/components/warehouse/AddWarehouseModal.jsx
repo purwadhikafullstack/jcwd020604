@@ -22,6 +22,7 @@ import * as Yup from "yup";
 export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	const [city, setCity] = useState([]);
 	const [province, setProvince] = useState([]);
+	const [selectedProvince, setSelectedProvince] = useState("");
 	const toast = useToast();
 	const nav = useNavigate();
 
@@ -111,6 +112,7 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 	const handleModalClose = () => {
 		formik.resetForm();
 		onClose();
+		setSelectedProvince("");
 	};
 
 	return (
@@ -139,24 +141,14 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 							id="district"
 							onChange={inputHandler}
 						/>
-						<FormLabel>City:</FormLabel>
-						<Select placeholder="Choose City" id="city" onChange={inputHandler}>
-							{city.length
-								? city.map((val) => (
-										<option
-											key={val.id}
-											value={`${val.city_name}|${val.city_id}`}
-										>
-											{val.city_name}
-										</option>
-								  ))
-								: null}
-						</Select>
 						<FormLabel>Province:</FormLabel>
 						<Select
 							placeholder="Choose Province"
 							id="province"
-							onChange={inputHandler}
+							onChange={(event) => {
+								inputHandler(event); // Call the inputHandler function to update the formik values
+								setSelectedProvince(event.target.value); // Update the selected province
+							}}
 						>
 							{province.length
 								? province.map((val) => (
@@ -164,6 +156,26 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 											{val.province}
 										</option>
 								  ))
+								: null}
+						</Select>
+						<FormLabel>City:</FormLabel>
+						<Select
+							placeholder="Choose City"
+							id="city"
+							onChange={inputHandler}
+							disabled={!selectedProvince} // Disable the city select until a province is selected
+						>
+							{city.length
+								? city
+										.filter((val) => val.province === selectedProvince)
+										.map((val) => (
+											<option
+												key={val.id}
+												value={`${val.city_name}|${val.city_id}`}
+											>
+												{val.city_name}
+											</option>
+										))
 								: null}
 						</Select>
 						<FormLabel>Phone Number:</FormLabel>
