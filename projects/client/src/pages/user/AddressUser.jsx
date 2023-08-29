@@ -29,6 +29,7 @@ export default function AddressUser(props) {
 
   const [city, setCity] = useState("");
   const [province, setProvince] = useState("");
+  const [selectedProvince, setSelectedProvince] = useState("");
 
   const navigate = useNavigate();
   const toast = useToast();
@@ -143,7 +144,7 @@ export default function AddressUser(props) {
               <FormLabel>Province</FormLabel>
               <Select
                 name="province"
-                onChange={(val) => handleInputChange(val)}
+                onChange={(val) => {handleInputChange(val); setSelectedProvince(val.target.value)}}
               >
                 {province.length
                   ? province.map((val) => (
@@ -156,7 +157,7 @@ export default function AddressUser(props) {
               <FormLabel>City</FormLabel>
               <Select name="city" id="city" onChange={(val) => handleInputChange(val)}>
                 {city.length
-                  ? city.map((val) => (
+                  ? city.filter((val) => val.province === selectedProvince).map((val) => (
                       <option
                         key={val.id}
                         value={`${val.city_name}|${val.city_id}`}
