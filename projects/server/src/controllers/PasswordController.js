@@ -25,7 +25,7 @@ const passwordController = {
 					status: "FORGOT-PASSWORD",
 				});
 
-				const template = await fs.readFileSync(path.join(__dirname, "../template/resetPassword.html"), "utf-8");
+				const template = await fs.readFile(path.join(__dirname, "../template/resetPassword.html"), "utf-8");
 
 				let compiledTemplate = handlebars.compile(template);
 				let resetPasswordTemplate = compiledTemplate({
