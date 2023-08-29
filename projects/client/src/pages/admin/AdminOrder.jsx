@@ -269,7 +269,7 @@ const AdminOrder = () => {
 									</Flex>
 									{order.order_details?.length ? order.order_details.map((detail) => (
 										<Box key={detail.id}>
-											<HStack>
+											<Flex flexDir={{base: 'column', md: 'row', sm: 'column'}}>
 												<Image
 													src={`${process.env.REACT_APP_API_BASE_URL}/${detail?.stock?.product?.product_images[0]?.product_image}`}
 													w={"100%"}
@@ -284,9 +284,9 @@ const AdminOrder = () => {
 													>
 														{detail.stock?.product?.product_name}
 													</Text>
-													<Flex w={{ base: "50%", sm: "100%", md: "50%" }}>
+													<Flex w={{ base: "100%", sm: "100%", md: "50%" }}>
 														<Text
-															textAlign={"justify"}
+															textAlign={'justify'}
 															as={"p"}
 															fontSize={"sm"}
 															fontWeight={"semibold"}
@@ -303,7 +303,7 @@ const AdminOrder = () => {
 														{detail.qty} barang x Rp{detail.price}
 													</Text>
 												</Stack>
-											</HStack>
+											</Flex>
 											<Flex justifyContent={"space-between"}>
 												<Flex></Flex>
 												{order.status === "PROCESSING" ? (
