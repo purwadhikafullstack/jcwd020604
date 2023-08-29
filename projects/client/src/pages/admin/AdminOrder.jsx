@@ -67,7 +67,13 @@ const AdminOrder = () => {
           setOrders(rows);
           setTotalPage(Math.ceil(count / 3));
         } catch (error) {
-          console.log("An error occurred while fetching data.");
+		  toast({
+			title: "An error occurred while fetching data.",
+			status: "error",
+			position: "top",
+			duration: 3000,
+			isClosable: false,
+		});
         }
       };
       
@@ -129,6 +135,8 @@ const AdminOrder = () => {
 			setPage(newPage);
 		}
 	};
+
+	console.log(orders);
 
 	return (
 		<>
@@ -199,11 +207,11 @@ const AdminOrder = () => {
 						</Select>
 					)}
 				</Flex>
-				{orders.length === 0 ? (
+				{orders?.length === 0 ? (
 					<OrderNotFound />
 				) : (
 					<>
-						{orders.map((order) => (
+						{orders?.length ? orders?.map((order) => (
 							<Card
 								my={2}
 								mx={{ base: "12", sm: "6", md: "14" }}
@@ -261,11 +269,11 @@ const AdminOrder = () => {
 											{order.user?.fullname}
 										</Text>
 									</Flex>
-									{order.order_details.map((detail) => (
+									{order.order_details?.length ? order.order_details.map((detail) => (
 										<Box key={detail.id}>
 											<HStack>
 												<Image
-													src={`${process.env.REACT_APP_API_BASE_URL}/${detail.stock.product.product_images[0].product_image}`}
+													src={`${process.env.REACT_APP_API_BASE_URL}/${detail?.stock?.product?.product_images[0]?.product_image}`}
 													w={"100%"}
 													boxSize="250px"
 													objectFit="cover"
@@ -276,7 +284,7 @@ const AdminOrder = () => {
 														fontWeight={"bold"}
 														textColor={"blackAlpha.600"}
 													>
-														{detail.stock.product.product_name}
+														{detail.stock?.product?.product_name}
 													</Text>
 													<Flex w={{ base: "50%", sm: "100%", md: "50%" }}>
 														<Text
@@ -286,7 +294,7 @@ const AdminOrder = () => {
 															fontWeight={"semibold"}
 															textColor={"blackAlpha.600"}
 														>
-															{detail.stock.product.product_detail}
+															{detail.stock?.product?.product_detail}
 														</Text>
 													</Flex>
 													<Text
@@ -344,10 +352,10 @@ const AdminOrder = () => {
 												)}
 											</Flex>
 										</Box>
-									))}
+									)): null}
 								</CardBody>
 							</Card>
-						))}
+						)): null}
 					</>
 				)}
 			</>

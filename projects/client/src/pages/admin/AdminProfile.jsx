@@ -6,7 +6,6 @@ import {
     Text,
     IconButton,
     Button,
-    Center,
     VStack,
     HStack,
     Wrap,
@@ -22,7 +21,6 @@ import {
     Stack,
     useColorModeValue,
     ButtonGroup,
-    Spacer,
   } from '@chakra-ui/react';
   import {
     MdFacebook,

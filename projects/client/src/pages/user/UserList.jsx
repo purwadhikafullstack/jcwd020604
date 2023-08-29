@@ -37,28 +37,23 @@ const UserList = () => {
      fetchData();
     }, []);
 
-    const fetchData = async() => {
+    const fetchData = async () => {
         try {
-            api().get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}`)
-            .then((response) => {
-                setUsers(response.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
+            const response = await api().get(`/auth/users/role/${role}`);
+            setUsers(response.data);
         } catch (error) {
             toast({
-                title:"There is something error while executing this command",
-                status:"error",
-                duration:3000,
-                isClosable:false
+                title: "There is something error while executing this command",
+                status: "error",
+                duration: 3000,
+                isClosable: false,
             });
         }
-    }
-
+    };
+    
     const deleteUser = async(id) => {
         try {
-            await api().delete(`${process.env.REACT_APP_API_BASE_URL}/auth/users/role/${role}/${id}`);
+            await api().delete(`/auth/users/role/${role}/${id}`);
             setUsers(prevUsers => prevUsers.filter(user => user.id !== id));
             toast({
                 title:"User has been deleted",

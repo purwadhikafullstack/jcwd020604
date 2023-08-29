@@ -54,7 +54,7 @@ import {
     });
 
   async function fetchUser(data){
-   const res = await api().get(`${process.env.REACT_APP_API_BASE_URL}/authentication/v2`, {
+   const res = await api().get("/authentication/v2", {
     headers:{
       Authorization:'Bearer '+ data,
     }
@@ -76,7 +76,7 @@ import {
     async function verif(values) {
       const { password } = values;
       try {
-        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/password/verify-password?token=`+token, {
+        await api().patch("/password/verify-password?token="+token, {
           password,
         },
           {headers:{
@@ -84,7 +84,7 @@ import {
           } }, 
         );
         toast({
-          title: "Verifikasi berhasil, sekarang anda bisa login",
+          title: "Verification success, you can login now",
           status: "success",
           duration: 3000,
           isClosable: true,
@@ -92,7 +92,7 @@ import {
         nav("/login");
       } catch (err) {
         toast({
-          title: err.response?.data?.message,
+          title: "Verification failed",
           status: "error",
           duration: 3000,
           isClosable: true,
@@ -199,7 +199,7 @@ import {
                   </Button>
                 </InputRightElement>
               </InputGroup>
-              <Box fontSize={'14px'} color={'red'}>{formik.errors.confirmPassword9}</Box>
+              <Box fontSize={'14px'} color={'red'}>{formik.errors.confirmPassword}</Box>
               <Box h={"20px"}>
                 <FormErrorMessage fontSize={"2xs"}>
                   {formik.errors.confirmPassword}
