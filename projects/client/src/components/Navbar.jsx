@@ -268,15 +268,15 @@ export default function Navbar(props) {
               {user.fullname ? (
                 <>
                   <Text
-                    fontSize={{ base: "12px", sm: "10px", md: "12px" }}
+                    fontSize={{ base: "8px", sm: "10px", md: "12px" }}
                     mr={2}
                     display={"flex"}
-                    flexDir={{ base: "row", sm: "column", md: "column" }}
+                    flexDir={{ base: "column", sm: "column", md: "column" }}
                   >
                     {greeting}
                     <Text
                       as={"b"}
-                      fontSize={{ base: "12px", sm: "10px", md: "12px" }}
+                      fontSize={{ base: "8px", sm: "10px", md: "12px" }}
                     >
                       {user.fullname.length > 18
                         ? user.fullname.substring(0, 18) + "..."
