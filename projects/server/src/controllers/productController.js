@@ -2,6 +2,7 @@ const db = require("../models");
 const Joi = require("joi");
 const { Op } = require("sequelize");
 const fs = require("fs");
+const path = require("path");
 
 const productController = {
 	insert: async (req, res) => {
@@ -113,9 +114,7 @@ const productController = {
 			});
 
 			for (const image of selectedProduct.product_images) {
-				fs.unlinkSync(
-					`${__dirname}/../public/productImg/${image.product_image}`
-				);
+				fs.unlinkSync(path.join(__dirname, `../public/${image.product_image}`));
 			}
 
 			// Update the product
@@ -173,9 +172,7 @@ const productController = {
 				return res.status(404).send({ message: "Product not found." });
 			}
 			for (const image of existingProduct.product_images) {
-				fs.unlinkSync(
-					`${__dirname}/../public/productImg/${image.product_image}`
-				);
+				fs.unlinkSync(path.join(__dirname, `../public/${image.product_image}`));
 			}
 
 			await db.products.destroy({ where: { id }, transaction: t });
