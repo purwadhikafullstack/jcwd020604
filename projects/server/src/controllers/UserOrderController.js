@@ -399,7 +399,7 @@ const userOrdersController = {
       const update = await db.orders.update(
         {
           payment_proof: process.env.paymentProof_img + req?.file?.filename,
-          status: "CONFIRM_PAYMENT",
+          status: "WAITING_PAYMENT",
         },
         {
           where: { id: order_id },

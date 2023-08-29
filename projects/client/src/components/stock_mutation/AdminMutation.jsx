@@ -301,6 +301,7 @@ export default function AdminMutation() {
 							}}
 						>
 							<option>APPROVED</option>
+							<option>AUTO</option>
 							<option>PENDING</option>
 							<option>REJECT</option>
 						</Select>
