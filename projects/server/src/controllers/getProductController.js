@@ -13,7 +13,7 @@ const getProductController = {
 				where.category_id = category_id;
 			}
 
-			if (page && parseInt(page) > 1) {
+			if (page && parseInt(page) >= 1) {
 				offset = (parseInt(page) - 1) * limit;
 			}
 
