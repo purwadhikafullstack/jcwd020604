@@ -136,16 +136,14 @@ const AdminOrder = () => {
 		}
 	};
 
-	console.log(orders);
-
 	return (
 		<>
 			<Navbar />
 			<>
-				<Flex flexDir={"row"} mx={{ base: "12", sm: "6", md: "14" }}>
+				<Flex flexDir={"row"} mx={{ base: "10", sm: "6", md: "14" }}>
 					<Select
 						placeholder="All Status"
-						w={{ base: "12%", sm: "md", md: "13%" }}
+						w={{ base: "none", sm: "md", md: "13%" }}
 						m={4}
 						cursor={"pointer"}
 						fontSize={"xs"}
@@ -167,7 +165,7 @@ const AdminOrder = () => {
 					{user.role === "ADMIN" ? (
 						<Select
 							placeholder="All Warehouse"
-							w={{ base: "12%", sm: "md", md: "12%" }}
+							w={{ base: "none", sm: "md", md: "12%" }}
 							m={4}
 							cursor={"pointer"}
 							fontSize={"xs"}
@@ -189,7 +187,7 @@ const AdminOrder = () => {
 					) : (
 						<Select
 							placeholder="All Warehouse"
-							w={{ base: "12%", sm: "md", md: "12%" }}
+							w={{ base: "none", sm: "md", md: "12%" }}
 							m={4}
 							cursor={"pointer"}
 							fontSize={"xs"}
@@ -214,7 +212,7 @@ const AdminOrder = () => {
 						{orders?.length ? orders?.map((order) => (
 							<Card
 								my={2}
-								mx={{ base: "12", sm: "6", md: "14" }}
+								mx={{ base: "10", sm: "6", md: "14" }}
 								size={"sm"}
 								display={"block"}
 								position={"relative"}
