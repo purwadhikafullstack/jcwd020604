@@ -55,10 +55,6 @@ export default function Navbar(props) {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const filteredProducts = product.filter(val =>
-    val.product_name.toLowerCase().includes(search.toLowerCase())
-);
-
   const [greeting, setGreeting] = useState("");
   const [totalQty, setTotalQty] = useState(0);
 
@@ -425,7 +421,7 @@ export default function Navbar(props) {
         ) : null}
       </Box>
           <VStack overflow={'clip'} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'}>
-            {search ? (<>{filteredProducts?.map((val) => (
+            {search ? (<>{product?.map((val) => (
             <Flex key={val.uuid}>
               <Text fontSize={'xs'} mx={2}>{val.product_name}</Text>
                 <Link to={`/collection/${val.uuid}`}>
