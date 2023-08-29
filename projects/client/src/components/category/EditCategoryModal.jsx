@@ -73,9 +73,11 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 		setSelectedCategory(event.target.value);
 	};
 
+	const isSaveButtonEnabled = selectedCategory;
+
 	const resetInputFields = () => {
 		setData({});
-		setSelectedCategory([]);
+		setSelectedCategory();
 	};
 
 	const handleModalClose = () => {
@@ -110,6 +112,7 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 							placeholder="e.g. Hoodie"
 							id="category_name"
 							defaultValue={data.category_name}
+							isDisabled={!isSaveButtonEnabled}
 							onChange={(e) =>
 								setData({ ...data, category_name: e.target.value })
 							}
@@ -118,7 +121,12 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 				</ModalBody>
 
 				<ModalFooter>
-					<Button onClick={editCategory} colorScheme="blue" mr={3}>
+					<Button
+						onClick={editCategory}
+						colorScheme="blue"
+						mr={3}
+						isDisabled={!isSaveButtonEnabled}
+					>
 						Save
 					</Button>
 				</ModalFooter>
