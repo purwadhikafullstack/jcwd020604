@@ -33,6 +33,10 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 	const user = useSelector((state) => state.auth);
 
 	useEffect(() => {
+		setProduct(val);
+	}, [val]);
+
+	useEffect(() => {
 		getCategory();
 	}, [isOpen]);
 

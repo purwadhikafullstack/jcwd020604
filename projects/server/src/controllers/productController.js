@@ -1,6 +1,7 @@
 const db = require("../models");
 const Joi = require("joi");
 const { Op } = require("sequelize");
+const fs = require("fs");
 
 const productController = {
 	insert: async (req, res) => {
@@ -106,6 +107,15 @@ const productController = {
 					.send({ message: "Product name already exists." });
 			}
 
+			const selectedProduct = await db.products.findOne({
+				where: { id },
+				include: [{ model: db.product_images, as: "product_images" }],
+			});
+
+			for (const image of selectedProduct.product_images) {
+				fs.unlinkSync(`${__dirname}/../public/${image.product_image}`);
+			}
+
 			// Update the product
 			await db.products.update(
 				{
@@ -152,10 +162,16 @@ const productController = {
 		const t = await db.sequelize.transaction();
 
 		try {
-			const existingProduct = await db.products.findOne({ where: { id } });
+			const existingProduct = await db.products.findOne({
+				where: { id },
+				include: [{ model: db.product_images, as: "product_images" }],
+			});
 
 			if (!existingProduct) {
 				return res.status(404).send({ message: "Product not found." });
+			}
+			for (const image of existingProduct.product_images) {
+				fs.unlinkSync(`${__dirname}/../public/${image.product_image}`);
 			}
 
 			await db.products.destroy({ where: { id }, transaction: t });

@@ -287,7 +287,6 @@ const OrderModal = (props) => {
 														fontSize={"sm"}
 														fontWeight={"semibold"}
 														textColor={"blackAlpha.600"}
-														mr={2}
 													>
 														Payment Proof : 
 													</Text>
