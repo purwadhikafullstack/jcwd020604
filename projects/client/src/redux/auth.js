@@ -4,7 +4,6 @@ const init = {
 };
 
 function userReducer(state = init, action) {
-	//action adalah event yang terjadi
 	if (action.type === "login") {
 		return {
 			...state,
@@ -19,7 +18,6 @@ function userReducer(state = init, action) {
 			warehouse_id: action.payload.warehouse_id,
 			address: action.payload.address,
 			cart: action.payload.cart,
-			// password: action.payload.password,
 		};
 	} else if (action.type === "logout") {
 		return init;

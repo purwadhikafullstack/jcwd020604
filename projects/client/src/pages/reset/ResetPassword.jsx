@@ -43,18 +43,20 @@ import { useSelector } from 'react-redux';
 
     const resetPassword = async (values) => {
       try {
-        await api().post(`${process.env.REACT_APP_API_BASE_URL}/password/reset-password`, values);
+        await api().post(`/password/reset-password`, values);
         toast({
-          title: "Periksa email verifikasi anda",
+          title: "Verification password has been sent to your email",
           status: "success",
           duration: 3000,
+          position: 'top',
           isClosable: true,
         });
       } catch (err) {
         toast({
-          title: err.response?.data?.message,
+          title: "Failed to send verification password",
           status: "error",
           duration: 3000,
+          position: 'top',
           isClosable: true,
         });
       }
