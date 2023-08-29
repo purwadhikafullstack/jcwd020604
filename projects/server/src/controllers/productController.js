@@ -113,7 +113,9 @@ const productController = {
 			});
 
 			for (const image of selectedProduct.product_images) {
-				fs.unlinkSync(`${__dirname}/../public/${image.product_image}`);
+				fs.unlinkSync(
+					`${__dirname}/../public/productImg/${image.product_image}`
+				);
 			}
 
 			// Update the product
@@ -171,7 +173,9 @@ const productController = {
 				return res.status(404).send({ message: "Product not found." });
 			}
 			for (const image of existingProduct.product_images) {
-				fs.unlinkSync(`${__dirname}/../public/${image.product_image}`);
+				fs.unlinkSync(
+					`${__dirname}/../public/productImg/${image.product_image}`
+				);
 			}
 
 			await db.products.destroy({ where: { id }, transaction: t });
