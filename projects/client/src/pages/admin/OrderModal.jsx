@@ -292,7 +292,7 @@ const OrderModal = (props) => {
 													</Text>
 												</Flex>
 													<Image 
-														src={orderById?.payment_proof}
+														src={`${process.env.REACT_APP_API_BASE_URL}/${orderById?.payment_proof}`}
 														w={'100%'}
 														h={'100%'}>
 													</Image>
