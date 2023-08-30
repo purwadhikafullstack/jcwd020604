@@ -18,6 +18,7 @@ module.exports = (sequelize, Sequelize) => {
 				type: Sequelize.STRING,
 				validate: {
 					isNumeric: true,
+					len: [0, 12]
 				}
 			},
 			password: Sequelize.STRING,
