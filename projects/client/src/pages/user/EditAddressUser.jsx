@@ -96,8 +96,6 @@ export default function AddressUser(props) {
     }
   };
 
-  console.log(city);
-
   const handleInputChange = (e) => {
     const { value, id } = e.target;
     if (id === "city") {

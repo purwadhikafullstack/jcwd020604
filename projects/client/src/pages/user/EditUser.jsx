@@ -57,7 +57,6 @@ export default function EditUser (props) {
           position: "top",
           isClosable: false,
         });
-        console.log(error);
       }
     };
   
@@ -66,7 +65,6 @@ export default function EditUser (props) {
         const response = await api().get(`/auth/users/${props.uuid}`);
         setUsers(response.data);
       } catch (error) {
-        console.log(error);
         toast({
           title: "Error fetching user details",
           status: "error",
@@ -74,7 +72,6 @@ export default function EditUser (props) {
           position: "top",
           isClosable: false,
         });
-        console.log(error);
       }
     };
 
