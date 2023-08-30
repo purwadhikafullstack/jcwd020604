@@ -6,6 +6,8 @@ import {
   Link,
   useToast,
   ButtonGroup,
+  Flex,
+  Icon,
 } from "@chakra-ui/react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
@@ -13,6 +15,9 @@ import { useState, useRef, useEffect } from "react";
 import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
 import { api } from "../api/api";
 import { useNavigate } from "react-router-dom";
+import { BsEnvelopePaperHeart } from "react-icons/bs";
+import { IoMdTime } from "react-icons/io";
+import { AiOutlineCheckCircle } from "react-icons/ai";
 
 export default function Order() {
   const [subTotal, setSubTotal] = useState(0);
@@ -88,12 +93,6 @@ export default function Order() {
     }
   };
 
-  // async function getcart() {
-  //   console.log(user.id);
-  //   const res = await api.get(`/cart/` + user.id);
-  //   setProduct(res.data);
-  // }
-  // console.log(product);
   const calculateTotal = () => {
     let total = 0;
     product.forEach((val) => {
@@ -117,18 +116,50 @@ export default function Order() {
     }
   };
 
+  console.log(order);
+
+  const userDone = async (orderId) => {
+    try {
+      await api().patch(`/userOrders/orders-done/${orderId}`, {
+        action: "done",
+      });
+      toast({
+        title: "Order has been arrived",
+        status: "success",
+        position: "top",
+        duration: 3000,
+        isClosable: false,
+      });
+      getOrder();
+    } catch (error) {
+      toast({
+        title: error.response.data.message,
+        status: "error",
+        position: "top",
+        duration: 3000,
+        isClosable: false,
+      });
+    }
+  };
+  useEffect(() => {
+    getOrder();
+  }, [page]);
+
   return (
     <>
       <Navbar />
       <Center mb={"50px"} mt={"50px"}>
         <Box w={"900px"} h={"800px"}>
-          <Box display={"flex"} justifyContent={"space-between"} mt={"10px"}>
-            <Image
-              w={"80px"}
-              h={"35px"}
-              src="https://kabarpolisi.com/wp-content/uploads/2017/03/04-07-24-LogoBankmandiriButtonBackgroudTransparentPNG.png"
-            />
-            <Box mr={"10px"}> Not yet paid</Box>
+          <Box
+            gap={"10px"}
+            alignItems={"center"}
+            justifyContent={"center"}
+            display={"flex"}
+            mt={"10px"}
+            fontSize={"large"}
+          >
+            <Box>Order List</Box>
+            <BsEnvelopePaperHeart />
           </Box>
           <hr
             style={{
@@ -138,10 +169,10 @@ export default function Order() {
           {order.length
             ? order?.map((val) => (
                 <>
-                  <Box>
+                  <Box key={val.id}>
                     <Box
                       w={"900px"}
-                      mt={"20px"}
+                      mt={"40px"}
                       display={"flex"}
                       justifyContent={"space-between"}
                       alignItems={"center"}
@@ -193,8 +224,9 @@ export default function Order() {
                     justifyContent={"space-between"}
                   >
                     <Box></Box>
+
                     <Box display={"flex"} mt={"20px"} gap={"5px"}>
-                      <Box>Amount to paid :</Box>
+                      <Box>Total Price :</Box>
                       <Box fontWeight={"bold"}>
                         {" "}
                         Rp{" "}
@@ -205,45 +237,73 @@ export default function Order() {
                       </Box>
                     </Box>
                   </Box>
+                  <Flex justifyContent={"space-between"} mt={"10px"}>
+                    <Flex fontWeight={"bold"}>Status :</Flex>
+                    {val.status === "DONE" ? (
+                      <Flex alignItems={"center"} gap={"5px"} color={"green"}>
+                        <Flex>Product Arrived</Flex>
+                        <AiOutlineCheckCircle />
+                      </Flex>
+                    ) : val.status === "WAITING_PAYMENT" &&
+                      val.payment_proof ? (
+                      <Flex color={"blue"} alignItems={"center"} gap={"5px"}>
+                        <Flex>Waiting admin confirm </Flex>
+                        <IoMdTime />
+                      </Flex>
+                    ) : val.status === "WAITING_PAYMENT" &&
+                      !val.payment_proof ? (
+                      <Flex color={"blue"} alignItems={"center"} gap={"5px"}>
+                        <Flex>Waiting Payment </Flex>
+                        <IoMdTime />
+                      </Flex>
+                    ) : (
+                      val.status
+                    )}
+                  </Flex>
                   <Box
                     display={"flex"}
                     justifyContent={"space-between"}
                     mt={"20px"}
                   >
-                    <Box
-                      fontSize={12}
-                      display={"flex"}
-                      gap={"5px"}
-                      alignItems={"center"}
-                    >
-                      <Box>Pay before</Box>
-                      <Box>August, 22 2023 16:15</Box>
-                    </Box>
-                    <Box display={"flex"} gap={"10px"}>
-                      <Box>
-                        <Button
-                          w={"200px"}
-                          bgColor={"#ffe401"}
-                          borderRadius={"none"}
-                          onClick={() => nav(`/payment/${val.id}`)}
-                        >
-                          Payment now
-                        </Button>
+                    <Box></Box>
+                    {!val.payment_proof && val.status === "WAITING_PAYMENT" ? (
+                      <Box display={"flex"} gap={"10px"}>
+                        <Box>
+                          <Button
+                            w={"200px"}
+                            bgColor={"#ffe401"}
+                            borderRadius={"none"}
+                            onClick={() => nav(`/payment/${val.id}`)}
+                          >
+                            Payment now
+                          </Button>
+                        </Box>
+
+                        <Box>
+                          <Button
+                            w={"200px"}
+                            bgColor={"white"}
+                            border={"1px solid grey"}
+                            borderRadius={"none"}
+                            onClick={() => {
+                              setOrderId(val.id);
+                            }}
+                          >
+                            Cancel order
+                          </Button>
+                        </Box>
                       </Box>
-                      <Box>
-                        <Button
-                          w={"200px"}
-                          bgColor={"white"}
-                          border={"1px solid grey"}
-                          borderRadius={"none"}
-                          onClick={() => {
-                            setOrderId(val.id);
-                          }}
-                        >
-                          Cancel order
-                        </Button>
-                      </Box>
-                    </Box>
+                    ) : null}
+                    {val.payment_proof && val.status === "DELIVERY" ? (
+                      <Button
+                        onClick={() => userDone(val.id)}
+                        w={"200px"}
+                        bgColor={"#1EFF43"}
+                        borderRadius={"none"}
+                      >
+                        Order Received
+                      </Button>
+                    ) : null}
                   </Box>
                 </>
               ))
@@ -251,7 +311,7 @@ export default function Order() {
         </Box>
       </Center>
       <ButtonGroup
-        p={3}
+        p={20}
         display={"flex"}
         justifyContent={"center"}
         alignItems={"center"}
@@ -260,6 +320,8 @@ export default function Order() {
       >
         {page === 1 || order?.length === 0 ? null : (
           <Button
+            w={"80px"}
+            borderRadius={"none"}
             onClick={() => {
               handlePageChange(page - 1);
               window.scrollTo({ top: 0, behavior: "smooth" });
@@ -270,6 +332,8 @@ export default function Order() {
         )}
         {page === totalPage || order?.length === 0 ? null : (
           <Button
+            w={"80px"}
+            borderRadius={"none"}
             onClick={() => {
               handlePageChange(page + 1);
               window.scrollTo({ top: 0, behavior: "smooth" });

@@ -15,6 +15,8 @@ import { BsImage } from "react-icons/bs";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../api/api";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+
 import { color } from "framer-motion";
 
 export default function Payment() {
@@ -29,6 +31,9 @@ export default function Payment() {
   const userSelector = useSelector((state) => state.auth);
   const orderId = loc.pathname.split("/")[2];
   const [order, setOrder] = useState();
+  const nav = useNavigate();
+  const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false); // New state
+
   const uploadPaymentImg = async () => {
     try {
       const formData = new FormData();
@@ -41,10 +46,13 @@ export default function Payment() {
         duration: 3000,
         isClosable: true,
       });
+      setIsPaymentConfirmed(true);
+      nav("/order");
     } catch (err) {
       console.log(err);
     }
   };
+
   const fetchOrderById = async () => {
     try {
       const res = await api().get(`/userOrders/ordersUser/${orderId}`);
@@ -103,7 +111,7 @@ export default function Payment() {
               alignItems={"center"}
             >
               <Box fontSize={18} p={"10px"} fontWeight={"semibold"}>
-                Mandiri Virtual Account
+                Mandiri
               </Box>
               <Image
                 mr={"5px"}
@@ -121,15 +129,15 @@ export default function Payment() {
               alignItems={"center"}
             >
               <Box>
-                <Box>Virtual Account Number</Box>
-                <Box fontWeight={"semibold"}>900283764783475</Box>
+                <Box>Account Number</Box>
+                <Box fontWeight={"semibold"}>1090018991489</Box>
               </Box>
               <Box
                 mr={"8px"}
                 fontSize={18}
                 cursor={"pointer"}
                 fontWeight={"bold"}
-                color={"#ffe401"}
+                color={"black"}
                 display={"flex"}
                 alignItems={"center"}
                 gap={"4px"}
@@ -159,7 +167,7 @@ export default function Payment() {
                   </Box>
                   <AiOutlineCopy
                     style={{
-                      color: "#ffe401",
+                      color: "black",
                       cursor: "pointer",
                       fontSize: "18",
                     }}
@@ -212,7 +220,7 @@ export default function Payment() {
                   />
                 </label>{" "}
                 <Box>
-                  <BsImage />
+                  <BsImage style={{ color: "black" }} />
                 </Box>
               </Box>
             </Box>
@@ -220,7 +228,18 @@ export default function Payment() {
             <Box p={3}>
               <Image src={image} />
             </Box>
-            <Button onClick={uploadPaymentImg}>confirm</Button>
+
+            <Box display={"flex"} justifyContent={"space-between"}>
+              <Box></Box>
+              <Button
+                margin={2}
+                colorScheme="green"
+                onClick={uploadPaymentImg}
+                isDisabled={!image}
+              >
+                confirm
+              </Button>
+            </Box>
           </Box>
         </Center>
         <Center>

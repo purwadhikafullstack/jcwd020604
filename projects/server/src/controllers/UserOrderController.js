@@ -389,6 +389,54 @@ const userOrdersController = {
       return res.status(500).send({ message: err.message });
     }
   },
+  userDone: async (req, res) => {
+    try {
+      const { id } = req.params;
+      const { action } = req.body;
+
+      const order = await db.orders.findOne({
+        where: { id },
+        include: [
+          {
+            model: db.order_details,
+            include: [
+              {
+                model: db.stocks,
+                include: [
+                  {
+                    model: db.products,
+                    include: [{ model: db.product_images }],
+                  },
+                  { model: db.warehouses },
+                ],
+              },
+            ],
+          },
+          { model: db.users, include: [{ model: db.addresses }] },
+        ],
+      });
+
+      if (!order) {
+        return res.status(404).json({ message: "Order not found" });
+      }
+
+      if (action === "done") {
+        if (order.status !== "DELIVERY") {
+          return res
+            .status(400)
+            .json({ message: "Invalid order, Order has not been deliver" });
+        }
+
+        order.status = "DONE";
+        await order.save();
+
+        return res.status(200).json({ message: "Order has been arrived" });
+      }
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ message: "Invalid action" });
+    }
+  },
   paymentProofByUser: async (req, res) => {
     console.log(req.file);
     console.log(req.params);
@@ -398,7 +446,7 @@ const userOrdersController = {
     try {
       const update = await db.orders.update(
         {
-          payment_proof: process.env.paymentProof_img + req?.file?.filename,
+          payment_proof: "paymentProof/" + req?.file?.filename,
           status: "WAITING_PAYMENT",
         },
         {

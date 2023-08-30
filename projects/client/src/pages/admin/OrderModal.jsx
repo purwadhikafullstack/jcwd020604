@@ -1,41 +1,41 @@
 import React, { useEffect, useState } from "react";
 import {
-	Modal,
-	ModalOverlay,
-	ModalContent,
-	ModalHeader,
-	ModalFooter,
-	ModalBody,
-	ModalCloseButton,
-	Button,
-	Flex,
-	Card,
-	CardHeader,
-	CardBody,
-	Box,
-	Text,
-	Stack,
-	Badge,
-	Image,
-	HStack,
-	useToast,
-	VStack,
-	Spacer,
-	Divider,
-	ButtonGroup,
-	Select,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
+  Button,
+  Flex,
+  Card,
+  CardHeader,
+  CardBody,
+  Box,
+  Text,
+  Stack,
+  Badge,
+  Image,
+  HStack,
+  useToast,
+  VStack,
+  Spacer,
+  Divider,
+  ButtonGroup,
+  Select,
 } from "@chakra-ui/react";
 import { api } from "../../api/api";
 
 const OrderModal = (props) => {
-	const [orderById, setOrderById] = useState([]);
-	const toast = useToast();
-	const orderDate = orderById?.createdAt ? new Date(orderById.createdAt) : null;
-	const [action, setAction] = useState("");
+  const [orderById, setOrderById] = useState([]);
+  const toast = useToast();
+  const orderDate = orderById?.createdAt ? new Date(orderById.createdAt) : null;
+  const [action, setAction] = useState("");
 
-	useEffect(() => {
-		if (props.selectedOrder) getDetailById();
-	}, [props.selectedOrder]);
+  useEffect(() => {
+    if (props.selectedOrder) getDetailById();
+  }, [props.selectedOrder]);
 
 	const getDetailById = async () => {
 		try {
@@ -51,52 +51,52 @@ const OrderModal = (props) => {
 		}
 	};
 
-	const confirmOrReject = async () => {
-		try {
-			await api().patch(
-				`/payment/payment/confirm-payment/${props.selectedOrder}`,
-				{ action }
-			);
-			if (action === "accept") {
-				toast({
-					title: "Payment received, order status updated to Processing",
-					status: "success",
-					position: "top",
-					duration: 3000,
-					isClosable: false,
-				});
-				getDetailById();
-				props.onClose();
-				props.fetchData();
-			} else {
-				toast({
-					title:
-						"Payment is rejected, order status is updated to Waiting for Payment",
-					status: "error",
-					duration: 3000,
-					position: "top",
-					isClosable: false,
-				});
-				getDetailById();
-				props.onClose();
-				props.fetchData();
-			}
-		} catch (error) {
-			toast({
-				title: "Payment has been accepted or Done",
-				status: "info",
-				position: "top",
-				duration: 3000,
-				isClosable: false,
-			});
-			props.onClose();
-			props.fetchData();
-		}
-	};
+  const confirmOrReject = async () => {
+    try {
+      await api().patch(
+        `/payment/payment/confirm-payment/${props.selectedOrder}`,
+        { action }
+      );
+      if (action === "accept") {
+        toast({
+          title: "Payment received, order status updated to Processing",
+          status: "success",
+          position: "top",
+          duration: 3000,
+          isClosable: false,
+        });
+        getDetailById();
+        props.onClose();
+        props.fetchData();
+      } else {
+        toast({
+          title:
+            "Payment is rejected, order status is updated to Waiting for Payment",
+          status: "error",
+          duration: 3000,
+          position: "top",
+          isClosable: false,
+        });
+        getDetailById();
+        props.onClose();
+        props.fetchData();
+      }
+    } catch (error) {
+      toast({
+        title: "Payment has been accepted or Done",
+        status: "info",
+        position: "top",
+        duration: 3000,
+        isClosable: false,
+      });
+      props.onClose();
+      props.fetchData();
+    }
+  };
 
-	const handleActionChange = (e) => {
-		setAction(e.target.value);
-	};
+  const handleActionChange = (e) => {
+    setAction(e.target.value);
+  };
 
 	return (
 		<>
@@ -292,7 +292,7 @@ const OrderModal = (props) => {
 													</Text>
 												</Flex>
 													<Image 
-														src={orderById?.payment_proof}
+														src={`${process.env.REACT_APP_API_BASE_URL}/${orderById?.payment_proof}`}
 														w={'100%'}
 														h={'100%'}>
 													</Image>

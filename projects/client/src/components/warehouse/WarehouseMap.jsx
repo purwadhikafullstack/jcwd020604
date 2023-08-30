@@ -21,7 +21,7 @@ export default function Maps({ geolocation }) {
 	return (
 		<>
 			<Center fontWeight={700} fontSize={"4xl"} pt={"15px"}>
-				All Store
+				All Offline Store
 			</Center>
 			<Center
 				flexWrap={"wrap"}

@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { Box, useBreakpointValue } from "@chakra-ui/react";
+import { Box } from "@chakra-ui/react";
 import Slider from "react-slick";
 import Product1 from "../../assets/product photos/ACCESORIES/chingco1.jpg";
 import Product2 from "../../assets/product photos/BOTTOMS/Pants1.jpg";
