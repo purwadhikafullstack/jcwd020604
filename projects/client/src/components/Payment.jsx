@@ -2,7 +2,7 @@ import {
   Box,
   Button,
   Center,
-  Icon,
+  Flex,
   Image,
   Input,
   useToast,
@@ -17,13 +17,8 @@ import { api } from "../api/api";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-import { color } from "framer-motion";
-
 export default function Payment() {
   const loc = useLocation();
-  const [countDown, setCountDown] = useState(86400); // 24 hours in seconds
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const inputFileRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [image, setImage] = useState();
@@ -52,7 +47,7 @@ export default function Payment() {
       console.log(err);
     }
   };
-
+  console.log();
   const fetchOrderById = async () => {
     try {
       const res = await api().get(`/userOrders/ordersUser/${orderId}`);
@@ -64,21 +59,7 @@ export default function Payment() {
   useEffect(() => {
     fetchOrderById();
   }, []);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountDown((prevCount) => prevCount - 1);
-    }, 1000);
-    return () => clearInterval(timer); // Clear the interval when component unmounts
-  }, []); // Empty dependency array to run effect only once on component mount
 
-  const formatTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
   const handleImageChange = (event) => {
     setSelectedFiles(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]));
@@ -89,16 +70,7 @@ export default function Payment() {
       <Center mb={10} mt={10} flexDir={"column"}>
         <Center flexDir={"column"} gap={"5px"}>
           <Box fontSize={18} fontWeight={"bold"}>
-            Finish payment in time
-          </Box>
-          <Box fontSize={18} color={"red"} fontWeight={"bold"}>
-            {formatTime(countDown)}
-          </Box>{" "}
-          <Box fontSize={14} color={"grey"}>
-            Payment Deadline
-          </Box>
-          <Box fontWeight={"bold"} fontSize={16}>
-            August, 19 2023 16:15
+            Finish payment now!
           </Box>
         </Center>
         <Center mt={12}>
@@ -148,6 +120,16 @@ export default function Payment() {
                 </Box>
               </Box>
             </Box>
+            <Box mt={"20px"} ml={"10px"} w={"480px"}>
+              <Box fontWeight={"semibold"}>Product Name :</Box>
+              <Box>
+                {order?.order_details?.map((val) => (
+                  <Flex flexDir={"column"}>
+                    ✱ {val?.stock?.product?.product_name}
+                  </Flex>
+                ))}
+              </Box>
+            </Box>
             <Box
               mt={"20px"}
               ml={"10px"}
@@ -157,7 +139,7 @@ export default function Payment() {
               alignItems={"center"}
             >
               <Box>
-                <Box>Total Payment</Box>
+                <Box fontWeight={"semibold"}>Total Payment</Box>
                 <Box display={"flex"} alignItems={"center"} gap={"4px"}>
                   <Box fontWeight={"semibold"}>
                     {order?.total_price.toLocaleString("id-ID", {
@@ -179,10 +161,9 @@ export default function Payment() {
                 cursor={"pointer"}
                 fontWeight={"bold"}
                 mr={"8px"}
-              >
-                See Detail
-              </Box>
+              ></Box>
             </Box>
+
             <Box
               mt={"20px"}
               ml={"10px"}

@@ -18,7 +18,6 @@ router.post(
 router.post("/order-detail", userOrdersController.createOrderDetail);
 router.patch("/orders-done/:id", userOrdersController.userDone);
 router.patch("/orders/:id", userOrdersController.updateOrder);
-// router.delete("/orders/:id", userOrdersController.deleteOrder);
 router.delete("/orders/:id", userOrdersController.deleteOrderByUser);
 router.patch(
   "/payment/:order_id",

@@ -7,24 +7,19 @@ const userOrdersController = {
     try {
       const { status, warehouse_id } = req.query;
       const limit = 3;
-
       const page = req?.query?.page || 1;
       let offset = (parseInt(page) - 1) * limit;
-
       let whereClause = {};
-
       if (status) {
         whereClause["$status$"] = {
           [Op.like]: `${status}`,
         };
       }
-
       if (warehouse_id) {
         whereClause["$orders.warehouse_id$"] = {
           [Op.like]: `${warehouse_id}`,
         };
       }
-
       const orders = await db.orders.findAndCountAll({
         where: {
           ...whereClause,
@@ -63,10 +58,8 @@ const userOrdersController = {
     try {
       const { user_id } = req.params;
       const limit = 3;
-
       const page = req?.query?.page || 1;
       let offset = (parseInt(page) - 1) * limit;
-
       const orders = await db.orders.findAndCountAll({
         where: {
           user_id,
@@ -91,7 +84,6 @@ const userOrdersController = {
         ],
         distinct: true,
       });
-      console.log(orders.rows);
       res.status(200).json({
         count: orders.count,
         rows: orders.rows.slice(offset, limit * page),
@@ -102,7 +94,6 @@ const userOrdersController = {
         .json({ message: "Error retrieving order", error: error.message });
     }
   },
-
   getOrderById: async (req, res) => {
     try {
       const { id } = req.params;
@@ -138,10 +129,8 @@ const userOrdersController = {
         .json({ message: "Error retrieving order", error: error.message });
     }
   },
-
   createOrderByUser: async (req, res) => {
     const t = await db.sequelize.transaction();
-
     const {
       payment_detail,
       // payment_proof,
@@ -153,7 +142,6 @@ const userOrdersController = {
       user_id,
       address_id,
     } = req.body;
-
     const orderSchema = Joi.object({
       payment_detail: Joi.string().required(),
       // payment_proof: Joi.string().required(),
@@ -165,7 +153,6 @@ const userOrdersController = {
       user_id: Joi.number().required(),
       address_id: Joi.number().required(),
     });
-
     const validation = orderSchema.validate({
       payment_detail,
       // payment_proof,
@@ -177,22 +164,12 @@ const userOrdersController = {
       user_id,
       address_id,
     });
-
     if (validation.error) {
       return res
         .status(400)
         .send({ message: validation.error.details[0].message });
     }
-
     try {
-      //   const existingOrder = await db.orders.findOne({
-      //     where: { payment_detail },
-      //   });
-
-      //   if (existingOrder) {
-      //     throw new Error("Orders with the same name already exists");
-      //   }
-
       const newOrder = await db.orders.create(
         { ...req.body, warehouse_id: req.closestWarehouse.id },
         {
@@ -203,7 +180,6 @@ const userOrdersController = {
       const orderDetails = [];
       for (const cartItem of cartItems) {
         const { qty, price } = cartItem.dataValues;
-        console.log(req.closestWarehouse);
         const [stock, created] = await db.stocks.findOrCreate({
           where: {
             warehouse_id: req.closestWarehouse.id,
@@ -235,48 +211,38 @@ const userOrdersController = {
         .json({ message: "Error creating order", error: error.message });
     }
   },
-
   createOrderDetail: async (req, res) => {
     const t = await db.sequelize.transaction();
-
     const { qty, price, stock_id, order_id } = req.body;
-
     const orderSchema = Joi.object({
       qty: Joi.number().required(),
       price: Joi.number().required(),
       stock_id: Joi.number().required(),
       order_id: Joi.number().required(),
     });
-
     const validation = orderSchema.validate({
       qty,
       price,
       stock_id,
       order_id,
     });
-
     if (validation.error) {
       return res
         .status(400)
         .send({ message: validation.error.details[0].message });
     }
-
     try {
       const existingOrder = await db.order_details.findOne({
         where: { order_id },
         include: [{ model: db.stocks }],
       });
-
       if (existingOrder) {
         throw new Error("Orders with the same name already exists");
       }
-
       const newOrder = await db.order_details.create(req.body, {
         transaction: t,
       });
-
       await t.commit();
-
       res.status(201).json(newOrder);
     } catch (error) {
       await t.rollback();
@@ -285,7 +251,6 @@ const userOrdersController = {
         .json({ message: "Error creating order", error: error.message });
     }
   },
-
   getOrderDetailById: async (req, res) => {
     try {
       const { id } = req.params;
@@ -304,7 +269,6 @@ const userOrdersController = {
         .json({ message: "Error retrieving order", error: error.message });
     }
   },
-
   updateOrder: async (req, res) => {
     const { id } = req.params;
     const {
@@ -318,15 +282,12 @@ const userOrdersController = {
       user_id,
       address_id,
     } = req.body;
-
     const t = await db.sequelize.transaction();
-
     try {
       const [updatedRows] = await db.orders.update(req.body, {
         where: { id: id },
         transaction: t,
       });
-
       if (updatedRows > 0) {
         await t.commit();
         res.status(200).json({ message: "Order updated successfully" });
@@ -341,22 +302,18 @@ const userOrdersController = {
         .json({ message: "Error updating order", error: error.message });
     }
   },
-
   deleteOrder: async (req, res) => {
     const { id } = req.params;
     const t = await db.sequelize.transaction();
-
     try {
       const order = await db.orders.findOne({ where: { id } });
       if (!order) {
         return res.status(404).send({ message: "Orders not found." });
       }
-
       await db.orders.destroy({
         where: { id: id },
         transaction: t,
       });
-
       await t.commit();
       res.send({ message: "Orders deleted successfully." });
     } catch (err) {
@@ -367,13 +324,11 @@ const userOrdersController = {
   deleteOrderByUser: async (req, res) => {
     const { id } = req.params;
     const t = await db.sequelize.transaction();
-
     try {
       const order = await db.orders.findOne({ where: { id } });
       if (!order) {
         return res.status(404).send({ message: "Orders not found." });
       }
-
       await db.orders.update(
         { status: "CANCELLED" },
         {
@@ -381,7 +336,6 @@ const userOrdersController = {
           transaction: t,
         }
       );
-
       await t.commit();
       res.send({ message: "Orders deleted successfully." });
     } catch (err) {
@@ -393,7 +347,6 @@ const userOrdersController = {
     try {
       const { id } = req.params;
       const { action } = req.body;
-
       const order = await db.orders.findOne({
         where: { id },
         include: [
@@ -426,10 +379,8 @@ const userOrdersController = {
             .status(400)
             .json({ message: "Invalid order, Order has not been deliver" });
         }
-
         order.status = "DONE";
         await order.save();
-
         return res.status(200).json({ message: "Order has been arrived" });
       }
     } catch (error) {
@@ -438,11 +389,8 @@ const userOrdersController = {
     }
   },
   paymentProofByUser: async (req, res) => {
-    console.log(req.file);
-    console.log(req.params);
     const { order_id } = req.params;
     const t = await db.sequelize.transaction();
-
     try {
       const update = await db.orders.update(
         {
