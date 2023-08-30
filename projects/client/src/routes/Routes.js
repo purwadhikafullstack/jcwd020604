@@ -92,10 +92,9 @@ const routes = [
     element={<ConfirmResetPassword />}
   ></Route>,
 
-
-	<Route path="/not-found" element={<NotFound />}></Route>,
-	<Route path="/order-not-found" element={<OrderNotFound />}></Route>,
-	<Route path="/restricted" element={<Restricted />}></Route>,
+  <Route path="/not-found" element={<NotFound />}></Route>,
+  <Route path="/order-not-found" element={<OrderNotFound />}></Route>,
+  <Route path="/restricted" element={<Restricted />}></Route>,
 
   <Route
     path="/user_profile"
@@ -146,6 +145,14 @@ const routes = [
       </ProtectedPages>
     }
   ></Route>,
+  <Route
+    path="/report"
+    element={
+      <ProtectedPages needLogin={true} needLoginAdmin={true}>
+        <SalesReport />
+      </ProtectedPages>
+    }
+  ></Route>,
 
   // Maulana
   <Route
@@ -177,14 +184,6 @@ const routes = [
     element={
       <ProtectedPages needLogin={true}>
         <Order />
-      </ProtectedPages>
-    }
-  ></Route>,
-  <Route
-    path="/report"
-    element={
-      <ProtectedPages needLogin={true}>
-        <SalesReport />
       </ProtectedPages>
     }
   ></Route>,
