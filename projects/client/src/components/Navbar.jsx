@@ -58,6 +58,7 @@ export default function Navbar(props) {
 
   const [greeting, setGreeting] = useState("");
   const [totalQty, setTotalQty] = useState(0);
+  const [message, setMessage] = useState("");
 
   useEffect(() => {
     const currentTime = new Date();
@@ -90,7 +91,7 @@ export default function Navbar(props) {
       });
       setProduct(res.data.rows);
     } catch (error) {
-      console.error("Error fetching data:", error);
+      setMessage("Error fetching data:", error);
     }
   }
 
@@ -98,15 +99,13 @@ export default function Navbar(props) {
     try {
       const res = await api().get(`/cart/${user.id}`);
       setProduct(res.data);
-
       let total = 0;
       res.data.forEach((val) => {
         total += val.qty;
       });
-
       setTotalQty(total);
     } catch (error) {
-      console.error("Error fetching cart data:", error);
+      setMessage("Error fetching cart data:", error);
     }
   }
 
