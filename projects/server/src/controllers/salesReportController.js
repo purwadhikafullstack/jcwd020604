@@ -25,7 +25,18 @@ const salesReport = {
     }
     try {
       const dataReport = await db.order_details.findAndCountAll({
-        include: [{ model: db.orders, as: "orders" }],
+        include: [
+          { model: db.orders, as: "orders" },
+          {
+            model: db.stocks,
+            include: [
+              {
+                model: db.products,
+                include: [{ model: db.categories, as: "category" }],
+              },
+            ],
+          },
+        ],
         where: where,
       });
       res
