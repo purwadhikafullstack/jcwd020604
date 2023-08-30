@@ -142,7 +142,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 						<Textarea
 							placeholder="e.g. A T-shirt with an impressive"
 							id="product_detail"
-							h={"170px"}
+							h={"120px"}
 							defaultValue={val.product_detail}
 							onChange={inputHandler}
 						/>

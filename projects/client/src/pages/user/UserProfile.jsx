@@ -22,6 +22,7 @@ import {
   useToast,
   Grid,
   GridItem,
+  FormHelperText,
 } from '@chakra-ui/react';
 import {
   MdFacebook,
@@ -180,11 +181,14 @@ export default function UserProfile() {
         navigate("/user_profile");
     } catch (error) {
       toast({
-        title:"Failed to update data",
+        title:"Failed to update data, phone number max 12",
         status:"error",
         duration:3000,
         isClosable:false
     });
+    fetchData();
+    fetch();
+    navigate("/user_profile");
     }
 }
 
@@ -341,6 +345,7 @@ const handleInputChange = (e) => {
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
                                         <Input type="text" size="md" id="fullname" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
                                     </InputGroup>
+                                    <FormHelperText>We'll never share your name.</FormHelperText>
                               </FormControl>
                               <FormControl id="phone_number">
                                     <FormLabel>Phone</FormLabel>
@@ -348,6 +353,7 @@ const handleInputChange = (e) => {
                                           <InputLeftElement pointerEvents="none" children={<BsPhone color="gray.800" />} />
                                           <Input type="number" size="md" id="phone_number" value={phone_number} onChange={(val) => {handleInputChange(val); setPhone_Number(val.target.value)}}/>
                                       </InputGroup>
+                                      <FormHelperText>Max 12 number.</FormHelperText>
                               </FormControl>                        
                             <FormControl id="email">
                                      <FormLabel>Email</FormLabel>
@@ -358,6 +364,7 @@ const handleInputChange = (e) => {
                                        />
                                        <Input type="email" size="md" readOnly={true} value={email}/>
                                      </InputGroup>
+                                     <FormHelperText>We'll never share your email.</FormHelperText>
                             </FormControl>
                             </HStack>
                               <Box display={'flex'} alignSelf={{base: 'flex', md: 'flex-start', sm: 'block'}}>
