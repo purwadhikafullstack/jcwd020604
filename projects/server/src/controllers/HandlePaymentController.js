@@ -178,7 +178,6 @@ const handlePaymentController = {
 			}
 		} catch (error) {
 			await t.rollback();
-			console.error(error);
 			return res
 				.status(500)
 				.json({ message: "There was an error while processing the payment" });

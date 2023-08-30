@@ -81,7 +81,6 @@ export default function AddressUser(props) {
         position: "top",
         isClosable: false,
       });
-      console.log(error);
     }
   };
 

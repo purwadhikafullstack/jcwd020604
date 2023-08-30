@@ -71,7 +71,6 @@ const addressController = {
 
       return res.status(200).json(address);
     } catch (error) {
-      console.error("Error while fetching address by ID:", error);
       return res.status(500).json({ error: "Internal server error" });
     }
   },
@@ -85,7 +84,7 @@ const addressController = {
       });
       res.status(200).send(response);
     } catch (error) {
-      console.log(error.message);
+      return res.status(500).json({ error: "Internal server error" });
     }
   },
 
