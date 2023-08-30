@@ -27,7 +27,6 @@ export default function Assign (props) {
           setWarehouse(res.data);
         }
       } catch (error) {
-        console.error(error);
         toast({
           title: "Can't get warehouse",
           status: 'warning',
@@ -66,9 +65,7 @@ export default function Assign (props) {
 
     useEffect(() => {
       getWarehouse();
-      if (props.uuid){
-        console.log(props.uuid);
-      }
+      if (props.uuid){}
     },[props.uuid]);
 
     function handleInputChange(e) {

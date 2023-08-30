@@ -52,7 +52,6 @@ const insertAddressController = {
           res.send({ message: "Address added" });
         } catch (err) {
           await t.rollback();
-          console.log(err.message);
           return res.status(500).send({ message: err.message });
         }
     },
@@ -115,7 +114,6 @@ const insertAddressController = {
           res.send({ message: "Address added" });
         } catch (err) {
           await t.rollback();
-          console.log(err.message);
           return res.status(500).send({ message: err.message });
         }
     },

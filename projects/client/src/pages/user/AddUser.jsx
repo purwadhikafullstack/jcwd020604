@@ -60,7 +60,6 @@ const AddUser = () => {
                 duration:3000,
                 isClosable:false
             });
-            console.log(error);
         }
     }
 

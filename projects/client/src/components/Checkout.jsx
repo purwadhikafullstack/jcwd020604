@@ -1,24 +1,16 @@
 import {
   Box,
-  Container,
   Button,
   Center,
   Flex,
   Image,
   Select,
-  Icon,
-  Input,
   useToast,
   useDisclosure,
-  Grid,
-  GridItem,
-  HStack,
-  Text,
   RadioGroup,
   Radio,
   Stack,
 } from "@chakra-ui/react";
-import { AiOutlineDelete } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Loading from "./Loading";
@@ -27,27 +19,16 @@ import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import AddressUser from "./NewAddressModal";
-import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
-import axios from "axios";
 
 export default function Checkout() {
   const [product, setProduct] = useState([]);
-  const [value, setValue] = useState(1);
-  const [stock, setStock] = useState(0);
-  const [cart_id, setCart_id] = useState(0);
-  const [product_id, setProduct_id] = useState(0);
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const inputFileRef = useRef(null);
-  const [selectedFile, setSelectedFile] = useState(null);
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
-  const editAddressUser = useDisclosure();
-  const deleteAddress = useDisclosure();
   const addressUser = useDisclosure();
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [fullname, setFullName] = useState(user.fullname);
-  const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState(user?.address?.address);
   const [changes, setChanges] = useState("");
   const [addressId, setAddressId] = useState("");
@@ -55,26 +36,17 @@ export default function Checkout() {
   const [subTotal, setSubTotal] = useState(0);
   const [cityId, setCityId] = useState("");
   const nav = useNavigate();
-
+  const [message, setMessage] = useState("");
   const [feeship, setFeeship] = useState(0);
-  const [allFee, setAllFee] = useState(0);
   const handleAddressSelection = (addressId, cityId) => {
     setAddressId(addressId);
     setCityId(cityId);
   };
-
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
-
   const [shipping, setShipping] = useState([]);
   const [courier, setCourier] = useState();
-
-  console.log(feeship);
   const fetchShipping = async () => {
-    console.log("fetchship");
     const token = JSON.parse(localStorage.getItem("user"));
     const destination = cityId;
-    console.log("destination", destination);
-
     try {
       const response = await api().post("/cart/get/cost", {
         destination,
@@ -85,22 +57,16 @@ export default function Checkout() {
         }, 0),
         courier: courier,
       });
-      console.log(response.data);
       setShipping(response.data);
     } catch (err) {
-      console.log(err.response?.data);
+      setMessage(err);
     }
   };
-  console.log(addressId);
-  console.log(shipping);
   useEffect(() => {
     if (courier) {
       fetchShipping();
     }
   }, [courier]);
-
-  console.log(address);
-
   const handleContinueShippingg = () => {
     if (addressId) {
       toast({
@@ -110,7 +76,6 @@ export default function Checkout() {
         duration: 3000,
         isClosable: true,
       });
-      console.log("Selected Address city ID:", cityId);
     } else {
       toast({
         title: "Please select a shipping address",
@@ -121,7 +86,6 @@ export default function Checkout() {
       });
     }
   };
-
   const order = async () => {
     try {
       const orderData = {
@@ -138,7 +102,6 @@ export default function Checkout() {
       const response = await api().post("/userOrders/addOrder", orderData);
 
       const responseData = response.data;
-      console.log(responseData);
 
       toast({
         title: "Order has been created",
@@ -148,8 +111,6 @@ export default function Checkout() {
         isClosable: false,
       });
       nav("/order");
-
-      console.log("Order has been created");
     } catch (error) {
       console.error(error);
 
@@ -162,24 +123,15 @@ export default function Checkout() {
       });
     }
   };
-
   useEffect(() => {
     getAddressByUser();
     fetchData();
   }, []);
-
-  const handleFile = (e) => {
-    setSelectedFile(e.target.files[0]);
-    console.log(e.target.files[0]);
-  };
-
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
   }, [isLoading]);
-  console.log(feeship, "feeship");
-
   const fetchData = async () => {
     try {
       const response = await api().get(
@@ -188,7 +140,6 @@ export default function Checkout() {
       );
       setUsers(response.data);
     } catch (error) {
-      console.log(error);
       toast({
         title: "There is something error while executing this command",
         status: "error",
@@ -197,8 +148,6 @@ export default function Checkout() {
       });
     }
   };
-  console.log(users);
-
   const getAddressByUser = async () => {
     try {
       const response = await api().get(
@@ -216,50 +165,14 @@ export default function Checkout() {
       });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsFormSubmitted(true);
   };
-
-  const saveUser = async () => {
-    try {
-      await api().patch(
-        `${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`,
-        changes
-      );
-      toast({
-        title: "User has been updated",
-        status: "success",
-        duration: 3000,
-        isClosable: false,
-      });
-      fetchData();
-      navigate("/user_profile");
-    } catch (error) {
-      toast({
-        title: "Failed to update data",
-        status: "error",
-        duration: 3000,
-        isClosable: false,
-      });
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    const tempUser = { ...users };
-    tempUser[id] = value;
-    setChanges(tempUser);
-    console.log(changes);
-  };
-
   async function getcart() {
-    console.log(user.id);
     const res = await api().get(`/cart/` + user.id);
     setProduct(res.data);
   }
-  console.log(product);
   const calculateTotal = () => {
     let total = 0;
     product.forEach((val) => {
@@ -267,19 +180,13 @@ export default function Checkout() {
     });
     return total;
   };
-
   useEffect(() => {
     const total = calculateTotal();
     setSubTotal(total);
   }, [product]);
-
   useEffect(() => {
     getcart();
   }, []);
-
-  console.log(users);
-  console.log(address);
-
   return (
     <>
       <Navbar />

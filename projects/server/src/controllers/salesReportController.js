@@ -2,17 +2,6 @@ const db = require("../models");
 const Joi = require("joi");
 const { Op } = require("sequelize");
 
-// langakah-langkah membuat sales report
-
-// 1. Laporan penjualan perbulan
-// mencari product id,
-
-// 2. Laporan penjualan perbulan berdasarkan kategory produk
-// mencari kategory id = order details => stock id => produk id => category id
-
-// 3. Laporan penjualan perbulan berdasarkan produk
-// mencari produk id = order details => stock id => produk id
-
 const salesReport = {
   getData: async (req, res) => {
     const { dateFrom, dateTo, warehouse_id } = req.body;
