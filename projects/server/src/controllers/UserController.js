@@ -161,7 +161,7 @@ const userController = {
 		try {
 			const { filename } = req.file;
 			await db.users.update(
-				{ avatar_url: process.env.user_img + filename },
+				{ avatar_url: "userImg/" + filename },
 				{ where: { id: req.params.id }, transaction: t }
 			);
 			await t.commit();

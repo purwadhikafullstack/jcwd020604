@@ -6,6 +6,7 @@ import { api } from '../api/api';
 export default function AuthProvider({ children }) {
 	const dispatch = useDispatch();
 	const [isLoading, setIsLoading] = useState(true);
+	const [message, setMessage] = useState("");
 
 	useEffect(() => {
 		fetch();
@@ -15,7 +16,7 @@ export default function AuthProvider({ children }) {
 		try {
 			const token = JSON.parse(localStorage.getItem("auth"));
 			const user = await api()
-				.get(`${process.env.REACT_APP_API_BASE_URL}/authentication/v2`, {
+				.get("/authentication/v2", {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
@@ -28,7 +29,7 @@ export default function AuthProvider({ children }) {
 				});
 			}
 		} catch (err) {
-			console.log(err);
+			setMessage(err);
 		} finally {
 			setIsLoading(false);
 		}

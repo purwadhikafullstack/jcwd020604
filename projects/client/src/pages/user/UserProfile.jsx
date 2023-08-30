@@ -207,7 +207,6 @@ const handleInputChange = (e) => {
               <Box
                 color="white"
                 borderRadius="lg"
-                // m={{ sm: 4, md: 16, lg: 10 }}
                 p={{ sm: 5, md: 5, lg: 2 }}
               >
                 <Flex justifyContent={"center"} alignItems={"center"}>
@@ -245,7 +244,7 @@ const handleInputChange = (e) => {
                                          <Avatar
                                              size={'xl'}
                                              src={
-                                               users.avatar_url
+                                              `${process.env.REACT_APP_API_BASE_URL}/${users.avatar_url}`
                                              }
                                              alt={'Author'}
                                              css={{
