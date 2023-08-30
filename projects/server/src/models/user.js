@@ -8,7 +8,6 @@ module.exports = (sequelize, Sequelize) => {
 				allowNull: false,
 				validate: {
 					notEmpty: true,
-					len: [0, 20]
 				}
 			},
 			email: {

@@ -61,6 +61,7 @@ const UserList = () => {
                 duration:3000,
                 isClosable:false
             });
+            fetchData();
         } catch (error) {
             toast({
                 title:"There is something error while executing this command",
