@@ -10,27 +10,23 @@ import {
   Th,
   Td,
   Flex,
-} from "@chakra-ui/react"; // You can adjust the UI library as needed
+} from "@chakra-ui/react";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import { api } from "../api/api";
 import moment from "moment";
-// import BarChartComponent from "./ChartSalesReport";
-// import OrderCategoryChart from "./ChartSalesReport";
 import { Chart, registerables } from "chart.js";
 import { Bar } from "react-chartjs-2";
 Chart.register(...registerables);
 
 export default function SalesReport() {
-  // Sample data for demonstration
   const warehouses = ["MMS Batam", "MMS Yogyakarta", "MMS Jakarta"];
   const [selectedWarehouse, setSelectedWarehouse] = useState(warehouses[0]);
   const [date, setDate] = useState({
     dateFrom: "",
     dateTo: "",
   });
-  const [warehouseId, setWarehouseId] = useState();
-
+  const [message, setMessage] = useState("");
   const [dataReport, setDataReport] = useState([]);
   const [dataReportChart, setDataReportChart] = useState([]);
   async function getData() {
@@ -39,13 +35,13 @@ export default function SalesReport() {
         ? date.dateFrom
         : moment().subtract(1, "months").format("YYYY-MM-DD"),
       dateTo: date.dateFrom ? date.dateFrom : moment().format("YYYY-MM-DD"),
-      // warehouse,
     };
     try {
-      console.log(data);
       const res = await api().post(`/report/report`, data);
       setDataReport(res.data.data);
-    } catch (error) {}
+    } catch (error) {
+      setMessage(error);
+    }
   }
 
   useEffect(() => {
@@ -56,8 +52,6 @@ export default function SalesReport() {
     }
   }, []);
 
-  console.log(dataReport);
-  // console.log(getData());
   return (
     <>
       <Navbar />
@@ -88,7 +82,6 @@ export default function SalesReport() {
                 <Th>Product Name</Th>
                 <Th>Category</Th>
                 <Th>Price</Th>
-                {/* <Th>Quantity</Th> */}
               </Tr>
             </Thead>
             <Tbody>

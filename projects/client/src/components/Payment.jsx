@@ -2,7 +2,7 @@ import {
   Box,
   Button,
   Center,
-  Icon,
+  Flex,
   Image,
   Input,
   useToast,
@@ -15,13 +15,10 @@ import { BsImage } from "react-icons/bs";
 import { useEffect, useRef, useState } from "react";
 import { api } from "../api/api";
 import { useSelector } from "react-redux";
-import { color } from "framer-motion";
+import { useNavigate } from "react-router-dom";
 
 export default function Payment() {
   const loc = useLocation();
-  const [countDown, setCountDown] = useState(86400); // 24 hours in seconds
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [uploadedImageUrl, setUploadedImageUrl] = useState(null);
   const inputFileRef = useRef(null);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [image, setImage] = useState();
@@ -29,6 +26,9 @@ export default function Payment() {
   const userSelector = useSelector((state) => state.auth);
   const orderId = loc.pathname.split("/")[2];
   const [order, setOrder] = useState();
+  const nav = useNavigate();
+  const [isPaymentConfirmed, setIsPaymentConfirmed] = useState(false); // New state
+
   const uploadPaymentImg = async () => {
     try {
       const formData = new FormData();
@@ -41,10 +41,13 @@ export default function Payment() {
         duration: 3000,
         isClosable: true,
       });
+      setIsPaymentConfirmed(true);
+      nav("/order");
     } catch (err) {
       console.log(err);
     }
   };
+  console.log();
   const fetchOrderById = async () => {
     try {
       const res = await api().get(`/userOrders/ordersUser/${orderId}`);
@@ -56,21 +59,7 @@ export default function Payment() {
   useEffect(() => {
     fetchOrderById();
   }, []);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setCountDown((prevCount) => prevCount - 1);
-    }, 1000);
-    return () => clearInterval(timer); // Clear the interval when component unmounts
-  }, []); // Empty dependency array to run effect only once on component mount
 
-  const formatTime = (seconds) => {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = seconds % 60;
-    return `${hours.toString().padStart(2, "0")}:${minutes
-      .toString()
-      .padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
-  };
   const handleImageChange = (event) => {
     setSelectedFiles(event.target.files[0]);
     setImage(URL.createObjectURL(event.target.files[0]));
@@ -81,16 +70,7 @@ export default function Payment() {
       <Center mb={10} mt={10} flexDir={"column"}>
         <Center flexDir={"column"} gap={"5px"}>
           <Box fontSize={18} fontWeight={"bold"}>
-            Finish payment in time
-          </Box>
-          <Box fontSize={18} color={"red"} fontWeight={"bold"}>
-            {formatTime(countDown)}
-          </Box>{" "}
-          <Box fontSize={14} color={"grey"}>
-            Payment Deadline
-          </Box>
-          <Box fontWeight={"bold"} fontSize={16}>
-            August, 19 2023 16:15
+            Finish payment now!
           </Box>
         </Center>
         <Center mt={12}>
@@ -103,7 +83,7 @@ export default function Payment() {
               alignItems={"center"}
             >
               <Box fontSize={18} p={"10px"} fontWeight={"semibold"}>
-                Mandiri Virtual Account
+                Mandiri
               </Box>
               <Image
                 mr={"5px"}
@@ -121,15 +101,15 @@ export default function Payment() {
               alignItems={"center"}
             >
               <Box>
-                <Box>Virtual Account Number</Box>
-                <Box fontWeight={"semibold"}>900283764783475</Box>
+                <Box>Account Number</Box>
+                <Box fontWeight={"semibold"}>1090018991489</Box>
               </Box>
               <Box
                 mr={"8px"}
                 fontSize={18}
                 cursor={"pointer"}
                 fontWeight={"bold"}
-                color={"#ffe401"}
+                color={"black"}
                 display={"flex"}
                 alignItems={"center"}
                 gap={"4px"}
@@ -138,6 +118,16 @@ export default function Payment() {
                 <Box>
                   <AiOutlineCopy />
                 </Box>
+              </Box>
+            </Box>
+            <Box mt={"20px"} ml={"10px"} w={"480px"}>
+              <Box fontWeight={"semibold"}>Product Name :</Box>
+              <Box>
+                {order?.order_details?.map((val) => (
+                  <Flex flexDir={"column"}>
+                    ✱ {val?.stock?.product?.product_name}
+                  </Flex>
+                ))}
               </Box>
             </Box>
             <Box
@@ -149,7 +139,7 @@ export default function Payment() {
               alignItems={"center"}
             >
               <Box>
-                <Box>Total Payment</Box>
+                <Box fontWeight={"semibold"}>Total Payment</Box>
                 <Box display={"flex"} alignItems={"center"} gap={"4px"}>
                   <Box fontWeight={"semibold"}>
                     {order?.total_price.toLocaleString("id-ID", {
@@ -159,7 +149,7 @@ export default function Payment() {
                   </Box>
                   <AiOutlineCopy
                     style={{
-                      color: "#ffe401",
+                      color: "black",
                       cursor: "pointer",
                       fontSize: "18",
                     }}
@@ -171,10 +161,9 @@ export default function Payment() {
                 cursor={"pointer"}
                 fontWeight={"bold"}
                 mr={"8px"}
-              >
-                See Detail
-              </Box>
+              ></Box>
             </Box>
+
             <Box
               mt={"20px"}
               ml={"10px"}
@@ -212,7 +201,7 @@ export default function Payment() {
                   />
                 </label>{" "}
                 <Box>
-                  <BsImage />
+                  <BsImage style={{ color: "black" }} />
                 </Box>
               </Box>
             </Box>
@@ -220,7 +209,18 @@ export default function Payment() {
             <Box p={3}>
               <Image src={image} />
             </Box>
-            <Button onClick={uploadPaymentImg}>confirm</Button>
+
+            <Box display={"flex"} justifyContent={"space-between"}>
+              <Box></Box>
+              <Button
+                margin={2}
+                colorScheme="green"
+                onClick={uploadPaymentImg}
+                isDisabled={!image}
+              >
+                confirm
+              </Button>
+            </Box>
           </Box>
         </Center>
         <Center>

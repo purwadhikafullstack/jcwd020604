@@ -86,7 +86,6 @@ const handleActionOrderController = {
                     .json({ message: "Order status updated to Delivered" });
             }
         } catch (error) {
-            console.error(error);
             return res.status(500).json({ message: "Invalid action" });
         }
     },
@@ -115,7 +114,6 @@ const handleActionOrderController = {
     
             return res.status(200).json({ message: "Order cancelled successfully" });
         } catch (error) {
-            console.error(error);
             return res
                 .status(500)
                 .json({ message: "An error occurred while cancelling the order" });

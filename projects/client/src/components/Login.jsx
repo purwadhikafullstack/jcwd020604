@@ -39,7 +39,6 @@ export default function Login() {
       });
       nav("/");
     } catch (err) {
-      console.log(err.message);
       toast({
         title: "Wrong Email or Password",
         status: "error",

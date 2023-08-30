@@ -1,24 +1,16 @@
 import {
   Box,
-  Container,
   Button,
   Center,
   Flex,
   Image,
   Select,
-  Icon,
-  Input,
   useToast,
   useDisclosure,
-  Grid,
-  GridItem,
-  HStack,
-  Text,
   RadioGroup,
   Radio,
   Stack,
 } from "@chakra-ui/react";
-import { AiOutlineDelete } from "react-icons/ai";
 import { Link, useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Loading from "./Loading";
@@ -27,96 +19,55 @@ import { UseSelector, useSelector } from "react-redux/es/hooks/useSelector";
 import Navbar from "./Navbar";
 import Footer from "./Footer";
 import AddressUser from "./NewAddressModal";
-import { Checkbox, CheckboxGroup } from "@chakra-ui/react";
-import axios from "axios";
 
 export default function Checkout() {
   const [product, setProduct] = useState([]);
-  const [value, setValue] = useState(1);
-  const [stock, setStock] = useState(0);
-  const [cart_id, setCart_id] = useState(0);
-  const [product_id, setProduct_id] = useState(0);
-
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
-  const inputFileRef = useRef(null);
-  const [selectedFile, setSelectedFile] = useState(null);
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(true);
-  const editAddressUser = useDisclosure();
-  const deleteAddress = useDisclosure();
   const addressUser = useDisclosure();
   const [isFormSubmitted, setIsFormSubmitted] = useState(false);
   const [fullname, setFullName] = useState(user.fullname);
-  const [email, setEmail] = useState(user.email);
   const [address, setAddress] = useState(user?.address?.address);
   const [changes, setChanges] = useState("");
   const [addressId, setAddressId] = useState("");
   const [users, setUsers] = useState("");
-  // const [value, setValue] = React.useState("1");
   const [subTotal, setSubTotal] = useState(0);
   const [cityId, setCityId] = useState("");
   const nav = useNavigate();
-
+  const [message, setMessage] = useState("");
   const [feeship, setFeeship] = useState(0);
-  const [allFee, setAllFee] = useState(0);
   const handleAddressSelection = (addressId, cityId) => {
-    setAddressId(addressId); // Set the selected address ID to the state
+    setAddressId(addressId);
     setCityId(cityId);
   };
-
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState(null);
-
   const [shipping, setShipping] = useState([]);
   const [courier, setCourier] = useState();
-
-  console.log(feeship);
   const fetchShipping = async () => {
-    console.log("fetchship");
     const token = JSON.parse(localStorage.getItem("user"));
-    // TODO: get the actual origin id from
-    // cara mencari warouse terdekat dengan destionation user
-    // 1. ambil semua warehouse yang ada di DB
-    // 2. lalu dapatkan destination ID dari user
-    // 3.
-
     const destination = cityId;
-    console.log("destination", destination);
-
     try {
-      const response = await api().post(
-        "/cart/get/cost",
-        {
-          destination,
-          addressId,
-          weight: product.reduce((prev, curr) => {
-            prev += curr.product.weight * curr.qty;
-            return prev;
-          }, 0),
-          courier: courier,
-        }
-        // {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
-      );
-      console.log(response.data);
+      const response = await api().post("/cart/get/cost", {
+        destination,
+        addressId,
+        weight: product.reduce((prev, curr) => {
+          prev += curr.product.weight * curr.qty;
+          return prev;
+        }, 0),
+        courier: courier,
+      });
       setShipping(response.data);
     } catch (err) {
-      console.log(err.response?.data);
+      setMessage(err);
     }
   };
-  console.log(addressId);
-  console.log(shipping);
   useEffect(() => {
     if (courier) {
       fetchShipping();
     }
   }, [courier]);
-
-  console.log(address);
-
   const handleContinueShippingg = () => {
-    // Perform any necessary actions with the selected address
     if (addressId) {
       toast({
         title: "address selected",
@@ -125,9 +76,6 @@ export default function Checkout() {
         duration: 3000,
         isClosable: true,
       });
-      // Address ID is selected
-      console.log("Selected Address city ID:", cityId);
-      // ... Perform further actions or navigate to the next step
     } else {
       toast({
         title: "Please select a shipping address",
@@ -138,10 +86,8 @@ export default function Checkout() {
       });
     }
   };
-
   const order = async () => {
     try {
-      // Prepare the order data
       const orderData = {
         courier: courier,
         addressId,
@@ -153,14 +99,10 @@ export default function Checkout() {
         status: "WAITING_PAYMENT",
       };
 
-      // Send the order data to the backend
       const response = await api().post("/userOrders/addOrder", orderData);
 
-      // Handle the response
       const responseData = response.data;
-      console.log(responseData);
 
-      // Show a success message to the user
       toast({
         title: "Order has been created",
         position: "top",
@@ -169,13 +111,9 @@ export default function Checkout() {
         isClosable: false,
       });
       nav("/order");
-
-      console.log("Order has been created");
     } catch (error) {
-      // Handle any errors that might occur
       console.error(error);
 
-      // Show an error message to the user
       toast({
         title: "An error occurred while creating the order",
         position: "top",
@@ -185,24 +123,15 @@ export default function Checkout() {
       });
     }
   };
-
   useEffect(() => {
     getAddressByUser();
     fetchData();
   }, []);
-
-  const handleFile = (e) => {
-    setSelectedFile(e.target.files[0]);
-    console.log(e.target.files[0]);
-  };
-
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
     }, 1000);
   }, [isLoading]);
-  console.log(feeship, "feeship");
-
   const fetchData = async () => {
     try {
       const response = await api().get(
@@ -211,7 +140,6 @@ export default function Checkout() {
       );
       setUsers(response.data);
     } catch (error) {
-      console.log(error);
       toast({
         title: "There is something error while executing this command",
         status: "error",
@@ -220,8 +148,6 @@ export default function Checkout() {
       });
     }
   };
-  console.log(users);
-
   const getAddressByUser = async () => {
     try {
       const response = await api().get(
@@ -239,50 +165,14 @@ export default function Checkout() {
       });
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsFormSubmitted(true);
   };
-
-  const saveUser = async () => {
-    try {
-      await api().patch(
-        `${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`,
-        changes
-      );
-      toast({
-        title: "User has been updated",
-        status: "success",
-        duration: 3000,
-        isClosable: false,
-      });
-      fetchData();
-      navigate("/user_profile");
-    } catch (error) {
-      toast({
-        title: "Failed to update data",
-        status: "error",
-        duration: 3000,
-        isClosable: false,
-      });
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { id, value } = e.target;
-    const tempUser = { ...users };
-    tempUser[id] = value;
-    setChanges(tempUser);
-    console.log(changes);
-  };
-
   async function getcart() {
-    console.log(user.id);
     const res = await api().get(`/cart/` + user.id);
     setProduct(res.data);
   }
-  console.log(product);
   const calculateTotal = () => {
     let total = 0;
     product.forEach((val) => {
@@ -290,19 +180,13 @@ export default function Checkout() {
     });
     return total;
   };
-
   useEffect(() => {
     const total = calculateTotal();
     setSubTotal(total);
   }, [product]);
-
   useEffect(() => {
     getcart();
   }, []);
-
-  console.log(users);
-  console.log(address);
-
   return (
     <>
       <Navbar />
@@ -328,60 +212,6 @@ export default function Checkout() {
               <Box fontSize={"18px"} fontWeight={"bold"}>
                 Shipping address
               </Box>
-              {/* <Box mt={"5px"}>Name</Box>
-
-          <Input
-            w={"500px"}
-            borderRadius={"none"}
-            type="text"
-            id="fullname"
-            value={fullname}
-            onChange={(val) => {
-              setFullName(val.target.value);
-            }}
-          />
-
-          <Box mt={"5px"}>Address</Box>
-          <Input
-            placeholder="Enter your address"
-            w={"500px"}
-            borderRadius={"none"}
-          ></Input>
-          <Box mt={"5px"}>Apartment, room number, etc. (optional)</Box>
-          <Input
-            placeholder="Write here"
-            w={"500px"}
-            borderRadius={"none"}
-          ></Input>
-          <Box mt={"5px"}>City</Box>
-          <Input
-            placeholder="Enter your city"
-            w={"500px"}
-            borderRadius={"none"}
-          ></Input>
-          <Box mt={"5px"}>Province</Box>
-          <Box display={"flex"} gap={"10px"}>
-            <Select
-              border={"solid black 1px"}
-              w={"245px"}
-              borderRadius={"none"}
-            >
-              <option>Riau Islands</option>
-            </Select>
-            <Input
-              border={"solid black 1px"}
-              placeholder="Postal Code"
-              borderRadius={"none"}
-              w={"245px"}
-            ></Input>
-          </Box>
-
-          <Box>Phone</Box>
-          <Input
-            placeholder={"Enter your phone number"}
-            w={"500px"}
-            borderRadius={"none"}
-          ></Input> */}
               <Box
                 w={"515px"}
                 display={"flex"}
@@ -446,7 +276,7 @@ export default function Checkout() {
                               w={"100px"}
                               onChange={() =>
                                 handleAddressSelection(val.id, val.city_id)
-                              } // Call the function when the checkbox is clicked
+                              }
                             ></Radio>
                           </Box>
                         </Box>
@@ -571,7 +401,6 @@ export default function Checkout() {
                     Return to cart
                   </Button>
                 </Link>
-                {/* <Link to={"/payment"}> */}
                 <Button
                   w={"200px"}
                   bgColor={"#ffe401"}
@@ -582,7 +411,6 @@ export default function Checkout() {
                 >
                   Order
                 </Button>
-                {/* </Link> */}
               </Box>
             </Flex>
 
@@ -618,10 +446,7 @@ export default function Checkout() {
                       justifyContent={"space-between"}
                       w={"249px"}
                     >
-                      <Box fontSize={"12px"}>
-                        {val.product.product_name}
-                        {/* {val.product.weight} */}
-                      </Box>
+                      <Box fontSize={"12px"}>{val.product.product_name}</Box>
                       <Box fontWeight={"bold"} fontSize={"13px"} w={"100px"}>
                         Rp{" "}
                         {val.product.price
@@ -653,7 +478,6 @@ export default function Checkout() {
                     ? parseInt(subTotal).toLocaleString("id-ID")
                     : "Price Not Available"}
                   ,00
-                  {/* {subTotal},00 */}
                 </Box>
               </Box>
               <Box
@@ -688,8 +512,6 @@ export default function Checkout() {
                     ? (subTotal + parseInt(feeship)).toLocaleString("id-ID")
                     : parseInt(subTotal)}
                   ,00
-                  {/* Rp {subTotal + parseInt(feeship)}
-                  ,00 */}
                 </Box>
               </Box>
             </Flex>
