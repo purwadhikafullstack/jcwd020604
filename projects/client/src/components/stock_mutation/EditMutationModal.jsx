@@ -14,6 +14,7 @@ import {
 	Select,
 	Center,
 	HStack,
+	Flex,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -136,7 +137,8 @@ export default function EditMutationModal({
 						</Center>
 					</FormControl>
 				</ModalBody>
-				<ModalFooter>
+				<ModalFooter justifyContent={"space-between"}>
+					<Flex>Max Amount: {val.stock.qty}</Flex>
 					{user.role === "ADMIN" || "ADMIN" ? (
 						<Button colorScheme="blue" mr={3} onClick={editMutation}>
 							Save

@@ -48,25 +48,18 @@ export default function AddressUser(props) {
   };
 
   const getUserCity = async () => {
-    const res = await api().get(
-      `${process.env.REACT_APP_API_BASE_URL}/address/getAll/city`
-    );
+    const res = await api().get("/address/getAll/city");
     setCity(res.data);
   };
 
   const getUserProvince = async () => {
-    const res = await api().get(
-      `${process.env.REACT_APP_API_BASE_URL}/address/getAll/province`
-    );
+    const res = await api().get("/address/getAll/province");
     setProvince(res.data);
   };
 
   const editAddress = async () => {
     try {
-      await api().patch(
-        `${process.env.REACT_APP_API_BASE_URL}/address/${props.addressId}`,
-        address
-      );
+      await api().patch(`/address/${props.addressId}`, address);
       toast({
         title: "Address updated",
         status: "success",
@@ -90,12 +83,9 @@ export default function AddressUser(props) {
 
   const getAddressByUser = async () => {
     try {
-      const response = await api().get(
-        `${process.env.REACT_APP_API_BASE_URL}/address/${props.addressId}`
-      );
+      const response = await api().get(`/address/${props.addressId}`);
       setAddress(response.data);
     } catch (error) {
-      console.error(error);
       toast({
         title: "Error fetching user details",
         status: "error",
@@ -105,6 +95,8 @@ export default function AddressUser(props) {
       });
     }
   };
+
+  console.log(city);
 
   const handleInputChange = (e) => {
     const { value, id } = e.target;

@@ -22,6 +22,7 @@ import {
   useToast,
   Grid,
   GridItem,
+  FormHelperText,
 } from '@chakra-ui/react';
 import {
   MdFacebook,
@@ -72,7 +73,6 @@ export default function UserProfile() {
 
   const handleFile = (e) => {
     setSelectedFile(e.target.files[0]);
-    console.log(e.target.files[0]);
   };
 
   async function uploadAvatar() {
@@ -80,7 +80,7 @@ export default function UserProfile() {
     formData.append("userImg", selectedFile);
   
     try {
-      await api().post(`${process.env.REACT_APP_API_BASE_URL}/auth/${user.id}`, formData);
+      await api().post(`/auth/${user.id}`, formData);
       toast({
         title: "Photo has been updated",
         status: "success",
@@ -91,7 +91,6 @@ export default function UserProfile() {
       fetchData();
       fetch();
     } catch (error) {
-      console.error("An error occurred:", error);
       toast({
         title: "File too large",
         status: "error",
@@ -110,10 +109,9 @@ export default function UserProfile() {
 
   const fetchData = async() => {
     try {
-      const response = await api().get(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`);
+      const response = await api().get(`/auth/users/${user.uuid}`);
       setUsers(response.data);
     } catch (error) {
-      console.log(error);
       toast({
             title:"There is something error while executing this command",
             status:"error",
@@ -126,8 +124,7 @@ export default function UserProfile() {
   async function fetch() {
     try {
       const token = JSON.parse(localStorage.getItem("auth"));
-      const user = await api()
-        .get(`${process.env.REACT_APP_API_BASE_URL}/authentication/v2`, {
+      const user = await api().get("/authentication/v2", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -140,18 +137,21 @@ export default function UserProfile() {
         });
       }
     } catch (err) {
-      console.log(err);
+      toast({
+        title: "Error fetching user details",
+        status: "error",
+        duration: 3000,
+        position: "top",
+        isClosable: false,
+      });
     }
   }
       
   const getAddressByUser = async () => {
     try {
-      const response = await api().get(
-        `${process.env.REACT_APP_API_BASE_URL}/address/users/${user.id}`
-      );
+      const response = await api().get(`/address/users/${user.id}`);
       setAddress(response.data);
     } catch (error) {
-      console.error(error);
       toast({
         title: "Error fetching user details",
         status: "error",
@@ -169,7 +169,7 @@ export default function UserProfile() {
 
   const saveUser = async () => {
     try {
-        await api().patch(`${process.env.REACT_APP_API_BASE_URL}/auth/users/${user.uuid}`, changes);
+        await api().patch(`/auth/users/${user.uuid}`, changes);
         toast({
             title:"User has been updated",
             status:"success",
@@ -186,6 +186,9 @@ export default function UserProfile() {
         duration:3000,
         isClosable:false
     });
+    fetchData();
+    fetch();
+    navigate("/user_profile");
     }
 }
 
@@ -194,7 +197,6 @@ const handleInputChange = (e) => {
   const tempUser = { ...users };
   tempUser[id] = value;
   setChanges(tempUser);
-  console.log(changes);
 };
 
   return (
@@ -209,7 +211,6 @@ const handleInputChange = (e) => {
               <Box
                 color="white"
                 borderRadius="lg"
-                // m={{ sm: 4, md: 16, lg: 10 }}
                 p={{ sm: 5, md: 5, lg: 2 }}
               >
                 <Flex justifyContent={"center"} alignItems={"center"}>
@@ -247,7 +248,7 @@ const handleInputChange = (e) => {
                                          <Avatar
                                              size={'xl'}
                                              src={
-                                               users.avatar_url
+                                              `${process.env.REACT_APP_API_BASE_URL}/${users.avatar_url}`
                                              }
                                              alt={'Author'}
                                              css={{
@@ -344,6 +345,7 @@ const handleInputChange = (e) => {
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
                                         <Input type="text" size="md" id="fullname" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
                                     </InputGroup>
+                                    <FormHelperText>Max 20 letter.</FormHelperText>
                               </FormControl>
                               <FormControl id="phone_number">
                                     <FormLabel>Phone</FormLabel>
@@ -351,6 +353,7 @@ const handleInputChange = (e) => {
                                           <InputLeftElement pointerEvents="none" children={<BsPhone color="gray.800" />} />
                                           <Input type="number" size="md" id="phone_number" value={phone_number} onChange={(val) => {handleInputChange(val); setPhone_Number(val.target.value)}}/>
                                       </InputGroup>
+                                      <FormHelperText>Max 12 number.</FormHelperText>
                               </FormControl>                        
                             <FormControl id="email">
                                      <FormLabel>Email</FormLabel>
@@ -361,6 +364,7 @@ const handleInputChange = (e) => {
                                        />
                                        <Input type="email" size="md" readOnly={true} value={email}/>
                                      </InputGroup>
+                                     <FormHelperText>We'll never share your email.</FormHelperText>
                             </FormControl>
                             </HStack>
                               <Box display={'flex'} alignSelf={{base: 'flex', md: 'flex-start', sm: 'block'}}>

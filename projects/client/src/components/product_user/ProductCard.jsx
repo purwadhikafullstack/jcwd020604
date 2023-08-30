@@ -13,6 +13,9 @@ export default function ProductCard({ val }) {
 			flexDir={"row"}
 			borderRadius={"15px"}
 			boxShadow="0 2px 4px rgba(0, 0, 0, 0.4)"
+			_hover={{
+				backgroundColor: "#E6EBF2",
+			}}
 		>
 			<Image
 				src={

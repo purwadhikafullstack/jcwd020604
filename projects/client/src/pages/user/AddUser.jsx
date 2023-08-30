@@ -35,7 +35,7 @@ const validationSchema = Yup.object().shape({
       )
       .min(8, "Password minimum 8 character")
     .required('Password is required'),
-    phone_number: Yup.string().min(12, "Minimal 12 numbers").required("This field is requried")
+    phone_number: Yup.string().max(12, "Max 12 numbers").required("This field is requried")
 });
 
 const AddUser = () => {
@@ -45,8 +45,7 @@ const AddUser = () => {
 
     const saveUser = async (values) => {
         try {
-            await api().post(`${process.env.REACT_APP_API_BASE_URL}/auth/users`, values);
-            console.log(values);
+            await api().post("/auth/users", values);
             toast({
                 title:"User has been created",
                 status:"success",

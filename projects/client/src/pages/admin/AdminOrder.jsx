@@ -67,7 +67,13 @@ const AdminOrder = () => {
           setOrders(rows);
           setTotalPage(Math.ceil(count / 3));
         } catch (error) {
-          console.log("An error occurred while fetching data.");
+		  toast({
+			title: "An error occurred while fetching data.",
+			status: "error",
+			position: "top",
+			duration: 3000,
+			isClosable: false,
+		});
         }
       };
       
@@ -134,10 +140,10 @@ const AdminOrder = () => {
 		<>
 			<Navbar />
 			<>
-				<Flex flexDir={"row"} mx={{ base: "12", sm: "6", md: "14" }}>
+				<Flex flexDir={"row"} mx={{ base: "10", sm: "6", md: "14" }}>
 					<Select
 						placeholder="All Status"
-						w={{ base: "12%", sm: "md", md: "13%" }}
+						w={{ base: "none", sm: "md", md: "13%" }}
 						m={4}
 						cursor={"pointer"}
 						fontSize={"xs"}
@@ -159,7 +165,7 @@ const AdminOrder = () => {
 					{user.role === "ADMIN" ? (
 						<Select
 							placeholder="All Warehouse"
-							w={{ base: "12%", sm: "md", md: "12%" }}
+							w={{ base: "none", sm: "md", md: "12%" }}
 							m={4}
 							cursor={"pointer"}
 							fontSize={"xs"}
@@ -181,7 +187,7 @@ const AdminOrder = () => {
 					) : (
 						<Select
 							placeholder="All Warehouse"
-							w={{ base: "12%", sm: "md", md: "12%" }}
+							w={{ base: "none", sm: "md", md: "12%" }}
 							m={4}
 							cursor={"pointer"}
 							fontSize={"xs"}
@@ -199,14 +205,14 @@ const AdminOrder = () => {
 						</Select>
 					)}
 				</Flex>
-				{orders.length === 0 ? (
+				{orders?.length === 0 ? (
 					<OrderNotFound />
 				) : (
 					<>
-						{orders.map((order) => (
+						{orders?.length ? orders?.map((order) => (
 							<Card
 								my={2}
-								mx={{ base: "12", sm: "6", md: "14" }}
+								mx={{ base: "10", sm: "6", md: "14" }}
 								size={"sm"}
 								display={"block"}
 								position={"relative"}
@@ -261,11 +267,11 @@ const AdminOrder = () => {
 											{order.user?.fullname}
 										</Text>
 									</Flex>
-									{order.order_details.map((detail) => (
+									{order.order_details?.length ? order.order_details.map((detail) => (
 										<Box key={detail.id}>
-											<HStack>
+											<Flex flexDir={{base: 'column', md: 'row', sm: 'column'}}>
 												<Image
-													src={`${process.env.REACT_APP_API_BASE_URL}/${detail.stock.product.product_images[0].product_image}`}
+													src={`${process.env.REACT_APP_API_BASE_URL}/${detail?.stock?.product?.product_images[0]?.product_image}`}
 													w={"100%"}
 													boxSize="250px"
 													objectFit="cover"
@@ -276,17 +282,17 @@ const AdminOrder = () => {
 														fontWeight={"bold"}
 														textColor={"blackAlpha.600"}
 													>
-														{detail.stock.product.product_name}
+														{detail.stock?.product?.product_name}
 													</Text>
-													<Flex w={{ base: "50%", sm: "100%", md: "50%" }}>
+													<Flex w={{ base: "100%", sm: "100%", md: "50%" }}>
 														<Text
-															textAlign={"justify"}
+															textAlign={'justify'}
 															as={"p"}
 															fontSize={"sm"}
 															fontWeight={"semibold"}
 															textColor={"blackAlpha.600"}
 														>
-															{detail.stock.product.product_detail}
+															{detail.stock?.product?.product_detail}
 														</Text>
 													</Flex>
 													<Text
@@ -297,7 +303,7 @@ const AdminOrder = () => {
 														{detail.qty} barang x Rp{detail.price}
 													</Text>
 												</Stack>
-											</HStack>
+											</Flex>
 											<Flex justifyContent={"space-between"}>
 												<Flex></Flex>
 												{order.status === "PROCESSING" ? (
@@ -344,10 +350,10 @@ const AdminOrder = () => {
 												)}
 											</Flex>
 										</Box>
-									))}
+									)): null}
 								</CardBody>
 							</Card>
-						))}
+						)): null}
 					</>
 				)}
 			</>

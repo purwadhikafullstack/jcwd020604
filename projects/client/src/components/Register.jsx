@@ -40,16 +40,16 @@ import * as Yup from "yup";
 
     const register = async (values) => {
       try {
-        await api().post(`${process.env.REACT_APP_API_BASE_URL}/authentication/register`, values);
+        await api().post("/authentication/register", values);
         toast({
-          title: "Periksa email verifikasi anda",
+          title: "Check your email verification",
           status: "success",
           duration: 3000,
           isClosable: true,
         });
       } catch (err) {
         toast({
-          title: err.response?.data?.message,
+          title: "Failed to send email verification",
           status: "error",
           duration: 3000,
           isClosable: true,

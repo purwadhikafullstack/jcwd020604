@@ -23,6 +23,7 @@ import {
   useColorMode,
   Icon,
   VStack,
+  Badge,
 } from "@chakra-ui/react";
 import {
   FiLogOut,
@@ -209,6 +210,9 @@ export default function Navbar(props) {
                   ></Input>
                 </InputGroup>
               </Flex>
+              {user.role === "ADMIN" || user.role === "W_ADMIN" ? 
+                <Badge variant='outline' colorScheme='green'><Text as={"b"} fontSize={{ base: "8px", sm: "10px", md: "10px" }}>{user.role}</Text>
+              </Badge> : null}
             </HStack>
           </HStack>
           <Flex alignItems={"center"}>
@@ -268,15 +272,15 @@ export default function Navbar(props) {
               {user.fullname ? (
                 <>
                   <Text
-                    fontSize={{ base: "12px", sm: "10px", md: "12px" }}
+                    fontSize={{ base: "8px", sm: "10px", md: "12px" }}
                     mr={2}
                     display={"flex"}
-                    flexDir={{ base: "row", sm: "column", md: "column" }}
+                    flexDir={{ base: "column", sm: "column", md: "column" }}
                   >
                     {greeting}
                     <Text
                       as={"b"}
-                      fontSize={{ base: "12px", sm: "10px", md: "12px" }}
+                      fontSize={{ base: "8px", sm: "10px", md: "12px" }}
                     >
                       {user.fullname.length > 18
                         ? user.fullname.substring(0, 18) + "..."
@@ -290,9 +294,9 @@ export default function Navbar(props) {
                     cursor={"pointer"}
                     minW={0}
                   >
-                    <Avatar size={"sm"} src={user.avatar_url}>
-                      <AvatarBadge boxSize="1.25em" bg="green.500" />
-                    </Avatar>
+                      <Avatar size={"sm"} src={`${process.env.REACT_APP_API_BASE_URL}/${user.avatar_url}`}>
+                        <AvatarBadge boxSize="1.25em" bg="green.500" />
+                      </Avatar>
                   </MenuButton>
                   <MenuList>
                     {user.role === "ADMIN" ? (
@@ -420,6 +424,9 @@ export default function Navbar(props) {
                 </>
               )}
             </Stack>
+            {user.role === "ADMIN" || user.role === "W_ADMIN" ? 
+            <Badge variant='outline' colorScheme='green'><Text as={"b"} fontSize={{ base: "8px", sm: "10px", md: "10px" }}>{user.role}</Text>
+            </Badge> : null}
           </Box>
         ) : null}
       </Box>

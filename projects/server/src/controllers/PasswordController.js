@@ -7,6 +7,7 @@ const fs = require("fs").promises;
 const handlebars = require("handlebars");
 const { where } = require("sequelize");
 const Joi = require("joi");
+const path = require("path");
 
 const passwordController = {
     resetPassword: async (req, res) => {
@@ -25,15 +26,13 @@ const passwordController = {
 					status: "FORGOT-PASSWORD",
 				});
 
-				const template = await fs.readFile(
-					"./src/template/resetPassword.html",
-					"utf-8"
-				);
+				const template = await fs.readFile(path.join(__dirname, "../template/resetPassword.html"), "utf-8");
 
 				let compiledTemplate = handlebars.compile(template);
 				let resetPasswordTemplate = compiledTemplate({
 					registrationLink: `${process.env.URL_RESET_PASSWORD}/reset-password/${token.dataValues.token}`,
 				});
+
 
 				mailer({
 					subject: "Reset Password - Email Verification Link",
