@@ -24,18 +24,6 @@ Chart.register(...registerables);
 export default function SalesReport() {
   // Sample data for demonstration
   const warehouses = ["MMS Batam", "MMS Yogyakarta", "MMS Jakarta"];
-  const products = [
-    { id: 1, name: "Product 1", category: "Category A" },
-    { id: 2, name: "Product 2", category: "Category B" },
-    // ... other products
-  ];
-  // You would have real sales data from your backend
-  const salesData = [
-    { warehouse: "Warehouse A", product: "Product 1", revenue: 1500 },
-    { warehouse: "Warehouse B", product: "Product 2", revenue: 2000 },
-    // ... other sales data
-  ];
-
   const [selectedWarehouse, setSelectedWarehouse] = useState(warehouses[0]);
   const [date, setDate] = useState({
     dateFrom: "",
