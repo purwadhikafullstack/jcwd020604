@@ -181,7 +181,7 @@ export default function UserProfile() {
         navigate("/user_profile");
     } catch (error) {
       toast({
-        title:"Failed to update data, phone number max 12",
+        title:"Failed to update data",
         status:"error",
         duration:3000,
         isClosable:false
@@ -345,7 +345,7 @@ const handleInputChange = (e) => {
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
                                         <Input type="text" size="md" id="fullname" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
                                     </InputGroup>
-                                    <FormHelperText>We'll never share your name.</FormHelperText>
+                                    <FormHelperText>Max 20 letter.</FormHelperText>
                               </FormControl>
                               <FormControl id="phone_number">
                                     <FormLabel>Phone</FormLabel>
