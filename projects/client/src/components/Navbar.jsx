@@ -23,7 +23,6 @@ import {
   useColorMode,
   Icon,
   VStack,
-  Divider,
   Badge,
 } from "@chakra-ui/react";
 import {
