@@ -54,6 +54,9 @@ export default function ProductList({ val, getProduct }) {
 			borderColor={"#E6EBF2"}
 			gap={"7"}
 			alignItems={"center"}
+			_hover={{
+				backgroundColor: "#E6EBF2",
+			}}
 		>
 			<Flex gap={"5px"} alignItems={"center"}>
 				<Image

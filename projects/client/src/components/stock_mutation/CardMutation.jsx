@@ -54,7 +54,12 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 	return (
 		<>
 			{val?.stock?.id ? (
-				<Card maxW="xs">
+				<Card
+					maxW="xs"
+					_hover={{
+						backgroundColor: "#E6EBF2",
+					}}
+				>
 					<CardBody>
 						<Image
 							src={
