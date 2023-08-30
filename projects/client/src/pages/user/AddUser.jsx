@@ -35,7 +35,7 @@ const validationSchema = Yup.object().shape({
       )
       .min(8, "Password minimum 8 character")
     .required('Password is required'),
-    phone_number: Yup.string().min(12, "Minimal 12 numbers").required("This field is requried")
+    phone_number: Yup.string().max(12, "Max 12 numbers").required("This field is requried")
 });
 
 const AddUser = () => {
