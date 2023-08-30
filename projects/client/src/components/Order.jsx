@@ -43,6 +43,7 @@ export default function Order() {
   async function cancelOrder() {
     try {
       const res = await api().delete(`/userOrders/orders/` + orderId);
+      getOrder();
     } catch (error) {
       console.log(error);
     }
@@ -275,23 +276,24 @@ export default function Order() {
                             borderRadius={"none"}
                             onClick={() => nav(`/payment/${val.id}`)}
                           >
-                            Payment now
+                            See & Payment
                           </Button>
                         </Box>
-
-                        <Box>
-                          <Button
-                            w={"200px"}
-                            bgColor={"white"}
-                            border={"1px solid grey"}
-                            borderRadius={"none"}
-                            onClick={() => {
-                              setOrderId(val.id);
-                            }}
-                          >
-                            Cancel order
-                          </Button>
-                        </Box>
+                        {val.status !== "CANCELLED" && (
+                          <Box>
+                            <Button
+                              w={"200px"}
+                              bgColor={"white"}
+                              border={"1px solid grey"}
+                              borderRadius={"none"}
+                              onClick={() => {
+                                setOrderId(val.id);
+                              }}
+                            >
+                              Cancel order
+                            </Button>
+                          </Box>
+                        )}
                       </Box>
                     ) : null}
                     {val.payment_proof && val.status === "DELIVERY" ? (

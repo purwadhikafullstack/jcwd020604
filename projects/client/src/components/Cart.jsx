@@ -4,13 +4,7 @@ import {
   Center,
   Flex,
   Image,
-  Select,
   Icon,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Input,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -27,11 +21,9 @@ export default function Cart() {
   const userSelector = useSelector((state) => state.auth);
   const [product, setProduct] = useState([]);
   const [subTotal, setSubTotal] = useState(0);
-  const [value, setValue] = useState(1);
   const [stock, setStock] = useState(0);
   const [cart_id, setCart_id] = useState(0);
   const [product_id, setProduct_id] = useState(0);
-
   const handleDeleteCartItem = async (id) => {
     try {
       const res = await api().delete(`/cart/delete`, {
@@ -43,7 +35,6 @@ export default function Cart() {
       console.log("Error deleting cart item:", error);
     }
   };
-
   const editCartItem = async (qty) => {
     try {
       console.log(qty, product_id, cart_id);
@@ -58,13 +49,11 @@ export default function Cart() {
       console.log("Error edit", error);
     }
   };
-
   async function getcart() {
     console.log(userSelector.id);
     const res = await api().get(`/cart/` + userSelector.id);
     setProduct(res.data);
   }
-  // console.log(product);
   const calculateTotal = () => {
     let total = 0;
     product.forEach((val) => {
@@ -72,16 +61,13 @@ export default function Cart() {
     });
     return total;
   };
-
   useEffect(() => {
     const total = calculateTotal();
     setSubTotal(total);
   }, [product]);
-
   useEffect(() => {
     getcart();
   }, []);
-
   return (
     <>
       <Navbar cart={product} />
@@ -97,15 +83,9 @@ export default function Cart() {
               marginTop: "30px",
             }}
           />
-
           {product &&
             product?.map((val) => (
-              <Flex
-                alignItems={"center"}
-                width={"1300px"}
-                // justifyContent={"space-evenly"}
-                gap={"30px"}
-              >
+              <Flex alignItems={"center"} width={"1300px"} gap={"30px"}>
                 <Flex>
                   <Box>
                     <Image
@@ -148,7 +128,6 @@ export default function Cart() {
                         ? val.subtotal.toLocaleString("id-ID")
                         : "Price Not Available"}
                       ,00
-                      {/* {val.subtotal} */}
                     </Box>
                     <Box>
                       <Icon
