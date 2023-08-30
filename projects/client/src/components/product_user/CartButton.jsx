@@ -17,6 +17,7 @@ export default function CartButton({
 	handleDecrement,
 	handleIncrement,
 	addCart,
+	userSelector,
 }) {
 	return (
 		<Flex justifyContent={"space-between"} alignItems={"center"}>
@@ -61,7 +62,7 @@ export default function CartButton({
 				bgColor={"yellow"}
 				fontWeight={"bold"}
 				_hover={{ bgColor: "yellow.200" }}
-				isDisabled={isSoldOut}
+				isDisabled={isSoldOut || userSelector.role !== "USER"}
 			>
 				<Icon as={AiOutlineShoppingCart} fontSize={"25px"} />
 				CART

@@ -181,6 +181,7 @@ export default function ProductDetail() {
 								handleDecrement={handleDecrement}
 								handleIncrement={handleIncrement}
 								addCart={addCart}
+								userSelector={userSelector}
 							/>
 						</Flex>
 					</Center>
