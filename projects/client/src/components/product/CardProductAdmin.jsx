@@ -53,7 +53,12 @@ export default function ProductList({ val, getProduct }) {
 	}
 
 	return (
-		<Card maxW="xs">
+		<Card
+			maxW="xs"
+			_hover={{
+				backgroundColor: "#E6EBF2",
+			}}
+		>
 			<CardBody>
 				<Image
 					src={
