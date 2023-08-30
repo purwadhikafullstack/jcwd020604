@@ -1,7 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from 'react-router-dom';
-import { Box, IconButton, useBreakpointValue } from "@chakra-ui/react";
-import { BiLeftArrowAlt, BiRightArrowAlt } from "react-icons/bi";
+import { Box, useBreakpointValue } from "@chakra-ui/react";
 import Slider from "react-slick";
 import Product1 from "../../assets/product photos/ACCESORIES/chingco1.jpg";
 import Product2 from "../../assets/product photos/BOTTOMS/Pants1.jpg";
@@ -49,9 +48,6 @@ export default function Carousel() {
     Product1, Product2, Product3, Product4
   ]
 
-	const top = useBreakpointValue({ base: "90%", md: "50%" });
-	const side = useBreakpointValue({ base: "30%", md: "10px" });
-
 	return (
 		<Box position={'relative'} height={'600px'} width={'full'} overflow={'hidden'} mb={4}>
 			<link
@@ -64,30 +60,6 @@ export default function Carousel() {
 				type="text/css"
 				href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
 			/>
-				<IconButton
-					aria-label="left-arrow"
-					colorScheme="messenger"
-					borderRadius="full"
-					position="absolute"
-					left={side}
-					top={top}
-					transform={'translate(0%, -50%)'}
-					zIndex={2}
-					onClick={() => slider?.slickPrev()}>
-					<BiLeftArrowAlt />
-				</IconButton>
-				<IconButton
-					aria-label="right-arrow"
-					colorScheme="messenger"
-					borderRadius="full"
-					position="absolute"
-					right={side}
-					top={top}
-					transform={'translate(0%, -50%)'}
-					zIndex={2}
-					onClick={() => sliderRef?.slickNext()}>
-					<BiRightArrowAlt />
-				</IconButton>
 				<Slider {...settings} ref={(sliderRef) => setSlider(sliderRef)}>
 					{card.map((url, index) => (
 						<Box

@@ -136,16 +136,14 @@ const AdminOrder = () => {
 		}
 	};
 
-	console.log(orders);
-
 	return (
 		<>
 			<Navbar />
 			<>
-				<Flex flexDir={"row"} mx={{ base: "12", sm: "6", md: "14" }}>
+				<Flex flexDir={"row"} mx={{ base: "10", sm: "6", md: "14" }}>
 					<Select
 						placeholder="All Status"
-						w={{ base: "12%", sm: "md", md: "13%" }}
+						w={{ base: "none", sm: "md", md: "13%" }}
 						m={4}
 						cursor={"pointer"}
 						fontSize={"xs"}
@@ -167,7 +165,7 @@ const AdminOrder = () => {
 					{user.role === "ADMIN" ? (
 						<Select
 							placeholder="All Warehouse"
-							w={{ base: "12%", sm: "md", md: "12%" }}
+							w={{ base: "none", sm: "md", md: "12%" }}
 							m={4}
 							cursor={"pointer"}
 							fontSize={"xs"}
@@ -189,7 +187,7 @@ const AdminOrder = () => {
 					) : (
 						<Select
 							placeholder="All Warehouse"
-							w={{ base: "12%", sm: "md", md: "12%" }}
+							w={{ base: "none", sm: "md", md: "12%" }}
 							m={4}
 							cursor={"pointer"}
 							fontSize={"xs"}
@@ -214,7 +212,7 @@ const AdminOrder = () => {
 						{orders?.length ? orders?.map((order) => (
 							<Card
 								my={2}
-								mx={{ base: "12", sm: "6", md: "14" }}
+								mx={{ base: "10", sm: "6", md: "14" }}
 								size={"sm"}
 								display={"block"}
 								position={"relative"}
@@ -271,7 +269,7 @@ const AdminOrder = () => {
 									</Flex>
 									{order.order_details?.length ? order.order_details.map((detail) => (
 										<Box key={detail.id}>
-											<HStack>
+											<Flex flexDir={{base: 'column', md: 'row', sm: 'column'}}>
 												<Image
 													src={`${process.env.REACT_APP_API_BASE_URL}/${detail?.stock?.product?.product_images[0]?.product_image}`}
 													w={"100%"}
@@ -286,9 +284,9 @@ const AdminOrder = () => {
 													>
 														{detail.stock?.product?.product_name}
 													</Text>
-													<Flex w={{ base: "50%", sm: "100%", md: "50%" }}>
+													<Flex w={{ base: "100%", sm: "100%", md: "50%" }}>
 														<Text
-															textAlign={"justify"}
+															textAlign={'justify'}
 															as={"p"}
 															fontSize={"sm"}
 															fontWeight={"semibold"}
@@ -305,7 +303,7 @@ const AdminOrder = () => {
 														{detail.qty} barang x Rp{detail.price}
 													</Text>
 												</Stack>
-											</HStack>
+											</Flex>
 											<Flex justifyContent={"space-between"}>
 												<Flex></Flex>
 												{order.status === "PROCESSING" ? (

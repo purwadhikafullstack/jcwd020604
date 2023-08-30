@@ -19,7 +19,7 @@ import { api } from "../../api/api";
 
 export default function EditCategoryModal({ isOpen, onClose }) {
 	const [category, setCategory] = useState([]);
-	const [selectedCategory, setSelectedCategory] = useState([]);
+	const [selectedCategory, setSelectedCategory] = useState(null);
 	const [data, setData] = useState({});
 	const toast = useToast();
 	const nav = useNavigate();
