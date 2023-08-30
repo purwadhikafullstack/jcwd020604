@@ -113,10 +113,6 @@ const productController = {
 				include: [{ model: db.product_images, as: "product_images" }],
 			});
 
-			for (const image of selectedProduct.product_images) {
-				fs.unlinkSync(path.join(__dirname, `../public/${image.product_image}`));
-			}
-
 			// Update the product
 			await db.products.update(
 				{
@@ -150,6 +146,12 @@ const productController = {
 					{ transaction: t }
 				);
 				await db.product_images.bulkCreate(imageUrls, { transaction: t });
+
+				for (const image of selectedProduct.product_images) {
+					fs.unlinkSync(
+						path.join(__dirname, `../public/${image.product_image}`)
+					);
+				}
 			}
 			await t.commit();
 			res.status(200).send({ message: "Product updated successfully." });
@@ -171,6 +173,7 @@ const productController = {
 			if (!existingProduct) {
 				return res.status(404).send({ message: "Product not found." });
 			}
+
 			for (const image of existingProduct.product_images) {
 				fs.unlinkSync(path.join(__dirname, `../public/${image.product_image}`));
 			}
