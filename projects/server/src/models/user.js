@@ -7,7 +7,8 @@ module.exports = (sequelize, Sequelize) => {
 				defaultValue: Sequelize.UUIDV4,
 				allowNull: false,
 				validate: {
-					notEmpty: true
+					notEmpty: true,
+					len: [0, 20]
 				}
 			},
 			email: {
