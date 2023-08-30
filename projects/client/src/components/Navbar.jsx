@@ -193,7 +193,7 @@ export default function Navbar(props) {
                   </Flex>
                 </>
               )}
-              <Flex justifyContent={'center'}>
+              <Flex justifyContent={"center"}>
                 <InputGroup>
                   <InputRightElement cursor={"pointer"}>
                     <FiSearch
@@ -306,6 +306,9 @@ export default function Navbar(props) {
                         <MenuItem onClick={() => navigate("/user_profile")}>
                           Manage Profile
                         </MenuItem>
+                        <MenuItem onClick={() => navigate("/order")}>
+                          My Order List
+                        </MenuItem>
                       </>
                     )}
                     {user.role === "ADMIN" || user.role === "W_ADMIN" ? (
@@ -387,20 +390,20 @@ export default function Navbar(props) {
                 </>
               ) : (
                 <>
-                 <InputGroup>
-                  <InputRightElement cursor={"pointer"}>
-                    <FiSearch
-                      color="gray.300"
-                      onClick={() => handleSearch(inputFileRef.current.value)}
-                    />
-                  </InputRightElement>
-                  <Input
-                    ref={inputFileRef}
-                    type="text"
-                    placeholder="Cari produk..."
-                    onChange={(e) => handleSearch(e.target.value)}
-                  ></Input>
-                </InputGroup>
+                  <InputGroup>
+                    <InputRightElement cursor={"pointer"}>
+                      <FiSearch
+                        color="gray.300"
+                        onClick={() => handleSearch(inputFileRef.current.value)}
+                      />
+                    </InputRightElement>
+                    <Input
+                      ref={inputFileRef}
+                      type="text"
+                      placeholder="Cari produk..."
+                      onChange={(e) => handleSearch(e.target.value)}
+                    ></Input>
+                  </InputGroup>
                   <Flex>
                     <Link to={"/collection"}>Tops</Link>
                   </Flex>
@@ -420,16 +423,30 @@ export default function Navbar(props) {
           </Box>
         ) : null}
       </Box>
-          <VStack overflow={'clip'} display={'flex'} alignItems={'center'} justifyContent={'center'} position={'relative'}>
-            {search ? (<>{product?.map((val) => (
-            <Flex key={val.uuid}>
-              <Text fontSize={'xs'} mx={2}>{val.product_name}</Text>
+      <VStack
+        overflow={"clip"}
+        display={"flex"}
+        alignItems={"center"}
+        justifyContent={"center"}
+        position={"relative"}
+      >
+        {search ? (
+          <>
+            {product?.map((val) => (
+              <Flex key={val.uuid}>
+                <Text fontSize={"xs"} mx={2}>
+                  {val.product_name}
+                </Text>
                 <Link to={`/collection/${val.uuid}`}>
-                    <Text fontSize={'xs'} fontWeight={'bold'} color={'green'}>Lihat Produk</Text>
+                  <Text fontSize={"xs"} fontWeight={"bold"} color={"green"}>
+                    Lihat Produk
+                  </Text>
                 </Link>
-            </Flex>
-            ))}</>) : null}
-          </VStack>
+              </Flex>
+            ))}
+          </>
+        ) : null}
+      </VStack>
     </>
   );
 }

@@ -36,7 +36,6 @@ export default function Checkout() {
   const [stock, setStock] = useState(0);
   const [cart_id, setCart_id] = useState(0);
   const [product_id, setProduct_id] = useState(0);
-
   const user = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const inputFileRef = useRef(null);
@@ -53,7 +52,6 @@ export default function Checkout() {
   const [changes, setChanges] = useState("");
   const [addressId, setAddressId] = useState("");
   const [users, setUsers] = useState("");
-  // const [value, setValue] = React.useState("1");
   const [subTotal, setSubTotal] = useState(0);
   const [cityId, setCityId] = useState("");
   const nav = useNavigate();
@@ -61,7 +59,7 @@ export default function Checkout() {
   const [feeship, setFeeship] = useState(0);
   const [allFee, setAllFee] = useState(0);
   const handleAddressSelection = (addressId, cityId) => {
-    setAddressId(addressId); // Set the selected address ID to the state
+    setAddressId(addressId);
     setCityId(cityId);
   };
 
@@ -74,31 +72,19 @@ export default function Checkout() {
   const fetchShipping = async () => {
     console.log("fetchship");
     const token = JSON.parse(localStorage.getItem("user"));
-    // TODO: get the actual origin id from
-    // cara mencari warouse terdekat dengan destionation user
-    // 1. ambil semua warehouse yang ada di DB
-    // 2. lalu dapatkan destination ID dari user
-    // 3.
-
     const destination = cityId;
     console.log("destination", destination);
 
     try {
-      const response = await api().post(
-        "/cart/get/cost",
-        {
-          destination,
-          addressId,
-          weight: product.reduce((prev, curr) => {
-            prev += curr.product.weight * curr.qty;
-            return prev;
-          }, 0),
-          courier: courier,
-        }
-        // {
-        //   headers: { Authorization: `Bearer ${token}` },
-        // }
-      );
+      const response = await api().post("/cart/get/cost", {
+        destination,
+        addressId,
+        weight: product.reduce((prev, curr) => {
+          prev += curr.product.weight * curr.qty;
+          return prev;
+        }, 0),
+        courier: courier,
+      });
       console.log(response.data);
       setShipping(response.data);
     } catch (err) {
@@ -116,7 +102,6 @@ export default function Checkout() {
   console.log(address);
 
   const handleContinueShippingg = () => {
-    // Perform any necessary actions with the selected address
     if (addressId) {
       toast({
         title: "address selected",
@@ -125,9 +110,7 @@ export default function Checkout() {
         duration: 3000,
         isClosable: true,
       });
-      // Address ID is selected
       console.log("Selected Address city ID:", cityId);
-      // ... Perform further actions or navigate to the next step
     } else {
       toast({
         title: "Please select a shipping address",
@@ -141,7 +124,6 @@ export default function Checkout() {
 
   const order = async () => {
     try {
-      // Prepare the order data
       const orderData = {
         courier: courier,
         addressId,
@@ -153,14 +135,11 @@ export default function Checkout() {
         status: "WAITING_PAYMENT",
       };
 
-      // Send the order data to the backend
       const response = await api().post("/userOrders/addOrder", orderData);
 
-      // Handle the response
       const responseData = response.data;
       console.log(responseData);
 
-      // Show a success message to the user
       toast({
         title: "Order has been created",
         position: "top",
@@ -172,10 +151,8 @@ export default function Checkout() {
 
       console.log("Order has been created");
     } catch (error) {
-      // Handle any errors that might occur
       console.error(error);
 
-      // Show an error message to the user
       toast({
         title: "An error occurred while creating the order",
         position: "top",
@@ -328,60 +305,6 @@ export default function Checkout() {
               <Box fontSize={"18px"} fontWeight={"bold"}>
                 Shipping address
               </Box>
-              {/* <Box mt={"5px"}>Name</Box>
-
-          <Input
-            w={"500px"}
-            borderRadius={"none"}
-            type="text"
-            id="fullname"
-            value={fullname}
-            onChange={(val) => {
-              setFullName(val.target.value);
-            }}
-          />
-
-          <Box mt={"5px"}>Address</Box>
-          <Input
-            placeholder="Enter your address"
-            w={"500px"}
-            borderRadius={"none"}
-          ></Input>
-          <Box mt={"5px"}>Apartment, room number, etc. (optional)</Box>
-          <Input
-            placeholder="Write here"
-            w={"500px"}
-            borderRadius={"none"}
-          ></Input>
-          <Box mt={"5px"}>City</Box>
-          <Input
-            placeholder="Enter your city"
-            w={"500px"}
-            borderRadius={"none"}
-          ></Input>
-          <Box mt={"5px"}>Province</Box>
-          <Box display={"flex"} gap={"10px"}>
-            <Select
-              border={"solid black 1px"}
-              w={"245px"}
-              borderRadius={"none"}
-            >
-              <option>Riau Islands</option>
-            </Select>
-            <Input
-              border={"solid black 1px"}
-              placeholder="Postal Code"
-              borderRadius={"none"}
-              w={"245px"}
-            ></Input>
-          </Box>
-
-          <Box>Phone</Box>
-          <Input
-            placeholder={"Enter your phone number"}
-            w={"500px"}
-            borderRadius={"none"}
-          ></Input> */}
               <Box
                 w={"515px"}
                 display={"flex"}
@@ -446,7 +369,7 @@ export default function Checkout() {
                               w={"100px"}
                               onChange={() =>
                                 handleAddressSelection(val.id, val.city_id)
-                              } // Call the function when the checkbox is clicked
+                              }
                             ></Radio>
                           </Box>
                         </Box>
@@ -571,7 +494,6 @@ export default function Checkout() {
                     Return to cart
                   </Button>
                 </Link>
-                {/* <Link to={"/payment"}> */}
                 <Button
                   w={"200px"}
                   bgColor={"#ffe401"}
@@ -582,7 +504,6 @@ export default function Checkout() {
                 >
                   Order
                 </Button>
-                {/* </Link> */}
               </Box>
             </Flex>
 
@@ -618,10 +539,7 @@ export default function Checkout() {
                       justifyContent={"space-between"}
                       w={"249px"}
                     >
-                      <Box fontSize={"12px"}>
-                        {val.product.product_name}
-                        {/* {val.product.weight} */}
-                      </Box>
+                      <Box fontSize={"12px"}>{val.product.product_name}</Box>
                       <Box fontWeight={"bold"} fontSize={"13px"} w={"100px"}>
                         Rp{" "}
                         {val.product.price
@@ -653,7 +571,6 @@ export default function Checkout() {
                     ? parseInt(subTotal).toLocaleString("id-ID")
                     : "Price Not Available"}
                   ,00
-                  {/* {subTotal},00 */}
                 </Box>
               </Box>
               <Box
@@ -688,8 +605,6 @@ export default function Checkout() {
                     ? (subTotal + parseInt(feeship)).toLocaleString("id-ID")
                     : parseInt(subTotal)}
                   ,00
-                  {/* Rp {subTotal + parseInt(feeship)}
-                  ,00 */}
                 </Box>
               </Box>
             </Flex>

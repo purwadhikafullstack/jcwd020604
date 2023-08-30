@@ -110,7 +110,6 @@ db.categories.hasMany(db.products, {
 
 db.products.belongsTo(db.categories, {
   foreignKey: "category_id",
-  as: "category",
 });
 
 // db.product_images foreignKey
