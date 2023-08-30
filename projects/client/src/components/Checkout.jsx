@@ -610,7 +610,7 @@ export default function Checkout() {
                       <Image
                         width={"100px"}
                         h={"100px"}
-                        src={val.product.product_images[0].product_image}
+                        src={`${process.env.REACT_APP_API_BASE_URL}/${val.product.product_images[0].product_image}`}
                       />
                     </Box>
                     <Box

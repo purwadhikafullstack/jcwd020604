@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -9,21 +9,26 @@ import {
   Tr,
   Th,
   Td,
+  Flex,
 } from "@chakra-ui/react"; // You can adjust the UI library as needed
 import Navbar from "./Navbar";
 import Footer from "./Footer";
-
-// Sample data for demonstration
-const warehouses = ["MMS Batam", "MMS Yogyakarta", "MMS Jakarta"];
-const products = [
-  { id: 1, name: "Product 1", category: "Category A" },
-  { id: 2, name: "Product 2", category: "Category B" },
-  // ... other products
-];
+import { api } from "../api/api";
+import moment from "moment";
+// import BarChartComponent from "./ChartSalesReport";
+// import OrderCategoryChart from "./ChartSalesReport";
+import { Chart, registerables } from "chart.js";
+import { Bar } from "react-chartjs-2";
+Chart.register(...registerables);
 
 export default function SalesReport() {
-  const [selectedWarehouse, setSelectedWarehouse] = useState(warehouses[0]);
-
+  // Sample data for demonstration
+  const warehouses = ["MMS Batam", "MMS Yogyakarta", "MMS Jakarta"];
+  const products = [
+    { id: 1, name: "Product 1", category: "Category A" },
+    { id: 2, name: "Product 2", category: "Category B" },
+    // ... other products
+  ];
   // You would have real sales data from your backend
   const salesData = [
     { warehouse: "Warehouse A", product: "Product 1", revenue: 1500 },
@@ -31,6 +36,40 @@ export default function SalesReport() {
     // ... other sales data
   ];
 
+  const [selectedWarehouse, setSelectedWarehouse] = useState(warehouses[0]);
+  const [date, setDate] = useState({
+    dateFrom: "",
+    dateTo: "",
+  });
+  const [warehouseId, setWarehouseId] = useState();
+
+  const [dataReport, setDataReport] = useState([]);
+  const [dataReportChart, setDataReportChart] = useState([]);
+  async function getData() {
+    const data = {
+      dateFrom: date.dateFrom
+        ? date.dateFrom
+        : moment().subtract(1, "months").format("YYYY-MM-DD"),
+      dateTo: date.dateFrom ? date.dateFrom : moment().format("YYYY-MM-DD"),
+      // warehouse,
+    };
+    try {
+      console.log(data);
+      const res = await api().post(`/report/report`, data);
+      setDataReport(res.data.data);
+    } catch (error) {}
+  }
+
+  useEffect(() => {
+    getData();
+
+    if (dataReport) {
+      setDataReportChart(dataReport);
+    }
+  }, []);
+
+  console.log(dataReport);
+  // console.log(getData());
   return (
     <>
       <Navbar />
@@ -48,27 +87,35 @@ export default function SalesReport() {
               ))}
             </Select>
           </Box>
+
+          <Flex w={"100%"} justifyContent={"center"}>
+            <OrderCategoryChart dataReport={dataReport} />
+          </Flex>
+
           <Table variant="striped" colorScheme="teal">
             <Thead>
               <Tr>
-                <Th>Product</Th>
+                <Th>no</Th>
+                <Th>Date</Th>
+                <Th>Product Name</Th>
                 <Th>Category</Th>
-                <Th>Revenue</Th>
+                <Th>Price</Th>
+                {/* <Th>Quantity</Th> */}
               </Tr>
             </Thead>
             <Tbody>
-              {salesData.map((sale) => (
-                <Tr key={sale.product}>
-                  <Td>{sale.product}</Td>
-                  <Td>
-                    {products.find((p) => p.name === sale.product)?.category}
-                  </Td>
-                  <Td>{sale.revenue}</Td>
+              {dataReport.map((val, index) => (
+                <Tr key={index}>
+                  <Td>{index + 1}</Td>
+                  <Td>{val.createdAt.split("T")[0]}</Td>
+                  <Td>{val.stock.product.product_name}</Td>
+                  <Td>{val.stock.product.category.category_name}</Td>
+                  <Td>{val.stock.product.price}</Td>
                 </Tr>
               ))}
             </Tbody>
           </Table>
-          <Button mt={4} colorScheme="blue">
+          <Button mt={4} colorScheme="pink">
             Export Report
           </Button>
         </Box>
@@ -77,3 +124,41 @@ export default function SalesReport() {
     </>
   );
 }
+
+const OrderCategoryChart = (props) => {
+  const dataReport = props.dataReport || [];
+
+  const categoryCounts = {};
+  dataReport?.forEach((order) => {
+    const product = order.stock.product;
+    if (product) {
+      const category = product.category;
+      const categoryName = category.category_name; // Ubah properti sesuai struktur Anda
+      categoryCounts[categoryName] = (categoryCounts[categoryName] || 0) + 1;
+    }
+  });
+
+  const chartData = {
+    labels: Object.keys(categoryCounts),
+    datasets: [
+      {
+        label: "Jumlah Produk",
+        data: Object.values(categoryCounts),
+        backgroundColor: "rgba(75, 192, 192, 0.6)",
+        borderColor: "rgba(75, 192, 192, 1)",
+        borderWidth: 1,
+      },
+    ],
+  };
+
+  const chartOptions = {
+    scales: {
+      y: {
+        beginAtZero: true,
+        precision: 0,
+      },
+    },
+  };
+
+  return <Bar data={chartData} options={chartOptions} />;
+};
