@@ -5,8 +5,6 @@ export default function ProductCard({ val }) {
 	const [stock, setStock] = useState(
 		val.stocks.reduce((accumulator, val) => accumulator + val.qty, 0)
 	);
-	// console.log(stock);
-	console.log(val);
 	const [hovered, setHovered] = useState(false);
 	const isSoldOut = stock === 0;
 	return (
