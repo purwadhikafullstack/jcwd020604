@@ -15,6 +15,7 @@ import {
 	Select,
 	Flex,
 	Image,
+	Text
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
@@ -124,32 +125,35 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 			<ModalOverlay />
 			<ModalContent>
 				{user.role === "ADMIN" ? (
-					<ModalHeader>Edit Product</ModalHeader>
+					<ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Edit Product</Text></ModalHeader>
 				) : (
-					<ModalHeader>Detail Product</ModalHeader>
+					<ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Detail Product</Text></ModalHeader>
 				)}
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Product Name:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Product Name:</Text></FormLabel>
 						<Input
 							placeholder="e.g. MMS T-shirt"
 							id="product_name"
+							size={'sm'}
 							defaultValue={val.product_name}
 							onChange={inputHandler}
 						/>
-						<FormLabel>Product Description:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Product Description:</Text></FormLabel>
 						<Textarea
 							placeholder="e.g. A T-shirt with an impressive"
 							id="product_detail"
 							h={"120px"}
+							size={'sm'}
 							defaultValue={val.product_detail}
 							onChange={inputHandler}
 						/>
-						<FormLabel> Product Category:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Product Category:</Text></FormLabel>
 						<Select
 							placeholder="Choose category"
 							id="category_id"
+							size={'sm'}
 							defaultValue={val.category_id}
 							onChange={inputHandler}
 						>
@@ -161,23 +165,25 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 								  ))
 								: null}
 						</Select>
-						<FormLabel>Price (Rp):</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Price (Rp):</Text></FormLabel>
 						<Input
 							type="number"
 							placeholder="e.g. 500000"
 							id="price"
+							size={'sm'}
 							defaultValue={val.price}
 							onChange={inputHandler}
 						/>
-						<FormLabel>Weight (g):</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Weight (g):</Text></FormLabel>
 						<Input
 							type="number"
 							placeholder="e.g. 100 "
 							id="weight"
+							size={'sm'}
 							defaultValue={val.weight}
 							onChange={inputHandler}
 						/>
-						<FormLabel>Product Images:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Product Image:</Text></FormLabel>
 						{imagesProduct.length ? (
 							<Flex
 								flexWrap={"wrap"}
@@ -197,7 +203,7 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 							</Flex>
 						) : null}
 						{user.role === "ADMIN" ? (
-							<FormLabel>Change Product Images:</FormLabel>
+							<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Change Product Image:</Text></FormLabel>
 						) : null}
 						{user.role === "ADMIN" ? (
 							<>
@@ -213,7 +219,9 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 								/>
 								<Button
 									onClick={() => inputFileRef.current.click()}
-									size={"sm"}
+									size={"xs"}
+									w={'25%'}
+									rounded={'sm'}
 									colorScheme="facebook"
 								>
 									Choose image
@@ -245,8 +253,10 @@ export default function EditProductModal({ isOpen, onClose, val, getProduct }) {
 				</ModalBody>
 				{user.role === "ADMIN" ? (
 					<ModalFooter justifyContent={"space-between"}>
-						<Flex>Max: 1mb/file</Flex>
-						<Button colorScheme="blue" mr={3} onClick={editProduct}>
+						<Flex fontSize={'sm'} fontWeight={'bold'} textColor={'blackAlpha.500'}>Max: 1mb/file</Flex>
+						<Button colorScheme="blue" mr={3} w={'25%'}
+						rounded={'sm'}
+						size={'xs'} onClick={editProduct}>
 							Save
 						</Button>
 					</ModalFooter>

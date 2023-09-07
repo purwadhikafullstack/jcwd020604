@@ -84,14 +84,15 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 		>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Delete Warehouse</ModalHeader>
+				<ModalHeader fontSize={'md'} fontWeight={'bold'}>Delete Warehouse</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Select Warehouse:</FormLabel>
+						<FormLabel fontSize={'sm'}>Select Warehouse:</FormLabel>
 						<Select
 							placeholder="Select Warehouse"
 							id="warehouse"
+							size={'sm'}
 							value={selectedWarehouseId}
 							onChange={handleWarehouseSelect}
 						>
@@ -105,9 +106,10 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 						</Select>
 					</FormControl>
 					<FormControl mt={4}>
-						<FormLabel>Type "DELETE" to confirm:</FormLabel>
+						<FormLabel fontSize={'sm'}>Type "DELETE" to confirm:</FormLabel>
 						<Input
 							type="text"
+							size={'sm'}
 							value={confirmationText}
 							onChange={handleConfirmationTextChange}
 							placeholder="Type 'DELETE' here"
@@ -115,10 +117,10 @@ export default function DeleteWarehouseModal({ isOpen, onClose }) {
 					</FormControl>
 				</ModalBody>
 
-				<ModalFooter>
+				<ModalFooter display={'flex'} justifyContent={'center'}>
 					<Button
 						colorScheme="red"
-						mr={3}
+						size={'xs'} w={'30%'} rounded={'sm'}
 						onClick={() => {
 							if (isDeleteButtonEnabled) {
 								deleteWarehouse(selectedWarehouseId);

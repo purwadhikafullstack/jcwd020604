@@ -37,13 +37,14 @@ export default function DeleteProductModal({ isOpen, onClose, deleteProduct }) {
 		>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Delete Product</ModalHeader>
+				<ModalHeader fontSize={'md'} fontWeight={'bold'}>Delete Product</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl mt={4}>
-						<FormLabel>Type "DELETE" to confirm:</FormLabel>
+						<FormLabel fontSize={'sm'}>Type "DELETE" to confirm:</FormLabel>
 						<Input
 							type="text"
+							size={'sm'}
 							value={confirmationText}
 							onChange={handleConfirmationTextChange}
 							placeholder="Type 'DELETE' here"
@@ -54,7 +55,8 @@ export default function DeleteProductModal({ isOpen, onClose, deleteProduct }) {
 				<ModalFooter>
 					<Button
 						colorScheme="red"
-						mr={3}
+						rounded={'sm'}
+						size={'xs'}
 						isDisabled={!isDeleteButtonEnabled}
 						onClick={deleteProduct}
 					>

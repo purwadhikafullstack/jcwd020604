@@ -201,18 +201,18 @@ export default function AdminMutation() {
 	return (
 		<Center flexDir={"column"}>
 			<Flex
-				margin={"30px 20px 30px"}
+				margin={8}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}
-				padding={"15px"}
+				padding={5}
 				maxW={"1300px"}
 				w={"100%"}
 				justifyContent={"center"}
 				flexDir={"column"}
 			>
-				<Flex flexDir={"column"}>
-					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
+				<Flex flexDir={"column"} pb={'15px'}>
+					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={'lg'}>
 						Stock Mutation
 					</Flex>
 					<Flex
@@ -221,20 +221,21 @@ export default function AdminMutation() {
 						paddingBottom={"15px"}
 					>
 						<Flex gap={"15px"} w={"100%"}>
-							<Link to={`/admin/managedata`}>
-								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
-							</Link>
+								<Button rounded={'sm'} size={'xs'} leftIcon={<ArrowBackIcon />}>
+									<Link to={`/admin/managedata`}>Back</Link>
+								</Button>
 							<Button
 								as={Button}
+								rounded={'sm'} size={'xs'}
 								colorScheme="green"
 								onClick={addMutationModal.onOpen}
 							>
 								<AddIcon />
 							</Button>
+							<Button rounded={'full'} size={'xs'} as={Button} onClick={mutationRequestModal.onOpen}>
+								<BellIcon />
+							</Button>
 							<Flex style={{ position: "relative", display: "inline-block" }}>
-								<Button as={Button} onClick={mutationRequestModal.onOpen}>
-									<BellIcon />
-								</Button>
 								{request.length ? (
 									<Flex
 										style={{
@@ -244,12 +245,12 @@ export default function AdminMutation() {
 											borderRadius: "50%",
 											backgroundColor: "red",
 											color: "white",
-											width: "20px",
-											height: "20px",
+											width: "16px",
+											height: "16px",
 											display: "flex",
 											justifyContent: "center",
 											alignItems: "center",
-											fontSize: "12px",
+											fontSize: "8px",
 										}}
 									>
 										{request.length}
@@ -257,11 +258,12 @@ export default function AdminMutation() {
 								) : null}
 							</Flex>
 						</Flex>
-						<Button onClick={handleReset}>
+						<Button onClick={handleReset} variant={'ghost'} size={'sm'} rounded={'full'} _hover={{color:'blue',bgColor:'chakra-placeholder-color._light'}}>
 							<RepeatIcon />
 						</Button>
 						<Input
 							type={"month"}
+							size={'sm'}
 							w={"520px"}
 							value={time}
 							onChange={(e) => {
@@ -271,13 +273,15 @@ export default function AdminMutation() {
 						/>
 					</Flex>
 					<Center
-						gap={"15px"}
-						paddingBottom={"15px"}
+						gap={5}
+						paddingBottom={4}
 						w={["100%", null, "auto"]} // Adjust width based on breakpoints
 						flexWrap={["wrap", null, "nowrap"]}
 					>
 						<Select
 							placeholder="From Warehouse"
+							size={'sm'}
+							cursor={'pointer'}
 							value={selectedWarehouse}
 							onChange={(event) => {
 								setPage(1);
@@ -294,22 +298,25 @@ export default function AdminMutation() {
 						</Select>
 						<Select
 							placeholder="Select Status"
+							size={'sm'}
+							cursor={'pointer'}
 							value={selectedStatus}
 							onChange={(event) => {
 								setPage(1);
 								setSelectedStatus(event.target.value);
 							}}
 						>
-							<option>APPROVED</option>
-							<option>AUTO</option>
-							<option>PENDING</option>
-							<option>REJECT</option>
+							<option style={{fontSize: '12px', fontWeight: 'bold', color: 'green'}}>APPROVED</option>
+							<option style={{fontSize: '12px', fontWeight: 'bold', color: 'blue'}}>AUTO</option>
+							<option style={{fontSize: '12px', fontWeight: 'bold', color: 'tomato'}}>PENDING</option>
+							<option style={{fontSize: '12px', fontWeight: 'bold', color: 'red'}}>REJECT</option>
 						</Select>
-						<InputGroup>
+						<InputGroup size={'sm'}>
 							<Input placeholder="Search..." ref={inputFileRef} />
 							<InputRightElement cursor={"pointer"}>
 								<Button
 									border="none"
+									size={'sm'}
 									onClick={() => {
 										setPage(1);
 										setSearch(inputFileRef.current.value);

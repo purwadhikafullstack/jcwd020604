@@ -11,6 +11,7 @@ import {
 	FormLabel,
 	Input,
 	useToast,
+	Text,
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { api } from "../../api/api";
@@ -71,24 +72,27 @@ export default function AddCategoryModal({ isOpen, onClose, getCategory }) {
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Add Category</ModalHeader>
+				<ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Add Category</Text></ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Category Name:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Category Name:</Text></FormLabel>
 						<Input
 							placeholder="e.g. TOPS"
 							id="category_name"
+							size={'sm'}
 							onChange={inputHandler}
 						/>
 					</FormControl>
 				</ModalBody>
 
-				<ModalFooter>
+				<ModalFooter display={'flex'} justifyContent={'center'}>
 					<Button
 						onClick={formik.handleSubmit}
 						colorScheme="green"
-						mr={3}
+						w={'25%'}
+						rounded={'sm'}
+						size={'xs'}
 						isDisabled={!isAddButtonEnabled}
 					>
 						Add Category

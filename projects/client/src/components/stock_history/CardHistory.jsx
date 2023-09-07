@@ -31,30 +31,30 @@ export default function HistoryCard({ val }) {
 						<Stack mt="6" spacing="2">
 							<Flex flexDir={"column"} justifyContent={"space-between"}>
 								<Text>
-									<Heading size="md">
+									<Heading size="sm">
 										{val?.stock?.product?.product_name}
 									</Heading>
 								</Text>
 
 								<Flex flexDir={"column"}>
 									<Flex gap={"5px"}>
-										<Flex>
+										<Flex fontSize={'xs'} fontWeight={'bold'} fontFamily={'sans-serif'}>
 											{" "}
 											{val?.stock?.warehouse?.warehouse_name
 												? val?.stock?.warehouse?.warehouse_name
 												: "Undefined warehouse"}
 										</Flex>
-										<Flex>{`(${val?.status})`}</Flex>
+										<Flex fontSize={'xs'} fontWeight={'medium'} fontFamily={'sans-serif'}>{`(${val?.status})`}</Flex>
 									</Flex>
 									<Flex gap={"5px"}>
-										<Flex>{val?.stock_after} </Flex>
-										<Flex style={{ color: val?.qty < 0 ? "red" : "green" }}>
+										<Flex fontSize={'xs'} fontWeight={'bold'} fontFamily={'sans-serif'}>{val?.stock_after} </Flex>
+										<Flex fontSize={'xs'} fontWeight={'bold'} fontFamily={'sans-serif'} style={{ color: val?.qty < 0 ? "red" : "green" }}>
 											{val?.qty === 0 ? null : `(${val?.qty})`}
 										</Flex>
 									</Flex>
 
-									<Flex>{val?.reference}</Flex>
-									<Flex>
+									<Flex fontSize={'xs'} fontWeight={'bold'} fontFamily={'sans-serif'}>{val?.reference}</Flex>
+									<Flex fontSize={'xs'} fontWeight={'bold'} fontFamily={'sans-serif'}>
 										{moment(val?.createdAt).format("DD/MM/YYYY HH:mm:ss")}
 									</Flex>
 								</Flex>

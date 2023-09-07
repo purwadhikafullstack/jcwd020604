@@ -14,6 +14,7 @@ import {
 	HStack,
 	Center,
 	useToast,
+	Text
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -98,15 +99,16 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Add Stock</ModalHeader>
+				<ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Add Stock</Text></ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl w={"100%"}>
-						<FormLabel>Select Warehouse:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Select Warehouse:</Text></FormLabel>
 						{user.role === "ADMIN" ? (
 							<Select
 								placeholder="All Warehouses"
 								id="warehouse_id"
+								size={'sm'}
 								onChange={inputHandler}
 							>
 								{warehouse.length
@@ -121,6 +123,7 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 							<Select
 								placeholder="All Warehouses"
 								id="warehouse_id"
+								size={'sm'}
 								defaultValue={user.warehouse_id}
 								isDisabled
 							>
@@ -133,10 +136,11 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 									: null}
 							</Select>
 						)}
-						<FormLabel>Select Product:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Select Product:</Text></FormLabel>
 						<Select
 							placeholder="All Product"
 							id="product_id"
+							size={'sm'}
 							onChange={inputHandler}
 						>
 							{product.length
@@ -148,12 +152,13 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 								: null}
 						</Select>
 						<Center flexDir={"column"} pt={"15px"}>
-							<FormLabel pl={"18px"}>Stock Amount:</FormLabel>
+							<FormLabel pl={"15px"}><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Stock Amount:</Text></FormLabel>
 							<HStack w="100px">
 								<Input
 									textAlign={"center"}
 									placeholder="0"
 									type="number"
+									size={'xs'}
 									id="qty"
 									onChange={inputHandler}
 								/>
@@ -162,10 +167,12 @@ export default function AddStockModal({ isOpen, onClose, getStock }) {
 					</FormControl>
 				</ModalBody>
 
-				<ModalFooter>
+				<ModalFooter display={'flex'} justifyContent={'center'}>
 					<Button
 						colorScheme="green"
-						mr={3}
+						w={'25%'}
+						rounded={'sm'}
+						size={'xs'}
 						onClick={formik.handleSubmit}
 						isDisabled={!isAddButtonEnabled}
 					>

@@ -12,6 +12,7 @@ import {
 	Input,
 	useToast,
 	Select,
+	Text
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -102,14 +103,15 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Warehouse Detail</ModalHeader>
+				<ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Warehouse Detail</Text></ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Select Warehouse:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Select Warehouse:</Text></FormLabel>
 						<Select
 							placeholder="Choose Warehouse"
 							onChange={handleWarehouseSelect}
+							size={'sm'}
 						>
 							{warehouse.length
 								? warehouse.map((val) => (
@@ -119,37 +121,41 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 								  ))
 								: null}
 						</Select>
-						<FormLabel>Warehouse Name:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Warehouse Name:</Text></FormLabel>
 						<Input
 							placeholder="e.g. MMS Jogja"
 							id="warehouse_name"
+							size={'sm'}
 							defaultValue={data.warehouse_name}
 							isDisabled={!isSaveButtonEnabled}
 							onChange={(e) =>
 								setData({ ...data, warehouse_name: e.target.value })
 							}
 						/>
-						<FormLabel>Address:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Address:</Text></FormLabel>
 						<Input
 							placeholder="e.g. Jalan Malioboro"
 							id="address"
+							size={'sm'}
 							defaultValue={data.address}
 							isDisabled={!isSaveButtonEnabled}
 							onChange={(e) => setData({ ...data, address: e.target.value })}
 						/>
-						<FormLabel>District:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>District:</Text></FormLabel>
 						<Input
 							placeholder="e.g. Gedongtengen "
 							id="district"
+							size={'sm'}
 							defaultValue={data.district}
 							isDisabled={!isSaveButtonEnabled}
 							onChange={(e) => setData({ ...data, district: e.target.value })}
 						/>
-						<FormLabel>Province:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Province:</Text></FormLabel>
 						<Select
 							id="province"
 							value={data.province}
 							placeholder="Choose Province"
+							size={'sm'}
 							isDisabled={!isSaveButtonEnabled}
 							onChange={(e) => {
 								setData({ ...data, province: e.target.value });
@@ -164,10 +170,11 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 								  ))
 								: null}
 						</Select>
-						<FormLabel>City:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>City:</Text></FormLabel>
 						<Select
 							id="city"
 							placeholder="Choose City"
+							size={'sm'}
 							isDisabled={!isSaveButtonEnabled}
 							onChange={(e) => {
 								const [cityName, cityId] = e.target.value.split("|");
@@ -196,10 +203,11 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 										)
 									)}
 						</Select>
-						<FormLabel>Phone Number:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Phone Number:</Text></FormLabel>
 						<Input
 							placeholder="08.. "
 							type="number"
+							size={'sm'}
 							id="phone_number"
 							defaultValue={data.phone_number}
 							isDisabled={!isSaveButtonEnabled}
@@ -209,11 +217,13 @@ export default function EditWarehouseModal({ isOpen, onClose }) {
 						/>
 					</FormControl>
 				</ModalBody>
-				<ModalFooter>
+				<ModalFooter display={'flex'} justifyContent={'center'}>
 					<Button
 						onClick={editWarehouse}
 						colorScheme="blue"
-						mr={3}
+						w={'25%'}
+						rounded={'sm'}
+						size={'xs'}
 						isDisabled={!isSaveButtonEnabled}
 					>
 						Save

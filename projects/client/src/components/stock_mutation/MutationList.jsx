@@ -57,7 +57,7 @@ export default function MutationList({ val, getMutation, getRequest }) {
 					borderColor={"#E6EBF2"}
 					gap={"7"}
 					alignItems={"center"}
-					_hover={{
+					_hover={{color: 'black',
 						backgroundColor: "#E6EBF2",
 					}}
 				>
@@ -72,25 +72,25 @@ export default function MutationList({ val, getMutation, getRequest }) {
 									: null
 							}
 						/>
-						<Flex w={"270px"}>{val?.stock?.product?.product_name}</Flex>
+						<Flex w={"270px"} fontSize={'sm'} fontWeight={'medium'}>{val?.stock?.product?.product_name}</Flex>
 					</Flex>
-					<Flex w={"195px"} flexWrap={"wrap"} gap={"3px"}>
-						<Flex>{`${
+					<Flex w={"195px"} fontSize={'sm'} fontWeight={'medium'} flexWrap={"wrap"} gap={"3px"}>
+						<Flex fontSize={'sm'} fontWeight={'medium'}>{`${
 							val?.from_warehouse?.warehouse_name
 								? val?.from_warehouse?.warehouse_name
 								: "Undefined warehouse"
 						}`}</Flex>
 						<Flex>➜</Flex>
-						<Flex>{` ${
+						<Flex fontSize={'sm'} fontWeight={'medium'}>{` ${
 							val?.to_warehouse?.warehouse_name
 								? val?.to_warehouse?.warehouse_name
 								: "Undefined warehouse"
 						}`}</Flex>
 					</Flex>
-					<Flex w={"195px"}>{val?.mutation_code}</Flex>
-					<Flex w={"100px"}>{val?.qty}</Flex>
-					<Flex w={"100px"}>{val?.status}</Flex>
-					<Flex w={"170px"}>
+					<Flex w={"195px"} fontSize={'sm'} fontWeight={'medium'}>{val?.mutation_code}</Flex>
+					<Flex w={"100px"} fontSize={'sm'} fontWeight={'medium'}>{val?.qty}</Flex>
+					<Flex w={"100px"} fontSize={'sm'} fontWeight={'medium'}>{val?.status}</Flex>
+					<Flex w={"170px"} fontSize={'sm'} fontWeight={'medium'}>
 						{moment(val?.createdAt).format("DD/MM/YYYY HH:mm:ss")}
 					</Flex>
 					{val?.status === "PENDING" ? (
@@ -98,9 +98,9 @@ export default function MutationList({ val, getMutation, getRequest }) {
 							<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
 								<Icon as={BiDotsHorizontalRounded} />
 							</MenuButton>
-							<MenuList>
-								<MenuItem onClick={editMutationModal.onOpen}>Edit</MenuItem>
-								<MenuItem onClick={deleteMutationModal.onOpen} color={"red"}>
+							<MenuList fontSize={'xs'}>
+								<MenuItem onClick={editMutationModal.onOpen} fontWeight={'bold'} color={"green"} _hover={{color:'#00cc00'}}>Edit</MenuItem>
+								<MenuItem onClick={deleteMutationModal.onOpen} color={"red"} fontWeight={'bold'} _hover={{color: '#ff4d4d'}}>
 									Cancel
 								</MenuItem>
 							</MenuList>

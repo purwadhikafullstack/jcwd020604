@@ -26,22 +26,22 @@ export default function HistoryList({ val }) {
 									: null
 							}
 						/>
-						<Flex w={"270px"}>{val?.stock?.product?.product_name}</Flex>
+						<Flex w={"270px"} fontSize={'sm'} fontWeight={'medium'}>{val?.stock?.product?.product_name}</Flex>
 					</Flex>
-					<Flex w={"195px"}>
+					<Flex w={"195px"} fontSize={'sm'} fontWeight={'medium'}>
 						{val?.stock?.warehouse?.warehouse_name
 							? val?.stock?.warehouse?.warehouse_name
 							: "Undefined warehouse"}
 					</Flex>
 					<Flex w={"115px"} gap={"5px"}>
-						<Flex>{val?.stock_after}</Flex>
-						<Flex style={{ color: val?.qty < 0 ? "red" : "green" }}>
+						<Flex fontSize={'sm'} fontWeight={'medium'}>{val?.stock_after}</Flex>
+						<Flex fontSize={'sm'} fontWeight={'medium'} style={{ color: val?.qty < 0 ? "red" : "green" }}>
 							{val?.qty === 0 ? null : `(${val?.qty})`}
 						</Flex>
 					</Flex>
-					<Flex w={"100px"}>{val?.status}</Flex>
-					<Flex w={"179px"}>{val?.reference}</Flex>
-					<Flex w={"179px"}>
+					<Flex w={"100px"} fontSize={'sm'} fontWeight={'medium'}>{val?.status}</Flex>
+					<Flex w={"179px"} fontSize={'sm'} fontWeight={'medium'}>{val?.reference}</Flex>
+					<Flex w={"179px"} fontSize={'sm'} fontWeight={'medium'}>
 						{moment(val?.createdAt).format("DD/MM/YYYY HH:mm:ss")}
 					</Flex>
 					<Flex w={"10px"} h={"20px"}></Flex>

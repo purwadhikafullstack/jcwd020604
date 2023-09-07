@@ -134,20 +134,20 @@ export default function AdminProduct() {
 
 	return (
 		<>
-			<Center flexDir={"column"}>
+			<Center flexDir={"column"} mx={2}>
 				<Flex
-					margin={"30px 20px 30px"}
+					margin={8}
 					border={"1px"}
 					borderRadius={"15px"}
 					borderColor={"#E6EBF2"}
-					padding={"15px"}
+					padding={5}
 					maxW={"1300px"}
 					w={"100%"}
 					justifyContent={"center"}
 					flexDir={"column"}
 				>
 					<Flex flexDir={"column"} paddingBottom={"15px"}>
-						<Flex fontWeight={600} fontSize={"23px"}>
+						<Flex fontWeight={600} fontSize={"lg"}>
 							Product Data
 						</Flex>
 					</Flex>

@@ -13,7 +13,8 @@ export default function SortStock({ handleSortChange, sort, pageWidth }) {
 					gap={"7"}
 				>
 					<Flex
-						w={"325px"}
+						w={"320px"}
+						fontSize={'sm'}
 						minW={"275px"}
 						paddingLeft={"55px"}
 						alignItems={"center"}
@@ -30,6 +31,7 @@ export default function SortStock({ handleSortChange, sort, pageWidth }) {
 					</Flex>
 					<Flex
 						w={"190px"}
+						fontSize={'sm'}
 						alignItems={"center"}
 						onClick={() =>
 							handleSortChange(
@@ -44,6 +46,7 @@ export default function SortStock({ handleSortChange, sort, pageWidth }) {
 					</Flex>
 					<Flex
 						w={"190px"}
+						fontSize={'sm'}
 						alignItems={"center"}
 						onClick={() =>
 							handleSortChange(
@@ -58,6 +61,7 @@ export default function SortStock({ handleSortChange, sort, pageWidth }) {
 					</Flex>
 					<Flex
 						w={"190px"}
+						fontSize={'sm'}
 						alignItems={"center"}
 						onClick={() =>
 							handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
@@ -68,7 +72,7 @@ export default function SortStock({ handleSortChange, sort, pageWidth }) {
 						<UpDownIcon ml={"10px"} />
 						{sort === "qtyAsc" ? sort === "qtyDesc" : null}
 					</Flex>
-					<Flex w={"190px"} alignItems={"center"}>
+					<Flex w={"190px"} alignItems={"center"} fontSize={'sm'}>
 						Status
 					</Flex>
 					<Flex w={"25px"}></Flex>

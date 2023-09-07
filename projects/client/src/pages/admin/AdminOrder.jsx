@@ -10,7 +10,6 @@ import {
 	Badge,
 	Flex,
 	Image,
-	HStack,
 	Button,
 	useDisclosure,
 	Select,
@@ -312,6 +311,7 @@ const AdminOrder = () => {
 															<Button
 																display={"flex"}
 																size={'xs'}
+																rounded={'sm'}
 																justifyContent={"end"}
 																colorScheme="red"
 																onClick={() => cancelOrder(order.id)}
@@ -321,6 +321,7 @@ const AdminOrder = () => {
 															<Button
 																display={"flex"}
 																size={'xs'}
+																rounded={'sm'}
 																justifyContent={"end"}
 																colorScheme="green"
 																onClick={() => sendOrder(order.id)}

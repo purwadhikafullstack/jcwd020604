@@ -189,20 +189,20 @@ export default function AdminManageData() {
 
 	return (
 		<>
-			<Center flexDir={"column"}>
+			<Center flexDir={"column"} mx={2}>
 				<Flex
-					margin={"30px 20px 30px"}
+					margin={8}
 					border={"1px"}
 					borderRadius={"15px"}
 					borderColor={"#E6EBF2"}
-					padding={"15px"}
+					padding={5}
 					maxW={"1300px"}
 					w={"100%"}
 					justifyContent={"center"}
 					flexDir={"column"}
 				>
 					<Flex flexDir={"column"} paddingBottom={"15px"}>
-						<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
+						<Flex fontWeight={600} paddingBottom={"15px"} fontSize={'lg'}>
 							Manage Data
 						</Flex>
 						<Flex
@@ -214,7 +214,7 @@ export default function AdminManageData() {
 						>
 							<Flex gap={"15px"} justifyContent={"space-between"} w={"100%"}>
 								<Flex gap={"15px"} w={"100%"}>
-									<Button colorScheme="green" onClick={addStockModal.onOpen}>
+									<Button colorScheme="green" rounded={'sm'} size={'xs'} onClick={addStockModal.onOpen}>
 										Add Stock
 									</Button>
 									<ButtonData
@@ -228,7 +228,7 @@ export default function AdminManageData() {
 										deleteWarehouseModal={deleteWarehouseModal}
 									/>
 								</Flex>
-								<Button onClick={handleReset}>
+								<Button onClick={handleReset} variant={'ghost'} size={'sm'} rounded={'full'} _hover={{color:'blue',bgColor:'chakra-placeholder-color._light'}}>
 									<RepeatIcon />
 								</Button>
 							</Flex>
@@ -238,17 +238,17 @@ export default function AdminManageData() {
 								flexWrap={["wrap", null, "nowrap"]}
 							>
 								<Link to={`/admin/product`}>
-									<Button gap={"5px"}>
+									<Button gap={"5px"} size={'xs'} rounded={'sm'}>
 										<HamburgerIcon /> Product Data
 									</Button>
 								</Link>
 								<Link to={`/admin/mutation`}>
-									<Button gap={"5px"}>
+									<Button gap={"5px"} size={'xs'} rounded={'sm'}>
 										<Icon as={FaBoxes} /> Stock Mutation
 									</Button>
 								</Link>
 								<Link to={`/admin/stockhistory`}>
-									<Button gap={"5px"}>
+									<Button gap={"5px"} size={'xs'} rounded={'sm'}>
 										<TimeIcon /> Stock History
 									</Button>
 								</Link>
@@ -263,6 +263,7 @@ export default function AdminManageData() {
 							<Select
 								placeholder="All Type of Products"
 								value={selectedProduct}
+								size={'sm'}
 								onChange={(event) => {
 									setPage(1);
 									setSelectedProduct(event.target.value);
@@ -280,6 +281,7 @@ export default function AdminManageData() {
 								<Select
 									placeholder="All Warehouses"
 									value={selectedWarehouse}
+									size={'sm'}
 									onChange={(event) => {
 										setPage(1);
 										setSelectedWarehouse(event.target.value);
@@ -294,7 +296,7 @@ export default function AdminManageData() {
 										: null}
 								</Select>
 							) : (
-								<Select value={user.warehouse_id} isDisabled>
+								<Select value={user.warehouse_id} isDisabled size={'sm'}>
 									{warehouse.length
 										? warehouse.map((val) => (
 												<option key={val.id} value={val.id}>
@@ -304,11 +306,12 @@ export default function AdminManageData() {
 										: null}
 								</Select>
 							)}
-							<InputGroup>
+							<InputGroup size={'sm'}>
 								<Input placeholder="Search..." ref={inputFileRef} />
 								<InputRightElement cursor={"pointer"}>
 									<Button
 										border="none"
+										size={'sm'}
 										onClick={() => {
 											setPage(1);
 											setSearch(inputFileRef.current.value);
@@ -329,17 +332,16 @@ export default function AdminManageData() {
 					</Flex>
 					<Flex justifyContent={"end"} alignItems={"center"} gap={"30px"}>
 						<Flex alignItems={"center"} gap={"5px"} mt={"15px"}>
-							<Icon as={BsFillCircleFill} color={"red"} />
-							<Flex>Stock = 0</Flex>
+							<Icon as={BsFillCircleFill} color={"red"} fontSize={'xs'}/>
+							<Flex textColor={{'blackAlpha.700' : 'white'}} fontSize={'xs'} fontWeight={'bold'}>{`Stock = 0`}</Flex>
 						</Flex>
 						<Flex alignItems={"center"} gap={"5px"} mt={"15px"}>
-							<Icon as={BsFillCircleFill} color={"orange"} />
-							<Flex>{`Stock > 0`}</Flex>
+							<Icon as={BsFillCircleFill} color={"orange"} fontSize={'xs'}/>
+							<Flex textColor={{'blackAlpha.700' : 'white'}} fontSize={'xs'} fontWeight={'bold'}>{`Stock > 0`}</Flex>
 						</Flex>
 						<Flex alignItems={"center"} gap={"5px"} mt={"15px"}>
-							<Icon as={BsFillCircleFill} color={"green"} />
-
-							<Flex>{`Stock > 10`}</Flex>
+							<Icon as={BsFillCircleFill} color={"green"} fontSize={'xs'}/>
+							<Flex textColor={{'blackAlpha.700' : 'white'}} fontSize={'xs'} fontWeight={'bold'}>{`Stock > 10`}</Flex>
 						</Flex>
 						<ButtonPage
 							data={stock}

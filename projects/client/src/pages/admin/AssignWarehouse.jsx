@@ -11,7 +11,9 @@ import {
   ModalCloseButton, 
   ModalBody,
   useToast, 
-  ModalFooter, } from '@chakra-ui/react';
+  ModalFooter,
+  Text 
+} from '@chakra-ui/react';
 import { useNavigate } from 'react-router-dom';
 
 export default function Assign (props) {
@@ -79,12 +81,12 @@ export default function Assign (props) {
       <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalContent>
-            <ModalHeader>Assign Warehouse Admin</ModalHeader>
+            <ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Assign Warehouse Admin</Text></ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
                 <FormControl isRequired>
-                    <FormLabel>Warehouse</FormLabel>
-                    <Select id='warehouse_id' name='warehouse' placeholder='Select warehouse' onClick={handleInputChange}>
+                    <FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Warehouse</Text></FormLabel>
+                    <Select size={'sm'} id='warehouse_id' name='warehouse' placeholder='Select warehouse' onClick={handleInputChange}>
                         {warehouse.length? warehouse.map((val) => (
                             <option key={val.id} value={val.id}>{val.warehouse_name}</option>
                         )) : null}
@@ -92,10 +94,14 @@ export default function Assign (props) {
                 </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={assignUser}>
+              <Button colorScheme='blue' mr={3} w={'25%'}
+						    rounded={'sm'}
+						    size={'xs'} onClick={assignUser}>
                 Save
               </Button>
-              <Button colorScheme='orange' onClick={props.onClose}>Cancel</Button>
+              <Button colorScheme='orange' w={'25%'}
+						    rounded={'sm'}
+						    size={'xs'} onClick={props.onClose}>Cancel</Button>
             </ModalFooter>
         </ModalContent>
         </Modal>

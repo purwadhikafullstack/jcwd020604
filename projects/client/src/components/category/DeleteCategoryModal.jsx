@@ -85,14 +85,15 @@ export default function DeleteCategoryModal({ isOpen, onClose }) {
 		>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Delete Category</ModalHeader>
+				<ModalHeader fontSize={'md'} fontWeight={'bold'}>Delete Category</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Select Category:</FormLabel>
+						<FormLabel fontSize={'sm'}>Select Category:</FormLabel>
 						<Select
 							placeholder="Select Category"
 							id="category"
+							size={'sm'}
 							value={selectedCategoryId}
 							onChange={handleCategorySelect}
 						>
@@ -106,9 +107,10 @@ export default function DeleteCategoryModal({ isOpen, onClose }) {
 						</Select>
 					</FormControl>
 					<FormControl mt={4}>
-						<FormLabel>Type "DELETE" to confirm:</FormLabel>
+						<FormLabel fontSize={'sm'}>Type "DELETE" to confirm:</FormLabel>
 						<Input
 							type="text"
+							size={'sm'}
 							value={confirmationText}
 							onChange={handleConfirmationTextChange}
 							placeholder="Type 'DELETE' here"
@@ -116,10 +118,10 @@ export default function DeleteCategoryModal({ isOpen, onClose }) {
 					</FormControl>
 				</ModalBody>
 
-				<ModalFooter>
+				<ModalFooter display={'flex'} justifyContent={'center'}>
 					<Button
 						colorScheme="red"
-						mr={3}
+						size={'xs'} w={'25%'} rounded={'sm'}
 						onClick={() => {
 							if (isDeleteButtonEnabled) {
 								deleteCategory(selectedCategoryId);

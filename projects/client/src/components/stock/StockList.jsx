@@ -57,7 +57,7 @@ export default function StockList({ val, getStock }) {
 			borderColor={"#E6EBF2"}
 			gap={"7"}
 			alignItems={"center"}
-			_hover={{
+			_hover={{color: 'black',
 				backgroundColor: "#E6EBF2",
 			}}
 		>
@@ -72,24 +72,24 @@ export default function StockList({ val, getStock }) {
 							: null
 					}
 				/>
-				<Flex w={"270px"}>{val.product.product_name}</Flex>
+				<Flex w={"270px"} fontSize={'sm'} fontWeight={'medium'}>{val.product.product_name}</Flex>
 			</Flex>
-			<Flex w={"190px"}>
+			<Flex w={"190px"} fontSize={'sm'} fontWeight={'medium'}>
 				{!val?.warehouse ? (
 					<Flex>Undefined warehouse</Flex>
 				) : (
 					val?.warehouse?.warehouse_name
 				)}
 			</Flex>
-			<Flex w={"190px"}>
+			<Flex w={"190px"} fontSize={'xs'} fontWeight={'medium'}>
 				{val.product.category == null ? (
 					<Flex>Category not found</Flex>
 				) : (
 					val.product.category.category_name
 				)}
 			</Flex>
-			<Flex w={"190px"}>{val.qty}</Flex>
-			<Flex w={"190px"}>
+			<Flex w={"190px"} fontSize={'sm'} fontWeight={'medium'}>{val.qty}</Flex>
+			<Flex w={"190px"} fontSize={'xs'} fontWeight={'medium'}>
 				{stock > 10 ? (
 					<Flex>
 						<Icon as={BsFillCircleFill} color={"green"} />
@@ -108,12 +108,12 @@ export default function StockList({ val, getStock }) {
 				<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
-				<MenuList>
-					<MenuItem onClick={editStockModal.onOpen} getStock={getStock}>
+				<MenuList fontSize={'xs'}>
+					<MenuItem onClick={editStockModal.onOpen} getStock={getStock} fontWeight={'bold'} color={"green"} _hover={{color:'#00cc00'}}>
 						Edit
 					</MenuItem>
 					{user.role === "ADMIN" ? (
-						<MenuItem onClick={deleteStockModal.onOpen} color={"red"}>
+						<MenuItem onClick={deleteStockModal.onOpen} fontWeight={'bold'} color={"red"} _hover={{color: '#ff4d4d'}}>
 							Remove
 						</MenuItem>
 					) : null}

@@ -71,7 +71,7 @@ export default function MutationRequestModal({
 		<Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
 			<ModalOverlay />
 			<ModalContent maxH={"700px"}>
-				<ModalHeader>Stock Mutation Request</ModalHeader>
+				<ModalHeader fontSize={'md'} fontWeight={'bold'}>Stock Mutation Request</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					{request?.length ? (
@@ -100,28 +100,29 @@ export default function MutationRequestModal({
 													}
 												/>
 												<Flex flexDir={"column"}>
-													<Flex>
+													<Flex fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>
 														From:{" "}
 														{request?.from_warehouse?.warehouse_name
 															? request?.from_warehouse?.warehouse_name
 															: "Undefined warehouse"}
 													</Flex>
-													<Flex>
+													<Flex fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>
 														To:{" "}
 														{request?.to_warehouse?.warehouse_name
 															? request?.to_warehouse?.warehouse_name
 															: "Undefined warehouse"}
 													</Flex>
-													<Flex>
+													<Flex fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>
 														Product: {request?.stock?.product?.product_name}
 													</Flex>
-													<Flex>Amount: {request.qty}</Flex>
+													<Flex fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Amount: {request.qty}</Flex>
 												</Flex>
 											</Flex>
 											<Flex justifyContent={"end"} gap={"10px"} pt={"15px"}>
 												<Button
 													colorScheme="red"
-													size={"sm"}
+													rounded={'sm'}
+													size={'xs'}
 													id="id"
 													onClick={() => handleReject(request.id)}
 												>
@@ -129,7 +130,8 @@ export default function MutationRequestModal({
 												</Button>
 												<Button
 													colorScheme="green"
-													size={"sm"}
+													rounded={'sm'}
+													size={'xs'}
 													id="id"
 													onClick={() => handleApprove(request.id)}
 												>
@@ -142,7 +144,7 @@ export default function MutationRequestModal({
 							);
 						})
 					) : (
-						<Flex>No Mutation Request</Flex>
+						<Flex fontSize={'sm'} fontWeight={'medium'}>No Mutation Request</Flex>
 					)}
 				</ModalBody>
 			</ModalContent>

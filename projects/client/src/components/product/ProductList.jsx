@@ -54,7 +54,7 @@ export default function ProductList({ val, getProduct }) {
 			borderColor={"#E6EBF2"}
 			gap={"7"}
 			alignItems={"center"}
-			_hover={{
+			_hover={{color: 'black',
 				backgroundColor: "#E6EBF2",
 			}}
 		>
@@ -69,10 +69,11 @@ export default function ProductList({ val, getProduct }) {
 							: null
 					}
 				/>
-				<Flex w={"270px"}>{val.product_name}</Flex>
+				<Flex w={"270px"} fontSize={'sm'} fontWeight={'medium'}>{val.product_name}</Flex>
 			</Flex>
 			<Flex
 				w={"300px"}
+				fontSize={'sm'} fontWeight={'medium'}
 				style={{
 					overflow: "hidden",
 					whiteSpace: "nowrap",
@@ -82,37 +83,36 @@ export default function ProductList({ val, getProduct }) {
 				{val.product_detail.length > 35
 					? val.product_detail.substring(0, 35) + "..."
 					: val.product_detail}
-				{/* {val.product_detail} */}
 			</Flex>
-			<Flex w={"160px"}>
+			<Flex w={"160px"} fontSize={'sm'} fontWeight={'medium'}>
 				{val.category == null ? (
 					<Flex>Category not found</Flex>
 				) : (
 					val.category.category_name
 				)}
 			</Flex>
-			<Flex w={"160px"}>
+			<Flex w={"160px"} fontSize={'sm'} fontWeight={'medium'}>
 				<Flex>
 					{val.price
 						? val.price.toLocaleString("id-ID")
 						: "Price Not Available"}
 				</Flex>
 			</Flex>
-			<Flex w={"160px"}>{val.weight}</Flex>
+			<Flex w={"160px"} fontSize={'sm'} fontWeight={'medium'}>{val.weight}</Flex>
 			<Menu>
 				<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
 					<Icon as={BiDotsHorizontalRounded} />{" "}
 				</MenuButton>
-				<MenuList>
+				<MenuList fontSize={'xs'}>
 					{user.role === "ADMIN" ? (
-						<MenuItem onClick={editProductModal.onOpen}>
+						<MenuItem onClick={editProductModal.onOpen} fontWeight={'bold'} color={"green"} _hover={{color:'#00cc00'}}>
 							View / Edit Product
 						</MenuItem>
 					) : (
 						<MenuItem onClick={editProductModal.onOpen}>View Detail</MenuItem>
 					)}
 					{user.role === "ADMIN" ? (
-						<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
+						<MenuItem onClick={deleteProductModal.onOpen} fontWeight={'bold'} color={"red"} _hover={{color: '#ff4d4d'}}>
 							Remove
 						</MenuItem>
 					) : null}

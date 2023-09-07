@@ -56,21 +56,22 @@ export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Edit Stock</ModalHeader>
+				<ModalHeader fontSize={'md'} fontWeight={'bold'}>Edit Stock</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Warehouse</FormLabel>
-						<Input value={val?.warehouse?.warehouse_name} />
-						<FormLabel>Product</FormLabel>
-						<Input value={val.product.product_name} />
+						<FormLabel fontSize={'sm'}>Warehouse</FormLabel>
+						<Input size={'sm'} value={val?.warehouse?.warehouse_name} />
+						<FormLabel fontSize={'sm'}>Product</FormLabel>
+						<Input size={'sm'} value={val.product.product_name} />
 						<Center flexDir={"column"} pt={"15px"}>
-							<FormLabel pl={"18px"}>Stocks</FormLabel>
+							<FormLabel pl={"15px"} fontSize={'sm'}>Stocks</FormLabel>
 							<HStack w="100px">
 								<Input
 									textAlign={"center"}
 									type="number"
 									id="qty"
+									size={'xs'}
 									defaultValue={val.qty}
 									onChange={inputHandler}
 								/>
@@ -78,8 +79,8 @@ export default function EditStockModal({ isOpen, onClose, val, getStock }) {
 						</Center>
 					</FormControl>
 				</ModalBody>
-				<ModalFooter>
-					<Button colorScheme="blue" mr={3} onClick={editStock}>
+				<ModalFooter display={'flex'} justifyContent={'center'}>
+					<Button colorScheme="blue" size={'xs'} w={'25%'} rounded={'sm'} onClick={editStock}>
 						Save
 					</Button>
 				</ModalFooter>

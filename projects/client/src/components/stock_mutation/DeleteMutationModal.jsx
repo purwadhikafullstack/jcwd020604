@@ -41,13 +41,14 @@ export default function DeleteMutationModal({
 		>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Cancel Mutation</ModalHeader>
+				<ModalHeader fontSize={'md'} fontWeight={'bold'}>Cancel Mutation</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl mt={4}>
-						<FormLabel>Type "CANCEL" to confirm:</FormLabel>
+						<FormLabel fontSize={'sm'}>Type "CANCEL" to confirm:</FormLabel>
 						<Input
 							type="text"
+							size={'sm'}
 							value={confirmationText}
 							onChange={handleConfirmationTextChange}
 							placeholder="Type 'CANCEL' here"
@@ -58,7 +59,8 @@ export default function DeleteMutationModal({
 				<ModalFooter>
 					<Button
 						colorScheme="red"
-						mr={3}
+						rounded={'sm'}
+						size={'xs'}
 						isDisabled={!isDeleteButtonEnabled}
 						onClick={deleteMutation}
 					>

@@ -16,6 +16,7 @@ export default function SortHistory({ handleSortChange, sort, pageWidth }) {
 						w={"325px"}
 						minW={"275px"}
 						paddingLeft={"55px"}
+						fontSize={'sm'}
 						alignItems={"center"}
 						onClick={() =>
 							handleSortChange(
@@ -31,6 +32,7 @@ export default function SortHistory({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"195px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange(
 								"warehouse" + (sort === "warehouseAsc" ? "Desc" : "Asc")
@@ -45,6 +47,7 @@ export default function SortHistory({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"115px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange(
 								"stockAfter" + (sort === "stockAfterAsc" ? "Desc" : "Asc")
@@ -59,6 +62,7 @@ export default function SortHistory({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"100px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange(
 								"status" + (sort === "statusAsc" ? "Desc" : "Asc")
@@ -73,6 +77,7 @@ export default function SortHistory({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"179px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange(
 								"reference" + (sort === "referenceAsc" ? "Desc" : "Asc")
@@ -87,6 +92,7 @@ export default function SortHistory({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"179px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange("date" + (sort === "dateAsc" ? "Desc" : "Asc"))
 						}

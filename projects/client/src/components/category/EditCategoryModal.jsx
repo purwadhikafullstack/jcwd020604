@@ -12,6 +12,7 @@ import {
 	Input,
 	useToast,
 	Select,
+	Text
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -89,14 +90,15 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Category Detail</ModalHeader>
+				<ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Category Detail</Text></ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Select Category:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Select Category:</Text></FormLabel>
 						<Select
 							placeholder="Choose Category"
 							onChange={handleWarehouseSelect}
+							size={'sm'}
 						>
 							{category.length
 								? category.map((val) => (
@@ -107,10 +109,11 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 								: null}
 						</Select>
 
-						<FormLabel>Category Name:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Category Name:</Text></FormLabel>
 						<Input
 							placeholder="e.g. Hoodie"
 							id="category_name"
+							size={'sm'}
 							defaultValue={data.category_name}
 							isDisabled={!isSaveButtonEnabled}
 							onChange={(e) =>
@@ -120,11 +123,13 @@ export default function EditCategoryModal({ isOpen, onClose }) {
 					</FormControl>
 				</ModalBody>
 
-				<ModalFooter>
+				<ModalFooter display={'flex'} justifyContent={'center'}>
 					<Button
 						onClick={editCategory}
 						colorScheme="blue"
-						mr={3}
+						w={'25%'}
+						rounded={'sm'}
+						size={'xs'}
 						isDisabled={!isSaveButtonEnabled}
 					>
 						Save

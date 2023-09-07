@@ -6,6 +6,7 @@ import {
 	InputRightElement,
 	Icon,
 	Button,
+	HStack,
 } from "@chakra-ui/react";
 import { AddIcon, ArrowBackIcon, RepeatIcon } from "@chakra-ui/icons";
 import { FaSearch } from "react-icons/fa";
@@ -31,12 +32,15 @@ export default function TopMenu({
 			flexWrap={["wrap", null, "nowrap"]}
 		>
 			<Flex justifyContent={"space-between"} w={"100%"}>
-				<Flex gap={"15px"}>
-					<Link to={`/admin/managedata`}>
-						<Button leftIcon={<ArrowBackIcon />}>Back</Button>
-					</Link>
+				<HStack display={'flex'} alignItems={'center'}>
+						<Button rounded={'sm'} size={'xs'} leftIcon={<ArrowBackIcon />}>
+							<Link to={`/admin/managedata`}>
+								Back
+							</Link>
+						</Button>
 					{user.role === "ADMIN" ? (
 						<Button
+							rounded={'sm'} size={'xs'}
 							as={Button}
 							colorScheme="green"
 							onClick={addProductModal.onOpen}
@@ -44,14 +48,15 @@ export default function TopMenu({
 							<AddIcon />
 						</Button>
 					) : null}
-				</Flex>
-				<Button onClick={handleReset} ml={"15px"}>
+				</HStack>
+				<Button onClick={handleReset} ml={"15px"} variant={'ghost'} size={'sm'} rounded={'full'} _hover={{color:'blue',bgColor:'none'}}>
 					<RepeatIcon />
 				</Button>
 			</Flex>
 			<Flex gap={"15px"} w={"1500px"} flexWrap={["wrap", null, "nowrap"]}>
 				<Select
 					w={"100%"}
+					size={'sm'}
 					placeholder="All Type of Category"
 					value={selectedCategory}
 					onChange={(event) => {
@@ -67,11 +72,12 @@ export default function TopMenu({
 						  ))
 						: null}
 				</Select>
-				<InputGroup w={"100%"}>
+				<InputGroup w={"100%"} size={'sm'}>
 					<Input placeholder="Search..." ref={inputFileRef} />
 					<InputRightElement cursor={"pointer"}>
 						<Button
 							border="none"
+							size={'sm'}
 							onClick={() => {
 								setPage(1);
 								setSearch(inputFileRef.current.value);

@@ -56,7 +56,7 @@ export default function StockCard({ val, getStock }) {
 		<>
 			<Card
 				maxW="xs"
-				_hover={{
+				_hover={{color: 'black',
 					backgroundColor: "#E6EBF2",
 				}}
 			>
@@ -71,17 +71,17 @@ export default function StockCard({ val, getStock }) {
 					/>
 					<Stack mt="6" spacing="2">
 						<Flex>
-							<Heading size="md">{val.product.product_name}</Heading>
+							<Heading size="sm">{val.product.product_name}</Heading>
 							<Menu>
 								<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
 									<Icon as={BiDotsVerticalRounded} />{" "}
 								</MenuButton>
 								<MenuList>
-									<MenuItem onClick={editStockModal.onOpen} getStock={getStock}>
+									<MenuItem onClick={editStockModal.onOpen} getStock={getStock} fontWeight={'bold'} color={"green"} _hover={{color:'#00cc00'}}>
 										Edit
 									</MenuItem>
 									{user.role === "ADMIN" ? (
-										<MenuItem onClick={deleteStockModal.onOpen} color={"red"}>
+										<MenuItem onClick={deleteStockModal.onOpen} fontWeight={'bold'} color={"red"} _hover={{color: '#ff4d4d'}}>
 											Remove
 										</MenuItem>
 									) : null}
@@ -89,21 +89,21 @@ export default function StockCard({ val, getStock }) {
 							</Menu>
 						</Flex>
 						<Flex flexDir={"column"}>
-							<Flex w={"190px"}>
+							<Flex w={"190px"} fontSize={'sm'} fontWeight={'medium'}>
 								{!val?.warehouse ? (
 									<Flex>Undefined warehouse</Flex>
 								) : (
 									val?.warehouse?.warehouse_name
 								)}
 							</Flex>
-							<Flex w={"190px"}>
+							<Flex w={"190px"} fontSize={'sm'} fontWeight={'medium'}>
 								{val.product.category == null ? (
 									<Flex>Category not found</Flex>
 								) : (
 									val.product.category.category_name
 								)}
 							</Flex>
-							<Flex w={"190px"} alignItems={"center"} gap={"5px"}>
+							<Flex w={"190px"} alignItems={"center"} gap={"5px"} fontSize={'sm'} fontWeight={'medium'}>
 								Stock: {val.qty}{" "}
 								{stock > 10 ? (
 									<Flex>

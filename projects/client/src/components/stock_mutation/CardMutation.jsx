@@ -55,8 +55,8 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 		<>
 			{val?.stock?.id ? (
 				<Card
-					maxW="xs"
-					_hover={{
+					maxW="sm"
+					_hover={{color: 'black',
 						backgroundColor: "#E6EBF2",
 					}}
 				>
@@ -69,21 +69,27 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 							}
 							borderRadius="lg"
 						/>
-						<Stack mt="6" spacing="2">
+						<Stack mt="6" spacing="2" fontWeight={'medium'}>
 							<Flex justifyContent={"space-between"}>
-								<Heading size="md">{val?.stock?.product?.product_name}</Heading>
+								<Heading size="sm">
+									{
+										val?.stock?.product?.product_name.length > 15 ? 
+										val?.stock?.product?.product_name.substring(0, 15)  + "..." : 
+										val?.stock?.product?.product_name
+									}
+								</Heading>
 								{val?.status === "PENDING" ? (
 									<Menu>
 										<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
 											<Icon as={BiDotsVerticalRounded} />
 										</MenuButton>
 										<MenuList>
-											<MenuItem onClick={editMutationModal.onOpen}>
+											<MenuItem onClick={editMutationModal.onOpen} fontWeight={'bold'} color={"green"} _hover={{color:'#00cc00'}}>
 												Edit
 											</MenuItem>
 											<MenuItem
 												onClick={deleteMutationModal.onOpen}
-												color={"red"}
+												fontWeight={'bold'} color={"red"} _hover={{color: '#ff4d4d'}}
 											>
 												Cancel
 											</MenuItem>
@@ -112,10 +118,10 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 									/>
 								)}
 							</Flex>
-							<Flex flexDir={"column"}>
-								<Flex w={"100px"}>{val?.status}</Flex>
-								<Flex w={"100px"}>Amount: {val?.qty}</Flex>
-								<Flex w={"195px"}>
+							<Flex flexWrap={'wrap'}>
+								<Flex w={"100px"} fontSize={'xs'}>{val?.status}</Flex>
+								<Flex w={"100px"} fontSize={'xs'}>Amount: {val?.qty}</Flex>
+								<Flex w={"170px"} fontSize={'xs'} flexWrap={'wrap'}>
 									{`${
 										val?.from_warehouse?.warehouse_name
 											? val?.from_warehouse?.warehouse_name
@@ -126,8 +132,8 @@ export default function MutationCard({ val, getMutation, getRequest }) {
 											: "Undefined warehouse"
 									}`}
 								</Flex>
-								<Flex w={"195px"}>{val?.mutation_code}</Flex>
-								<Flex w={"170px"}>
+								<Flex w={"195px"} fontSize={'xs'}>{val?.mutation_code}</Flex>
+								<Flex w={"170px"} fontSize={'xs'}>
 									{moment(val?.createdAt).format("DD/MM/YYYY HH:mm:ss")}
 								</Flex>
 							</Flex>

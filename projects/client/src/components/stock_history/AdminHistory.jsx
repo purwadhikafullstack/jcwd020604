@@ -157,35 +157,36 @@ export default function AdminHistory() {
 	}
 
 	return (
-		<Center flexDir={"column"}>
+		<Center flexDir={"column"} mx={2}>
 			<Flex
-				margin={"30px 20px 30px"}
+				margin={8}
 				border={"1px"}
 				borderRadius={"15px"}
 				borderColor={"#E6EBF2"}
-				padding={"15px"}
+				padding={5}
 				maxW={"1300px"}
 				w={"100%"}
 				justifyContent={"center"}
 				flexDir={"column"}
 			>
-				<Flex flexDir={"column"}>
-					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={"23px"}>
+				<Flex flexDir={"column"} pb={5}>
+					<Flex fontWeight={600} paddingBottom={"15px"} fontSize={'lg'}>
 						Stock History
 					</Flex>
-					<Flex gap={"15px"}>
+					<Flex gap={"15px"} my={2}>
 						<Flex w={"100%"} marginBottom={"15px"}>
-							<Link to={`/admin/managedata`}>
-								<Button leftIcon={<ArrowBackIcon />}>Back</Button>
-							</Link>
+							<Button size={'xs'} rounded={'sm'} leftIcon={<ArrowBackIcon />}>
+								<Link to={`/admin/managedata`}>Back</Link>
+							</Button>
 						</Flex>
-						<Button onClick={handleReset}>
+						<Button onClick={handleReset} variant={'ghost'} size={'sm'} rounded={'full'} _hover={{color:'blue',bgColor:'chakra-placeholder-color._light'}}>
 							<RepeatIcon />
 						</Button>
 
 						<Input
 							type={"month"}
 							w={"520px"}
+							size={'sm'}
 							value={time}
 							onChange={(e) => {
 								setPage(1);
@@ -202,6 +203,7 @@ export default function AdminHistory() {
 						{user.role === "ADMIN" ? (
 							<Select
 								placeholder="All Warehouses"
+								size={'sm'}
 								value={selectedWarehouse}
 								onChange={(event) => {
 									setPage(1);
@@ -217,7 +219,7 @@ export default function AdminHistory() {
 									: null}
 							</Select>
 						) : (
-							<Select value={user.warehouse_id} isDisabled>
+							<Select size={'sm'} value={user.warehouse_id} isDisabled>
 								{warehouse.length
 									? warehouse.map((val) => (
 											<option key={val.id} value={val.id}>
@@ -229,22 +231,24 @@ export default function AdminHistory() {
 						)}
 						<Select
 							placeholder="Select Reference"
+							size={'sm'}
 							value={selectedReference}
 							onChange={(event) => {
 								setPage(1);
 								setSelectedReference(event.target.value);
 							}}
 						>
-							<option>ADD FROM ADMIN</option>
-							<option>EDIT FROM ADMIN</option>
-							<option>INVOICE</option>
-							<option value={"MUT"}>MUTATION</option>
+							<option style={{fontSize: '12px', fontWeight: 'bold'}}>ADD FROM ADMIN</option>
+							<option style={{fontSize: '12px', fontWeight: 'bold'}}>EDIT FROM ADMIN</option>
+							<option style={{fontSize: '12px', fontWeight: 'bold'}}>INVOICE</option>
+							<option style={{fontSize: '12px', fontWeight: 'bold'}} value={"MUT"}>MUTATION</option>
 						</Select>
-						<InputGroup>
+						<InputGroup size={'sm'}>
 							<Input placeholder="Search..." ref={inputFileRef} />
 							<InputRightElement cursor={"pointer"}>
 								<Button
 									border="none"
+									size={'sm'}
 									onClick={() => {
 										setPage(1);
 										setSearch(inputFileRef.current.value);

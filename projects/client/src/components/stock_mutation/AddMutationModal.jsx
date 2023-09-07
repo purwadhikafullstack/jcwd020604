@@ -15,6 +15,7 @@ import {
 	Center,
 	useToast,
 	Flex,
+	Text
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -121,14 +122,15 @@ export default function AddMutationModal({
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Add Mutation</ModalHeader>
+				<ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Add Mutation</Text></ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl w={"100%"}>
-						<FormLabel>From Warehouse:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>From Warehouse:</Text></FormLabel>
 						<Select
 							placeholder="Select Source Warehouse"
 							id="from_warehouse_id"
+							size={'sm'}
 							value={selectedWarehouse}
 							onChange={(event) => {
 								setSelectedWarehouse(event.target.value);
@@ -143,11 +145,12 @@ export default function AddMutationModal({
 								  ))
 								: null}
 						</Select>
-						<FormLabel>To Warehouse:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>To Warehouse:</Text></FormLabel>
 						{user.role === "ADMIN" ? (
 							<Select
 								placeholder="All Warehouses"
 								id="to_warehouse_id"
+								size={'sm'}
 								onChange={inputHandler}
 							>
 								{warehouse.length
@@ -162,6 +165,7 @@ export default function AddMutationModal({
 							<Select
 								placeholder="Select Destination Warehouse"
 								id="to_warehouse_id"
+								size={'sm'}
 								defaultValue={user.warehouse_id}
 								isDisabled
 							>
@@ -174,10 +178,11 @@ export default function AddMutationModal({
 									: null}
 							</Select>
 						)}
-						<FormLabel>Select Product:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Select Product:</Text></FormLabel>
 						<Select
 							placeholder="All Product"
 							id="stock_id"
+							size={'sm'}
 							onChange={(event) => {
 								inputHandler(event);
 								const selectedStock = stock.find(
@@ -195,12 +200,13 @@ export default function AddMutationModal({
 								: null}
 						</Select>
 						<Center flexDir={"column"} pt={"15px"}>
-							<FormLabel pl={"18px"}>Mutation Amount:</FormLabel>
+							<FormLabel pl={"18px"}><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Mutation Amount:</Text></FormLabel>
 							<HStack w="100px">
 								<Input
 									textAlign={"center"}
 									placeholder="0"
 									type="number"
+									size={'xs'}
 									id="qty"
 									onChange={inputHandler}
 								/>
@@ -209,11 +215,16 @@ export default function AddMutationModal({
 					</FormControl>
 				</ModalBody>
 				<ModalFooter justifyContent={selectedStock ? "space-between" : null}>
-					{selectedStock ? <Flex>Max Amount: {selectedStock?.qty}</Flex> : null}
+					{selectedStock ? 
+					<Flex>
+						<Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Max Amount: {selectedStock?.qty}</Text> 
+					</Flex> : null}
 					<Button
-						position={"sticky"}
+						position={'sticky'}
 						colorScheme="green"
-						mr={3}
+						w={'25%'}
+						rounded={'sm'}
+						size={'xs'}
 						onClick={formik.handleSubmit}
 						isDisabled={!isAddButtonEnabled}
 					>

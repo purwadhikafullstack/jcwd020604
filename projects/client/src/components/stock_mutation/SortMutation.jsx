@@ -15,7 +15,8 @@ export default function SortMutation({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"325px"}
 						minW={"275px"}
-						paddingLeft={"55px"}
+						fontSize={'sm'}
+						paddingLeft={"50px"}
 						alignItems={"center"}
 						onClick={() =>
 							handleSortChange(
@@ -30,6 +31,7 @@ export default function SortMutation({ handleSortChange, sort, pageWidth }) {
 					</Flex>
 					<Flex
 						w={"195px"}
+						fontSize={'sm'}
 						alignItems={"center"}
 						onClick={() =>
 							handleSortChange(
@@ -48,6 +50,7 @@ export default function SortMutation({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"195px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange(
 								"mutation_code" + (sort === "mutation_codeAsc" ? "Desc" : "Asc")
@@ -62,6 +65,7 @@ export default function SortMutation({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"100px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange("qty" + (sort === "qtyAsc" ? "Desc" : "Asc"))
 						}
@@ -74,6 +78,7 @@ export default function SortMutation({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"100px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange(
 								"status" + (sort === "statusAsc" ? "Desc" : "Asc")
@@ -88,6 +93,7 @@ export default function SortMutation({ handleSortChange, sort, pageWidth }) {
 					<Flex
 						w={"170px"}
 						alignItems={"center"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange("date" + (sort === "dateAsc" ? "Desc" : "Asc"))
 						}

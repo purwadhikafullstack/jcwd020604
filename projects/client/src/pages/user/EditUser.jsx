@@ -87,33 +87,34 @@ export default function EditUser (props) {
       <>
       <Modal isOpen={props.isOpen} onClose={props.onClose}>
         <ModalContent>
-            <ModalHeader>Edit Data {users.fullname}</ModalHeader>
+            <ModalHeader fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Edit Data {users.fullname}</ModalHeader>
             <ModalCloseButton />
             <ModalBody pb={6}>
                 <FormControl isRequired>
-                    <FormLabel>Name</FormLabel>
-                    <Input type='text' name="fullname"
+                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Name</FormLabel>
+                    <Input type='text' name="fullname" size={'sm'}
                     value={users.fullname}
                     onChange={handleInputChange}/>
                 </FormControl>
                 <FormControl isRequired>
-                    <FormLabel>Email address</FormLabel>
-                    <Input type='email' name="email"
+                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Email address</FormLabel>
+                    <Input type='email' name="email" size={'sm'}
                     value={users.email}
                     onChange={handleInputChange}/>
                     <FormHelperText>We'll never share your email.</FormHelperText>
                 </FormControl>
                 <FormControl isRequired>
-                    <FormLabel>Phone</FormLabel>
-                    <Input type='tel' name="phone_number"
+                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Phone</FormLabel>
+                    <Input type='tel' name="phone_number" size={'sm'}
                     value={users.phone_number}
                     onChange={handleInputChange}/>
                 </FormControl>
                 <FormControl id="password" isRequired>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Password</FormLabel>
                   <InputGroup>
                     <Input  type="password"
                     name="password"
+                    size={'sm'}
                     placeholder="Password"
                     readOnly={true}
                     id="password"
@@ -122,25 +123,29 @@ export default function EditUser (props) {
                   </InputGroup>
                 </FormControl>
               <FormControl isRequired>
-                    <FormLabel>Verified</FormLabel>
-                    <Select placeholder='Select Option' name="verified" defaultValue={users.verified} onChange={handleInputChange}>
+                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Verified</FormLabel>
+                    <Select placeholder='Select Option' size={'sm'} name="verified" defaultValue={users.verified} onChange={handleInputChange}>
                         <option value={true}>Verified</option>
                         <option value={false}>Unverified</option>
                     </Select>
                 </FormControl>
                 <FormControl isRequired>
-                    <FormLabel>Role</FormLabel>
-                    <Select placeholder='Select Role' name='role' defaultValue={users.role} onChange={handleInputChange}>
+                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Role</FormLabel>
+                    <Select placeholder='Select Role' size={'sm'} name='role' defaultValue={users.role} onChange={handleInputChange}>
                         <option value={'W_ADMIN'}>Warehouse Admin</option>
                         <option value={'USER'}>User</option>
                     </Select>
                 </FormControl>
             </ModalBody>
             <ModalFooter>
-              <Button colorScheme='blue' mr={3} onClick={() => updateUser()}>
+              <Button colorScheme='blue' mr={3} w={'25%'}
+						            rounded={'sm'}
+						            size={'xs'} onClick={() => updateUser()}>
                 Save
               </Button>
-              <Button colorScheme='orange' onClick={props.onClose}>Cancel</Button>
+              <Button colorScheme='orange' w={'25%'}
+						            rounded={'sm'}
+						            size={'xs'} onClick={props.onClose}>Cancel</Button>
             </ModalFooter>
         </ModalContent>
         </Modal>

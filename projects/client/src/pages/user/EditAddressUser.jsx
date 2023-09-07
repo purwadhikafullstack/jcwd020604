@@ -117,30 +117,32 @@ export default function AddressUser(props) {
     <>
       <Modal isOpen={props.isOpen} onClose={Close}>
         <ModalContent>
-          <ModalHeader>Add Address</ModalHeader>
+          <ModalHeader fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Edit Address</ModalHeader>
           <ModalCloseButton />
           <ModalBody pb={6}>
             <FormControl isRequired>
-              <FormLabel>Address</FormLabel>
+              <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Address</FormLabel>
               <Input
                 type="text"
+                size={'sm'}
                 id="address"
                 value={address.address}
                 onChange={handleInputChange}
               />
             </FormControl>
             <FormControl isRequired>
-              <FormLabel>District</FormLabel>
+              <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>District</FormLabel>
               <Input
                 type="text"
+                size={'sm'}
                 id="district"
                 value={address.district}
                 onChange={handleInputChange}
               />
             </FormControl>
             <FormControl isRequired>
-              <FormLabel>Province</FormLabel>
-              <Select id="province" onChange={handleInputChange}>
+              <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Province</FormLabel>
+              <Select id="province" onChange={handleInputChange} size={'sm'}>
                 {province.length
                   ? province.map((val) =>
                       val.province === address.province ? (
@@ -155,9 +157,10 @@ export default function AddressUser(props) {
               </Select>
             </FormControl>
             <FormControl isRequired>
-              <FormLabel>City</FormLabel>
+              <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>City</FormLabel>
               <Select
                 id="city"
+                size={'sm'}
                 onChange={handleInputChange}
                 value={`${address.city}|${address.city_id}`}
               >
@@ -179,12 +182,16 @@ export default function AddressUser(props) {
             <Button
               colorScheme="blue"
               mr={3}
-              size={"sm"}
+              w={'25%'}
+              size={"xs"}
+              rounded={'sm'}
               onClick={() => editAddress()}
             >
               Edit
             </Button>
-            <Button colorScheme="orange" size={"sm"} onClick={Close}>
+            <Button colorScheme="orange"  w={'25%'}
+              size={"xs"}
+              rounded={'sm'} onClick={Close}>
               Cancel
             </Button>
           </ModalFooter>

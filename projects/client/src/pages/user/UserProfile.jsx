@@ -284,7 +284,8 @@ const handleInputChange = (e) => {
                                              mt={8}
                                              bg={'gray.900'}
                                              color={'white'}
-                                             rounded={'md'}
+                                             rounded={'sm'}
+                                             size={'sm'}
                                              _hover={{
                                              transform: 'translateY(-2px)',
                                              boxShadow: 'lg',
@@ -340,41 +341,41 @@ const handleInputChange = (e) => {
                             <VStack spacing={5}>
                             <HStack display={{base: 'flex', sm: 'block', md:'flex'}}>
                               <FormControl id="name">
-                                  <FormLabel>Your Name</FormLabel>
+                                  <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Your Name</FormLabel>
                                     <InputGroup borderColor="#E0E1E7">
                                         <InputLeftElement pointerEvents="none" children={<BsPerson color="gray.800" />} />
-                                        <Input type="text" size="md" id="fullname" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
+                                        <Input type="text" size="sm" id="fullname" value={fullname} onChange={(val) => {handleInputChange(val); setFullName(val.target.value)}}/>
                                     </InputGroup>
                                     <FormHelperText>Max 20 letter.</FormHelperText>
                               </FormControl>
                               <FormControl id="phone_number">
-                                    <FormLabel>Phone</FormLabel>
+                                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Phone</FormLabel>
                                       <InputGroup borderColor="#E0E1E7">
                                           <InputLeftElement pointerEvents="none" children={<BsPhone color="gray.800" />} />
-                                          <Input type="number" size="md" id="phone_number" value={phone_number} onChange={(val) => {handleInputChange(val); setPhone_Number(val.target.value)}}/>
+                                          <Input type="number" size="sm" id="phone_number" value={phone_number} onChange={(val) => {handleInputChange(val); setPhone_Number(val.target.value)}}/>
                                       </InputGroup>
                                       <FormHelperText>Max 12 number.</FormHelperText>
                               </FormControl>                        
                             <FormControl id="email">
-                                     <FormLabel>Email</FormLabel>
+                                     <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Email</FormLabel>
                                      <InputGroup borderColor="#E0E1E7">
                                        <InputLeftElement
                                          pointerEvents="none"
                                          children={<MdOutlineEmail color="gray.800" />}
                                        />
-                                       <Input type="email" size="md" readOnly={true} value={email}/>
+                                       <Input type="email" size="sm" readOnly={true} value={email}/>
                                      </InputGroup>
                                      <FormHelperText>We'll never share your email.</FormHelperText>
                             </FormControl>
                             </HStack>
                               <Box display={'flex'} alignSelf={{base: 'flex', md: 'flex-start', sm: 'block'}}>
-                                <Button mr={4} colorScheme={"blue"} w={'70px'} size={"sm"} onClick={() => saveUser()}>
+                                <Button mr={4} colorScheme={"blue"} w={'70px'} size={"xs"} rounded={'sm'} onClick={() => saveUser()}>
                                   Save
                                 </Button>
                               </Box>
                             <FormControl id="address">
                             <FormLabel>
-                                <Button variant={'link'} colorScheme={"green"} w={'70px'} size={'sm'} onClick={() => addressUser.onOpen()}>
+                                <Button variant={'link'} colorScheme={"green"} w={'70px'} size={'xs'} onClick={() => addressUser.onOpen()}>
                                   + Address
                                 </Button>
                             </FormLabel>
@@ -390,7 +391,7 @@ const handleInputChange = (e) => {
                                       <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Kec/Kota: {val.district}, {val.city}</Text>
                                       <Text fontSize={'sm'} textColor={'blackAlpha.700'} fontWeight={'semibold'}>Provinsi: {val.province}</Text>
                                    
-                                    <HStack>
+                                    <HStack mt={2}>
                                     <Flex pl={1}>
                                         <Button
                                          variant={'link'} 

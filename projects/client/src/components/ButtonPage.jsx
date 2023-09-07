@@ -16,6 +16,9 @@ export default function ButtonPage({
 				>
 					{page === 1 || data?.length === 0 ? null : (
 						<Button
+						rounded={'sm'}
+						size={'xs'}
+						colorScheme={'messenger'}
 							onClick={() => {
 								handlePageChange(page - 1);
 								window.scrollTo({ top: 0, behavior: "smooth" });
@@ -26,6 +29,9 @@ export default function ButtonPage({
 					)}
 					{page === totalPage || data?.length === 0 ? null : (
 						<Button
+						rounded={'sm'}
+						size={'xs'}
+						colorScheme='messenger'
 							onClick={() => {
 								handlePageChange(page + 1);
 								window.scrollTo({ top: 0, behavior: "smooth" });

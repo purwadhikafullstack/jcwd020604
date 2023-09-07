@@ -38,7 +38,7 @@ export default function ProductCard({ val }) {
 				padding={"15px"}
 				justifyContent={"end"}
 			>
-				<Flex>{val.product_name}</Flex>
+				<Flex fontSize={'sm'}>{val.product_name}</Flex>
 				<Flex fontSize={"18px"} fontWeight={"bold"}>
 					{isSoldOut ? (
 						<Flex flexWrap={"wrap"}>

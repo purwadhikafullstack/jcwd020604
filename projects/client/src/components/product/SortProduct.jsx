@@ -13,8 +13,9 @@ export default function SortProduct({ handleSortChange, sort, pageWidth }) {
 					gap={"7"}
 				>
 					<Flex
-						w={"325px"}
+						w={"320px"}
 						minW={"275px"}
+						fontSize={'sm'}
 						paddingLeft={"55px"}
 						onClick={() =>
 							handleSortChange(
@@ -28,11 +29,12 @@ export default function SortProduct({ handleSortChange, sort, pageWidth }) {
 						<UpDownIcon ml={"10px"} />
 						{sort === "productDesc" ? sort === "productAsc" : null}
 					</Flex>
-					<Flex w={"300px"} alignItems={"center"}>
+					<Flex w={"300px"} fontSize={'sm'} alignItems={"center"}>
 						Description
 					</Flex>
 					<Flex
 						w={"160px"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange(
 								"category" + (sort === "categoryAsc" ? "Desc" : "Asc")
@@ -47,6 +49,7 @@ export default function SortProduct({ handleSortChange, sort, pageWidth }) {
 					</Flex>
 					<Flex
 						w={"160px"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange("price" + (sort === "priceAsc" ? "Desc" : "Asc"))
 						}
@@ -59,6 +62,7 @@ export default function SortProduct({ handleSortChange, sort, pageWidth }) {
 					</Flex>
 					<Flex
 						w={"160px"}
+						fontSize={'sm'}
 						onClick={() =>
 							handleSortChange(
 								"weight" + (sort === "weightAsc" ? "Desc" : "Asc")

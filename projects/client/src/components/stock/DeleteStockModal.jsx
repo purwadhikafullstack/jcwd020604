@@ -37,13 +37,14 @@ export default function DeleteStockModal({ isOpen, onClose, deleteStock }) {
 		>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Delete Stock</ModalHeader>
+				<ModalHeader fontSize={'md'} fontWeight={'bold'}>Delete Stock</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl mt={4}>
-						<FormLabel>Type "DELETE" to confirm:</FormLabel>
+						<FormLabel fontSize={'sm'}>Type "DELETE" to confirm:</FormLabel>
 						<Input
 							type="text"
+							size={'sm'}
 							value={confirmationText}
 							onChange={handleConfirmationTextChange}
 							placeholder="Type 'DELETE' here"
@@ -55,6 +56,8 @@ export default function DeleteStockModal({ isOpen, onClose, deleteStock }) {
 					<Button
 						colorScheme="red"
 						mr={3}
+						rounded={'sm'}
+						size={'xs'}
 						isDisabled={!isDeleteButtonEnabled}
 						onClick={deleteStock}
 					>

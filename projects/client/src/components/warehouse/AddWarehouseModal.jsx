@@ -12,6 +12,7 @@ import {
 	Input,
 	useToast,
 	Select,
+	Text
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -119,32 +120,36 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 		<Modal isOpen={isOpen} onClose={handleModalClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Add Warehouse</ModalHeader>
+				<ModalHeader><Text fontSize={'md'} fontWeight={'bold'} fontFamily={'sans-serif'}>Add Warehouse</Text></ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Warehouse Name:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Warehouse Name:</Text></FormLabel>
 						<Input
 							placeholder="e.g. MMS Jogja"
 							id="warehouse_name"
+							size={'sm'}
 							onChange={inputHandler}
 						/>
-						<FormLabel>Address:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Address:</Text></FormLabel>
 						<Input
 							placeholder="e.g. Jalan Malioboro"
 							id="address"
+							size={'sm'}
 							onChange={inputHandler}
 						/>
-						<FormLabel>District:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>District:</Text></FormLabel>
 						<Input
 							placeholder="e.g. Gedongtengen "
 							id="district"
+							size={'sm'}
 							onChange={inputHandler}
 						/>
-						<FormLabel>Province:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Province:</Text></FormLabel>
 						<Select
 							placeholder="Choose Province"
 							id="province"
+							size={'sm'}
 							onChange={(event) => {
 								inputHandler(event); // Call the inputHandler function to update the formik values
 								setSelectedProvince(event.target.value); // Update the selected province
@@ -158,10 +163,11 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 								  ))
 								: null}
 						</Select>
-						<FormLabel>City:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>City:</Text></FormLabel>
 						<Select
 							placeholder="Choose City"
 							id="city"
+							size={'sm'}
 							onChange={inputHandler}
 							disabled={!selectedProvince} // Disable the city select until a province is selected
 						>
@@ -178,20 +184,23 @@ export default function AddWarehouseModal({ isOpen, onClose, getWarehouse }) {
 										))
 								: null}
 						</Select>
-						<FormLabel>Phone Number:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Phone Number:</Text></FormLabel>
 						<Input
 							placeholder="08.."
 							id="phone_number"
+							size={'sm'}
 							type="number"
 							onChange={inputHandler}
 						/>
 					</FormControl>
 				</ModalBody>
-				<ModalFooter>
+				<ModalFooter display={'flex'} justifyContent={'center'}>
 					<Button
 						onClick={formik.handleSubmit}
 						colorScheme="green"
-						mr={3}
+						w={'25%'}
+						rounded={'sm'}
+						size={'xs'}
 						isDisabled={!isAddButtonEnabled}
 					>
 						Add Warehouse

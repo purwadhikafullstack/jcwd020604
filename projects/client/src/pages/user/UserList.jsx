@@ -78,9 +78,12 @@ const UserList = () => {
         <Stack>
             <HStack>
                <ButtonGroup m={2}>
-                    <Button onClick={() => navigate('/add_user')} fontSize={'xs'} colorScheme={'messenger'} size={'xs'}>Add Users</Button>
-                    <Button colorScheme={'messenger'} size={'xs'} fontSize={'xs'} cursor={'pointer'} onClick={() => navigate("/admin/manageData")}>Manage Data</Button>
-                    <Button colorScheme={'messenger'} size={'xs'} fontSize={'xs'}cursor={'pointer'} onClick={() => navigate("/")}>Back to home</Button>
+                    <Button onClick={() => navigate('/add_user')} fontSize={'xs'} colorScheme={'messenger'} size={'xs'}
+						            rounded={'sm'}>Add Users</Button>
+                    <Button colorScheme={'messenger'} size={'xs'} fontSize={'xs'} cursor={'pointer'}
+						            rounded={'sm'} onClick={() => navigate("/admin/manageData")}>Manage Data</Button>
+                    <Button colorScheme={'messenger'} size={'xs'} fontSize={'xs'}cursor={'pointer'}
+						            rounded={'sm'} onClick={() => navigate("/")}>Back to home</Button>
                </ButtonGroup>
             </HStack>
         </Stack>
@@ -108,9 +111,12 @@ const UserList = () => {
                             <Td><Text fontFamily={'sans-serif'} textColor={'blackAlpha.700'} fontSize={'xs'} fontWeight={'semibold'}>{user?.warehouse?.warehouse_name}</Text></Td>
                             <Td>
                                 <ButtonGroup display={'flex'} justifyContent={'center'}>
-                                    <Button colorScheme={'green'} fontSize={'xs'} size={'xs'} onClick={()=> {editUser.onOpen();setAdminId(user.uuid)} }>Edit</Button>
-                                    <Button colorScheme={'facebook'} fontSize={'xs'} size={'xs'} onClick={() => {assignUser.onOpen();setAdminId(user.uuid)}}>Assign</Button>
-                                    <Button colorScheme={'red'} fontSize={'xs'} size={'xs'} onClick={() => {deleteUser(user.uuid); navigate("/user_list")}}>Delete</Button>
+                                    <Button colorScheme={'green'} fontSize={'xs'} size={'xs'} w={'25%'}
+						            rounded={'sm'} onClick={()=> {editUser.onOpen();setAdminId(user.uuid)} }>Edit</Button>
+                                    <Button colorScheme={'facebook'} fontSize={'xs'} size={'xs'} w={'25%'}
+						            rounded={'sm'} onClick={() => {assignUser.onOpen();setAdminId(user.uuid)}}>Assign</Button>
+                                    <Button colorScheme={'red'} fontSize={'xs'} size={'xs'} w={'25%'}
+						            rounded={'sm'} onClick={() => {deleteUser(user.uuid); navigate("/user_list")}}>Delete</Button>
                                 </ButtonGroup>
                             </Td>
                         </Tr>

@@ -194,7 +194,7 @@ export default function Navbar(props) {
                 </>
               )}
               <Flex justifyContent={"center"}>
-                <InputGroup>
+                <InputGroup size={'sm'}>
                   <InputRightElement cursor={"pointer"}>
                     <FiSearch
                       color="gray.300"
@@ -361,7 +361,7 @@ export default function Navbar(props) {
             <Stack as={"nav"} spacing={4}>
               {user.role === "ADMIN" ? (
                 <>
-                  <InputGroup>
+                  <InputGroup size={'sm'}>
                     <InputRightElement cursor={"pointer"}>
                       <FiSearch
                         color="gray.300"

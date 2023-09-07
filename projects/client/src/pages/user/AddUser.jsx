@@ -87,8 +87,8 @@ const AddUser = () => {
                         <Field name="fullname">
                             {({ field }) => (
                                 <FormControl isRequired>
-                                    <FormLabel>Name</FormLabel>
-                                    <Input {...field} type="text" placeholder='Input name'/>
+                                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Name</FormLabel>
+                                    <Input {...field} type="text" size={'sm'} placeholder='Input name'/>
                                     <ErrorMessage name="fullname" component={FormHelperText} color="red.500" />
                                 </FormControl>
                             )}
@@ -96,8 +96,8 @@ const AddUser = () => {
                         <Field name="email">
                             {({ field }) => (
                                 <FormControl isRequired>
-                                    <FormLabel>Email address</FormLabel>
-                                    <Input {...field} type="email" placeholder='Type your email'/>
+                                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Email address</FormLabel>
+                                    <Input {...field} type="email" size={'sm'} placeholder='Type your email'/>
                                     <ErrorMessage name="email" component={FormHelperText} color="red.500" />
                                 </FormControl>
                             )}
@@ -105,8 +105,8 @@ const AddUser = () => {
                         <Field name="phone_number">
                             {({ field }) => (
                                 <FormControl isRequired>
-                                    <FormLabel>Phone Number</FormLabel>
-                                    <Input {...field} type="tel" placeholder='Type your phone'/>
+                                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Phone Number</FormLabel>
+                                    <Input {...field} type="tel" size={'sm'} placeholder='Type your phone'/>
                                     <ErrorMessage name="phone_number" component={FormHelperText} color="red.500" />
                                 </FormControl>
                             )}
@@ -114,9 +114,9 @@ const AddUser = () => {
                         <Field name="password">
                             {({ field }) => (
                                 <FormControl isRequired>
-                                    <FormLabel>Password</FormLabel>
+                                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Password</FormLabel>
                                     <InputGroup>
-                                        <Input {...field} type={showPassword ? 'text' : 'password'} placeholder="Password" />
+                                        <Input {...field} type={showPassword ? 'text' : 'password'} size={'sm'} placeholder="Password" />
                                         <InputRightElement h={'full'}>
                                             <Button
                                                 variant={'ghost'}
@@ -133,8 +133,8 @@ const AddUser = () => {
                         <Field name="verified">
                             {({ field }) => (
                                 <FormControl isRequired>
-                                    <FormLabel>Verified</FormLabel>
-                                    <Select {...field} placeholder="Select Verification Status">
+                                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Verified</FormLabel>
+                                    <Select {...field} size={'sm'} placeholder="Select Verification Status">
                                         <option value={true}>Verified</option>
                                         <option value={false}>Unverified</option>
                                     </Select>
@@ -145,8 +145,8 @@ const AddUser = () => {
                         <Field name="role">
                             {({ field }) => (
                                 <FormControl isRequired>
-                                    <FormLabel>Role</FormLabel>
-                                    <Select {...field} placeholder="Select Role">
+                                    <FormLabel fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Role</FormLabel>
+                                    <Select {...field} size={'sm'} placeholder="Select Role">
                                         <option value={'W_ADMIN'}>Warehouse Admin</option>
                                         <option value={'USER'}>User</option>
                                     </Select>
@@ -156,10 +156,14 @@ const AddUser = () => {
                         </Field>
                         <Box mt={2}>
                             <HStack>
-                                <Button size={'sm'} w={'20%'} type="submit" colorScheme="twitter" isLoading={isSubmitting}>
+                                <Button w={'25%'}
+						            rounded={'sm'}
+						            size={'xs'} type="submit" colorScheme="twitter" isLoading={isSubmitting}>
                                     Save
                                 </Button>
-                                <Button size={'sm'} w={'20%'} colorScheme="orange" onClick={() => navigate("/user_list")}>
+                                <Button w={'25%'}
+						            rounded={'sm'}
+						            size={'xs'} colorScheme="orange" onClick={() => navigate("/user_list")}>
                                     Cancel
                                 </Button>
                             </HStack>

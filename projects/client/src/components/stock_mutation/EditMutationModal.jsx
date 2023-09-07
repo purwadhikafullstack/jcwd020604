@@ -15,6 +15,7 @@ import {
 	Center,
 	HStack,
 	Flex,
+	Text
 } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
@@ -77,23 +78,25 @@ export default function EditMutationModal({
 		<Modal isOpen={isOpen} onClose={onClose}>
 			<ModalOverlay />
 			<ModalContent>
-				<ModalHeader>Edit Mutation</ModalHeader>
+				<ModalHeader fontSize={'md'} fontWeight={'bold'}>Edit Mutation</ModalHeader>
 				<ModalCloseButton />
 				<ModalBody pb={6}>
 					<FormControl>
-						<FormLabel>Product Name:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Product Name:</Text></FormLabel>
 						<Input
 							placeholder="e.g. MMS T-shirt"
 							id="stock_id"
+							size={'sm'}
 							onChange={inputHandler}
 							value={val.stock.product.product_name}
 							isDisabled
 						/>
 
-						<FormLabel> From Warehouse:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>From Warehouse:</Text></FormLabel>
 						<Select
 							placeholder="Choose warehouse"
 							id="from_warehouse_id"
+							size={'sm'}
 							value={val.from_warehouse_id}
 							onChange={inputHandler}
 							isDisabled
@@ -106,10 +109,11 @@ export default function EditMutationModal({
 								  ))
 								: null}
 						</Select>
-						<FormLabel> To Warehouse:</FormLabel>
+						<FormLabel><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>To Warehouse:</Text></FormLabel>
 						<Select
 							placeholder="Choose warehouse"
 							id="to_warehouse_id"
+							size={'sm'}
 							value={val.to_warehouse_id}
 							onChange={inputHandler}
 							isDisabled
@@ -123,12 +127,13 @@ export default function EditMutationModal({
 								: null}
 						</Select>
 						<Center flexDir={"column"} pt={"15px"}>
-							<FormLabel pl={"18px"}>Mutation Amount:</FormLabel>
+							<FormLabel pl={"18px"}><Text fontSize={'sm'} fontWeight={'bold'} fontFamily={'sans-serif'}>Mutation Amount:</Text></FormLabel>
 							<HStack w="100px">
 								<Input
 									textAlign={"center"}
 									placeholder="0"
 									type="number"
+									size={'sm'}
 									id="qty"
 									defaultValue={val.qty}
 									onChange={inputHandler}
@@ -138,9 +143,10 @@ export default function EditMutationModal({
 					</FormControl>
 				</ModalBody>
 				<ModalFooter justifyContent={"space-between"}>
-					<Flex>Max Amount: {val.stock.qty}</Flex>
+					<Flex fontSize={'sm'} fontWeight={'bold'} textColor={'blackAlpha.500'}>Max Amount: {val.stock.qty}</Flex>
 					{user.role === "ADMIN" || "ADMIN" ? (
-						<Button colorScheme="blue" mr={3} onClick={editMutation}>
+						<Button colorScheme="blue" mr={3} rounded={'sm'}
+						size={'xs'} onClick={editMutation}>
 							Save
 						</Button>
 					) : null}

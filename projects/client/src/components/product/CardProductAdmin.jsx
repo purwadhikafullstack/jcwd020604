@@ -55,7 +55,7 @@ export default function ProductList({ val, getProduct }) {
 	return (
 		<Card
 			maxW="xs"
-			_hover={{
+			_hover={{color: 'black',
 				backgroundColor: "#E6EBF2",
 			}}
 		>
@@ -70,36 +70,36 @@ export default function ProductList({ val, getProduct }) {
 				/>
 				<Stack mt="6" spacing="2">
 					<Flex>
-						<Heading size="md">{val.product_name}</Heading>
+						<Heading size="sm">{val.product_name}</Heading>
 						<Menu>
 							<MenuButton w={"25px"} h={"25px"} cursor={"pointer"}>
 								<Icon as={BiDotsVerticalRounded} />{" "}
 							</MenuButton>
-							<MenuList>
+							<MenuList fontSize={'xs'}>
 								{user.role === "ADMIN" ? (
-									<MenuItem onClick={editProductModal.onOpen}>
+									<MenuItem onClick={editProductModal.onOpen} fontWeight={'bold'} color={"green"} _hover={{color:'#00cc00'}}>
 										View / Edit Product
 									</MenuItem>
 								) : (
-									<MenuItem onClick={editProductModal.onOpen}>
+									<MenuItem onClick={editProductModal.onOpen} fontWeight={'bold'} color={"green"} _hover={{color:'#00cc00'}}>
 										View Detail
 									</MenuItem>
 								)}
 								{user.role === "ADMIN" ? (
-									<MenuItem onClick={deleteProductModal.onOpen} color={"red"}>
+									<MenuItem onClick={deleteProductModal.onOpen} fontWeight={'bold'} color={"red"} _hover={{color: '#ff4d4d'}}>
 										Remove
 									</MenuItem>
 								) : null}
 							</MenuList>
 						</Menu>
 					</Flex>
-					<Text>
+					<Text fontSize={'xs'} fontWeight={'medium'}>
 						{" "}
 						{val.product_detail.length > 100
 							? val.product_detail.substring(0, 100) + "..."
 							: val.product_detail}
 					</Text>
-					<Text color="blue.600" fontSize="2xl">
+					<Text color="blue.600" fontSize="sm" fontWeight={'bold'}>
 						Rp{" "}
 						{val.price
 							? val.price.toLocaleString("id-ID")
