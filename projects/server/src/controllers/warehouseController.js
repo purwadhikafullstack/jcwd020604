@@ -200,6 +200,15 @@ const warehouseController = {
 					.json({ error: "User is already assigned to another warehouse." });
 			}
 
+			// Check if there is already an admin assigned to this warehouse
+			const existingAdmin = await db.users.findOne({
+				where: { warehouse_id, role: "W_ADMIN" },
+			});
+	
+			if (existingAdmin && existingAdmin.uuid !== uuid) {
+				return res.status(400).json({ error: "This warehouse already has an admin." });
+			}
+
 			await db.users.update(
 				{ warehouse_id },
 				{ where: { uuid }, transaction: t }

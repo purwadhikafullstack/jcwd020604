@@ -54,7 +54,7 @@ export default function Assign (props) {
         props.onClose();
       } catch (error) {
         toast({
-          title: "User is already assigned to another warehouse",
+          title: "User or warehouse has been assigned",
           status: 'warning',
           duration: 3000,
           position: 'top',
