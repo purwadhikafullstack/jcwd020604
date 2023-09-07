@@ -29,5 +29,6 @@ router.delete(
 	warehouseController.deleteWarehouse
 );
 router.post("/assign", warehouseController.assignAdminUserToWarehouse);
+router.post("/unassign", warehouseController.unassignAdminUserFromWarehouse);
 
 module.exports = router;

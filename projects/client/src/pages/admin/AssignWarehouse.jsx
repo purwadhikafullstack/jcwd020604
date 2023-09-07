@@ -65,6 +65,32 @@ export default function Assign (props) {
       }
     }
 
+    const unassignUser = async () => {
+      try {
+        await api().post("/warehouse/unassign", {...wAdmin, uuid: props.uuid});
+        toast({
+          title: "Unassign admin success",
+          status: "success",
+          duration: 3000,
+          position: 'top',
+          isClosable: false
+        });
+        nav('/user_list');
+        props.fetchData();
+        props.onClose();
+      } catch (error) {
+        toast({
+          title: "User is already unassigned",
+          status: 'warning',
+          duration: 3000,
+          position: 'top',
+          isClosable: false
+        });
+        props.onClose();
+        props.fetchData();
+      }
+    }
+
     useEffect(() => {
       getWarehouse();
       if (props.uuid){}
@@ -99,9 +125,15 @@ export default function Assign (props) {
 						    size={'xs'} onClick={assignUser}>
                 Save
               </Button>
-              <Button colorScheme='orange' w={'25%'}
+              <Button colorScheme='orange' w={'25%'} mr={3}
 						    rounded={'sm'}
-						    size={'xs'} onClick={props.onClose}>Cancel</Button>
+						    size={'xs'} onClick={props.onClose}>Cancel
+              </Button>
+              <Button colorScheme='yellow' mr={3} w={'25%'}
+						    rounded={'sm'}
+						    size={'xs'} onClick={unassignUser}>
+                Unassign
+              </Button>
             </ModalFooter>
         </ModalContent>
         </Modal>

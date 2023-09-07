@@ -211,5 +211,37 @@ const warehouseController = {
 			return res.status(500).send({ message: err.message });
 		}
 	},
+
+	unassignAdminUserFromWarehouse: async (req, res) => {
+		const t = await db.sequelize.transaction();
+		try {
+			const { uuid } = req.body;
+	
+			const existingUser = await db.users.findOne({
+				where: { uuid },
+			});
+			if (!existingUser) {
+				return res.status(404).json({ error: "User not found." });
+			}
+			if (!existingUser.verified) {
+				return res.status(403).json({ error: "The user is not an admin." });
+			}
+	
+			if (!existingUser.warehouse_id) {
+				return res.status(400).json({ error: "User is not assigned to any warehouse." });
+			}
+	
+			await db.users.update(
+				{ warehouse_id: null },
+				{ where: { uuid }, transaction: t }
+			);
+			await t.commit();
+			res.send({ message: "Warehouse unassignment successful." });
+		} catch (err) {
+			await t.rollback();
+			return res.status(500).send({ message: err.message });
+		}
+	},
+	
 };
 module.exports = warehouseController;

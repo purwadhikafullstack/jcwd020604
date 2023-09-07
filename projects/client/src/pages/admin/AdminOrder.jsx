@@ -215,7 +215,7 @@ const AdminOrder = () => {
 								size={"sm"}
 								display={"block"}
 								position={"relative"}
-								bgColor={"white"}
+								bgColor={{"white" : "none"}}
 							>
 								<CardHeader key={order.id}>
 									<Stack
@@ -248,7 +248,7 @@ const AdminOrder = () => {
 										<Text
 											fontSize={"sm"}
 											fontWeight={"medium"}
-											textColor={"blackAlpha.600"}
+											textColor={{"blackAlpha.600" : "white"}}
 										>
 											No {order.invoice}
 										</Text>
@@ -261,7 +261,7 @@ const AdminOrder = () => {
 											px={1}
 											bgColor={"blackAlpha.100"}
 											fontWeight={"bold"}
-											textColor={"blackAlpha.600"}
+											textColor={{"blackAlpha.600" : "white"}}
 										>
 											{order.user?.fullname}
 										</Text>
@@ -272,14 +272,17 @@ const AdminOrder = () => {
 												<Image
 													src={`${process.env.REACT_APP_API_BASE_URL}/${detail?.stock?.product?.product_images[0]?.product_image}`}
 													w={"100%"}
+													rounded={'sm'}
 													boxSize="250px"
+													bgColor={'none'}
 													objectFit="cover"
+													m={2}
 												></Image>
 												<Stack spacing={"3"}>
 													<Text
 														fontSize={"sm"}
 														fontWeight={"bold"}
-														textColor={"blackAlpha.600"}
+														textColor={{"blackAlpha.600" : "white"}}
 													>
 														{detail.stock?.product?.product_name}
 													</Text>
@@ -289,7 +292,7 @@ const AdminOrder = () => {
 															as={"p"}
 															fontSize={"sm"}
 															fontWeight={"semibold"}
-															textColor={"blackAlpha.600"}
+															textColor={{"blackAlpha.600" : "white"}}
 														>
 															{detail.stock?.product?.product_detail}
 														</Text>
@@ -297,7 +300,7 @@ const AdminOrder = () => {
 													<Text
 														fontSize={"sm"}
 														fontWeight={"normal"}
-														textColor={"blackAlpha.600"}
+														textColor={{"blackAlpha.600" : "white"}}
 													>
 														{detail.qty} barang x Rp{detail.price}
 													</Text>

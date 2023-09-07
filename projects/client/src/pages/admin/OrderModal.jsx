@@ -105,7 +105,7 @@ const OrderModal = (props) => {
 				<ModalContent>
 					<ModalHeader
 						fontSize={"sm"}
-						color={"blackAlpha.700"}
+						color={{"blackAlpha.700" : "white"}}
 						fontWeight={"bold"}
 						fontFamily={"sans-serif"}
 					>
@@ -119,7 +119,7 @@ const OrderModal = (props) => {
 							size={"md"}
 							display={"block"}
 							position={"relative"}
-							bgColor={"white"}
+							bgColor={{"white" : "none"}}
 						>
 							<CardHeader>
 								<Stack
@@ -161,7 +161,7 @@ const OrderModal = (props) => {
 									<Text
 										fontSize={"xs"}
 										fontWeight={"medium"}
-										textColor={"blackAlpha.600"}
+										textColor={{"blackAlpha.600" : "white"}}
 									>
 										Order Date: {orderDate ? orderDate.toDateString() : "N/A"}
 									</Text>
@@ -172,7 +172,7 @@ const OrderModal = (props) => {
 										<>
 											<Select
 												placeholder="Select action ..."
-												textColor={"blackAlpha.600"}
+												textColor={{"blackAlpha.600" : "white"}}
 												fontWeight={"bold"}
 												cursor={"pointer"}
 												w={"sm"}
@@ -199,7 +199,7 @@ const OrderModal = (props) => {
 										px={1}
 										bgColor={"blackAlpha.100"}
 										fontWeight={"bold"}
-										textColor={"blackAlpha.600"}
+										textColor={{"blackAlpha.600" : "white"}}
 									>
 										{orderById?.user?.fullname}
 									</Text>
@@ -210,14 +210,16 @@ const OrderModal = (props) => {
 											<Image
 												src={`${process.env.REACT_APP_API_BASE_URL}/${detail?.stock?.product?.product_images[0]?.product_image}`}
 												w={"100%"}
+												rounded={'sm'}
 												boxSize="250px"
 												objectFit="cover"
+												m={2}
 											></Image>
 											<Stack spacing={"3"}>
 												<Text
 													fontSize={"sm"}
 													fontWeight={"bold"}
-													textColor={"blackAlpha.600"}
+													textColor={{"blackAlpha.600" : "white"}}
 												>
 													{detail?.stock?.product?.product_name}
 												</Text>
@@ -227,7 +229,7 @@ const OrderModal = (props) => {
 														as={"p"}
 														fontSize={"sm"}
 														fontWeight={"semibold"}
-														textColor={"blackAlpha.600"}
+														textColor={{"blackAlpha.600" : "white"}}
 													>
 														{detail?.stock?.product?.product_detail}
 													</Text>
@@ -267,7 +269,7 @@ const OrderModal = (props) => {
 											>
 												<Text
 													fontWeight={"bold"}
-													textColor={"blackAlpha.600"}
+													textColor={{"blackAlpha.600" : "white"}}
 													my={2}
 												>
 													Shipping Information
@@ -275,7 +277,7 @@ const OrderModal = (props) => {
 												<Text
 													fontSize={"sm"}
 													fontWeight={"semibold"}
-													textColor={"blackAlpha.600"}
+													textColor={{"blackAlpha.600" : "white"}}
 												>
 													Kurir : {orderById?.courier}
 												</Text>
@@ -286,7 +288,7 @@ const OrderModal = (props) => {
 														as={"p"}
 														fontSize={"sm"}
 														fontWeight={"semibold"}
-														textColor={"blackAlpha.600"}
+														textColor={{"blackAlpha.600" : "white"}}
 													>
 														Payment Proof : 
 													</Text>
@@ -304,7 +306,7 @@ const OrderModal = (props) => {
 													<Text
 														fontSize={"sm"}
 														fontWeight={"semibold"}
-														textColor={"blackAlpha.600"}
+														textColor={{"blackAlpha.600" : "white"}}
 													>
 														Alamat :{" "}
 													</Text>
@@ -312,7 +314,7 @@ const OrderModal = (props) => {
 													<Text
 														fontSize={"sm"}
 														fontWeight={"semibold"}
-														textColor={"blackAlpha.600"}
+														textColor={{"blackAlpha.600" : "white"}}
 													>
 														{orderById?.user?.addresses[0]?.address},{" "}
 														{orderById?.user?.addresses[0]?.district}
@@ -320,7 +322,7 @@ const OrderModal = (props) => {
 													<Text
 														fontSize={"sm"}
 														fontWeight={"semibold"}
-														textColor={"blackAlpha.600"}
+														textColor={{"blackAlpha.600" : "white"}}
 													>
 														{orderById?.user?.addresses[0]?.city},{" "}
 														{orderById?.user?.addresses[0]?.province}
