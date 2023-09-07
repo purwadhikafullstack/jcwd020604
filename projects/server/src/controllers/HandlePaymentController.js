@@ -7,7 +7,7 @@ const haversine = require("haversine");
 const orderDetail = require("../models/orderDetail");
 
 const handlePaymentController = {
-    adminConfirmOrderPayment: async (req, res) => {
+	adminConfirmOrderPayment: async (req, res) => {
 		const t = await db.sequelize.transaction();
 		try {
 			const { id } = req.params;
@@ -74,35 +74,28 @@ const handlePaymentController = {
 							(warehouse) => warehouse.id !== referenceWarehouse.warehouse.id
 						);
 
-						const nearestBranch = otherWarehouses.reduce(
-							(nearest, warehouse) => {
-								const distance = haversine(
-									{
-										latitude: referenceWarehouse?.latitude,
-										longitude: referenceWarehouse?.longitude,
-									},
-									{
-										latitude: warehouse.latitude,
-										longitude: warehouse.longitude,
-									}
-								);
-
-								if (
-									!nearest ||
-									(distance < nearest.distance &&
-										warehouse.stock >= orderDetail.qty)
-								) {
-									return { warehouse, distance };
+						let nearest = {};
+						for (const warehouse of otherWarehouses) {
+							const distance = haversine(
+								{
+									latitude: referenceWarehouse?.latitude,
+									longitude: referenceWarehouse?.longitude,
+								},
+								{
+									latitude: warehouse.latitude,
+									longitude: warehouse.longitude,
 								}
-								return nearest;
-							},
-							null
-						);
+							);
 
-						if (nearestBranch) {
+							if (!nearest.distance || distance < nearest.distance) {
+								nearest = { warehouse, distance };
+							}
+						}
+
+						if (nearest) {
 							await autoMutation.autoMutation(
 								referenceWarehouse,
-								nearestBranch,
+								nearest,
 								stockShortage,
 								t
 							);
@@ -183,6 +176,6 @@ const handlePaymentController = {
 				.json({ message: "There was an error while processing the payment" });
 		}
 	},
-}
+};
 
 module.exports = handlePaymentController;

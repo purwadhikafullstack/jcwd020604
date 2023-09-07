@@ -2,7 +2,9 @@ import { Box, Flex, Image } from "@chakra-ui/react";
 import { useState } from "react";
 
 export default function ProductCard({ val }) {
-	const [stock, setStock] = useState(val.stocks[0]?.qty || 0);
+	const [stock, setStock] = useState(
+		val.stocks.reduce((accumulator, val) => accumulator + val.qty, 0)
+	);
 	const [hovered, setHovered] = useState(false);
 	const isSoldOut = stock === 0;
 	return (
