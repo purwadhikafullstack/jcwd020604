@@ -250,7 +250,7 @@ const AdminOrder = () => {
 											fontWeight={"medium"}
 											textColor={{"blackAlpha.600" : "white"}}
 										>
-											No {order.invoice}
+											{order.invoice}
 										</Text>
 									</Stack>
 								</CardHeader>
